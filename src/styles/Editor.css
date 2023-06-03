@@ -1,0 +1,19 @@
+.editor-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* width: 400px; */
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+    transition: transform 0.3s;
+  }
+  
+  /* .editor-container.visible {
+    transform: translateX(0);
+  }
+  
+  .editor-container.hidden {
+    transform: translateX(100%);
+  } */
+  

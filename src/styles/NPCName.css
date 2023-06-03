@@ -1,0 +1,14 @@
+
+.npc-name {
+    position: fixed;
+    z-index: 9999;
+    width: 25px;
+    height: 25px;
+    color: white;
+    /* background-color: rgba(83, 83, 255, 0.404); */
+    /* border: 2px solid rgba(0, 0, 0, 0.253); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

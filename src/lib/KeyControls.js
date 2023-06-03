@@ -1,0 +1,113 @@
+var keys = {
+  w: {
+    pressed: false,
+    justPressed: false,
+  },
+  a: {
+    pressed: false,
+    justPressed: false,
+  },
+  s: {
+    pressed: false,
+    justPressed: false,
+  },
+  d: {
+    pressed: false,
+    justPressed: false,
+  },
+  e: {
+    pressed: false,
+    justPressed: false,
+  },
+  q: {
+    pressed: false,
+    justPressed: false,
+  },
+  shift: {
+    pressed: false,
+    justPressed: false,
+  },
+  ctrl: {
+    pressed: false,
+    justPressed: false,
+  },
+  space: {
+    pressed: false,
+    justPressed: false,
+  },
+};
+
+window.addEventListener("keydown", (event) => {
+  switch (event.code) {
+    case "KeyW":
+      keys.w.justPressed = !keys.w.justPressed;
+      keys.w.pressed = true;
+      break;
+    case "KeyA":
+      keys.a.justPressed = !keys.a.justPressed;
+      keys.a.pressed = true;
+      break;
+    case "KeyS":
+      keys.s.justPressed = !keys.s.justPressed;
+      keys.s.pressed = true;
+      break;
+    case "KeyD":
+      keys.d.justPressed = !keys.d.justPressed;
+      keys.d.pressed = true;
+      break;
+    case "KeyE":
+      keys.e.justPressed = !keys.e.justPressed;
+      keys.e.pressed = true;
+      break;
+    case "KeyQ":
+      keys.q.justPressed = !keys.q.justPressed;
+      keys.q.pressed = true;
+      break;
+    case "ShiftLeft":
+      keys.shift.justPressed = !keys.shift.justPressed;
+      keys.shift.pressed = true;
+      break;
+    case "ControlLeft":
+      keys.ctrl.justPressed = !keys.ctrl.justPressed;
+      keys.ctrl.pressed = true;
+      break;
+    case "Space":
+      keys.space.justPressed = !keys.space.justPressed;
+      keys.space.pressed = true;
+      break;
+  }
+});
+
+window.addEventListener("keyup", (event) => {
+  switch (event.code) {
+    case "KeyW":
+      keys.w.pressed = false;
+      break;
+    case "KeyA":
+      keys.a.pressed = false;
+      break;
+    case "KeyS":
+      keys.s.pressed = false;
+      break;
+    case "KeyD":
+      keys.d.pressed = false;
+      break;
+    case "KeyE":
+      keys.e.pressed = false;
+      break;
+    case "KeyQ":
+      keys.q.pressed = false;
+      break;
+    case "ShiftLeft":
+      keys.shift.pressed = false;
+      break;
+    case "ControlLeft":
+      keys.ctrl.pressed = false;
+      break;
+    case "Space":
+      keys.space.pressed = false;
+      break;
+  }
+});
+
+export default keys;

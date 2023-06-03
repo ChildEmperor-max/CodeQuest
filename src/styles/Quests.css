@@ -1,0 +1,62 @@
+.hidden {
+    display: none;
+  }
+  
+  #questBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background-color: #141f45b9;
+    padding: 10px;
+  }
+  
+  .tab {
+    background-color: #0731bb27;
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .tab.active {
+    background-color: #0731bb71;
+  }
+  
+  .content {
+    display: none;
+    padding: 10px;
+    color: white;
+  }
+  #OngoingQuests, #AvailableQuests {
+    background-color: #3459a971;
+    width: 100%;
+    /* margin: 10px; */
+  }
+  #OngoingQuests h3, #AvailableQuests h3 {
+    padding: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 20px;
+    color: white;
+  }
+
+  #Ongoing li, #Available li{
+    list-style-type: none;
+    background-color: #3459a971;
+    /* margin: 5px; */
+    /* padding: 5px; */
+    border: 2px solid #243d75b0;
+    margin-bottom: 2px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+  }
+
+  #Ongoing li:hover{
+    cursor: pointer;
+  }
+
+  .content.active {
+    display: block;
+  }
+  
