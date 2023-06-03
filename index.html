@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeQuest</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="editor" class="editor-container">
+      <button style="color: white;">Test</button>
+    </div>
+    <div id="action-hint" class="interact-popup-text">E</div>
+    <div id="questBox" class="hidden">
+      <div id="OngoingQuests">
+        <h3>Ongoing quests</h3>
+        <ul id="Ongoing">
+          <!-- Quest items will be dynamically added here -->
+        </ul>
+      </div>
+      <div id="AvailableQuests">
+        <h3>Available quests</h3>
+        <ul id="Available">
+          <!-- Quest items will be dynamically added here -->
+        </ul>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
