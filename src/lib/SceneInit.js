@@ -107,8 +107,8 @@ export default class SceneInit {
           this.npcs[i].update(delta);
         }
       }
-      this.player.update(delta, this.npcs);
       this.cameraControls.update(this.player.getPosition());
+      this.player.update(delta, this.npcs);
 
       this.playerDetectNpc(this.npcs, this.textManager);
 

@@ -20,15 +20,20 @@ export default class CameraControls {
 
     this.camera.position.set(0, 10, 10);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.zoomSpeed = 0.5;
+    this.controls.rotateSpeed = 0.5;
     this.controls.enablePan = false;
     this.controls.update();
-    // Update the camera's projection matrix to apply the changes
     this.camera.updateProjectionMatrix();
+    // Update the camera's projection matrix to apply the changes
 
     this.cameraControls = new TrackballControls(
       this.camera,
       this.renderer.domElement
     );
+    this.cameraControls.rotateSpeed = 0;
+    this.cameraControls.noZoom = true; // disable zooming
+    this.cameraControls.noPan = true; // disable panning
     this.cameraControls.enabled = false;
     this.cameraControls.update();
   }

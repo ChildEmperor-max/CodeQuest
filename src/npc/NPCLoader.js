@@ -113,11 +113,12 @@ export default class NPCLoader extends THREE.Object3D {
 
   createQuest(instruction, goal) {}
 
-  createDialogBox(dialogTexts, hasQuest = false) {
+  createDialogBox(dialogTexts, questTitle = undefined, hasQuest = false) {
     this.hasQuest = hasQuest;
     if (hasQuest) {
       this.quest = dialogTexts[dialogTexts.length - 1];
-      this.questManager.addQuestItem(this.quest, this.npcName);
+      this.questTitle = questTitle;
+      this.questManager.addQuestItem(this.quest, questTitle, this.npcName);
     }
 
     // Create the dialog container
@@ -299,8 +300,8 @@ export default class NPCLoader extends THREE.Object3D {
     this.hideDialog();
     clearInterval(this.typingAnimation);
     if (this.hasQuest) {
-      this.player.questsList.push(this.quest);
-      this.questManager.moveQuestToOngoing(this.quest);
+      this.player.questsList.push(this.questTitle);
+      this.questManager.moveQuestToOngoing(this.questTitle);
       console.log("Quest accepted.");
     }
   }

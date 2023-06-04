@@ -6,7 +6,8 @@ import "./styles/Quests.css";
 import "./styles/ActionHint.css";
 import "./styles/DialogBox.css";
 import "./styles/Editor.css";
-import "./styles/NPCName.css"
+import "./styles/NPCName.css";
+import "./styles/LoadingScreen.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

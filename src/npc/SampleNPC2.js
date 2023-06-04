@@ -26,6 +26,15 @@ export default class SampleNPC2 extends NPCLoader {
       npcName,
       scale
     );
-    this.createDialogBox(["alo", "hello", "Do a flip!"], true);
+    this.createDialogBox(
+      [
+        "Hey! Do you know what are the variables? By variables, i mean, the containers that stores data values.",
+        "If you know what I am talking about, this is easy for you!",
+        'How would you store a string "Hello" in a variable? ',
+      ],
+      "Variables",
+      true
+    );
+    // this.createDialogBox(["1", "2", "3"], "Variables", true);
   }
 }

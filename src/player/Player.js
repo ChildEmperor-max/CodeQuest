@@ -10,7 +10,7 @@ export default class Player extends THREE.Object3D {
     super();
     this.mesh = undefined;
     this.rayY = 1;
-    this.rayLength = 0.03;
+    this.rayLength = 0.02;
     this.collisionRays = [
       new THREE.Vector3(0, this.rayY, this.rayLength),
       new THREE.Vector3(this.rayLength, this.rayY, this.rayLength),
@@ -57,9 +57,11 @@ export default class Player extends THREE.Object3D {
       new THREE.MeshBasicMaterial({ visible: false })
     );
     scene.add(this.collisionBox);
+    //flags
     this.isGrounded = true;
-
+    this.questListShown = false;
     this.enableNpcDetection = true;
+    this.isRunning = false;
     // this.textManager = new TextManager(this.scene);
     // this.textManager.initialize({
     //   text: "<div><h3>E</h3><div>",
@@ -67,8 +69,6 @@ export default class Player extends THREE.Object3D {
     //   yOffset: 4,
     //   camera: this.camera,
     // });
-
-    this.questListShown = false;
   }
 
   raycasterDebug(from_vec3) {
@@ -268,6 +268,7 @@ export default class Player extends THREE.Object3D {
         }
       }
     } else {
+      keys.shift.justPressed = false;
       if (this.idleAction) {
         this.currentAction = this.idleAction;
       }
@@ -296,7 +297,7 @@ export default class Player extends THREE.Object3D {
   }
 
   findIntersectionHeight(from_vec3, object_to_intersect) {
-    const xzOffset = 0.015;
+    const xzOffset = 0.01;
     const raycastGround = new THREE.Raycaster(
       new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
       new THREE.Vector3(0, -this.rayLength, 0)
@@ -339,6 +340,7 @@ export default class Player extends THREE.Object3D {
     let intersectionHeight = null;
     const intersectsGround = raycastGround.intersectObject(object_to_intersect);
     if (intersectsGround.length > 0) {
+      const intersectedObject = intersectsGround[0].object;
       intersectionHeight = intersectsGround[0].point.y;
     }
 
@@ -386,16 +388,25 @@ export default class Player extends THREE.Object3D {
       this.mesh.position,
       this.groundMesh
     );
+    const targetPosition = new THREE.Vector3(
+      this.mesh.position.x,
+      groundHeight,
+      this.mesh.position.z
+    );
+    const lerpFactor = 0.1; // Adjust the lerp factor to control the speed of interpolation
 
     if (groundHeight !== null) {
       const maxHeight = groundHeight + this.height / 2;
       if (this.mesh.position.y <= maxHeight) {
         this.mesh.position.y = groundHeight;
+        // this.position.lerp(targetPosition, lerpFactor);
+        this.position.y = this.mesh.position.y;
         this.direction.y = Math.max(0, this.direction.y);
         this.isGrounded = true;
       } else {
         // fall
         this.mesh.position.y -= 9.81 * deltaTime;
+        // this.position.lerp(this.mesh.position, lerpFactor);
         this.position.y = this.mesh.position.y;
         this.direction.y -= 9.81 * deltaTime;
         this.isGrounded = false;
@@ -403,6 +414,7 @@ export default class Player extends THREE.Object3D {
     } else {
       // if there is no ground
       this.mesh.position.y -= 9.81 * deltaTime;
+      this.position.y = this.mesh.position.y;
       this.direction.y -= 9.81 * deltaTime;
       this.isGrounded = false;
     }
@@ -441,13 +453,20 @@ export default class Player extends THREE.Object3D {
     if (keys.d.pressed) {
       this.direction.addScaledVector(perpendicularCamera, 1);
     }
-    if (keys.shift.pressed) {
+    if (keys.shift.justPressed) {
       this.running = true;
       this.movementSpeed = this.runningSpeed;
     } else {
       this.running = false;
       this.movementSpeed = this.walkingSpeed;
     }
+    // if (keys.shift.pressed) {
+    //     this.running = true;
+    //     this.movementSpeed = this.runningSpeed;
+    // } else {
+    //   this.running = false;
+    //   this.movementSpeed = this.walkingSpeed;
+    // }
     this.playerbox = new THREE.Box3().setFromObject(this.collisionBox);
     if (this.playerbox) {
       for (let i = 0; i < this.npcs.length; i++) {
@@ -488,23 +507,40 @@ export default class Player extends THREE.Object3D {
   }
 
   loadModel(scene) {
-    this.modelScale = 0.037;
+    // this.modelScale = 0.01;
     const loadingManager = new THREE.LoadingManager();
-    loadingManager.setURLModifier(function (url) {
-      if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/发.png") {
-        url = "/src/assets/models/hutao/tex/发.png";
-      }
-      if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/服.png") {
-        url = "/src/assets/models/hutao/tex/服.png";
-      }
-      if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/面.png") {
-        url = "/src/assets/models/hutao/tex/面.png";
-      }
-      return url;
-    });
+    // loadingManager.setURLModifier(function (url) {
+    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/发.png") {
+    //     url = "/src/assets/models/hutao/tex/发.png";
+    //   }
+    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/服.png") {
+    //     url = "/src/assets/models/hutao/tex/服.png";
+    //   }
+    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/面.png") {
+    //     url = "/src/assets/models/hutao/tex/面.png";
+    //   }
+    //   return url;
+    // });
+    var loadingGameScreenDiv = document.getElementById("loading-game-screen");
+    loadingManager.onStart = () => {
+      loadingGameScreenDiv.style.display = "block";
+    };
+    // Register a callback for the onProgress event
+    loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+      const progress = itemsLoaded / itemsTotal;
+      // Update the loading progress (e.g., update a progress bar)
+      // loadingGameScreenDiv.innerHTML = `Loading progress: ${progress}`;
+      console.log(`Loading progress: ${progress}`);
+    };
+
+    // Register a callback for the onLoad event
+    loadingManager.onLoad = () => {
+      // All assets have been loaded, hide the loading screen
+      loadingGameScreenDiv.style.display = "none";
+    };
     this.fbxLoader = new FBXLoader(loadingManager);
 
-    const playerModelPath = "/src/assets/models/hutao/";
+    const playerModelPath = "/src/assets/models/animations/";
     this.fbxLoader.load(
       playerModelPath + "model.fbx",
       (fbx) => {

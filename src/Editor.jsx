@@ -17,19 +17,18 @@ function Editor({ onChange, visible }) {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
   }, []);
 
-  const handleToggleVisibility = () => {
-    setEditorVisible((prevVisible) => !prevVisible);
-    console.log(editorVisible);
-  };
+  // const handleToggleVisibility = () => {
+  //   setEditorVisible((prevVisible) => !prevVisible);
+  // };
 
   return (
-    <div>
-      {visible && (
+    <div id="ace-editor-panel">
+      {/* {visible && (
         <button onClick={handleToggleVisibility}>
           {editorVisible ? "Close" : "Open"}
         </button>
-      )}
-      {visible || editorVisible ? (
+      )} */}
+      {visible ? (
         <AceEditor
           id="editor"
           mode="java"
@@ -45,8 +44,17 @@ function Editor({ onChange, visible }) {
 let visible = false;
 const root = ReactDOM.createRoot(document.getElementById("editor"));
 root.render(<Editor onChange={handleEditorChange} visible={visible} />);
+var closeButton = document.createElement("button");
+closeButton.textContent = "Close";
+closeButton.addEventListener("click", toggleEditor);
 
 export default function toggleEditor() {
   visible = !visible;
+  var editorContainer = document.getElementById("ace-editor-panel");
   root.render(<Editor onChange={handleEditorChange} visible={visible} />);
+  if (visible) {
+    editorContainer.appendChild(closeButton);
+  } else {
+    editorContainer.removeChild(closeButton);
+  }
 }

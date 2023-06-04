@@ -1,6 +1,6 @@
 .interact-popup-text {
     position: fixed;
-    z-index: 9999;
+    z-index: 1;
     width: 25px;
     height: 25px;
     background-color: rgba(83, 83, 255, 0.404);
@@ -9,4 +9,5 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    backdrop-filter: blur(5px); /* Apply the blur effect */
   }

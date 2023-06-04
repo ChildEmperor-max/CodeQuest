@@ -27,7 +27,12 @@ export default class SampleNPC1 extends NPCLoader {
       scale
     );
     this.createDialogBox(
-      ["wew", "wat", "Do a simple calculation of 1 + 1 then output the sum."],
+      [
+        "Hello kid! I have a programming problem for you to solve.",
+        "What I want you to do is what every programmers did to start their path.",
+        'Using this line of code "System.out.println()", how would you output the word "Hello World"? ',
+      ],
+      "Hello World!",
       true
     );
   }

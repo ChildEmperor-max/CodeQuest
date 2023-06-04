@@ -13,7 +13,7 @@ export function LoadWorld() {
         terrainMesh.position.set(3, 0, 3);
         terrainMesh.scale.set(1, 1, 1);
         const obstacles = [];
-        const spawnPoint = new THREE.Vector3(0, 100, -120);
+        const spawnPoint = new THREE.Vector3(0, 0, -120);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-11, 0, -140);
@@ -29,7 +29,7 @@ export function LoadWorld() {
           }
           if (child.isMesh && child.name.startsWith("Collision_")) {
             obstacles.push(child);
-            // child.visible = false;
+            child.visible = false;
 
             // Create a collision box for the obstacle
             // const obstacleCollisionBox = new THREE.Box3().setFromObject(child);

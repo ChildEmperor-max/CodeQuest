@@ -3,12 +3,21 @@ import toggleEditor from "../Editor";
 export default class QuestManager {
   constructor() {
     this.questBox = document.getElementById("questBox");
+    this.shown = false;
+    this.questMap = new Map();
 
     // Get the quest items in both sections
     this.availableQuests = document.getElementById("Available");
     this.ongoingQuests = document.getElementById("Ongoing");
   }
   toggleQuestBox() {
+    if (!this.shown) {
+      this.questBox.style.display = "block";
+      this.shown = true;
+    } else {
+      this.questBox.style.display = "none";
+      this.shown = false;
+    }
     this.questBox.classList.toggle("hidden");
   }
 
@@ -24,36 +33,74 @@ export default class QuestManager {
     });
   }
 
-  addQuestItem(questItem, questFrom) {
+  addQuestItem(questItem, questTitle, questFrom) {
     const li = document.createElement("li");
-    li.textContent = `${questFrom} - ${questItem} `;
-    li.setAttribute("data-name", questItem); // Set the data-name attribute with the quest name
+    const pi = document.createElement("span");
+    li.textContent = `${questTitle}`;
+    pi.textContent = `${questFrom}`;
+    li.setAttribute("id", questTitle); // Set the questTitle as the id
+    pi.setAttribute("data-quest-item", questItem);
 
     this.availableQuests.appendChild(li);
+    this.availableQuests.appendChild(pi);
+
+    this.questMap.set(questTitle, questItem); // Store the questItem in the map with questTitle as the key
   }
 
-  // Function to move a quest from available to ongoing quests
-  moveQuestToOngoing(questName) {
-    const questItem = this.availableQuests.querySelector(
-      `li[data-name="${questName}"]`
-    );
+  moveQuestToOngoing(questTitle) {
+    const questItem = this.questMap.get(questTitle); // Retrieve the questItem based on the questTitle
     if (questItem) {
-      this.ongoingQuests.appendChild(questItem);
-      questItem.addEventListener("click", this.showQuest.bind(this));
+      // Move the elements or perform any desired actions
+      const availableQuestItems = Array.from(this.availableQuests.children);
+      const questItemElement = availableQuestItems.find((element) => {
+        return element.getAttribute("data-quest-item") === questItem;
+      });
+      const questTitleElement = this.availableQuests.querySelector(
+        `li[id="${questTitle}"]`
+      );
+      questTitleElement.textContent += `: ${questItem}`;
+
+      if (questItemElement) {
+        const questTitleElement = this.availableQuests.querySelector(
+          `li[id="${questTitle}"]`
+        );
+
+        this.ongoingQuests.appendChild(questTitleElement);
+        this.ongoingQuests.appendChild(questItemElement);
+        questTitleElement.addEventListener(
+          "click",
+          this.showQuestEditor.bind(this)
+        );
+      }
     }
   }
 
   // Function to move a quest from ongoing to available quests
-  moveQuestToAvailable(questName) {
-    const questItem = this.ongoingQuests.querySelector(
-      `li[data-name="${questName}"]`
-    );
+  moveQuestToAvailable(questTitle) {
+    const questItem = this.questMap.get(questTitle); // Retrieve the questItem based on the questTitle
     if (questItem) {
-      this.availableQuests.appendChild(questItem);
+      // Move the elements or perform any desired actions
+      const availableQuestItems = Array.from(this.ongoingQuests.children);
+      const questItemElement = availableQuestItems.find((element) => {
+        return element.getAttribute("data-quest-item") === questItem;
+      });
+
+      if (questItemElement) {
+        const questTitleElement = this.ongoingQuests.querySelector(
+          `li[id="${questTitle}"]`
+        );
+
+        this.availableQuests.appendChild(questTitleElement);
+        this.availableQuests.appendChild(questItemElement);
+        questTitleElement.addEventListener(
+          "click",
+          this.showQuestEditor.bind(this)
+        );
+      }
     }
   }
 
-  showQuest() {
+  showQuestEditor() {
     toggleEditor();
   }
 
