@@ -40,7 +40,7 @@ export default class SceneInit {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     // this.renderer.shadowMap.enabled = true;
-    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // this.renderer.shadowMap.type = THREE.VSMShadowMap;
 
     const sceneLighting = new SceneLighting(this.scene, this.renderer);
     sceneLighting.initialize();

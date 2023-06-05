@@ -117,7 +117,9 @@ export default class Player extends THREE.Object3D {
   update(delta, npcs) {
     this.npcs = npcs;
     if (this.mesh) {
-      this.movement(delta);
+      if (document.getElementById("ace-editor") === null) {
+        this.movement(delta);
+      }
       this.updateAnimation();
       this.motion(delta);
       this.mixer.update(delta);
@@ -522,22 +524,24 @@ export default class Player extends THREE.Object3D {
     //   return url;
     // });
     var loadingGameScreenDiv = document.getElementById("loading-game-screen");
+    var loadingGameScreenText = document.getElementById(
+      "loading-game-screen-text"
+    );
     loadingManager.onStart = () => {
       loadingGameScreenDiv.style.display = "block";
+      loadingGameScreenText.textContent = "Loading...";
     };
-    // Register a callback for the onProgress event
     loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      const progress = itemsLoaded / itemsTotal;
-      // Update the loading progress (e.g., update a progress bar)
-      // loadingGameScreenDiv.innerHTML = `Loading progress: ${progress}`;
-      console.log(`Loading progress: ${progress}`);
+      const progress = (itemsLoaded / itemsTotal) * 100;
+      const formattedProgress = progress.toFixed(0); // Format the progress to two decimal places
+      loadingGameScreenText.textContent = `Loading... ${formattedProgress}%`;
     };
 
-    // Register a callback for the onLoad event
     loadingManager.onLoad = () => {
-      // All assets have been loaded, hide the loading screen
+      loadingGameScreenText.textContent = "";
       loadingGameScreenDiv.style.display = "none";
     };
+
     this.fbxLoader = new FBXLoader(loadingManager);
 
     const playerModelPath = "/src/assets/models/animations/";
