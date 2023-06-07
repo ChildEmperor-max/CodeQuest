@@ -3,7 +3,6 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
 import QuestManager from "../lib/QuestManager";
 import keys from "../lib/KeyControls";
-import TextManager from "../lib/TextManager";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -62,13 +61,6 @@ export default class Player extends THREE.Object3D {
     this.questListShown = false;
     this.enableNpcDetection = true;
     this.isRunning = false;
-    // this.textManager = new TextManager(this.scene);
-    // this.textManager.initialize({
-    //   text: "<div><h3>E</h3><div>",
-    //   position: position,
-    //   yOffset: 4,
-    //   camera: this.camera,
-    // });
   }
 
   raycasterDebug(from_vec3) {
@@ -119,6 +111,8 @@ export default class Player extends THREE.Object3D {
     if (this.mesh) {
       if (document.getElementById("ace-editor") === null) {
         this.movement(delta);
+      } else {
+        this.direction.set(0, 0, 0);
       }
       this.updateAnimation();
       this.motion(delta);
@@ -161,24 +155,19 @@ export default class Player extends THREE.Object3D {
       var collided = npcDetectionShape.containsPoint(npcPosition);
 
       if (collided) {
-        // this.textManager.updatePosition(npcPosition);
-        if (!npc.isTalking) {
-          // this.textManager.showText(npcPosition);
-        }
+        // if (!npc.isTalking) {
+        //   this.textManager.showText(npcPosition);
+        // }
         if (keys.e.pressed) {
-          // this.textManager.hideText();
           npc.talkToPlayer(true, this.position);
           this.rotateTowards(npc.position);
           this.enableNpcDetection = false;
         }
       } else {
-        // if (this.textManager) {
         if (!this.enableNpcDetection) {
           this.enableNpcDetection = true;
         }
-        // this.textManager.hideText();
         npc.talkToPlayer(false, npc.defaultRotation);
-        // }
       }
     }
   }
@@ -280,6 +269,9 @@ export default class Player extends THREE.Object3D {
         this.currentAction = this.fallingAction;
       }
     }
+    if (keys.space.justPressed) {
+      this.currentAction = this.victoryAction;
+    }
   }
 
   updateAnimation() {
@@ -304,11 +296,6 @@ export default class Player extends THREE.Object3D {
       new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
       new THREE.Vector3(0, -this.rayLength, 0)
     );
-
-    // this.raycastCollidables = new THREE.Raycaster(
-    //   new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
-    //   this.raycastCollideDirection
-    // );
     const near = 0.1;
     const far = 5.0;
 
@@ -598,6 +585,18 @@ export default class Player extends THREE.Object3D {
       this.fallingAction = this.actionClipAnimation(fallingFbx, mixer);
       this.fallingAction.name = "falling";
       this.actions.push(this.fallingAction);
+    });
+
+    this.fbxLoader.load(playerAnimationPath + "Defeat.fbx", (defeatFbx) => {
+      this.defeatAction = this.actionClipAnimation(defeatFbx, mixer);
+      this.defeatAction.name = "defeat";
+      this.actions.push(this.defeatAction);
+    });
+
+    this.fbxLoader.load(playerAnimationPath + "Victory.fbx", (victoryFbx) => {
+      this.victoryAction = this.actionClipAnimation(victoryFbx, mixer);
+      this.victoryAction.name = "victory";
+      this.actions.push(this.victoryAction);
     });
   }
 

@@ -44,8 +44,11 @@ var submitButton = document.createElement("button");
 submitButton.textContent = "Submit";
 submitButton.addEventListener("click", submitQuest);
 
-export default function toggleEditor() {
+export default function toggleEditor(setVisible = true) {
   visible = !visible;
+  if (!setVisible) {
+    visible = false;
+  }
   editorValue = "";
   var editorContainer = document.getElementById("editor");
   root.render(<Editor onChange={handleEditorChange} visible={visible} />);
@@ -53,8 +56,12 @@ export default function toggleEditor() {
     editorContainer.appendChild(submitButton);
     editorContainer.appendChild(cancelButton);
   } else {
-    editorContainer.removeChild(cancelButton);
-    editorContainer.removeChild(submitButton);
+    try {
+      editorContainer.removeChild(cancelButton);
+      editorContainer.removeChild(submitButton);
+    } catch (Exception) {
+      console.log("wew");
+    }
   }
 }
 

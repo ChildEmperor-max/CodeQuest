@@ -46,7 +46,7 @@ export default class SceneInit {
     sceneLighting.initialize();
 
     this.stats = Stats();
-    document.body.appendChild(this.stats.dom);
+    // document.body.appendChild(this.stats.dom);
 
     const cameraControls = new CameraControls(this.renderer);
     cameraControls.initialize();

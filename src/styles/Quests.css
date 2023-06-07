@@ -57,6 +57,14 @@
     border: 2px solid white;
   }
 
+  .quest-list-button {
+    float: right;
+  }
+
+  #Ongoing li:hover .quest-list-button {
+    display: block !important;
+  }
+
   #Ongoing span, #Available span{
     background-color: #3459a971;
     border: 2px solid #243d75b0;

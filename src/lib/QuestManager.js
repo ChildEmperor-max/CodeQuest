@@ -1,7 +1,9 @@
 import toggleEditor from "../Editor";
+import Quests from "../db/quests";
 
 export default class QuestManager {
   constructor() {
+    this.quests = new Quests();
     this.questBox = document.getElementById("questBox");
     this.shown = false;
     this.questMap = new Map();
@@ -9,6 +11,15 @@ export default class QuestManager {
     // Get the quest items in both sections
     this.availableQuests = document.getElementById("Available");
     this.ongoingQuests = document.getElementById("Ongoing");
+
+    this.startQuestButton = document.createElement("button");
+    this.startQuestButton.textContent = "Start";
+    this.startQuestButton.style.display = "none";
+    this.startQuestButton.setAttribute("class", "quest-list-button");
+    this.removeQuestButton = document.createElement("button");
+    this.removeQuestButton.textContent = "Cancel";
+    this.removeQuestButton.style.display = "none";
+    this.removeQuestButton.setAttribute("class", "quest-list-button");
   }
   toggleQuestBox() {
     if (!this.shown) {
@@ -21,10 +32,9 @@ export default class QuestManager {
     this.questBox.classList.toggle("hidden");
   }
 
-  // Function to change the quest list items
   changeQuestList(tabId, questItems) {
     const questList = document.getElementById(tabId);
-    questList.innerHTML = ""; // Clear the existing items
+    questList.innerHTML = "";
 
     questItems.forEach((item) => {
       const li = document.createElement("li");
@@ -41,16 +51,28 @@ export default class QuestManager {
     li.setAttribute("id", questTitle); // Set the questTitle as the id
     pi.setAttribute("data-quest-item", questItem);
 
+    this.quests.createQuest(
+      questTitle,
+      questItem,
+      this.quests.status.inactive,
+      questFrom
+    );
+
     this.availableQuests.appendChild(li);
     this.availableQuests.appendChild(pi);
 
-    this.questMap.set(questTitle, questItem); // Store the questItem in the map with questTitle as the key
+    this.questMap.set(questTitle, questItem);
+
+    this.removeQuestButton.addEventListener("click", () => {
+      this.moveQuestToAvailable(questTitle);
+    });
+    this.startQuestButton.addEventListener("click", toggleEditor.bind(this));
   }
 
   moveQuestToOngoing(questTitle) {
-    const questItem = this.questMap.get(questTitle); // Retrieve the questItem based on the questTitle
+    const questItem = this.questMap.get(questTitle);
+    this.quests.updateQuestStatus(questTitle, this.quests.status.active);
     if (questItem) {
-      // Move the elements or perform any desired actions
       const availableQuestItems = Array.from(this.availableQuests.children);
       const questItemElement = availableQuestItems.find((element) => {
         return element.getAttribute("data-quest-item") === questItem;
@@ -58,51 +80,43 @@ export default class QuestManager {
       const questTitleElement = this.availableQuests.querySelector(
         `li[id="${questTitle}"]`
       );
-      questTitleElement.textContent += `: ${questItem}`;
+      questTitleElement.textContent = `${questTitle}: ${questItem}`;
 
       if (questItemElement) {
         const questTitleElement = this.availableQuests.querySelector(
           `li[id="${questTitle}"]`
         );
+        questTitleElement.appendChild(this.removeQuestButton);
+        questTitleElement.appendChild(this.startQuestButton);
 
         this.ongoingQuests.appendChild(questTitleElement);
         this.ongoingQuests.appendChild(questItemElement);
-        questTitleElement.addEventListener(
-          "click",
-          this.showQuestEditor.bind(this)
-        );
+        // this.startQuestButton.style.display = "block";
+        // this.removeQuestButton.style.display = "block";
       }
     }
   }
 
-  // Function to move a quest from ongoing to available quests
   moveQuestToAvailable(questTitle) {
-    const questItem = this.questMap.get(questTitle); // Retrieve the questItem based on the questTitle
+    toggleEditor(false);
+    const questItem = this.questMap.get(questTitle);
+    this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
     if (questItem) {
-      // Move the elements or perform any desired actions
       const availableQuestItems = Array.from(this.ongoingQuests.children);
       const questItemElement = availableQuestItems.find((element) => {
         return element.getAttribute("data-quest-item") === questItem;
       });
+      const questTitleElement = this.ongoingQuests.querySelector(
+        `li[id="${questTitle}"]`
+      );
+      questTitleElement.textContent = `${questTitle}`;
 
       if (questItemElement) {
-        const questTitleElement = this.ongoingQuests.querySelector(
-          `li[id="${questTitle}"]`
-        );
-
         this.availableQuests.appendChild(questTitleElement);
         this.availableQuests.appendChild(questItemElement);
-        questTitleElement.addEventListener(
-          "click",
-          this.showQuestEditor.bind(this)
-        );
+        // this.startQuestButton.style.display = "none";
+        // this.removeQuestButton.style.display = "none";
       }
     }
   }
-
-  showQuestEditor() {
-    toggleEditor();
-  }
-
-  startQuest() {}
 }
