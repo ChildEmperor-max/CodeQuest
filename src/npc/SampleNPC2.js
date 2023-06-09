@@ -11,7 +11,7 @@ export default class SampleNPC2 extends NPCLoader {
     camera,
     player,
     canvas,
-    rotation = Math.PI / 2,
+    rotation = new THREE.Vector3(200, 0, 0),
     modelPath = this.path,
     npcName = "SampleNPC2",
     scale = 0.01
@@ -26,15 +26,15 @@ export default class SampleNPC2 extends NPCLoader {
       npcName,
       scale
     );
-    this.createDialogBox(
-      [
-        "Hey! Do you know what are the variables? By variables, i mean, the containers that stores data values.",
-        "If you know what I am talking about, this is easy for you!",
-        'How would you store a string "Hello" in a variable? ',
-      ],
-      "Variables",
-      true
-    );
-    // this.createDialogBox(["1", "2", "3"], "Variables", true);
+    // this.createDialogBox(
+    //   [
+    //     "Hey! Do you know what are the variables? By variables, i mean, the containers that stores data values.",
+    //     "If you know what I am talking about, this is easy for you!",
+    //     'How would you store a string "Hello" in a variable? ',
+    //   ],
+    //   "Variables",
+    //   true
+    // );
+    this.createDialogBox(["1", "2", "3"], "Variables", true);
   }
 }

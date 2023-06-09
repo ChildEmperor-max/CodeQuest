@@ -195,40 +195,99 @@ export default class Player extends THREE.Object3D {
     }
   }
 
-  collision() {
-    var position = this.getPosition();
-    var obstacles = this.obstacles;
-    var raycaster = this.caster;
-    var collision = {
-      x: false,
-      z: false,
-    };
-    var collisionDirection = {
-      x: 0,
-      z: 0,
-    };
+  boxCollision(box_to_collide, newPosition) {
+    if (this.playerbox.intersectsBox(box_to_collide)) {
+      var deltaX = this.playerbox.min.x - box_to_collide.min.x;
+      var deltaZ = this.playerbox.max.z - box_to_collide.max.z;
+      if (deltaX < 0) {
+        if (this.direction.x > 0) {
+          newPosition.x = this.mesh.position.x;
+        }
+      } else if (deltaX > 0) {
+        if (this.direction.x < 0) {
+          newPosition.x = this.mesh.position.x;
+        }
+      }
 
-    for (var i = 0; i < 8; i++) {
-      raycaster.set(
-        new THREE.Vector3(position.x, position.y + 3, position.z),
-        this.collisionRays[i]
-      );
-      var intersections = raycaster.intersectObjects(obstacles);
-      if (intersections.length > 0 && intersections[0].distance <= 2) {
-        collision.x = true;
-        collisionDirection = this.collisionRays[i];
-        break;
+      if (deltaZ > 0) {
+        if (this.direction.z < 0) {
+          newPosition.z = this.mesh.position.z;
+        }
+      } else if (deltaZ < 0) {
+        if (this.direction.z > 0) {
+          newPosition.z = this.mesh.position.z;
+        }
       }
     }
-
-    return [collision, collisionDirection];
   }
+
+  movement(delta) {
+    const cameraDirection = new THREE.Vector3();
+    this.camera.getWorldDirection(cameraDirection);
+
+    // Remove y component to only move along x and z axis
+    cameraDirection.y = 0;
+    cameraDirection.normalize();
+    const perpendicularCamera = new THREE.Vector3(
+      -cameraDirection.z,
+      0,
+      cameraDirection.x
+    );
+
+    this.direction.set(0, 0, 0); // Reset the direction vector
+
+    if (keys.w.pressed) {
+      this.direction.addScaledVector(cameraDirection, 1);
+    }
+    if (keys.s.pressed) {
+      this.direction.addScaledVector(cameraDirection, -1);
+    }
+    if (keys.a.pressed) {
+      this.direction.addScaledVector(perpendicularCamera, -1);
+    }
+    if (keys.d.pressed) {
+      this.direction.addScaledVector(perpendicularCamera, 1);
+    }
+    if (keys.shift.justPressed) {
+      this.running = true;
+      this.movementSpeed = this.runningSpeed;
+    } else {
+      this.running = false;
+      this.movementSpeed = this.walkingSpeed;
+    }
+    // if (keys.shift.pressed) {
+    //     this.running = true;
+    //     this.movementSpeed = this.runningSpeed;
+    // } else {
+    //   this.running = false;
+    //   this.movementSpeed = this.walkingSpeed;
+    // }
+
+    this.updatePositionToGround(delta);
+    this.direction.normalize();
+  }
+
   motion(delta) {
     if (this.direction.x !== 0 || this.direction.z !== 0) {
       const movement = this.direction
         .clone()
         .multiplyScalar(this.movementSpeed * delta);
-      this.mesh.position.add(movement);
+      const newPosition = this.mesh.position.clone().add(movement);
+
+      this.playerbox = new THREE.Box3().setFromObject(this.collisionBox);
+      if (this.playerbox) {
+        for (let i = 0; i < this.npcs.length; i++) {
+          if (this.npcs[i].npcbox) {
+            this.boxCollision(this.npcs[i].npcbox, newPosition);
+          }
+        }
+      }
+      this.obstacles.forEach((collisionObject) => {
+        const boundingBox = new THREE.Box3().setFromObject(collisionObject);
+        this.boxCollision(boundingBox, newPosition);
+      });
+
+      this.mesh.position.copy(newPosition);
       const angle = Math.atan2(this.direction.x, this.direction.z);
 
       // const rotateModelToAngle = (targetAngle) => {
@@ -291,40 +350,10 @@ export default class Player extends THREE.Object3D {
   }
 
   findIntersectionHeight(from_vec3, object_to_intersect) {
-    const xzOffset = 0.01;
     const raycastGround = new THREE.Raycaster(
       new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
       new THREE.Vector3(0, -this.rayLength, 0)
     );
-    const near = 0.1;
-    const far = 5.0;
-
-    const front = new THREE.Raycaster(
-      new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
-      new THREE.Vector3(0, -this.rayLength, -xzOffset)
-    );
-    front.near = near;
-    front.far = far;
-    const back = new THREE.Raycaster(
-      new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
-      new THREE.Vector3(0, -this.rayLength, xzOffset)
-    );
-    back.near = near;
-    back.far = far;
-    const left = new THREE.Raycaster(
-      new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
-      new THREE.Vector3(-xzOffset, -this.rayLength, 0)
-    );
-    left.near = near;
-    left.far = far;
-    const right = new THREE.Raycaster(
-      new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
-      new THREE.Vector3(xzOffset, -this.rayLength, 0)
-    );
-    right.near = near;
-    right.far = far;
-
-    this.raycasters = [front, back, left, right];
 
     let intersectionHeight = null;
     const intersectsGround = raycastGround.intersectObject(object_to_intersect);
@@ -332,42 +361,6 @@ export default class Player extends THREE.Object3D {
       const intersectedObject = intersectsGround[0].object;
       intersectionHeight = intersectsGround[0].point.y;
     }
-
-    this.obstacles.forEach((collisionObject) => {
-      this.raycasters.forEach((raycast) => {
-        const intersectingCollidables =
-          raycast.intersectObject(collisionObject);
-        if (intersectingCollidables.length > 0) {
-          // intersectionHeight = intersectingCollidables.point.y;
-          const boundingBox = new THREE.Box3().setFromObject(collisionObject);
-          var deltaX = this.playerbox.max.x - boundingBox.min.x;
-          var deltaZ = this.playerbox.max.z - boundingBox.min.z;
-          var deltaBackZ = this.playerbox.min.z - boundingBox.max.z;
-          if (deltaX < deltaZ) {
-            if (this.direction.x > 0) {
-              // when going right
-              this.direction.x = 0;
-            }
-          } else if (-deltaX < deltaZ) {
-            if (this.direction.x < 0) {
-              // when going left
-              this.direction.x = 0;
-            }
-          }
-          if (deltaBackZ > -deltaZ) {
-            if (this.direction.z < 0) {
-              // when going front
-              this.direction.z = 0;
-            }
-          } else if (-deltaBackZ > deltaZ) {
-            // when going back
-            if (this.direction.z > 0) {
-              this.direction.z = 0;
-            }
-          }
-        }
-      });
-    });
 
     return intersectionHeight;
   }
@@ -413,86 +406,6 @@ export default class Player extends THREE.Object3D {
 
   getPosition() {
     return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
-  }
-
-  movement(delta) {
-    const cameraDirection = new THREE.Vector3();
-    this.camera.getWorldDirection(cameraDirection);
-
-    // Remove y component to only move along x and z axis
-    cameraDirection.y = 0;
-    cameraDirection.normalize();
-    const perpendicularCamera = new THREE.Vector3(
-      -cameraDirection.z,
-      0,
-      cameraDirection.x
-    );
-
-    this.direction.set(0, 0, 0); // Reset the direction vector
-
-    if (keys.w.pressed) {
-      this.direction.addScaledVector(cameraDirection, 1);
-    }
-    if (keys.s.pressed) {
-      this.direction.addScaledVector(cameraDirection, -1);
-    }
-    if (keys.a.pressed) {
-      this.direction.addScaledVector(perpendicularCamera, -1);
-    }
-    if (keys.d.pressed) {
-      this.direction.addScaledVector(perpendicularCamera, 1);
-    }
-    if (keys.shift.justPressed) {
-      this.running = true;
-      this.movementSpeed = this.runningSpeed;
-    } else {
-      this.running = false;
-      this.movementSpeed = this.walkingSpeed;
-    }
-    // if (keys.shift.pressed) {
-    //     this.running = true;
-    //     this.movementSpeed = this.runningSpeed;
-    // } else {
-    //   this.running = false;
-    //   this.movementSpeed = this.walkingSpeed;
-    // }
-    this.playerbox = new THREE.Box3().setFromObject(this.collisionBox);
-    if (this.playerbox) {
-      for (let i = 0; i < this.npcs.length; i++) {
-        if (this.npcs[i].npcbox) {
-          if (this.playerbox.intersectsBox(this.npcs[i].npcbox)) {
-            var deltaX = this.playerbox.max.x - this.npcs[i].npcbox.min.x;
-            var deltaZ = this.playerbox.max.z - this.npcs[i].npcbox.min.z;
-            var deltaBackZ = this.playerbox.min.z - this.npcs[i].npcbox.max.z;
-            if (deltaX < deltaZ) {
-              if (this.direction.x > 0) {
-                // when going right
-                this.direction.x = 0;
-              }
-            } else if (-deltaX < deltaZ) {
-              if (this.direction.x < 0) {
-                // when going left
-                this.direction.x = 0;
-              }
-            }
-            if (deltaBackZ > -deltaZ) {
-              if (this.direction.z < 0) {
-                // when going front
-                this.direction.z = 0;
-              }
-            } else if (-deltaBackZ > deltaZ) {
-              // when going back
-              if (this.direction.z > 0) {
-                this.direction.z = 0;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    this.updatePositionToGround(delta);
-    this.direction.normalize(); // Normalize the direction vector to ensure consistent speed
   }
 
   loadModel(scene) {

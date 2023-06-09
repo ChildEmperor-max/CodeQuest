@@ -16,8 +16,15 @@ export function LoadWorld() {
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
-        const npcSpawnPoint2 = new THREE.Vector3(-11, 0, -140);
-        const npcSpawnPoints = [npcSpawnPoint1, npcSpawnPoint2];
+        const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
+        const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
+        const npcSpawnPoint4 = new THREE.Vector3(3, 0, -145);
+        const npcSpawnPoints = [
+          npcSpawnPoint1,
+          npcSpawnPoint2,
+          npcSpawnPoint3,
+          npcSpawnPoint4,
+        ];
 
         terrainMesh.traverse(function (child) {
           if (child instanceof THREE.Mesh) {

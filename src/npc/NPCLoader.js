@@ -13,8 +13,7 @@ export default class NPCLoader extends THREE.Object3D {
     this.actions = [];
     this.stateMachine = new StateMachine(new IdleState(this));
     // Set the default rotation angle (in radians)
-    this.defaultRotationAngle = -Math.PI / 2; // Example: 90 degrees
-    this.defaultRotation = new THREE.Euler(0, this.defaultRotationAngle, 0);
+    // this.defaultRotationAngle = Math.PI / 2; // Example: 90 degrees
     this.questManager = new QuestManager();
     this.dialogContainer = document.getElementById("npc-dialog");
   }
@@ -38,6 +37,7 @@ export default class NPCLoader extends THREE.Object3D {
     this.loadModel(modelPath, npcName, modelTexturePath, scale);
     this.stateMachine.currentState.enter();
     this.defaultRotationAngle = rotation;
+    this.defaultRotation = rotation;
     this.transitionedToIdle = false;
     this.transitionedToInteracting = false;
     this.isTalking = false;
@@ -399,7 +399,7 @@ export default class NPCLoader extends THREE.Object3D {
             child.receiveShadow = true;
           }
         });
-        fbx.rotation.copy(this.defaultRotation);
+        // fbx.rotation.y = Math.PI / 2;
         fbx.name = npcName;
         this.scene.add(fbx);
         this.mesh = fbx;
