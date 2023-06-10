@@ -1,0 +1,24 @@
+.ui-container {
+    position: fixed;
+}
+
+.right-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+}
+
+.left-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+}
+
+#quest-button,
+#leaderboard-button,
+#profile-button,
+#settings-button {
+  margin-right: 10px; /* Adjust the margin as needed */
+}

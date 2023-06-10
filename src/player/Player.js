@@ -132,7 +132,6 @@ export default class Player extends THREE.Object3D {
   }
   updateQuestVisibility() {
     if (keys.q.justPressed) {
-      // console.log("quests: ", this.questsList);
       if (!this.questListShown) {
         this.questManager.toggleQuestBox();
         this.questListShown = true;

@@ -145,12 +145,20 @@ export default class NPCLoader extends THREE.Object3D {
     nextButton.textContent = "Next";
     nextButton.addEventListener("click", this.showNextDialog.bind(this));
 
+    const skipButton = document.createElement("button");
+    skipButton.classList.add("npc-dialog-button");
+    skipButton.style.display = "none";
+    skipButton.textContent = "Skip";
+    // skipButton.addEventListener("click", this.showNextDialog.bind(this));
+
     this.nextButton = nextButton;
     this.prevButton = prevButton;
+    this.skipButton = skipButton;
 
     // Append the elements to the dialog container
     this.dialogContainer.appendChild(npcNameElement);
     this.dialogContainer.appendChild(dialogTextElement);
+    this.dialogContainer.appendChild(skipButton);
     this.dialogContainer.appendChild(nextButton);
     this.dialogContainer.appendChild(prevButton);
     this.dialogContainer.style.display = "none";
@@ -239,6 +247,7 @@ export default class NPCLoader extends THREE.Object3D {
       this.prevButton.style.display = "block";
     }
     if (this.currentDialogIndex === this.dialogTexts.length - 1) {
+      // IF ON LAST PAGE OF DIALOG
       if (this.hasQuest) {
         boundUpdateEventButton(
           ["I'll do it.", "acceptQuest"],
@@ -268,11 +277,13 @@ export default class NPCLoader extends THREE.Object3D {
       this.nextButton.textContent = "Next";
       this.nextButton.removeEventListener("click", this.acceptQuestHandler);
       this.nextButton.removeEventListener("click", this.doneTalkingHandler);
-      this.nextButton.addEventListener("click", this.showNextDialogHandler);
+      // this.nextButton.addEventListener("click", this.showNextDialogHandler);
+      this.nextButton.removeEventListener("click", this.showNextDialogHandler);
       this.prevButton.textContent = "back";
       // this.prevButton.removeEventListener("click", this.rejectQuestHandler);
       // this.prevButton.addEventListener("click", this.showPreviousDialogHandler);
     }
+
     const typingAnimation = setInterval(() => {
       if (currentIndex >= dialogText.length) {
         clearInterval(typingAnimation);
@@ -281,16 +292,39 @@ export default class NPCLoader extends THREE.Object3D {
         dialogTextElement.textContent += dialogText[currentIndex];
         currentIndex++;
         this.isFinishedTyping = false;
+        this.nextButton.removeEventListener(
+          "click",
+          this.showNextDialogHandler
+        );
       }
       if (!this.isFinishedTyping) {
         this.nextButton.style.visibility = "hidden";
+        // this.nextButton.textContent = "Skip";
+        // this.nextButton.removeEventListener(
+        //   "click",
+        //   this.showNextDialogHandler
+        // );
+        // this.nextButton.addEventListener("click", skipTypingAnimation);
+        this.skipButton.style.display = "block";
+        this.skipButton.addEventListener("click", skipTypingAnimation);
+
         this.prevButton.style.visibility = "hidden";
       } else {
+        this.skipButton.style.display = "none";
         this.nextButton.style.visibility = "visible";
         this.prevButton.style.visibility = "visible";
       }
     }, typingInterval);
     this.typingAnimation = typingAnimation;
+
+    const skipTypingAnimation = () => {
+      clearInterval(typingAnimation);
+      dialogTextElement.textContent = dialogText;
+      this.isFinishedTyping = true;
+      this.skipButton.style.display = "none";
+      this.nextButton.style.visibility = "visible";
+      this.prevButton.style.visibility = "visible";
+    };
   }
 
   acceptQuest() {

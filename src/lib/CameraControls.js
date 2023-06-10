@@ -15,8 +15,8 @@ export default class CameraControls {
       1000
     );
     // Modify the render distance
-    this.camera.near = 1; // Adjust the near clipping plane distance
-    this.camera.far = 200; // Adjust the far clipping plane distance
+    // this.camera.near = 1; // Adjust the near clipping plane distance
+    // this.camera.far = 200; // Adjust the far clipping plane distance
 
     this.camera.position.set(0, 10, 10);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);

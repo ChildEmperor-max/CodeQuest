@@ -12,6 +12,12 @@ export default class QuestManager {
     this.availableQuests = document.getElementById("Available");
     this.ongoingQuests = document.getElementById("Ongoing");
 
+    this.questButton = document.getElementById("quest-button");
+    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
+
+    this.questButton = document.getElementById("close-quest-button");
+    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
+
     this.startQuestButton = document.createElement("button");
     this.startQuestButton.textContent = "Start";
     this.startQuestButton.style.display = "none";
@@ -22,14 +28,12 @@ export default class QuestManager {
     this.removeQuestButton.setAttribute("class", "quest-list-button");
   }
   toggleQuestBox() {
-    if (!this.shown) {
-      this.questBox.style.display = "block";
-      this.shown = true;
-    } else {
-      this.questBox.style.display = "none";
-      this.shown = false;
-    }
     this.questBox.classList.toggle("hidden");
+    if (this.questBox.classList.contains("hidden")) {
+      this.questBox.style.display = "none";
+    } else {
+      this.questBox.style.display = "block";
+    }
   }
 
   changeQuestList(tabId, questItems) {

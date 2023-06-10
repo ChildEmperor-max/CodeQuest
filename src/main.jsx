@@ -8,6 +8,7 @@ import "./styles/DialogBox.css";
 import "./styles/Editor.css";
 import "./styles/NPCName.css";
 import "./styles/LoadingScreen.css";
+import "./styles/Interface.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

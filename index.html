@@ -4,15 +4,31 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" ref="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
     <title>CodeQuest</title>
   </head>
   <body>
+    <div class="ui-container">
+      <div class="right-container">
+        <button id="quest-button">Quests</button>
+        <button id="leaderboard-button">Leaderboard</button>
+        <button id="settings-button">Settings</button>
+      </div>
+      <div class="left-container">
+        <button id="profile-button">Profile</button>
+      </div>
+    </div>
     <div id="root"></div>
     <div id="loading-game-screen"><p id="loading-game-screen-text"></p></div>
     <div id="editor" class="editor-container">
     </div>
-    <div id="action-hint" class="interact-popup-text" style="display: none;"></div>
+    <div id="action-hint" class="interact-popup-text"></div>
     <div id="questBox" class="hidden" style="display: none;">
+      <div class="top-quest-bar">
+        <div id="close-quest-button"><i class="fas fa-window-close" style="font-size: 25px;"></i></div>
+      </div>
       <div id="OngoingQuests">
         <h3>Ongoing quests</h3>
         <ul id="Ongoing">
