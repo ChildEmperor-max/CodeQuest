@@ -84,6 +84,8 @@ export default class SceneInit {
           this.canvasId
         );
         this.npcs.push(this.sampleNPC2);
+
+        document.getElementById("interface-container").style.display = "block";
       })
       .catch((error) => {
         console.log("error loading terrain mesh: ", error);

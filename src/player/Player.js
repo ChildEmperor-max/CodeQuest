@@ -61,6 +61,10 @@ export default class Player extends THREE.Object3D {
     this.questListShown = false;
     this.enableNpcDetection = true;
     this.isRunning = false;
+    this.runningIcon = document.getElementById("sprint-icon");
+    this.runningIcon.addEventListener("click", function () {
+      keys.shift.justPressed = !keys.shift.justPressed;
+    });
   }
 
   raycasterDebug(from_vec3) {
@@ -248,19 +252,10 @@ export default class Player extends THREE.Object3D {
       this.direction.addScaledVector(perpendicularCamera, 1);
     }
     if (keys.shift.justPressed) {
-      this.running = true;
-      this.movementSpeed = this.runningSpeed;
+      this.runningMode(true);
     } else {
-      this.running = false;
-      this.movementSpeed = this.walkingSpeed;
+      this.runningMode(false);
     }
-    // if (keys.shift.pressed) {
-    //     this.running = true;
-    //     this.movementSpeed = this.runningSpeed;
-    // } else {
-    //   this.running = false;
-    //   this.movementSpeed = this.walkingSpeed;
-    // }
 
     this.updatePositionToGround(delta);
     this.direction.normalize();
@@ -316,7 +311,15 @@ export default class Player extends THREE.Object3D {
           }
         }
       }
+      if (this.running) {
+        this.runningIcon.classList.add("sprint-triggered");
+      } else {
+        this.runningIcon.classList.remove("sprint-triggered");
+        this.runningIcon.classList.replace("sprint-disabled", "sprint-enabled");
+      }
     } else {
+      this.runningIcon.classList.replace("sprint-enabled", "sprint-disabled");
+      this.runningIcon.classList.remove("sprint-triggered");
       keys.shift.justPressed = false;
       if (this.idleAction) {
         this.currentAction = this.idleAction;
@@ -329,6 +332,15 @@ export default class Player extends THREE.Object3D {
     }
     if (keys.space.justPressed) {
       this.currentAction = this.victoryAction;
+    }
+  }
+
+  runningMode(isRunning) {
+    this.running = isRunning;
+    if (this.running) {
+      this.movementSpeed = this.runningSpeed;
+    } else {
+      this.movementSpeed = this.walkingSpeed;
     }
   }
 

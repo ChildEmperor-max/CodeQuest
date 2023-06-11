@@ -20,5 +20,41 @@
 #leaderboard-button,
 #profile-button,
 #settings-button {
-  margin-right: 10px; /* Adjust the margin as needed */
+    margin-right: 10px;
+}
+
+.sprint-image-container {
+    border-radius: 50%;
+    position: fixed;
+    display: inline-block;
+    overflow: hidden;
+    width: 110px;
+    height: 110px;
+    margin: 50px;
+    bottom: 0;
+    right: 0;
+}
+
+.sprint-disabled {
+  opacity: 0.5;
+}
+
+.sprint-enabled {
+  opacity: 1.0;
+}
+
+.sprint-triggered {
+  background-color: white;
+}
+
+.sprint-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 1.0;
+  }
+
+.sprint-image-container:hover {
+    cursor: pointer;
+    border: 2px solid white;
 }

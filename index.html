@@ -10,7 +10,7 @@
     <title>CodeQuest</title>
   </head>
   <body>
-    <div class="ui-container">
+    <div class="ui-container" id="interface-container" style="display: none;">
       <div class="right-container">
         <button id="quest-button">Quests</button>
         <button id="leaderboard-button">Leaderboard</button>
@@ -19,12 +19,17 @@
       <div class="left-container">
         <button id="profile-button">Profile</button>
       </div>
+      <a>
+        <div class="sprint-image-container sprint-disabled" id="sprint-icon">
+          <img src='src/assets/icons/circle-running-icon-no-bg.png' alt="Description of the image" />
+        </div>
+      </a>      
     </div>
     <div id="root"></div>
     <div id="loading-game-screen"><p id="loading-game-screen-text"></p></div>
     <div id="editor" class="editor-container">
     </div>
-    <div id="action-hint" class="interact-popup-text"></div>
+    <div id="action-hint" class="interact-popup-text" style="display: none;"></div>
     <div id="questBox" class="hidden" style="display: none;">
       <div class="top-quest-bar">
         <div id="close-quest-button"><i class="fas fa-window-close" style="font-size: 25px;"></i></div>
