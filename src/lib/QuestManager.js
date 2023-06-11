@@ -26,6 +26,13 @@ export default class QuestManager {
     this.removeQuestButton.textContent = "Cancel";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
+
+    this.popupContainer = document.getElementById("popupContainer");
+    this.closePopupButton = document.getElementById("closeButton");
+
+    this.closePopupButton.addEventListener("click", () => {
+      this.popupContainer.style.display = "none";
+    });
   }
   toggleQuestBox() {
     this.questBox.classList.toggle("hidden");
@@ -33,6 +40,11 @@ export default class QuestManager {
       this.questBox.style.display = "none";
     } else {
       this.questBox.style.display = "block";
+      this.popupContainer.classList.add("fadeOut");
+      setTimeout(() => {
+        this.popupContainer.style.display = "none";
+        this.popupContainer.classList.remove("fadeOut");
+      }, 800);
     }
   }
 
@@ -74,6 +86,8 @@ export default class QuestManager {
   }
 
   moveQuestToOngoing(questTitle) {
+    this.popupContainer.style.display = "block";
+    document.getElementById("quest-item").textContent = questTitle;
     const questItem = this.questMap.get(questTitle);
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
     if (questItem) {
@@ -90,8 +104,10 @@ export default class QuestManager {
         const questTitleElement = this.availableQuests.querySelector(
           `li[id="${questTitle}"]`
         );
-        questTitleElement.appendChild(this.removeQuestButton);
+        var br = document.createElement("br");
+        questTitleElement.appendChild(br);
         questTitleElement.appendChild(this.startQuestButton);
+        questTitleElement.appendChild(this.removeQuestButton);
 
         this.ongoingQuests.appendChild(questTitleElement);
         this.ongoingQuests.appendChild(questItemElement);

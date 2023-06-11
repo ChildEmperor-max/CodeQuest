@@ -12,6 +12,7 @@
     padding: 10px;
     -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
     backdrop-filter: blur(5px); /* Apply the blur effect */
+    z-index: 2;
   }
 
   .top-quest-bar {
@@ -74,11 +75,11 @@
   }
 
   .quest-list-button {
-    float: right;
+    /* float: right; */
   }
 
   #Ongoing li:hover .quest-list-button {
-    display: block !important;
+    display: inline-block !important;
   }
 
   #Ongoing span, #Available span{

@@ -1,5 +1,6 @@
 .ui-container {
     position: fixed;
+    z-index: 2;
 }
 
 .right-container {
@@ -57,4 +58,47 @@
 .sprint-image-container:hover {
     cursor: pointer;
     border: 2px solid white;
+}
+
+#popupContainer {
+  display: none;
+  position: fixed;
+  text-align: center;
+  top: 30%;
+  left: 50%;
+  width: 45%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 3;
+  animation: slideIn 0.8s ease-in-out;
+}
+
+.fadeOut {
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+
+#quest-item {
+  font-size: 40px;
+  margin: 0;
+}
+
+/* #popupContent {
+  animation: slideIn 0.8s ease-in-out;
+  z-index: 3;
+} */
+
+@keyframes slideIn {
+  0% {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  100% {
+    /* transform: translate(-50%, -50%); */
+    opacity: 1;
+  }
 }
