@@ -57,7 +57,6 @@ export default class NPCLoader extends THREE.Object3D {
       this.mixer.update(delta);
       this.stateMachine.update();
       TWEEN.update();
-      // Set the position of the collision box
       this.collisionBox.position.set(
         this.position.x,
         this.position.y,
@@ -111,8 +110,6 @@ export default class NPCLoader extends THREE.Object3D {
     }
   }
 
-  createQuest(instruction, goal) {}
-
   createDialogBox(dialogTexts, questTitle = undefined, hasQuest = false) {
     this.hasQuest = hasQuest;
     if (hasQuest) {
@@ -149,7 +146,6 @@ export default class NPCLoader extends THREE.Object3D {
     skipButton.classList.add("npc-dialog-button");
     skipButton.style.display = "none";
     skipButton.textContent = "Skip";
-    // skipButton.addEventListener("click", this.showNextDialog.bind(this));
 
     this.nextButton = nextButton;
     this.prevButton = prevButton;

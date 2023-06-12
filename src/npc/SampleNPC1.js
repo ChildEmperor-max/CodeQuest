@@ -36,34 +36,4 @@ export default class SampleNPC1 extends NPCLoader {
       true
     );
   }
-  // setDialog(dialogTexts) {
-  //   super.setDialog(dialogTexts);
-  // }
 }
-
-// function loadAnimation(mixer) {
-//   this.fbxLoader.load("/src/assets/player/Idle.fbx", (idleFbx) => {
-//     this.idleAction = this.actionClipAnimation(idleFbx, mixer);
-//     this.idleAction.name = "idle";
-//     this.actions.push(this.idleAction);
-//   });
-
-//   this.fbxLoader.load("/src/assets/player/Walking.fbx", (walkingFbx) => {
-//     this.walkingAction = this.actionClipAnimation(walkingFbx, mixer);
-//     this.walkingAction.name = "walking";
-//     this.actions.push(this.walkingAction);
-//   });
-
-//   this.fbxLoader.load("/src/assets/player/Running.fbx", (runningFbx) => {
-//     this.runningAction = this.actionClipAnimation(runningFbx, mixer);
-//     this.runningAction.name = "running";
-//     this.actions.push(this.runningAction);
-//   });
-// }
-
-// function actionClipAnimation(fbx, mixer) {
-//   fbx.scale.set(0.01, 0.01, 0.01);
-//   const animationClip = fbx.animations[0];
-//   const animationAction = mixer.clipAction(animationClip);
-//   return animationAction;
-// }

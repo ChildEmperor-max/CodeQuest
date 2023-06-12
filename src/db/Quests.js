@@ -9,6 +9,19 @@ class Quests {
     };
   }
 
+  fetchQuest() {
+    fetch("http://localhost:3000/quests")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Assuming the response is an array of quest objects
+        // Update the UI with the retrieved data
+        // ...
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   createQuest(title, description, status, from) {
     this.quests[title] = {
       title: title,

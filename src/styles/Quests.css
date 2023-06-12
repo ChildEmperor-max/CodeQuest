@@ -44,12 +44,12 @@
     padding: 10px;
     color: white;
   }
-  #OngoingQuests, #AvailableQuests {
+  #OngoingQuests, #AvailableQuests, #StoryQuest {
     /* background-color: #3459a971; */
     width: 100%;
     /* margin: 10px; */
   }
-  #OngoingQuests h3, #AvailableQuests h3 {
+  #OngoingQuests h3, #AvailableQuests h3, #StoryQuest h3 {
     background-color: #3459a971;
     padding: 10px;
     font-weight: 600;
@@ -58,7 +58,7 @@
     color: white;
   }
 
-  #Ongoing li, #Available li{
+  #Ongoing li, #Available li, #StoryQuestList li{
     /* list-style-type: none; */
     background-color: #3459a971;
     margin-top: 5px;
@@ -88,10 +88,10 @@
   }
 
   #Ongoing li:hover + span,
-#Ongoing li:hover ~ span {
-  background-color: #3459a971;
-  border-top: 2px solid white;
-}
+  #Ongoing li:hover ~ span {
+    background-color: #3459a971;
+    border-top: 2px solid white;
+  }
 
   .content.active {
     display: block;

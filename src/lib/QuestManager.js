@@ -35,6 +35,7 @@ export default class QuestManager {
     });
   }
   toggleQuestBox() {
+    this.quests.fetchQuest();
     this.questBox.classList.toggle("hidden");
     if (this.questBox.classList.contains("hidden")) {
       this.questBox.style.display = "none";
