@@ -13,7 +13,7 @@ const pool = new Pool({
   user: "postgres",
   host: "localhost",
   database: "CodeQuest",
-  password: "Myp@$$w012d",
+  password: "admin",
   port: 5432, // default PostgreSQL port
 });
 

@@ -20,7 +20,8 @@
 #quest-button,
 #leaderboard-button,
 #profile-button,
-#settings-button {
+#settings-button,
+#achievement-button {
     margin-right: 10px;
 }
 
@@ -29,8 +30,8 @@
     position: fixed;
     display: inline-block;
     overflow: hidden;
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
     margin: 50px;
     bottom: 0;
     right: 0;
