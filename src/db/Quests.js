@@ -1,3 +1,5 @@
+import { addQuestToTable, fetchQuestTable } from "./HandleTable";
+
 // Separate script acting as a temporary placeholder for a database
 class Quests {
   constructor() {
@@ -10,25 +12,18 @@ class Quests {
   }
 
   fetchQuest() {
-    fetch("http://127.0.0.1:3000/quests")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data); // Assuming the response is an array of quest objects
-        // Update the UI with the retrieved data
-        // ...
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    fetchQuestTable();
   }
 
-  createQuest(title, description, status, from) {
+  createQuest(title, description, status, from, type) {
     this.quests[title] = {
       title: title,
       description: description,
       status: status,
       from: from,
+      type: type,
     };
+    addQuestToTable(from, title, description, status, type);
   }
 
   readQuest(title) {

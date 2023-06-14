@@ -60,25 +60,26 @@ export default class QuestManager {
     });
   }
 
-  addQuestItem(questItem, questTitle, questFrom) {
+  addQuestItem(questDesc, questTitle, questFrom, questType) {
     const li = document.createElement("li");
     const pi = document.createElement("span");
     li.textContent = `${questTitle}`;
     pi.textContent = `${questFrom}`;
     li.setAttribute("id", questTitle); // Set the questTitle as the id
-    pi.setAttribute("data-quest-item", questItem);
+    pi.setAttribute("data-quest-item", questDesc);
 
     this.quests.createQuest(
       questTitle,
-      questItem,
+      questDesc,
       this.quests.status.inactive,
-      questFrom
+      questFrom,
+      questType
     );
 
     this.availableQuests.appendChild(li);
     this.availableQuests.appendChild(pi);
 
-    this.questMap.set(questTitle, questItem);
+    this.questMap.set(questTitle, questDesc);
 
     this.removeQuestButton.addEventListener("click", () => {
       this.moveQuestToAvailable(questTitle);

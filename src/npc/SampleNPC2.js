@@ -33,7 +33,8 @@ export default class SampleNPC2 extends NPCLoader {
         'How would you store a string "Hello" in a variable? ',
       ],
       "Variables",
-      true
+      true,
+      "side"
     );
     // this.createDialogBox(["1", "2", "3"], "Variables", true);
   }

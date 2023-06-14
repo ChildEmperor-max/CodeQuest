@@ -4,6 +4,7 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import QuestManager from "../lib/QuestManager";
+import { addNpcToTable, addDialogToTable } from "../db/HandleTable";
 
 export default class NPCLoader extends THREE.Object3D {
   constructor(scene) {
@@ -50,6 +51,8 @@ export default class NPCLoader extends THREE.Object3D {
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
     );
     this.scene.add(this.collisionBox); // Add the collision box to the scene
+
+    addNpcToTable(npcName);
   }
 
   update(delta) {
@@ -110,13 +113,24 @@ export default class NPCLoader extends THREE.Object3D {
     }
   }
 
-  createDialogBox(dialogTexts, questTitle = undefined, hasQuest = false) {
+  createDialogBox(
+    dialogTexts,
+    questTitle = undefined,
+    hasQuest = false,
+    questType
+  ) {
     this.hasQuest = hasQuest;
     if (hasQuest) {
       this.quest = dialogTexts[dialogTexts.length - 1];
       this.questTitle = questTitle;
-      this.questManager.addQuestItem(this.quest, questTitle, this.npcName);
+      this.questManager.addQuestItem(
+        this.quest,
+        questTitle,
+        this.npcName,
+        questType
+      );
     }
+    addDialogToTable(this.npcName, dialogTexts, questTitle);
 
     // Create the dialog container
     this.dialogContainer = document.createElement("div");

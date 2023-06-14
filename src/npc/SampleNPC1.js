@@ -33,7 +33,8 @@ export default class SampleNPC1 extends NPCLoader {
         'Using this line of code "System.out.println()", how would you output the word "Hello World"? ',
       ],
       "Hello World!",
-      true
+      true,
+      "side"
     );
   }
 }
