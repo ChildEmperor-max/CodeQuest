@@ -1,4 +1,8 @@
-import { addQuestToTable, fetchQuestTable } from "./HandleTable";
+import {
+  addQuestToTable,
+  fetchQuestTable,
+  fetchDialogTable,
+} from "./HandleTable";
 
 // Separate script acting as a temporary placeholder for a database
 class Quests {
@@ -12,7 +16,7 @@ class Quests {
   }
 
   fetchQuest() {
-    fetchQuestTable();
+    fetchDialogTable();
   }
 
   createQuest(title, description, status, from, type) {

@@ -51,8 +51,6 @@ export default class NPCLoader extends THREE.Object3D {
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
     );
     this.scene.add(this.collisionBox); // Add the collision box to the scene
-
-    addNpcToTable(npcName);
   }
 
   update(delta) {
@@ -130,7 +128,28 @@ export default class NPCLoader extends THREE.Object3D {
         questType
       );
     }
-    addDialogToTable(this.npcName, dialogTexts, questTitle);
+
+    addNpc(this.npcName);
+
+    async function addNpc(npcName) {
+      try {
+        await addDialog(npcName);
+        await addNpcToTable(npcName, questTitle, dialogTexts);
+        console.log("NPC added to the table");
+      } catch (error) {
+        console.error("Error adding NPC to the table:", error);
+      }
+    }
+
+    async function addDialog(npcName) {
+      try {
+        await addDialogToTable(npcName, dialogTexts, questTitle);
+        console.log("Dialog added to the table");
+      } catch (error) {
+        console.error("Error adding dialog to the table:", error);
+        throw error;
+      }
+    }
 
     // Create the dialog container
     this.dialogContainer = document.createElement("div");

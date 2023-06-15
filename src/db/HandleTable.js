@@ -1,9 +1,9 @@
-const host = "http://127.0.0.1:3000/";
+const host = "http://localhost:3000/";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 
-export function addNpcToTable(npc_name) {
+export function addNpcToTable(npc_name, quest_title, dialog) {
   fetch(npcAPI, {
     method: "POST",
     headers: {
@@ -11,6 +11,8 @@ export function addNpcToTable(npc_name) {
     },
     body: JSON.stringify({
       npc_name: npc_name,
+      quest_title: quest_title,
+      dialog: dialog,
     }),
   })
     .then((response) => {
@@ -70,29 +72,44 @@ export function fetchQuestTable() {
 }
 
 export function addDialogToTable(npc_name, dialog, quest_title) {
-  fetch(dialogAPI, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      npc_name: npc_name,
-      dialog: dialog,
-      quest_title: quest_title,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error creating new dialog: " + response.statusText);
-      }
-      return response.json();
+  return new Promise((resolve, reject) => {
+    fetch(dialogAPI, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        npc_name: npc_name,
+        dialog: dialog,
+        quest_title: quest_title,
+      }),
     })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error creating new dialog: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("New dialog created successfully:", data);
+        // Perform any necessary UI updates after successful creation
+        // ...
+        resolve(); // Resolve the promise when the operations are completed
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error); // Reject the promise if an error occurs
+      });
+  });
+}
+
+export function fetchDialogTable() {
+  fetch(dialogAPI)
+    .then((response) => response.json())
     .then((data) => {
-      console.log("New dialog created successfully:", data);
-      // Perform any necessary UI updates after successful creation
-      // ...
+      console.log(data);
     })
     .catch((error) => {
-      console.error(error);
+      console.error("Error:", error);
     });
 }
