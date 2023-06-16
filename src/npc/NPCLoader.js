@@ -121,15 +121,16 @@ export default class NPCLoader extends THREE.Object3D {
     if (hasQuest) {
       this.quest = dialogTexts[dialogTexts.length - 1];
       this.questTitle = questTitle;
-      this.questManager.addQuestItem(
-        this.quest,
-        questTitle,
-        this.npcName,
-        questType
-      );
+      // this.questManager.initialize();
+      //   this.questManager.addQuestItem(
+      //     this.quest,
+      //     questTitle,
+      //     this.npcName,
+      //     questType
+      //   );
     }
 
-    addNpc(this.npcName);
+    // addNpc(this.npcName);
 
     async function addNpc(npcName) {
       try {

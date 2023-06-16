@@ -7,6 +7,7 @@ import CameraControls from "./CameraControls";
 import { LoadWorld } from "../world/LoadWorld";
 // import { LoadWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
+import QuestManager from "./QuestManager";
 
 import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
@@ -26,6 +27,8 @@ export default class SceneInit {
     this.textRenderer = undefined;
     this.player = undefined;
     this.npcs = [];
+    this.questManager = new QuestManager();
+    this.questManager.initialize();
   }
 
   initialize() {

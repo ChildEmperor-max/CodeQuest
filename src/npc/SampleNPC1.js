@@ -1,10 +1,12 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Quests from "../db/quests";
 
 export default class SampleNPC1 extends NPCLoader {
   constructor(scene) {
     super(scene);
     this.path = "/src/assets/models/animations/";
+    this.quests = new Quests();
   }
   initialize(
     position = new THREE.Vector3(0, 0, 0),
@@ -34,7 +36,7 @@ export default class SampleNPC1 extends NPCLoader {
       ],
       "Hello World!",
       true,
-      "side"
+      this.quests.type.side
     );
   }
 }

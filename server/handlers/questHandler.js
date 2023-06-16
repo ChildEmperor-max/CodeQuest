@@ -12,6 +12,65 @@ export function handleFetchQuest(req, res, pool) {
   });
 }
 
+export function handleUpdateQuestStatus(req, res, pool) {
+  let body = "";
+  req.on("data", (chunk) => {
+    body += chunk;
+  });
+
+  req.on("end", () => {
+    try {
+      const questData = JSON.parse(body);
+      const questTitle = questData.quest_title;
+      const newQuestStatus = questData.quest_status;
+      pool.query(
+        "SELECT id FROM quest WHERE quest_title = $1",
+        [questTitle],
+        (err, result) => {
+          if (err) {
+            console.error("Error checking Quest ID:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Internal Server Error" }));
+            return;
+          }
+          if (result.rows.length === 0) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Quest not found" }));
+            return;
+          }
+          const questId = result.rows[0].id;
+
+          pool
+            .query("UPDATE quest SET quest_status = $1 WHERE id = $2", [
+              newQuestStatus,
+              questId,
+            ])
+            .then(() => {
+              console.log("Data updated successfully");
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({ message: "Quest status updated successfully" })
+              );
+            })
+            .catch((error) => {
+              console.error("Error updating data:", error);
+              res.writeHead(500, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Internal Server Error" }));
+            });
+          // .finally(() => {
+          //   // Close the database pool
+          //   pool.end();
+          // });
+        }
+      );
+    } catch (error) {
+      console.error("Error parsing quest data:", error);
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Bad Request" }));
+    }
+  });
+}
+
 export function handleInsertQuest(req, res, pool) {
   let body = "";
   req.on("data", (chunk) => {

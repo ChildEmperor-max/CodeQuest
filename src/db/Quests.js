@@ -2,6 +2,9 @@ import {
   addQuestToTable,
   fetchQuestTable,
   fetchDialogTable,
+  fetchNpcTable,
+  fetchNpcQuestDialog,
+  updateQuestDataStatus,
 } from "./HandleTable";
 
 // Separate script acting as a temporary placeholder for a database
@@ -13,10 +16,14 @@ class Quests {
       active: "active",
       completed: "completed",
     };
+    this.type = {
+      side: "side",
+      story: "story",
+    };
   }
 
   fetchQuest() {
-    fetchDialogTable();
+    fetchNpcQuestDialog();
   }
 
   createQuest(title, description, status, from, type) {
@@ -27,7 +34,7 @@ class Quests {
       from: from,
       type: type,
     };
-    addQuestToTable(from, title, description, status, type);
+    // addQuestToTable(from, title, description, status, type);
   }
 
   readQuest(title) {
@@ -44,6 +51,7 @@ class Quests {
     if (this.quests.hasOwnProperty(title)) {
       this.quests[title].status = newStatus;
     }
+    updateQuestDataStatus(title, newStatus);
   }
 
   deleteQuest(title) {

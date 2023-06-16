@@ -1,5 +1,6 @@
 import toggleEditor from "../Editor";
 import Quests from "../db/quests";
+import { fetchNpcQuestDialog, fetchQuestTable } from "../db/HandleTable";
 
 export default class QuestManager {
   constructor() {
@@ -35,7 +36,19 @@ export default class QuestManager {
     });
   }
   toggleQuestBox() {
-    this.quests.fetchQuest();
+    // var questData = this.quests.fetchQuest();
+    const viewQuestData = async () => {
+      try {
+        const npcData = await fetchNpcQuestDialog();
+        npcData.forEach((element) => {
+          console.log(element.quest_status);
+        });
+      } catch (error) {
+        console.error("[ERROR]:", error);
+      }
+    };
+    viewQuestData();
+
     this.questBox.classList.toggle("hidden");
     if (this.questBox.classList.contains("hidden")) {
       this.questBox.style.display = "none";
@@ -60,7 +73,28 @@ export default class QuestManager {
     });
   }
 
-  addQuestItem(questDesc, questTitle, questFrom, questType) {
+  initialize() {
+    const addNpcQuestData = async () => {
+      try {
+        const npcData = await fetchNpcQuestDialog();
+        npcData.forEach((element) => {
+          this.addQuestItem(
+            element.quest_description,
+            element.quest_title,
+            element.npc_name,
+            element.quest_type,
+            element.quest_status
+          );
+        });
+      } catch (error) {
+        console.error("[ERROR]:", error);
+      }
+    };
+
+    addNpcQuestData();
+  }
+
+  addQuestItem(questDesc, questTitle, questFrom, questType, questStatus) {
     const li = document.createElement("li");
     const pi = document.createElement("span");
     li.textContent = `${questTitle}`;
@@ -76,8 +110,15 @@ export default class QuestManager {
       questType
     );
 
-    this.availableQuests.appendChild(li);
-    this.availableQuests.appendChild(pi);
+    // if (questStatus === this.quests.status.active) {
+    //   this.ongoingQuests.appendChild(li);
+    //   this.ongoingQuests.appendChild(pi);
+    // } else if (questStatus === this.quests.status.inactive) {
+    //   this.availableQuests.appendChild(li);
+    //   this.availableQuests.appendChild(pi);
+    // } else {
+    //   console.log(`${questStatus}: ${this.quests.status.active}`);
+    // }
 
     this.questMap.set(questTitle, questDesc);
 

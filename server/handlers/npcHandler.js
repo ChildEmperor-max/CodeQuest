@@ -1,3 +1,18 @@
+import fs from "fs";
+
+export function fetchNpcQuestDialog(req, res, pool) {
+  const sqlQuery = fs.readFileSync("server/sql/viewNpcQuestDialog.sql", "utf8");
+  pool
+    .query(sqlQuery)
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((error) => {
+      console.error("Error executing query:", error);
+    });
+}
+
 export function handleFetchNpc(req, res, pool) {
   // Query the database and return quest data
   pool.query("SELECT * FROM npc", (err, result) => {

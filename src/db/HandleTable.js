@@ -31,27 +31,81 @@ export function addNpcToTable(npc_name, quest_title, dialog) {
     });
 }
 
+export function fetchNpcTable() {
+  fetch(npcAPI)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+export function fetchNpcQuestDialog() {
+  return fetch(npcAPI + "-quest-dialog")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching NPC quest dialog data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function updateQuestDataStatus(quest_title, quest_status) {
+  return new Promise((resolve, reject) => {
+    fetch(questAPI + "-update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        quest_title: quest_title,
+        quest_status: quest_status,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating quest status: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Quest status updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
 export function addQuestToTable(from, title, description, status, type) {
   fetch(questAPI, {
-    method: "POST", // Use the POST method to create a new entry
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      // Provide the new quest data as the payload
       assigned_npc: from,
       quest_title: title,
       quest_description: description,
       quest_status: status,
       quest_type: type,
-      // Add other properties for the new quest
     }),
   })
     .then((response) => response.json())
     .then((data) => {
       console.log("New quest created successfully:", data);
-      // Perform any necessary UI updates after successful creation
-      // ...
     })
     .catch((error) => {
       console.error("Error creating new quest:", error);
