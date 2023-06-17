@@ -7,7 +7,7 @@ export default class QuestManager {
     this.quests = new Quests();
     this.questBox = document.getElementById("questBox");
     this.shown = false;
-    this.questMap = new Map();
+    this.ncpQuestMap = new Map();
 
     // Get the quest items in both sections
     this.availableQuests = document.getElementById("Available");
@@ -19,6 +19,9 @@ export default class QuestManager {
     this.questButton = document.getElementById("close-quest-button");
     this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
 
+    this.popupContainer = document.getElementById("popupContainer");
+    this.closePopupButton = document.getElementById("closeButton");
+
     this.startQuestButton = document.createElement("button");
     this.startQuestButton.textContent = "Start";
     this.startQuestButton.style.display = "none";
@@ -27,9 +30,6 @@ export default class QuestManager {
     this.removeQuestButton.textContent = "Cancel";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
-
-    this.popupContainer = document.getElementById("popupContainer");
-    this.closePopupButton = document.getElementById("closeButton");
 
     this.closePopupButton.addEventListener("click", () => {
       this.popupContainer.style.display = "none";
@@ -95,12 +95,16 @@ export default class QuestManager {
   }
 
   addQuestItem(questDesc, questTitle, questFrom, questType, questStatus) {
+    questTitle = questTitle.trim();
+    questStatus = questStatus.trim();
+    questDesc = questDesc.trim();
+    questFrom = questFrom.trim();
     const li = document.createElement("li");
     const pi = document.createElement("span");
     li.textContent = `${questTitle}`;
     pi.textContent = `${questFrom}`;
     li.setAttribute("id", questTitle); // Set the questTitle as the id
-    pi.setAttribute("data-quest-item", questDesc);
+    pi.setAttribute("data-quest-item", questFrom);
 
     this.quests.createQuest(
       questTitle,
@@ -109,77 +113,87 @@ export default class QuestManager {
       questFrom,
       questType
     );
-
-    // if (questStatus === this.quests.status.active) {
-    //   this.ongoingQuests.appendChild(li);
-    //   this.ongoingQuests.appendChild(pi);
-    // } else if (questStatus === this.quests.status.inactive) {
-    //   this.availableQuests.appendChild(li);
-    //   this.availableQuests.appendChild(pi);
-    // } else {
-    //   console.log(`${questStatus}: ${this.quests.status.active}`);
-    // }
-
-    this.questMap.set(questTitle, questDesc);
+    this.startQuestButton = document.createElement("button");
+    this.startQuestButton.textContent = "Start";
+    this.startQuestButton.style.display = "none";
+    this.startQuestButton.setAttribute("class", "quest-list-button");
+    this.removeQuestButton = document.createElement("button");
+    this.removeQuestButton.textContent = "Cancel";
+    this.removeQuestButton.style.display = "none";
+    this.removeQuestButton.setAttribute("class", "quest-list-button");
+    if (questStatus === this.quests.status.active) {
+      this.ongoingQuests.appendChild(li);
+      this.ongoingQuests.appendChild(pi);
+      li.textContent = `${questTitle}: ${questDesc}`;
+      var br = document.createElement("br");
+      li.appendChild(br);
+      li.appendChild(this.startQuestButton);
+      li.appendChild(this.removeQuestButton);
+      console.log("wat");
+    } else if (questStatus === this.quests.status.inactive) {
+      this.availableQuests.appendChild(li);
+      this.availableQuests.appendChild(pi);
+      // li.appendChild(this.startQuestButton);
+      // li.appendChild(this.removeQuestButton);
+    }
 
     this.removeQuestButton.addEventListener("click", () => {
-      this.moveQuestToAvailable(questTitle);
+      this.moveQuestToAvailable(questTitle, questFrom);
     });
     this.startQuestButton.addEventListener("click", toggleEditor.bind(this));
+
+    this.ncpQuestMap.set(questTitle, questDesc);
   }
 
-  moveQuestToOngoing(questTitle) {
+  moveQuestToOngoing(questTitle, questDesc, questFrom) {
     this.popupContainer.style.display = "block";
     document.getElementById("quest-item").textContent = questTitle;
-    const questItem = this.questMap.get(questTitle);
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
-    if (questItem) {
-      const availableQuestItems = Array.from(this.availableQuests.children);
-      const questItemElement = availableQuestItems.find((element) => {
-        return element.getAttribute("data-quest-item") === questItem;
-      });
-      const questTitleElement = this.availableQuests.querySelector(
-        `li[id="${questTitle}"]`
-      );
-      questTitleElement.textContent = `${questTitle}: ${questItem}`;
 
-      if (questItemElement) {
-        const questTitleElement = this.availableQuests.querySelector(
-          `li[id="${questTitle}"]`
-        );
-        var br = document.createElement("br");
-        questTitleElement.appendChild(br);
-        questTitleElement.appendChild(this.startQuestButton);
-        questTitleElement.appendChild(this.removeQuestButton);
+    var questTitleElement = document.getElementById(questTitle);
+    // var questFromElement = document.getElementById(questDesc);
 
-        this.ongoingQuests.appendChild(questTitleElement);
-        this.ongoingQuests.appendChild(questItemElement);
-        // this.startQuestButton.style.display = "block";
-        // this.removeQuestButton.style.display = "block";
-      }
-    }
+    const availableQuestItems = Array.from(this.availableQuests.children);
+    const questFromElement = availableQuestItems.find((element) => {
+      return element.getAttribute("data-quest-item") === questFrom;
+    });
+
+    questTitleElement.textContent = `${questTitle}: ${questDesc}`;
+    var br = document.createElement("br");
+    questTitleElement.appendChild(br);
+
+    this.removeQuestButton.addEventListener("click", () => {
+      this.moveQuestToAvailable(questTitle, questFrom);
+    });
+    this.startQuestButton.addEventListener("click", toggleEditor.bind(this));
+
+    questTitleElement.appendChild(this.startQuestButton);
+    questTitleElement.appendChild(this.removeQuestButton);
+
+    this.ongoingQuests.appendChild(questTitleElement);
+    this.ongoingQuests.appendChild(questFromElement);
   }
 
-  moveQuestToAvailable(questTitle) {
+  moveQuestToAvailable(questTitle, questFrom) {
     toggleEditor(false);
-    const questItem = this.questMap.get(questTitle);
-    this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
-    if (questItem) {
-      const availableQuestItems = Array.from(this.ongoingQuests.children);
-      const questItemElement = availableQuestItems.find((element) => {
-        return element.getAttribute("data-quest-item") === questItem;
-      });
-      const questTitleElement = this.ongoingQuests.querySelector(
-        `li[id="${questTitle}"]`
-      );
-      questTitleElement.textContent = `${questTitle}`;
 
-      if (questItemElement) {
-        this.availableQuests.appendChild(questTitleElement);
-        this.availableQuests.appendChild(questItemElement);
-        // this.startQuestButton.style.display = "none";
-        // this.removeQuestButton.style.display = "none";
-      }
-    }
+    document.getElementById("quest-item").textContent = questTitle;
+    this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
+
+    var questTitleElement = document.getElementById(questTitle);
+
+    const availableQuestItems = Array.from(this.ongoingQuests.children);
+    const questFromElement = availableQuestItems.find((element) => {
+      return element.getAttribute("data-quest-item") === questFrom;
+    });
+
+    questTitleElement.textContent = `${questTitle}`;
+    // var br = document.createElement("br");
+    // questTitleElement.appendChild(br);
+    // questTitleElement.appendChild(this.startQuestButton);
+    // questTitleElement.appendChild(this.removeQuestButton);
+
+    this.availableQuests.appendChild(questTitleElement);
+    this.availableQuests.appendChild(questFromElement);
   }
 }

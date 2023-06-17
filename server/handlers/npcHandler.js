@@ -13,6 +13,21 @@ export function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
+export function handleFetchNpcDataByName(name, res, pool) {
+  // Query the database and return quest data
+  pool
+    .query("SELECT * FROM npc WHERE TRIM(npc_name) = $1", [name])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export function handleFetchNpc(req, res, pool) {
   // Query the database and return quest data
   pool.query("SELECT * FROM npc", (err, result) => {

@@ -365,7 +365,11 @@ export default class NPCLoader extends THREE.Object3D {
     clearInterval(this.typingAnimation);
     if (this.hasQuest) {
       this.player.questsList.push(this.questTitle);
-      this.questManager.moveQuestToOngoing(this.questTitle);
+      this.questManager.moveQuestToOngoing(
+        this.questTitle,
+        this.quest,
+        this.npcName
+      );
       console.log("Quest accepted.");
     }
   }

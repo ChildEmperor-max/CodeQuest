@@ -13,6 +13,7 @@ import {
   handleInsertNpc,
   handleFetchNpc,
   fetchNpcQuestDialog,
+  handleFetchNpcDataByName,
 } from "./handlers/npcHandler.js";
 import {
   handleInsertQuest,
@@ -56,6 +57,10 @@ const server = http.createServer((req, res) => {
     handleFetchNpc(req, res, pool);
   } else if (req.url === "/npc-quest-dialog") {
     fetchNpcQuestDialog(req, res, pool);
+  } else if (req.url === "/npc/get-npc/") {
+    const name = req.url.split("/")[3];
+    console.log(name);
+    handleFetchNpcDataByName(name, res, pool);
   } else if (req.url === "/quests" && req.method === "POST") {
     handleInsertQuest(req, res, pool);
   } else if (req.url === "/quests-update" && req.method === "POST") {

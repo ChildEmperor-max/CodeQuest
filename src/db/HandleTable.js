@@ -1,4 +1,4 @@
-const host = "http://localhost:3000/";
+const host = "http://127.0.0.1:3000/";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
@@ -49,6 +49,20 @@ export function fetchNpcQuestDialog() {
         throw new Error(
           "Error fetching NPC quest dialog data: " + response.statusText
         );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchNpcDataByName(name) {
+  return fetch(npcAPI + "/get-npc/" + name)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching NPC data: " + response.statusText);
       }
       return response.json();
     })

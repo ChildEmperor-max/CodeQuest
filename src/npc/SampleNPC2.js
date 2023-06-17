@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
 import Quests from "../db/quests";
+import { fetchNpcDataByName } from "../db/HandleTable";
 
 export default class SampleNPC2 extends NPCLoader {
   constructor(scene) {
@@ -28,6 +29,17 @@ export default class SampleNPC2 extends NPCLoader {
       npcName,
       scale
     );
+
+    const viewNpcData = async () => {
+      try {
+        const npcData = await fetchNpcDataByName(npcName);
+        console.log(npcData);
+      } catch (error) {
+        console.error("[ERROR]:", error);
+      }
+    };
+
+    viewNpcData();
     this.createDialogBox(
       [
         "Hey! Do you know what are the variables? By variables, i mean, the containers that stores data values.",
