@@ -40,9 +40,9 @@ export default class QuestManager {
     const viewQuestData = async () => {
       try {
         const npcData = await fetchNpcQuestDialog();
-        npcData.forEach((element) => {
-          console.log(element.quest_status);
-        });
+        // npcData.forEach((element) => {
+        //   console.log(element.quest_status);
+        // });
       } catch (error) {
         console.error("[ERROR]:", error);
       }
@@ -129,7 +129,6 @@ export default class QuestManager {
       li.appendChild(br);
       li.appendChild(this.startQuestButton);
       li.appendChild(this.removeQuestButton);
-      console.log("wat");
     } else if (questStatus === this.quests.status.inactive) {
       this.availableQuests.appendChild(li);
       this.availableQuests.appendChild(pi);
@@ -150,8 +149,10 @@ export default class QuestManager {
     document.getElementById("quest-item").textContent = questTitle;
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
 
+    console.log(questTitle);
     var questTitleElement = document.getElementById(questTitle);
     // var questFromElement = document.getElementById(questDesc);
+    console.log(questTitleElement);
 
     const availableQuestItems = Array.from(this.availableQuests.children);
     const questFromElement = availableQuestItems.find((element) => {

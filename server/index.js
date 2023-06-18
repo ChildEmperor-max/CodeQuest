@@ -8,6 +8,7 @@ const { Pool } = pkg;
 import {
   handleInsertDialog,
   handleFetchDialog,
+  handleFetchDialogById,
 } from "./handlers/dialogHandler.js";
 import {
   handleInsertNpc,
@@ -19,6 +20,7 @@ import {
   handleInsertQuest,
   handleFetchQuest,
   handleUpdateQuestStatus,
+  handleFetchQuestById,
 } from "./handlers/questHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -57,10 +59,15 @@ const server = http.createServer((req, res) => {
     handleFetchNpc(req, res, pool);
   } else if (req.url === "/npc-quest-dialog") {
     fetchNpcQuestDialog(req, res, pool);
-  } else if (req.url === "/npc/get-npc/") {
+  } else if (req.url.startsWith("/npc/get-npc/")) {
     const name = req.url.split("/")[3];
-    console.log(name);
     handleFetchNpcDataByName(name, res, pool);
+  } else if (req.url.startsWith("/quests/get-quest/")) {
+    const name = req.url.split("/")[3];
+    handleFetchQuestById(name, res, pool);
+  } else if (req.url.startsWith("/dialog/get-dialog/")) {
+    const name = req.url.split("/")[3];
+    handleFetchDialogById(name, res, pool);
   } else if (req.url === "/quests" && req.method === "POST") {
     handleInsertQuest(req, res, pool);
   } else if (req.url === "/quests-update" && req.method === "POST") {

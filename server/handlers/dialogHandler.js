@@ -13,6 +13,21 @@ export function handleFetchDialog(req, res, pool) {
   });
 }
 
+export function handleFetchDialogById(id, res, pool) {
+  // Query the database and return quest data
+  pool
+    .query("SELECT * FROM dialog WHERE id = $1", [id])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export function handleInsertDialog(req, res, pool) {
   let body = "";
   req.on("data", (chunk) => {

@@ -3,6 +3,33 @@ const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 
+export const viewNpcData = async (name) => {
+  try {
+    const npcData = await fetchNpcDataByName(name);
+    return npcData;
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
+
+export const viewQuestData = async (id) => {
+  try {
+    const questData = await fetchQuestById(id);
+    return questData;
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
+
+export const viewDialogData = async (id) => {
+  try {
+    const dialogData = await fetchDialogById(id);
+    return dialogData;
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
+
 export function addNpcToTable(npc_name, quest_title, dialog) {
   fetch(npcAPI, {
     method: "POST",
@@ -63,6 +90,34 @@ export function fetchNpcDataByName(name) {
     .then((response) => {
       if (!response.ok) {
         throw new Error("Error fetching NPC data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchQuestById(id) {
+  return fetch(questAPI + "/get-quest/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching quest data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchDialogById(id) {
+  return fetch(dialogAPI + "/get-dialog/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Dialog data: " + response.statusText);
       }
       return response.json();
     })
