@@ -13,12 +13,6 @@ export default class QuestManager {
     this.availableQuests = document.getElementById("Available");
     this.ongoingQuests = document.getElementById("Ongoing");
 
-    this.questButton = document.getElementById("quest-button");
-    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
-
-    this.questButton = document.getElementById("close-quest-button");
-    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
-
     this.popupContainer = document.getElementById("popupContainer");
     this.closePopupButton = document.getElementById("closeButton");
 
@@ -36,7 +30,6 @@ export default class QuestManager {
     });
   }
   toggleQuestBox() {
-    // var questData = this.quests.fetchQuest();
     const viewQuestData = async () => {
       try {
         const npcData = await fetchNpcQuestDialog();
@@ -50,6 +43,8 @@ export default class QuestManager {
     viewQuestData();
 
     this.questBox.classList.toggle("hidden");
+
+    // quest accepted popup hide on opening quest box
     if (this.questBox.classList.contains("hidden")) {
       this.questBox.style.display = "none";
     } else {
@@ -74,6 +69,14 @@ export default class QuestManager {
   }
 
   initialize() {
+    this.questButton = document.getElementById("quest-button");
+    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
+
+    this.closeQuestButton = document.getElementById("close-quest-button");
+    this.closeQuestButton.addEventListener(
+      "click",
+      this.toggleQuestBox.bind(this)
+    );
     const addNpcQuestData = async () => {
       try {
         const npcData = await fetchNpcQuestDialog();
@@ -146,25 +149,17 @@ export default class QuestManager {
 
   moveQuestToOngoing(questTitle, questDesc, questFrom) {
     this.popupContainer.style.display = "block";
-    // document.getElementById("quest-item").textContent = questTitle;
+    document.getElementById("quest-item").textContent = questTitle;
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
-
-    console.log(questTitle);
-    // var questTitleElement = document.getElementById(questTitle);
-    // var questFromElement = document.getElementById(questDesc);
-    // console.log(questTitleElement);
 
     const availableQuestItems = Array.from(this.availableQuests.children);
     const questFromElement = availableQuestItems.find((element) => {
       return element.getAttribute("data-quest-item") === questFrom;
     });
 
-    const questTitleElement = availableQuestItems.find((element) => {
+    availableQuestItems.find((element) => {
       if (element.getAttribute("id")) {
-        console.log(element.getAttribute("id").toString());
-
         if (element.getAttribute("id").toString() === questTitle.trim()) {
-          console.log("test");
           element.textContent = `${questTitle}: ${questDesc}`;
           var br = document.createElement("br");
           element.appendChild(br);
@@ -190,23 +185,22 @@ export default class QuestManager {
   moveQuestToAvailable(questTitle, questFrom) {
     toggleEditor(false);
 
-    document.getElementById("quest-item").textContent = questTitle;
     this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
-
-    var questTitleElement = document.getElementById(questTitle);
 
     const availableQuestItems = Array.from(this.ongoingQuests.children);
     const questFromElement = availableQuestItems.find((element) => {
       return element.getAttribute("data-quest-item") === questFrom;
     });
 
-    questTitleElement.textContent = `${questTitle}`;
-    // var br = document.createElement("br");
-    // questTitleElement.appendChild(br);
-    // questTitleElement.appendChild(this.startQuestButton);
-    // questTitleElement.appendChild(this.removeQuestButton);
+    availableQuestItems.find((element) => {
+      if (element.getAttribute("id")) {
+        if (element.getAttribute("id").toString() === questTitle.trim()) {
+          element.textContent = `${questTitle} `;
 
-    this.availableQuests.appendChild(questTitleElement);
-    this.availableQuests.appendChild(questFromElement);
+          this.availableQuests.appendChild(element);
+          this.availableQuests.appendChild(questFromElement);
+        }
+      }
+    });
   }
 }

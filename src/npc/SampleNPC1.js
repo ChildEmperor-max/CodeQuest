@@ -32,7 +32,6 @@ export default class SampleNPC1 extends NPCLoader {
     async function fetchData(npcName) {
       try {
         const npcData = await viewNpcData(npcName);
-        console.log("npc data: ", npcData);
 
         const dialogData = await viewDialogData(npcData[0].dialog_id);
         const dialogString = dialogData[0].dialog;
@@ -40,8 +39,6 @@ export default class SampleNPC1 extends NPCLoader {
         const dialogArray = dialogWithoutBrackets
           .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
           .map((item) => item.trim());
-
-        console.log("dialog data: ", dialogArray);
 
         var npcDialog = dialogArray;
         var npcHasQuest = false;
