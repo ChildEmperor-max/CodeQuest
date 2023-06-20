@@ -5,6 +5,9 @@ import {
   fetchNpcTable,
   fetchNpcQuestDialog,
   updateQuestDataStatus,
+  fetchQuestById,
+  viewQuestData,
+  executeJavaCode,
 } from "./HandleTable";
 
 // Separate script acting as a temporary placeholder for a database
@@ -35,6 +38,16 @@ class Quests {
       type: type,
     };
     // addQuestToTable(from, title, description, status, type);
+  }
+
+  submitPlayerAnswer(quest_title, answer) {
+    console.log("submitted player answer: ", answer);
+    console.log(quest_title);
+    // viewQuestData(quest);
+
+    const code = answer; // Get the Java code from the Ace Editor
+    const data = { code: code, quest: quest_title };
+    executeJavaCode(data);
   }
 
   readQuest(title) {

@@ -8,6 +8,7 @@ export default class QuestManager {
     this.questBox = document.getElementById("questBox");
     this.shown = false;
     this.ncpQuestMap = new Map();
+    this.addedStartQuestListener = false;
 
     // Get the quest items in both sections
     this.availableQuests = document.getElementById("Available");
@@ -132,17 +133,22 @@ export default class QuestManager {
       li.appendChild(br);
       li.appendChild(this.startQuestButton);
       li.appendChild(this.removeQuestButton);
+
+      if (!this.addedStartQuestListener) {
+        this.removeQuestButton.addEventListener("click", () => {
+          this.moveQuestToAvailable(questTitle, questFrom);
+        });
+        this.startQuestButton.addEventListener("click", () => {
+          toggleEditor(questTitle);
+        });
+        this.addedStartQuestListener = true;
+      }
     } else if (questStatus === this.quests.status.inactive) {
       this.availableQuests.appendChild(li);
       this.availableQuests.appendChild(pi);
       // li.appendChild(this.startQuestButton);
       // li.appendChild(this.removeQuestButton);
     }
-
-    this.removeQuestButton.addEventListener("click", () => {
-      this.moveQuestToAvailable(questTitle, questFrom);
-    });
-    this.startQuestButton.addEventListener("click", toggleEditor.bind(this));
 
     this.ncpQuestMap.set(questTitle, questDesc);
   }
@@ -164,14 +170,15 @@ export default class QuestManager {
           var br = document.createElement("br");
           element.appendChild(br);
 
-          this.removeQuestButton.addEventListener("click", () => {
-            this.moveQuestToAvailable(questTitle, questFrom);
-          });
-          this.startQuestButton.addEventListener(
-            "click",
-            toggleEditor.bind(this)
-          );
-
+          if (!this.addedStartQuestListener) {
+            this.removeQuestButton.addEventListener("click", () => {
+              this.moveQuestToAvailable(questTitle, questFrom);
+            });
+            this.startQuestButton.addEventListener("click", () => {
+              toggleEditor(questTitle);
+            });
+            this.addedStartQuestListener = true;
+          }
           element.appendChild(this.startQuestButton);
           element.appendChild(this.removeQuestButton);
 
@@ -183,7 +190,7 @@ export default class QuestManager {
   }
 
   moveQuestToAvailable(questTitle, questFrom) {
-    toggleEditor(false);
+    toggleEditor(questTitle, false);
 
     this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
 
@@ -196,7 +203,6 @@ export default class QuestManager {
       if (element.getAttribute("id")) {
         if (element.getAttribute("id").toString() === questTitle.trim()) {
           element.textContent = `${questTitle} `;
-
           this.availableQuests.appendChild(element);
           this.availableQuests.appendChild(questFromElement);
         }

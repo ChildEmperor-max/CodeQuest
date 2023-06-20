@@ -6,6 +6,8 @@ import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
+import Quests from "./db/quests";
+
 const handleEditorChange = (newValue) => {
   console.log("Editor change:", newValue);
   editorValue = newValue;
@@ -33,18 +35,24 @@ function Editor({ onChange, visible }) {
 }
 let visible = false;
 let editorValue = "";
+let questTitle = null;
 const root = ReactDOM.createRoot(document.getElementById("editor"));
 root.render(<Editor onChange={handleEditorChange} visible={visible} />);
 
 var cancelButton = document.createElement("button");
 cancelButton.textContent = "Cancel";
-cancelButton.addEventListener("click", toggleEditor);
+cancelButton.addEventListener("click", () => {
+  toggleEditor(null);
+});
 
 var submitButton = document.createElement("button");
 submitButton.textContent = "Submit";
 submitButton.addEventListener("click", submitQuest);
 
-export default function toggleEditor(setVisible = true) {
+var quests = new Quests();
+
+export default function toggleEditor(quest_title, setVisible = true) {
+  questTitle = quest_title;
   visible = !visible;
   if (!setVisible) {
     visible = false;
@@ -66,5 +74,5 @@ export default function toggleEditor(setVisible = true) {
 }
 
 function submitQuest() {
-  console.log("submitted: ", editorValue);
+  quests.submitPlayerAnswer(questTitle, editorValue);
 }

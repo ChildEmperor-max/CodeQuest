@@ -4,6 +4,38 @@ const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 
+export function executeJavaCode(data) {
+  fetch(host + "execute-java", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      // Process the result received from the server
+      if (result.error) {
+        if (result.compilationError) {
+          console.error(
+            "Java code compilation error:",
+            result.compilationError
+          );
+        } else if (result.executionError) {
+          console.error("Java code execution error:", result.executionError);
+        } else {
+          console.error("Unknown error occurred during Java code execution");
+        }
+      } else {
+        console.log("Java code output:", result.output);
+      }
+    })
+    .catch((error) => {
+      // Handle the error
+      console.error("Error executing Java code:", error);
+    });
+}
+
 export const viewNpcData = async (name) => {
   try {
     const npcData = await fetchNpcDataByName(name);
@@ -186,9 +218,7 @@ export function fetchQuestTable() {
   fetch(questAPI)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // Assuming the response is an array of quest objects
-      // Update the UI with the retrieved data
-      // ...
+      return data;
     })
     .catch((error) => {
       console.error("Error:", error);

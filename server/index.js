@@ -1,10 +1,14 @@
-import http from "http";
+import express from "express";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import bodyParser from "body-parser";
+import cors from "cors";
+
 import pkg from "pg";
 const { Pool } = pkg;
 
+import { handleSubmittedJavaAnswer } from "./handlers/javaHandler.js";
 import {
   handleInsertDialog,
   handleFetchDialog,
@@ -34,68 +38,92 @@ const pool = new Pool({
   port: 5432, // default PostgreSQL port
 });
 
-const server = http.createServer((req, res) => {
-  // Set CORS headers
+const app = express();
+
+// Set CORS headers
+app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-Requested-With,content-type"
   );
-  if (req.method === "OPTIONS") {
-    // Handle preflight request
-    res.writeHead(200, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With,content-type",
-    });
-    res.end();
-    return;
-  }
-
-  if (req.url === "/npc" && req.method === "POST") {
-    handleInsertNpc(req, res, pool);
-  } else if (req.url === "/npc") {
-    handleFetchNpc(req, res, pool);
-  } else if (req.url === "/npc-quest-dialog") {
-    fetchNpcQuestDialog(req, res, pool);
-  } else if (req.url.startsWith("/npc/get-npc/")) {
-    const name = req.url.split("/")[3];
-    handleFetchNpcDataByName(name, res, pool);
-  } else if (req.url.startsWith("/quests/get-quest/")) {
-    const name = req.url.split("/")[3];
-    handleFetchQuestById(name, res, pool);
-  } else if (req.url.startsWith("/dialog/get-dialog/")) {
-    const name = req.url.split("/")[3];
-    handleFetchDialogById(name, res, pool);
-  } else if (req.url === "/quests" && req.method === "POST") {
-    handleInsertQuest(req, res, pool);
-  } else if (req.url === "/quests-update" && req.method === "POST") {
-    handleUpdateQuestStatus(req, res, pool);
-  } else if (req.url === "/quests") {
-    handleFetchQuest(req, res, pool);
-  } else if (req.url === "/dialog" && req.method === "POST") {
-    handleInsertDialog(req, res, pool);
-  } else if (req.url === "/dialog" && req.method === "GET") {
-    handleFetchDialog(req, res, pool);
-  } else if (req.url === "/") {
-    const filePath = "index.html";
-    fs.readFile(filePath, (err, content) => {
-      if (err) {
-        console.error("Error reading file:", err);
-        res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
-      } else {
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(content);
-      }
-    });
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not Found");
-  }
+  next();
 });
 
-server.listen(3000, () => {
+app.use(bodyParser.json());
+app.use(cors());
+
+app.post("/npc", (req, res) => {
+  handleInsertNpc(req, res, pool);
+});
+
+app.get("/npc", (req, res) => {
+  handleFetchNpc(req, res, pool);
+});
+
+app.get("/npc-quest-dialog", (req, res) => {
+  fetchNpcQuestDialog(req, res, pool);
+});
+
+app.get("/npc/get-npc/:name", (req, res) => {
+  const name = req.params.name;
+  handleFetchNpcDataByName(name, res, pool);
+});
+
+app.get("/quests/get-quest/:name", (req, res) => {
+  const name = req.params.name;
+  handleFetchQuestById(name, res, pool);
+});
+
+app.get("/dialog/get-dialog/:name", (req, res) => {
+  const name = req.params.name;
+  handleFetchDialogById(name, res, pool);
+});
+
+app.post("/quests", (req, res) => {
+  handleInsertQuest(req, res, pool);
+});
+
+app.post("/quests-update", (req, res) => {
+  handleUpdateQuestStatus(req, res, pool);
+});
+
+app.get("/quests", (req, res) => {
+  handleFetchQuest(req, res, pool);
+});
+
+app.post("/dialog", (req, res) => {
+  handleInsertDialog(req, res, pool);
+});
+
+app.get("/dialog", (req, res) => {
+  handleFetchDialog(req, res, pool);
+});
+
+app.post("/execute-java", (req, res) => {
+  handleSubmittedJavaAnswer(req, res, pool);
+});
+
+app.get("/", (req, res) => {
+  const filePath = "index.html";
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      console.error("Error reading file:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(content);
+    }
+  });
+});
+
+app.use((req, res) => {
+  res.writeHead(404, { "Content-Type": "text/plain" });
+  res.end("Not Found");
+});
+
+app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
