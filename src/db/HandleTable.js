@@ -5,7 +5,7 @@ const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 
 export function executeJavaCode(data) {
-  fetch(host + "execute-java", {
+  return fetch(host + "execute-java", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,25 +14,28 @@ export function executeJavaCode(data) {
   })
     .then((response) => response.json())
     .then((result) => {
-      // Process the result received from the server
       if (result.error) {
         if (result.compilationError) {
           console.error(
             "Java code compilation error:",
             result.compilationError
           );
+          result.error = result.compilationError;
         } else if (result.executionError) {
           console.error("Java code execution error:", result.executionError);
+          result.error = result.executionError;
         } else {
           console.error("Unknown error occurred during Java code execution");
+          result.error = "Unknown error occurred during Java code execution";
         }
       } else {
         console.log("Java code output:", result.output);
       }
+      return result;
     })
     .catch((error) => {
-      // Handle the error
       console.error("Error executing Java code:", error);
+      throw error;
     });
 }
 

@@ -6,10 +6,18 @@
     /* height: 100%; */
     z-index: 2;
     transition: transform 0.3s;
-    background-color: #141f45b9;
+    background-color: #090d1dd8;
     backdrop-filter: blur(5px); /* Apply the blur effect */
   }
   
+  .java-output-message {
+    overflow: auto; /* Add scrollbars when the content exceeds the height */
+    max-width: 490px; /* Set a maximum height for the div */
+    max-height: 150px;
+    font-size: 14px;
+    margin: 5px;
+  }
+
   /* .editor-container.visible {
     transform: translateX(0);
   }
