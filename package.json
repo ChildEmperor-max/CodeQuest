@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@tweenjs/tween.js": "^20.0.3",
     "ace-builds": "^1.22.0",
     "body-parser": "^1.20.2",

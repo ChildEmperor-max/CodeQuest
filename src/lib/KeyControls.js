@@ -1,3 +1,5 @@
+let keyListenersEnabled = true;
+
 var keys = {
   w: {
     pressed: false,
@@ -37,7 +39,9 @@ var keys = {
   },
 };
 
-window.addEventListener("keydown", (event) => {
+const handleKeyDown = (event) => {
+  if (!keyListenersEnabled) return;
+
   switch (event.code) {
     case "KeyW":
       keys.w.justPressed = !keys.w.justPressed;
@@ -76,9 +80,11 @@ window.addEventListener("keydown", (event) => {
       keys.space.pressed = true;
       break;
   }
-});
+};
 
-window.addEventListener("keyup", (event) => {
+const handleKeyUp = (event) => {
+  if (!keyListenersEnabled) return;
+
   switch (event.code) {
     case "KeyW":
       keys.w.pressed = false;
@@ -108,6 +114,18 @@ window.addEventListener("keyup", (event) => {
       keys.space.pressed = false;
       break;
   }
-});
+};
+
+window.addEventListener("keydown", handleKeyDown);
+
+window.addEventListener("keyup", handleKeyUp);
+
+export function enableKeyListeners() {
+  keyListenersEnabled = true;
+}
+
+export function disableKeyListeners() {
+  keyListenersEnabled = false;
+}
 
 export default keys;

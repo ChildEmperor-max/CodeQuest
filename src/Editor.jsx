@@ -1,12 +1,33 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPlus,
+  faMinus,
+  faMoon,
+  faSun,
+  faTimes,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-twilight";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+import "ace-builds/src-noconflict/theme-solarized_light";
+import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/theme-kuroir";
+import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/theme-textmate";
+import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
 import { executeJavaCode } from "./db/HandleTable";
+import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
 
 const handleEditorChange = (newValue) => {
   editorValue = newValue;
@@ -23,6 +44,15 @@ function Editor({ onChange, visible, onOutput }) {
 
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false); // Add loading state
+  const [fontSize, setFontSize] = useState(14);
+  const [darkMode, setDarkMode] = useState(false);
+
+  let editorTheme = "github";
+  if (darkMode) {
+    editorTheme = "twilight";
+  } else {
+    editorTheme = "github";
+  }
 
   const executeCode = () => {
     setLoading(true);
@@ -47,40 +77,108 @@ function Editor({ onChange, visible, onOutput }) {
     console.log("submit quest answer: ", editorValue, "\n", "output: ", output);
   };
 
-  const closePanelButton = (
-    <button onClick={() => toggleEditor(null)} disabled={loading}>
-      Close
-    </button>
-  );
+  const increaseFontSize = () => {
+    setFontSize((prevSize) => prevSize + 1);
+  };
 
-  const runButton = (
-    <button onClick={executeCode} disabled={loading}>
-      {loading ? "Executing..." : "Run"}
-    </button>
-  );
+  const decreaseFontSize = () => {
+    setFontSize((prevSize) => prevSize - 1);
+  };
 
-  const submitAnswerButton = (
-    <button onClick={submitPlayerAnswer} disabled={loading}>
-      Submit
-    </button>
-  );
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const ButtonText = ({
+    onClick,
+    disabled = false,
+    title,
+    icon,
+    buttonText,
+  }) => {
+    return (
+      <div className="button-text-container">
+        <button
+          className="panel-buttons"
+          onClick={onClick}
+          disabled={disabled}
+          title={title}
+        >
+          <FontAwesomeIcon icon={icon} />
+        </button>
+        <span className="button-text">{buttonText}</span>
+      </div>
+    );
+  };
 
   return (
     <div id="ace-editor-panel">
       {visible ? (
         <>
           <div id="editor-panel-buttons">
-            {runButton}
-            {submitAnswerButton}
-            {closePanelButton}
+            <div>
+              <ButtonText
+                onClick={executeCode}
+                disabled={loading}
+                title="Run script"
+                icon={faPlay}
+                buttonText="Run"
+              />
+              <div className="button-text-container">
+                <div className="grouped-buttons">
+                  <button
+                    className="panel-buttons"
+                    onClick={increaseFontSize}
+                    title="Increase font size"
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                  <button
+                    className="panel-buttons"
+                    onClick={decreaseFontSize}
+                    title="Decrease font size"
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                </div>
+                <span className="button-text">Font size</span>
+              </div>
+
+              <ButtonText
+                onClick={toggleDarkMode}
+                disabled={loading}
+                title="Toggle Dark mode"
+                icon={darkMode ? faMoon : faSun}
+                buttonText={darkMode ? "Dark" : "Light"}
+              />
+            </div>
+            <div>
+              <ButtonText
+                onClick={submitPlayerAnswer}
+                disabled={loading}
+                title="Submit answer"
+                icon={faCheck}
+                buttonText="Submit"
+              />
+              <ButtonText
+                onClick={() => toggleEditor(null)}
+                title="Close"
+                icon={faTimes}
+                buttonText="Close"
+              />
+            </div>
           </div>
           <AceEditor
             id="editor"
             mode="java"
-            theme="github"
+            theme={editorTheme}
             onChange={onChange}
+            fontSize={fontSize}
             name="ace-editor"
             editorProps={{ $blockScrolling: true }}
+            setOptions={{
+              enableBasicAutocompletion: true,
+            }}
           />
           <div className="java-output-message">
             Output:
@@ -113,6 +211,12 @@ export default function toggleEditor(quest_title, setVisible = true) {
   if (!setVisible) {
     visible = false;
   }
+  if (visible) {
+    disableKeyListeners();
+  } else {
+    enableKeyListeners();
+  }
+  console.log(visible);
   editorValue = "";
   root.render(
     <Editor

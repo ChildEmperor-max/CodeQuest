@@ -3,7 +3,7 @@
     top: 0;
     right: 0;
     /* width: 400px; */
-    /* height: 100%; */
+    height: 100%;
     z-index: 2;
     transition: transform 0.3s;
     background-color: #090d1dd8;
@@ -16,6 +16,33 @@
     max-height: 150px;
     font-size: 14px;
     margin: 5px;
+  }
+
+  .panel-buttons {
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; */
+  }
+
+  .button-text-container {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .grouped-buttons {
+    display: flex;
+  }
+
+  #editor-panel-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .button-text {
+    font-size: 11px;
+    text-align: center;
   }
 
   /* .editor-container.visible {

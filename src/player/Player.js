@@ -113,11 +113,7 @@ export default class Player extends THREE.Object3D {
   update(delta, npcs) {
     this.npcs = npcs;
     if (this.mesh) {
-      if (document.getElementById("ace-editor") === null) {
-        this.movement(delta);
-      } else {
-        this.direction.set(0, 0, 0);
-      }
+      this.movement(delta);
       this.updateAnimation();
       this.motion(delta);
       this.mixer.update(delta);
