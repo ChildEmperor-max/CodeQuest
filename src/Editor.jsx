@@ -47,12 +47,7 @@ function Editor({ onChange, visible, onOutput }) {
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
 
-  let editorTheme = "github";
-  if (darkMode) {
-    editorTheme = "twilight";
-  } else {
-    editorTheme = "github";
-  }
+  let editorTheme = darkMode ? "twilight" : "github";
 
   const executeCode = () => {
     setLoading(true);
@@ -62,7 +57,6 @@ function Editor({ onChange, visible, onOutput }) {
           setOutput(response.error);
         } else {
           setOutput(response.output);
-          console.log(response.output);
         }
       })
       .catch((error) => {
@@ -216,7 +210,6 @@ export default function toggleEditor(quest_title, setVisible = true) {
   } else {
     enableKeyListeners();
   }
-  console.log(visible);
   editorValue = "";
   root.render(
     <Editor

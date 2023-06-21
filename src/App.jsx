@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import InterfaceHandler from "./InterfaceHandler";
 import SceneInit from "./lib/SceneInit";
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
         id="myThreeJsCanvas"
         width={window.innerWidth}
         height={window.innerHeight}
-      />
+      ></canvas>
+      <InterfaceHandler />
     </div>
   );
 }
