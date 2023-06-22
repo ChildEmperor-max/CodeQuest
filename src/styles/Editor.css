@@ -2,7 +2,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    /* width: 400px; */
+    /* width: 600px; */
     height: 100%;
     z-index: 2;
     transition: transform 0.3s;
@@ -30,6 +30,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    border-left: 1px solid rgb(36, 36, 36);
+    border-right: 1px solid rgb(36, 36, 36);
   }
   .grouped-buttons {
     display: flex;
@@ -43,6 +45,7 @@
   .button-text {
     font-size: 11px;
     text-align: center;
+    margin: 0;
   }
 
   /* .editor-container.visible {

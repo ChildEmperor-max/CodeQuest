@@ -271,12 +271,8 @@ export default class NPCLoader extends THREE.Object3D {
     }
     const boundUpdateEventButton = updateEventButton.bind(this);
 
-    if (this.currentDialogIndex === 0) {
-      this.prevButton.style.display = "none";
-    } else {
-      this.prevButton.style.display = "block";
-    }
     if (this.currentDialogIndex === this.dialogTexts.length - 1) {
+      this.prevButton.style.display = "block";
       // IF ON LAST PAGE OF DIALOG
       if (this.hasQuest) {
         boundUpdateEventButton(
@@ -304,14 +300,12 @@ export default class NPCLoader extends THREE.Object3D {
         this.nextButton.addEventListener("click", this.doneTalkingHandler);
       }
     } else {
+      this.prevButton.style.display = "none";
       this.nextButton.textContent = "Next";
       this.nextButton.removeEventListener("click", this.acceptQuestHandler);
       this.nextButton.removeEventListener("click", this.doneTalkingHandler);
       // this.nextButton.addEventListener("click", this.showNextDialogHandler);
       this.nextButton.removeEventListener("click", this.showNextDialogHandler);
-      this.prevButton.textContent = "back";
-      // this.prevButton.removeEventListener("click", this.rejectQuestHandler);
-      // this.prevButton.addEventListener("click", this.showPreviousDialogHandler);
     }
 
     const typingAnimation = setInterval(() => {

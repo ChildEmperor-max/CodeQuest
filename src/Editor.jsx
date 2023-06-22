@@ -46,6 +46,7 @@ function Editor({ onChange, visible, onOutput }) {
   const [loading, setLoading] = useState(false); // Add loading state
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
+  const [editorWidth, setEditorWidth] = useState("600px");
 
   let editorTheme = darkMode ? "twilight" : "github";
 
@@ -173,6 +174,7 @@ function Editor({ onChange, visible, onOutput }) {
             setOptions={{
               enableBasicAutocompletion: true,
             }}
+            style={{ width: editorWidth }}
           />
           <div className="java-output-message">
             Output:

@@ -17,6 +17,13 @@
     display: flex;
 }
 
+.icon-button {
+  background-color: #1417299d;
+  border: none;
+  outline: none;
+  margin: 5px;
+}
+
 #quest-button,
 #leaderboard-button,
 #profile-button,

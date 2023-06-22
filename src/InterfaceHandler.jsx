@@ -1,16 +1,49 @@
 import React, { useEffect, useState } from "react";
+import toggleEditor from "./Editor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTasks,
+  faChartBar,
+  faCog,
+  faUser,
+  faMedal,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function InterfaceHandler() {
+  const InterfaceButton = ({ name, icon, id, onclickEvent = null }) => {
+    return (
+      <button id={id} className="icon-button" onClick={onclickEvent}>
+        <FontAwesomeIcon icon={icon} size="2xl" />
+        <p className="button-text">{name}</p>
+      </button>
+    );
+  };
+
   return (
     <div className="ui-container" id="interface-container">
       <div className="right-container">
-        <button id="quest-button">Quests</button>
-        <button id="leaderboard-button">Leaderboard</button>
-        <button id="achievement-button">Achievements</button>
-        <button id="settings-button">Settings</button>
+        <InterfaceButton name="Quests" icon={faTasks} id="quest-button" />
+        <InterfaceButton
+          name="Editor"
+          icon={faEdit}
+          id="toggle-editor-button"
+          onclickEvent={toggleEditor}
+        />
+        <InterfaceButton
+          name="Leaderboard"
+          icon={faMedal}
+          id="leaderboard-button"
+        />
+        <InterfaceButton
+          name="Achievements"
+          icon={faChartBar}
+          id="achivements-button"
+        />
+        <InterfaceButton name="Settings" icon={faCog} id="settings-button" />
       </div>
       <div className="left-container">
-        <button id="profile-button">Profile</button>
+        <InterfaceButton name="Profile" icon={faUser} id="profile-button" />
       </div>
       <a>
         <div

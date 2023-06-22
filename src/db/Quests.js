@@ -1,12 +1,6 @@
 import {
-  addQuestToTable,
-  fetchQuestTable,
-  fetchDialogTable,
-  fetchNpcTable,
   fetchNpcQuestDialog,
   updateQuestDataStatus,
-  fetchQuestById,
-  viewQuestData,
   executeJavaCode,
 } from "./HandleTable";
 

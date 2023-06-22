@@ -13,6 +13,7 @@
     -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
     backdrop-filter: blur(5px); /* Apply the blur effect */
     z-index: 2;
+    animation: slideToBottom 0.3s ease-in-out;
   }
 
   .top-quest-bar {
@@ -56,6 +57,7 @@
     font-size: 20px;
     margin-top: 20px;
     color: white;
+    animation: slideToRight 0.5s ease-in-out;
   }
 
   #Ongoing li, #Available li, #StoryQuestList li{
@@ -71,7 +73,8 @@
   #Ongoing li:hover,
   #Ongoing li:hover span{
     cursor: pointer;
-    border-top: 2px solid white;
+    animation: fadeIn 0.3s ease-in-out;
+    border-left: 2px solid white;
   }
 
   .quest-list-button {
@@ -79,21 +82,64 @@
   }
 
   #Ongoing li:hover .quest-list-button {
+    animation: buttonSlideToBottom 0.2s ease-in-out;
     display: inline-block !important;
   }
 
   #Ongoing span, #Available span{
     background-color: #3459a971;
     border: 2px solid #243d75b0;
+    font-size: 14px;
+    padding: 4px;
   }
 
   #Ongoing li:hover + span,
   #Ongoing li:hover ~ span {
     background-color: #3459a971;
-    border-top: 2px solid white;
+    animation: fadeIn 0.3s ease-in-out;
+    border-left: 2px solid white;
   }
 
   .content.active {
     display: block;
   }
-  
+
+  @keyframes fadeIn {
+    0% {
+      border-left: 2px solid rgba(255, 255, 255, 0);
+    }
+    100% {
+      border-left: 2px solid white;
+    }
+  }
+
+  @keyframes slideToBottom {
+    0% {
+      transform: translate(0, -100%);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes buttonSlideToBottom {
+    0% {
+      opacity: 0;
+      transform: translate(0, -100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes slideToRight {
+    0% {
+      opacity: 0;
+      transform: translate(-100%, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
