@@ -9,6 +9,7 @@ import {
   faSun,
   faTimes,
   faCheck,
+  faTasks,
 } from "@fortawesome/free-solid-svg-icons";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
@@ -47,6 +48,9 @@ function Editor({ onChange, visible, onOutput }) {
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
   const [editorWidth, setEditorWidth] = useState("600px");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
 
   let editorTheme = darkMode ? "twilight" : "github";
 
@@ -69,7 +73,7 @@ function Editor({ onChange, visible, onOutput }) {
   };
 
   const submitPlayerAnswer = () => {
-    console.log("submit quest answer: ", editorValue, "\n", "output: ", output);
+    console.log("submit quest answer: ", editorValue, "\n", "output: ", output, "quest: ", questTitle);
   };
 
   const increaseFontSize = () => {
@@ -82,6 +86,16 @@ function Editor({ onChange, visible, onOutput }) {
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  const viewSelectedQuestModal = () => {
+    setIsModalOpen(true);
+    setModalTitle(questTitle);
+    // setModalDescription(description);
+  }
+
+  const closeSelectedQuestModal = () => {
+    setIsModalOpen(false);
   };
 
   const ButtonText = ({
@@ -146,6 +160,13 @@ function Editor({ onChange, visible, onOutput }) {
                 icon={darkMode ? faMoon : faSun}
                 buttonText={darkMode ? "Dark" : "Light"}
               />
+              
+              <ButtonText
+                onClick={viewSelectedQuestModal}
+                title="Selected quest"
+                icon={faTasks}
+                buttonText={questTitle}
+              />
             </div>
             <div>
               <ButtonText
@@ -156,7 +177,7 @@ function Editor({ onChange, visible, onOutput }) {
                 buttonText="Submit"
               />
               <ButtonText
-                onClick={() => toggleEditor(null)}
+                onClick={() => toggleEditor({quest_title:null})}
                 title="Close"
                 icon={faTimes}
                 buttonText="Close"
@@ -201,8 +222,10 @@ root.render(
   />
 );
 
-export default function toggleEditor(quest_title, setVisible = true) {
-  questTitle = quest_title;
+export default function toggleEditor({quest_title = null, setVisible = true}) {
+  if (quest_title) {
+    questTitle = quest_title;
+  }
   visible = !visible;
   if (!setVisible) {
     visible = false;

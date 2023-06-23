@@ -134,15 +134,12 @@ export default class QuestManager {
       li.appendChild(this.startQuestButton);
       li.appendChild(this.removeQuestButton);
 
-      if (!this.addedStartQuestListener) {
-        this.removeQuestButton.addEventListener("click", () => {
-          this.moveQuestToAvailable(questTitle, questFrom);
-        });
-        this.startQuestButton.addEventListener("click", () => {
-          toggleEditor(questTitle);
-        });
-        this.addedStartQuestListener = true;
-      }
+      this.removeQuestButton.addEventListener("click", () => {
+        this.moveQuestToAvailable(questTitle, questFrom);
+      });
+      this.startQuestButton.addEventListener("click", () => {
+        toggleEditor({ quest_title: questTitle });
+      });
     } else if (questStatus === this.quests.status.inactive) {
       this.availableQuests.appendChild(li);
       this.availableQuests.appendChild(pi);
@@ -175,7 +172,7 @@ export default class QuestManager {
               this.moveQuestToAvailable(questTitle, questFrom);
             });
             this.startQuestButton.addEventListener("click", () => {
-              toggleEditor(questTitle);
+              toggleEditor({ quest_title: questTitle });
             });
             this.addedStartQuestListener = true;
           }
@@ -190,7 +187,7 @@ export default class QuestManager {
   }
 
   moveQuestToAvailable(questTitle, questFrom) {
-    toggleEditor(questTitle, false);
+    toggleEditor({ quest_title: questTitle, setVisible: false });
 
     this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
 
