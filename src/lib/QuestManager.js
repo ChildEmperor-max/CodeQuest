@@ -22,7 +22,7 @@ export default class QuestManager {
     this.startQuestButton.style.display = "none";
     this.startQuestButton.setAttribute("class", "quest-list-button");
     this.removeQuestButton = document.createElement("button");
-    this.removeQuestButton.textContent = "Cancel";
+    this.removeQuestButton.textContent = "Abandon";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
 
@@ -87,7 +87,9 @@ export default class QuestManager {
             element.quest_title,
             element.npc_name,
             element.quest_type,
-            element.quest_status
+            element.quest_status,
+            element.code_template,
+            element.quest_answer
           );
         });
       } catch (error) {
@@ -98,11 +100,21 @@ export default class QuestManager {
     addNpcQuestData();
   }
 
-  addQuestItem(questDesc, questTitle, questFrom, questType, questStatus) {
+  addQuestItem(
+    questDesc,
+    questTitle,
+    questFrom,
+    questType,
+    questStatus,
+    codeTemplate,
+    questAnswer
+  ) {
     questTitle = questTitle.trim();
     questStatus = questStatus.trim();
     questDesc = questDesc.trim();
     questFrom = questFrom.trim();
+    codeTemplate = codeTemplate.trim();
+    questAnswer = questAnswer.trim();
     const li = document.createElement("li");
     const pi = document.createElement("span");
     li.textContent = `${questTitle}`;
@@ -122,7 +134,7 @@ export default class QuestManager {
     this.startQuestButton.style.display = "none";
     this.startQuestButton.setAttribute("class", "quest-list-button");
     this.removeQuestButton = document.createElement("button");
-    this.removeQuestButton.textContent = "Cancel";
+    this.removeQuestButton.textContent = "Abandon";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
     if (questStatus === this.quests.status.active) {
@@ -138,7 +150,13 @@ export default class QuestManager {
         this.moveQuestToAvailable(questTitle, questFrom);
       });
       this.startQuestButton.addEventListener("click", () => {
-        toggleEditor({ quest_title: questTitle });
+        toggleEditor({
+          quest_title: questTitle,
+          quest_description: questDesc,
+          quest_from: questFrom,
+          code_template: codeTemplate,
+          quest_answer: questAnswer,
+        });
       });
     } else if (questStatus === this.quests.status.inactive) {
       this.availableQuests.appendChild(li);
@@ -150,7 +168,13 @@ export default class QuestManager {
     this.ncpQuestMap.set(questTitle, questDesc);
   }
 
-  moveQuestToOngoing(questTitle, questDesc, questFrom) {
+  moveQuestToOngoing(
+    questTitle,
+    questDesc,
+    questFrom,
+    codeTemplate,
+    questAnswer
+  ) {
     this.popupContainer.style.display = "block";
     document.getElementById("quest-item").textContent = questTitle;
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
@@ -172,7 +196,13 @@ export default class QuestManager {
               this.moveQuestToAvailable(questTitle, questFrom);
             });
             this.startQuestButton.addEventListener("click", () => {
-              toggleEditor({ quest_title: questTitle });
+              toggleEditor({
+                quest_title: questTitle,
+                quest_description: questDesc,
+                quest_from: questFrom,
+                code_template: codeTemplate,
+                quest_answer: questAnswer,
+              });
             });
             this.addedStartQuestListener = true;
           }
@@ -187,7 +217,14 @@ export default class QuestManager {
   }
 
   moveQuestToAvailable(questTitle, questFrom) {
-    toggleEditor({ quest_title: questTitle, setVisible: false });
+    toggleEditor({
+      quest_title: questTitle,
+      quest_description: null,
+      quest_from: null,
+      code_template: null,
+      quest_answer: null,
+      setVisible: false,
+    });
 
     this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
 

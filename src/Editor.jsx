@@ -10,6 +10,7 @@ import {
   faTimes,
   faCheck,
   faTasks,
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
@@ -38,19 +39,18 @@ const handleOutput = (res) => {
   output = res;
 };
 
-function Editor({ onChange, visible, onOutput }) {
-  useEffect(() => {
-    ace.config.set("basePath", "/node_modules/ace-builds/src");
-  }, []);
-
+function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false); // Add loading state
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
   const [editorWidth, setEditorWidth] = useState("600px");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalDescription, setModalDescription] = useState('');
+  const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalDescription, setModalDescription] = useState("");
+  useEffect(() => {
+    ace.config.set("basePath", "/node_modules/ace-builds/src");
+  }, []);
 
   let editorTheme = darkMode ? "twilight" : "github";
 
@@ -73,7 +73,18 @@ function Editor({ onChange, visible, onOutput }) {
   };
 
   const submitPlayerAnswer = () => {
-    console.log("submit quest answer: ", editorValue, "\n", "output: ", output, "quest: ", questTitle);
+    console.log(
+      "submit quest answer: ",
+      editorValue,
+      "\n",
+      "output: ",
+      output,
+      "quest: ",
+      questTitle
+    );
+    if (editorValue === quest_answer) {
+      console.log("CORRECT CODE!");
+    }
   };
 
   const increaseFontSize = () => {
@@ -89,13 +100,31 @@ function Editor({ onChange, visible, onOutput }) {
   };
 
   const viewSelectedQuestModal = () => {
-    setIsModalOpen(true);
-    setModalTitle(questTitle);
-    // setModalDescription(description);
-  }
+    setIsQuestModalOpen(true);
+    setModalTitle(questTitle + " - " + questFrom);
+    setModalDescription(questDescription);
+  };
 
   const closeSelectedQuestModal = () => {
-    setIsModalOpen(false);
+    setIsQuestModalOpen(false);
+  };
+
+  const QuestModal = () => {
+    return (
+      <div className="quest-modal-container">
+        <div className="quest-modal-content-container">
+          <button onClick={closeSelectedQuestModal}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <div className="quest-modal-header">
+            <span>{modalTitle}</span>
+          </div>
+          <div className="quest-modal-content">
+            <span>{modalDescription}</span>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const ButtonText = ({
@@ -121,96 +150,104 @@ function Editor({ onChange, visible, onOutput }) {
   };
 
   return (
-    <div id="ace-editor-panel">
-      {visible ? (
-        <>
-          <div id="editor-panel-buttons">
-            <div>
-              <ButtonText
-                onClick={executeCode}
-                disabled={loading}
-                title="Run script"
-                icon={faPlay}
-                buttonText="Run"
-              />
-              <div className="button-text-container">
-                <div className="grouped-buttons">
-                  <button
-                    className="panel-buttons"
-                    onClick={increaseFontSize}
-                    title="Increase font size"
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </button>
-                  <button
-                    className="panel-buttons"
-                    onClick={decreaseFontSize}
-                    title="Decrease font size"
-                  >
-                    <FontAwesomeIcon icon={faMinus} />
-                  </button>
+    <>
+      {isQuestModalOpen ? <QuestModal /> : null}
+      <div id="ace-editor-panel">
+        {visible ? (
+          <>
+            <div id="editor-panel-buttons">
+              <div>
+                <ButtonText
+                  onClick={executeCode}
+                  disabled={loading}
+                  title="Run script"
+                  icon={faPlay}
+                  buttonText="Run"
+                />
+                <div className="button-text-container">
+                  <div className="grouped-buttons">
+                    <button
+                      className="panel-buttons"
+                      onClick={increaseFontSize}
+                      title="Increase font size"
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                    <button
+                      className="panel-buttons"
+                      onClick={decreaseFontSize}
+                      title="Decrease font size"
+                    >
+                      <FontAwesomeIcon icon={faMinus} />
+                    </button>
+                  </div>
+                  <span className="button-text">Font size</span>
                 </div>
-                <span className="button-text">Font size</span>
-              </div>
 
-              <ButtonText
-                onClick={toggleDarkMode}
-                disabled={loading}
-                title="Toggle Dark mode"
-                icon={darkMode ? faMoon : faSun}
-                buttonText={darkMode ? "Dark" : "Light"}
-              />
-              
-              <ButtonText
-                onClick={viewSelectedQuestModal}
-                title="Selected quest"
-                icon={faTasks}
-                buttonText={questTitle}
-              />
+                <ButtonText
+                  onClick={toggleDarkMode}
+                  disabled={loading}
+                  title="Toggle Dark mode"
+                  icon={darkMode ? faMoon : faSun}
+                  buttonText={darkMode ? "Dark" : "Light"}
+                />
+
+                <ButtonText
+                  onClick={viewSelectedQuestModal}
+                  title="Selected quest"
+                  icon={faQuestionCircle}
+                  buttonText="Quest"
+                />
+              </div>
+              <div>
+                <ButtonText
+                  onClick={submitPlayerAnswer}
+                  disabled={loading}
+                  title="Submit answer"
+                  icon={faCheck}
+                  buttonText="Submit"
+                />
+                <ButtonText
+                  onClick={() => toggleEditor({ quest_title: null })}
+                  title="Close"
+                  icon={faTimes}
+                  buttonText="Close"
+                />
+              </div>
             </div>
-            <div>
-              <ButtonText
-                onClick={submitPlayerAnswer}
-                disabled={loading}
-                title="Submit answer"
-                icon={faCheck}
-                buttonText="Submit"
-              />
-              <ButtonText
-                onClick={() => toggleEditor({quest_title:null})}
-                title="Close"
-                icon={faTimes}
-                buttonText="Close"
-              />
+            <AceEditor
+              id="editor"
+              mode="java"
+              theme={editorTheme}
+              onChange={onChange}
+              fontSize={fontSize}
+              name="ace-editor"
+              editorProps={{ $blockScrolling: true }}
+              setOptions={{
+                enableBasicAutocompletion: true,
+              }}
+              value={code_template}
+              style={{ width: editorWidth }}
+            />
+            <div className="java-output-message">
+              Output:
+              <br />
+              {loading ? "Executing..." : output}
             </div>
-          </div>
-          <AceEditor
-            id="editor"
-            mode="java"
-            theme={editorTheme}
-            onChange={onChange}
-            fontSize={fontSize}
-            name="ace-editor"
-            editorProps={{ $blockScrolling: true }}
-            setOptions={{
-              enableBasicAutocompletion: true,
-            }}
-            style={{ width: editorWidth }}
-          />
-          <div className="java-output-message">
-            Output:
-            <br />
-            {loading ? "Executing..." : output}
-          </div>
-        </>
-      ) : null}
-    </div>
+          </>
+        ) : null}
+      </div>
+    </>
   );
 }
 
 let visible = false;
 let editorValue = "";
 let questTitle = null;
+let questFrom = null;
+let questDescription = null;
+let codeTemplate = null;
+let questAnswer = null;
 let output = "output here"; // Initialize with empty string
 
 const root = ReactDOM.createRoot(document.getElementById("editor"));
@@ -218,13 +255,34 @@ root.render(
   <Editor
     onChange={handleEditorChange}
     visible={visible}
+    code_template={codeTemplate}
+    quest_answer={questAnswer}
     onOutput={handleOutput}
   />
 );
 
-export default function toggleEditor({quest_title = null, setVisible = true}) {
+export default function toggleEditor({
+  quest_title = null,
+  quest_description = null,
+  quest_from = null,
+  code_template = null,
+  quest_answer = null,
+  setVisible = true,
+}) {
   if (quest_title) {
     questTitle = quest_title;
+  }
+  if (quest_description) {
+    questDescription = quest_description;
+  }
+  if (quest_from) {
+    questFrom = quest_from;
+  }
+  if (code_template) {
+    codeTemplate = code_template;
+  }
+  if (quest_answer) {
+    questAnswer = quest_answer;
   }
   visible = !visible;
   if (!setVisible) {
@@ -240,6 +298,8 @@ export default function toggleEditor({quest_title = null, setVisible = true}) {
     <Editor
       onChange={handleEditorChange}
       visible={visible}
+      code_template={code_template}
+      quest_answer={quest_answer}
       onOutput={handleOutput()}
     />
   );

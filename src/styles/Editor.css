@@ -1,5 +1,5 @@
 .editor-container {
-  position: fixed;
+    position: fixed;
     top: 0;
     right: 0;
     /* width: 600px; */
@@ -56,3 +56,29 @@
     transform: translateX(100%);
   } */
   
+  .quest-modal-container {
+    z-index: 10;
+    width: 70%;
+    position: fixed;
+  }
+  .quest-modal-content-container {
+    border: 1px solid white;
+  }
+  .quest-modal-container button {
+    float: right;
+  }
+  .quest-modal-header {
+    background-color: #3459a9;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+    text-align: left;
+    padding: 17px
+  }
+  .quest-modal-content {
+    background-color: #090d1dd8;
+    text-align: left;
+    padding: 17px;
+    height: 300px;
+  }
