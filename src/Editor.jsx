@@ -56,39 +56,58 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
 
   let editorTheme = darkMode ? "twilight" : "github";
 
-  const executeCode = () => {
+  const executeJavaCodeAndHandleOutput = () => {
     setLoading(true);
     setEditorVal(editorValue);
-    executeJavaCode({ code: editorValue, quest: questTitle })
+    return executeJavaCode({ code: editorValue, quest: questTitle })
       .then((response) => {
         if (response.error) {
           setOutput(response.error);
         } else {
           setOutput(response.output);
         }
+        return response;
       })
       .catch((error) => {
         setOutput("Error executing Java code: " + error.message);
+        throw error;
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
+  const executeCode = () => {
+    executeJavaCodeAndHandleOutput();
+  };
+
   const submitPlayerAnswer = () => {
-    const variableNames = editorValue.match(/\b\w+\b\s*(?==)/g);
-    if (variableNames) {
-      variableNames.forEach((variableName) => {
-        console.log(variableName.trim());
+    executeJavaCodeAndHandleOutput()
+      .then((response) => {
+        if (!response.error) {
+          const variableNames = editorValue.match(/\b\w+\b\s*(?==)/g);
+          if (variableNames) {
+            variableNames.forEach((variableName) => {
+              console.log(variableName.trim());
+            });
+          }
+          let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
+          let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
+          if (
+            playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
+          ) {
+            console.log("CORRECT!");
+          }
+          console.log("your code: ", playerAnswer);
+          console.log("correct answer: ", correctAnswer);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    }
-    let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
-    let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
-    if (playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())) {
-      console.log("CORRECT!");
-    }
-    console.log("your code: ", playerAnswer);
-    console.log("correct answer: ", correctAnswer);
   };
 
   const increaseFontSize = () => {
