@@ -41,13 +41,15 @@ const handleOutput = (res) => {
 
 function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   const [output, setOutput] = useState("");
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
   const [editorWidth, setEditorWidth] = useState("600px");
   const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
+  const [editorVal, setEditorVal] = useState(code_template);
+
   useEffect(() => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
   }, []);
@@ -56,6 +58,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
 
   const executeCode = () => {
     setLoading(true);
+    setEditorVal(editorValue);
     executeJavaCode({ code: editorValue, quest: questTitle })
       .then((response) => {
         if (response.error) {
@@ -73,18 +76,19 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   };
 
   const submitPlayerAnswer = () => {
-    console.log(
-      "submit quest answer: ",
-      editorValue,
-      "\n",
-      "output: ",
-      output,
-      "quest: ",
-      questTitle
-    );
-    if (editorValue === quest_answer) {
-      console.log("CORRECT CODE!");
+    const variableNames = editorValue.match(/\b\w+\b\s*(?==)/g);
+    if (variableNames) {
+      variableNames.forEach((variableName) => {
+        console.log(variableName.trim());
+      });
     }
+    let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
+    let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
+    if (playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())) {
+      console.log("CORRECT!");
+    }
+    console.log("your code: ", playerAnswer);
+    console.log("correct answer: ", correctAnswer);
   };
 
   const increaseFontSize = () => {
@@ -226,7 +230,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
               setOptions={{
                 enableBasicAutocompletion: true,
               }}
-              value={code_template}
+              value={editorVal}
               style={{ width: editorWidth }}
             />
             <div className="java-output-message">
@@ -251,15 +255,15 @@ let questAnswer = null;
 let output = "output here"; // Initialize with empty string
 
 const root = ReactDOM.createRoot(document.getElementById("editor"));
-root.render(
-  <Editor
-    onChange={handleEditorChange}
-    visible={visible}
-    code_template={codeTemplate}
-    quest_answer={questAnswer}
-    onOutput={handleOutput}
-  />
-);
+// root.render(
+//   <Editor
+//     onChange={handleEditorChange}
+//     visible={visible}
+//     code_template={codeTemplate}
+//     quest_answer={questAnswer}
+//     onOutput={handleOutput}
+//   />
+// );
 
 export default function toggleEditor({
   quest_title = null,
@@ -298,7 +302,7 @@ export default function toggleEditor({
     <Editor
       onChange={handleEditorChange}
       visible={visible}
-      code_template={code_template}
+      code_template={codeTemplate}
       quest_answer={quest_answer}
       onOutput={handleOutput()}
     />
