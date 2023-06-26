@@ -28,7 +28,7 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
-import { executeJavaCode, updateQuestDataStatus } from "./db/HandleTable";
+import { executeJavaCode, updateQuestDataStatus, fetchNpcQuestDialog } from "./db/HandleTable";
 import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
 import QuestManager from "./lib/QuestManager";
 
@@ -51,6 +51,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
   const [editorVal, setEditorVal] = useState(code_template);
+  const [activeQuests, setActiveQuests] = useState([]);
 
   useEffect(() => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
@@ -59,24 +60,24 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   let editorTheme = darkMode ? "twilight" : "github";
 
   const executeJavaCodeAndHandleOutput = () => {
-    setLoading(true);
-    setEditorVal(editorValue);
-    return executeJavaCode({ code: editorValue, quest: questTitle })
-      .then((response) => {
-        if (response.error) {
-          setOutput(response.error);
-        } else {
-          setOutput(response.output);
-        }
-        return response;
-      })
-      .catch((error) => {
-        setOutput("Error executing Java code: " + error.message);
-        throw error;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      setLoading(true);
+      setEditorVal(editorValue);
+      return executeJavaCode({ code: editorValue, quest: questTitle })
+        .then((response) => {
+          if (response.error) {
+            setOutput(response.error);
+          } else {
+            setOutput(response.output);
+          }
+          return response;
+        })
+        .catch((error) => {
+          setOutput("Error executing Java code: " + error.message);
+          throw error;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
   };
 
   const executeCode = () => {
@@ -103,6 +104,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
             questManager.moveQuestToCompleted(questTitle);
           } else {
             console.log("WRONG! ")
+            questManager.showWrongAnswerPopup();
           }
         }
       })
@@ -128,31 +130,58 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
 
   const viewSelectedQuestModal = () => {
     setIsQuestModalOpen(true);
-    setModalTitle(questTitle + " - " + questFrom);
-    setModalDescription(questDescription);
+    if (questTitle && questFrom) {
+      setModalTitle(questTitle + " - " + questFrom);
+      setModalDescription(questDescription);
+    } else {
+      setModalTitle("Quests");
+      setModalDescription(questDescription);
+    }
   };
+  
 
-  const closeSelectedQuestModal = () => {
-    setIsQuestModalOpen(false);
-  };
+const fetchActiveQuests = async () => {
+  try {
+    const npcData = await fetchNpcQuestDialog();
+    const filteredQuests = npcData.filter(element => element.quest_status.trim() === "active");
+    setActiveQuests(filteredQuests);
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
 
-  const QuestModal = () => {
-    return (
-      <div className="quest-modal-container">
-        <div className="quest-modal-content-container">
-          <button onClick={closeSelectedQuestModal}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-          <div className="quest-modal-header">
-            <span>{modalTitle}</span>
-          </div>
-          <div className="quest-modal-content">
+useEffect(() => {
+  fetchActiveQuests();
+}, []);
+
+const closeSelectedQuestModal = () => {
+  setIsQuestModalOpen(false);
+};
+
+const QuestModal = () => {
+  return (
+    <div className="quest-modal-container">
+      <div className="quest-modal-content-container">
+        <button onClick={closeSelectedQuestModal}>
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
+        <div className="quest-modal-header">
+          <span>{modalTitle}</span>
+        </div>
+        <div className="quest-modal-content">
+          {questTitle ? (
             <span>{modalDescription}</span>
-          </div>
+          ) : (
+            activeQuests.map(element => (
+              <p className="active-quest-list" key={element.id}>{element.quest_title}</p>
+            ))
+          )}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
+
 
   const ButtonText = ({
     onClick,
@@ -235,7 +264,10 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
                   buttonText="Submit"
                 />
                 <ButtonText
-                  onClick={() => toggleEditor({ quest_title: null })}
+                  onClick={() => {
+                    toggleEditor({ quest_title: null });
+                    questTitle = null;
+                  }}
                   title="Close"
                   icon={faTimes}
                   buttonText="Close"
