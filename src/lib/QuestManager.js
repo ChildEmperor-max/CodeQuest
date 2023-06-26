@@ -42,17 +42,19 @@ export default class QuestManager {
     };
     viewQuestData();
 
-    this.questBox.classList.toggle("hidden");
+    let questBox = document.getElementById("questBox");
+    let popupContainer = document.getElementById("popupContainer");
+    questBox.classList.toggle("hidden");
 
     // quest accepted popup hide on opening quest box
-    if (this.questBox.classList.contains("hidden")) {
-      this.questBox.style.display = "none";
+    if (questBox.classList.contains("hidden")) {
+      questBox.style.display = "none";
     } else {
-      this.questBox.style.display = "block";
-      this.popupContainer.classList.add("fadeOut");
+      questBox.style.display = "block";
+      popupContainer.classList.add("fadeOut");
       setTimeout(() => {
-        this.popupContainer.style.display = "none";
-        this.popupContainer.classList.remove("fadeOut");
+        popupContainer.style.display = "none";
+        popupContainer.classList.remove("fadeOut");
       }, 800);
     }
   }

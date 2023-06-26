@@ -121,6 +121,22 @@ export function fetchNpcQuestDialog() {
     });
 }
 
+export function fetchNpcQuestDialogById(id) {
+  return fetch(`${npcAPI}-get-quest-dialog/${id}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching NPC quest dialog data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
 export function fetchNpcDataByName(name) {
   return fetch(npcAPI + "/get-npc/" + name)
     .then((response) => {

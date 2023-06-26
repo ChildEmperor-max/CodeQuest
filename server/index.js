@@ -18,6 +18,7 @@ import {
   handleInsertNpc,
   handleFetchNpc,
   fetchNpcQuestDialog,
+  fetchNpcQuestDialogById,
   handleFetchNpcDataByName,
 } from "./handlers/npcHandler.js";
 import {
@@ -64,6 +65,11 @@ app.get("/npc", (req, res) => {
 
 app.get("/npc-quest-dialog", (req, res) => {
   fetchNpcQuestDialog(req, res, pool);
+});
+
+app.get("/npc-get-quest-dialog/:id", (req, res) => {
+  const id = req.params.id;
+  fetchNpcQuestDialogById(id, res, pool);
 });
 
 app.get("/npc/get-npc/:name", (req, res) => {

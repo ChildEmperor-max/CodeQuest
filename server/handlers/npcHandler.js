@@ -13,6 +13,21 @@ export function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
+export async function fetchNpcQuestDialogById(id, res, pool) {
+  try {
+    const query = fs.readFileSync(
+      "server/sql/viewNpcQuestDialogById.sql",
+      "utf8"
+    );
+    const result = await pool.query(query, [id]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
+}
+
 export function handleFetchNpcDataByName(name, res, pool) {
   // Query the database and return quest data
   pool

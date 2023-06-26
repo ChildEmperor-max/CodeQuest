@@ -28,7 +28,7 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
-import { executeJavaCode, updateQuestDataStatus, fetchNpcQuestDialog } from "./db/HandleTable";
+import { executeJavaCode, updateQuestDataStatus, fetchNpcQuestDialog, fetchNpcQuestDialogById } from "./db/HandleTable";
 import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
 import QuestManager from "./lib/QuestManager";
 
@@ -156,9 +156,19 @@ useEffect(() => {
 
 const closeSelectedQuestModal = () => {
   setIsQuestModalOpen(false);
+  fetchActiveQuests();
 };
 
 const QuestModal = () => {
+  const handleQuestClick = async (quest_id) => {
+    let questData = await fetchNpcQuestDialogById(quest_id);
+    questTitle = questData[0].quest_title;
+    questFrom = questData[0].npc_name;
+    questDescription = questData[0].quest_description;
+    setModalTitle(questTitle + " - " + questFrom);
+    setModalDescription(questDescription);
+  }
+
   return (
     <div className="quest-modal-container">
       <div className="quest-modal-content-container">
@@ -172,15 +182,26 @@ const QuestModal = () => {
           {questTitle ? (
             <span>{modalDescription}</span>
           ) : (
-            activeQuests.map(element => (
-              <p className="active-quest-list" key={element.id}>{element.quest_title}</p>
-            ))
+            activeQuests.length > 0 ? (
+              activeQuests.map(element => (
+                <p className="active-quest-list" key={element.id} onClick={() => handleQuestClick(element.id)} >{element.quest_title}</p>
+              ))
+            ) : (
+              <>
+                <p>No active quests found.</p>
+                <button onClick={() => {
+                  questManager.toggleQuestBox();
+                  closeSelectedQuestModal();
+                  }}>View Quests</button>
+              </>
+            )
           )}
         </div>
       </div>
     </div>
   );
 };
+
 
 
   const ButtonText = ({
