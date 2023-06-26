@@ -21,6 +21,7 @@ export default function InterfaceHandler() {
   };
 
   return (
+    <>
     <div className="ui-container" id="interface-container">
       <div className="right-container">
         <InterfaceButton name="Quests" icon={faTasks} id="quest-button" />
@@ -56,6 +57,7 @@ export default function InterfaceHandler() {
           />
         </div>
       </a>
+    </div>
       <div id="popupContainer">
         <div id="popupContent">
           <p id="popup-text-header">New Quest Accepted</p>
@@ -63,6 +65,6 @@ export default function InterfaceHandler() {
           <button id="closeButton">Okay</button>
         </div>
       </div>
-    </div>
+      </>
   );
 }

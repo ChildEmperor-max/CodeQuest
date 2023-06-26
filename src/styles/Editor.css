@@ -18,6 +18,23 @@
     margin: 5px;
   }
 
+  .active-quest-list {
+    background-color: #3459a971;
+    margin-top: 5px;
+    border: 2px solid #243d75b0;
+    padding: 20px;
+    padding-right: 10px;
+  }
+  
+  .active-quest-list:hover {
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+    border-left: 2px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Border glow effect */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
+  }
+  
+
   .panel-buttons {
     /* display: flex;
     flex-direction: column;
@@ -81,4 +98,17 @@
     text-align: left;
     padding: 17px;
     height: 300px;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      border-left: 2px solid rgba(255, 255, 255, 0);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0); /* Border glow effect */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0); /* Text glow effect */
+    }
+    100% {
+      border-left: 2px solid white;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Border glow effect */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
+    }
   }

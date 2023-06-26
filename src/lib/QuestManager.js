@@ -11,6 +11,7 @@ export default class QuestManager {
     this.addedStartQuestListener = false;
 
     // Get the quest items in both sections
+    this.storyQuestList = document.getElementById("StoryQuestList");
     this.availableQuests = document.getElementById("Available");
     this.ongoingQuests = document.getElementById("Ongoing");
 
@@ -118,6 +119,7 @@ export default class QuestManager {
     questStatus = questStatus.trim();
     questDesc = questDesc.trim();
     questFrom = questFrom.trim();
+    questType = questType.trim();
     codeTemplate = codeTemplate.trim();
     questAnswer = questAnswer.trim();
     const li = document.createElement("li");
@@ -142,7 +144,10 @@ export default class QuestManager {
     this.removeQuestButton.textContent = "Abandon";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
-    if (questStatus === this.quests.status.active) {
+    if (
+      questStatus === this.quests.status.active &&
+      questType === this.quests.type.side
+    ) {
       this.ongoingQuests.appendChild(li);
       this.ongoingQuests.appendChild(pi);
       li.textContent = `${questTitle}: ${questDesc}`;
@@ -163,11 +168,35 @@ export default class QuestManager {
           quest_answer: questAnswer,
         });
       });
-    } else if (questStatus === this.quests.status.inactive) {
+    } else if (
+      questStatus === this.quests.status.inactive &&
+      questType === this.quests.type.side
+    ) {
       this.availableQuests.appendChild(li);
       this.availableQuests.appendChild(pi);
       // li.appendChild(this.startQuestButton);
       // li.appendChild(this.removeQuestButton);
+    } else if (questType === this.quests.type.story) {
+      this.storyQuestList.appendChild(li);
+      this.storyQuestList.appendChild(pi);
+      li.textContent = `${questTitle}`;
+      var br = document.createElement("br");
+      li.appendChild(br);
+      li.appendChild(this.startQuestButton);
+      li.appendChild(this.removeQuestButton);
+
+      this.removeQuestButton.addEventListener("click", () => {
+        this.moveQuestToAvailable(questTitle, questFrom);
+      });
+      this.startQuestButton.addEventListener("click", () => {
+        toggleEditor({
+          quest_title: questTitle,
+          quest_description: questDesc,
+          quest_from: questFrom,
+          code_template: codeTemplate,
+          quest_answer: questAnswer,
+        });
+      });
     }
 
     this.ncpQuestMap.set(questTitle, questDesc);
@@ -256,17 +285,14 @@ export default class QuestManager {
   }
 
   moveQuestToCompleted(questTitle) {
-    toggleEditor({
-      quest_title: questTitle,
-      quest_description: null,
-      quest_from: null,
-      code_template: null,
-      quest_answer: null,
-      setVisible: false,
-    });
-    if (!this.questBox.classList.contains("hidden")) {
-      this.toggleQuestBox();
-    }
+    // toggleEditor({
+    //   quest_title: questTitle,
+    //   quest_description: null,
+    //   quest_from: null,
+    //   code_template: null,
+    //   quest_answer: null,
+    //   setVisible: false,
+    // });
     document.getElementById("popupContainer").style.display = "block";
     document.getElementById("popup-text-header").textContent =
       "Quest completed";
@@ -287,5 +313,12 @@ export default class QuestManager {
         }
       }
     });
+  }
+
+  showWrongAnswerPopup() {
+    document.getElementById("popupContainer").style.display = "block";
+    document.getElementById("popup-text-header").textContent = "Wrong Answer!";
+    document.getElementById("quest-item").textContent =
+      "Make sure to follow the instructions!";
   }
 }

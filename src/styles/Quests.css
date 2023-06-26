@@ -3,6 +3,7 @@
   }
   
   #questBox {
+    overflow: auto; /* Add scrollbars when the content exceeds the height */
     position: fixed;
     top: 0;
     left: 0;
@@ -61,10 +62,9 @@
   }
 
   #Ongoing li, #Available li, #StoryQuestList li{
-    /* list-style-type: none; */
+    /* list-style: none; */
     background-color: #3459a971;
     margin-top: 5px;
-    /* padding: 5px; */
     border: 2px solid #243d75b0;
     padding: 20px;
     padding-right: 10px;
@@ -73,8 +73,13 @@
   #Ongoing li:hover,
   #Ongoing li:hover span{
     cursor: pointer;
-    animation: fadeIn 0.3s ease-in-out;
     border-left: 2px solid white;
+  }
+
+  #Ongoing li:hover {
+    animation: fadeIn 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Border glow effect */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
   }
 
   .quest-list-button {
@@ -86,19 +91,18 @@
     display: inline-block !important;
   }
 
-  #Ongoing span, #Available span{
+  #Ongoing span, #Available span, #StoryQuestList span{
     background-color: #3459a971;
     border: 2px solid #243d75b0;
     font-size: 14px;
     padding: 4px;
   }
 
-  #Ongoing li:hover + span,
+  /* #Ongoing li:hover + span,
   #Ongoing li:hover ~ span {
     background-color: #3459a971;
-    animation: fadeIn 0.3s ease-in-out;
     border-left: 2px solid white;
-  }
+  } */
 
   .content.active {
     display: block;
@@ -107,9 +111,13 @@
   @keyframes fadeIn {
     0% {
       border-left: 2px solid rgba(255, 255, 255, 0);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0); /* Border glow effect */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0); /* Text glow effect */
     }
     100% {
       border-left: 2px solid white;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Border glow effect */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
     }
   }
 

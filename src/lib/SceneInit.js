@@ -11,6 +11,7 @@ import QuestManager from "./QuestManager";
 
 import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
+import AlbyNPC from "../npc/AlbyNPC";
 
 export default class SceneInit {
   constructor(canvasId) {
@@ -87,6 +88,15 @@ export default class SceneInit {
           this.canvasId
         );
         this.npcs.push(this.sampleNPC2);
+
+        this.albyNPC = new AlbyNPC(this.scene);
+        this.albyNPC.initialize(
+          npcSpawnPoints[2],
+          this.cameraControls.camera,
+          this.player,
+          this.canvasId
+        );
+        this.npcs.push(this.albyNPC);
 
         document.getElementById("interface-container").style.display = "block";
       })
