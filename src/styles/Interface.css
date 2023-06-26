@@ -80,7 +80,7 @@
   color: #fff;
   padding: 20px;
   border-radius: 10px;
-  z-index: 3;
+  z-index: 5;
   animation: slideIn 0.8s ease-in-out;
 }
 

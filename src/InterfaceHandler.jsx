@@ -58,7 +58,7 @@ export default function InterfaceHandler() {
       </a>
       <div id="popupContainer">
         <div id="popupContent">
-          <p>New Quest Accepted</p>
+          <p id="popup-text-header">New Quest Accepted</p>
           <p id="quest-item">{/* Accepted quest title here */}</p>
           <button id="closeButton">Okay</button>
         </div>

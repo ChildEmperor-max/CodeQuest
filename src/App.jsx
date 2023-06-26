@@ -11,12 +11,12 @@ function App() {
 
   return (
     <div>
+      <InterfaceHandler />
       <canvas
         id="myThreeJsCanvas"
         width={window.innerWidth}
         height={window.innerHeight}
       ></canvas>
-      <InterfaceHandler />
     </div>
   );
 }

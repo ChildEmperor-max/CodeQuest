@@ -30,11 +30,11 @@ export default class QuestManager {
     const viewQuestData = async () => {
       try {
         const npcData = await fetchNpcQuestDialog();
-        npcData.forEach((element) => {
-          if (element.quest_status.trim() === "completed") {
-            this.moveQuestToCompleted(element.quest_title.trim());
-          }
-        });
+        // npcData.forEach((element) => {
+        //   if (element.quest_status.trim() === this.quests.status.completed) {
+        //     this.moveQuestToCompleted(element.quest_title.trim());
+        //   }
+        // });
       } catch (error) {
         console.error("[ERROR]:", error);
       }
@@ -69,7 +69,11 @@ export default class QuestManager {
 
   initialize() {
     this.closePopupButton.addEventListener("click", () => {
-      this.popupContainer.style.display = "none";
+      this.popupContainer.classList.add("fadeOut");
+      setTimeout(() => {
+        this.popupContainer.style.display = "none";
+        this.popupContainer.classList.remove("fadeOut");
+      }, 800);
     });
     this.questButton = document.getElementById("quest-button");
     this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
@@ -177,6 +181,8 @@ export default class QuestManager {
     questAnswer
   ) {
     this.popupContainer.style.display = "block";
+    document.getElementById("popup-text-header").textContent =
+      "New Quest accepted";
     document.getElementById("quest-item").textContent = questTitle;
     this.quests.updateQuestStatus(questTitle, this.quests.status.active);
 
@@ -228,6 +234,10 @@ export default class QuestManager {
     });
 
     this.quests.updateQuestStatus(questTitle, this.quests.status.inactive);
+    this.popupContainer.style.display = "block";
+    document.getElementById("popup-text-header").textContent =
+      "Abandoned quest";
+    document.getElementById("quest-item").textContent = questTitle;
 
     const availableQuestItems = Array.from(this.ongoingQuests.children);
     const questFromElement = availableQuestItems.find((element) => {
@@ -246,6 +256,23 @@ export default class QuestManager {
   }
 
   moveQuestToCompleted(questTitle) {
+    toggleEditor({
+      quest_title: questTitle,
+      quest_description: null,
+      quest_from: null,
+      code_template: null,
+      quest_answer: null,
+      setVisible: false,
+    });
+    if (!this.questBox.classList.contains("hidden")) {
+      this.toggleQuestBox();
+    }
+    document.getElementById("popupContainer").style.display = "block";
+    document.getElementById("popup-text-header").textContent =
+      "Quest completed";
+    document.getElementById("quest-item").textContent = questTitle;
+    this.quests.updateQuestStatus(questTitle, this.quests.status.completed);
+
     const ongoingQuests = Array.from(this.ongoingQuests.children);
     const questFromElement = ongoingQuests.find((element) => {
       return element.getAttribute("data-quest-item") === questTitle.trim();
