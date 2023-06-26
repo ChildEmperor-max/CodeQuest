@@ -45,6 +45,7 @@ export default class SampleNPC2 extends NPCLoader {
         var questTitle = null;
         var questType = null;
         var codeTemplate = null;
+        var questAnswer = null;
 
         if (npcData[0].quest_id !== null) {
           const questData = await viewQuestData(npcData[0].quest_id);
@@ -53,9 +54,17 @@ export default class SampleNPC2 extends NPCLoader {
           questTitle = questData[0].quest_title;
           questType = questData[0].quest_type;
           codeTemplate = questData[0].code_template;
+          questAnswer = questData[0].quest_answer;
         }
 
-        return { npcDialog, npcHasQuest, questTitle, questType, codeTemplate };
+        return {
+          npcDialog,
+          npcHasQuest,
+          questTitle,
+          questType,
+          codeTemplate,
+          questAnswer,
+        };
       } catch (error) {
         console.error("[ERROR]:", error);
       }
@@ -63,14 +72,21 @@ export default class SampleNPC2 extends NPCLoader {
 
     const handleData = async (npcName) => {
       try {
-        const { npcDialog, npcHasQuest, questTitle, questType, codeTemplate } =
-          await fetchData(npcName);
+        const {
+          npcDialog,
+          npcHasQuest,
+          questTitle,
+          questType,
+          codeTemplate,
+          questAnswer,
+        } = await fetchData(npcName);
         this.createDialogBox(
           npcDialog,
           questTitle,
           npcHasQuest,
           questType,
-          codeTemplate
+          codeTemplate,
+          questAnswer
         );
       } catch (error) {
         console.error("[ERROR]:", error);

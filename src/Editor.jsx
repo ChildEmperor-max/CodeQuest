@@ -28,9 +28,11 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
-import { executeJavaCode } from "./db/HandleTable";
+import { executeJavaCode, updateQuestDataStatus } from "./db/HandleTable";
 import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
+import QuestManager from "./lib/QuestManager";
 
+let questManager = new QuestManager();
 const handleEditorChange = (newValue) => {
   editorValue = newValue;
 };
@@ -97,9 +99,11 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
             playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
           ) {
             console.log("CORRECT!");
+            updateQuestDataStatus(questTitle, "completed")
+            questManager.moveQuestToCompleted(questTitle);
+          } else {
+            console.log("WRONG! ")
           }
-          console.log("your code: ", playerAnswer);
-          console.log("correct answer: ", correctAnswer);
         }
       })
       .catch((error) => {

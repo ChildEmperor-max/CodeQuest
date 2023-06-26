@@ -25,18 +25,16 @@ export default class QuestManager {
     this.removeQuestButton.textContent = "Abandon";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
-
-    this.closePopupButton.addEventListener("click", () => {
-      this.popupContainer.style.display = "none";
-    });
   }
   toggleQuestBox() {
     const viewQuestData = async () => {
       try {
         const npcData = await fetchNpcQuestDialog();
-        // npcData.forEach((element) => {
-        //   console.log(element.quest_status);
-        // });
+        npcData.forEach((element) => {
+          if (element.quest_status.trim() === "completed") {
+            this.moveQuestToCompleted(element.quest_title.trim());
+          }
+        });
       } catch (error) {
         console.error("[ERROR]:", error);
       }
@@ -70,6 +68,9 @@ export default class QuestManager {
   }
 
   initialize() {
+    this.closePopupButton.addEventListener("click", () => {
+      this.popupContainer.style.display = "none";
+    });
     this.questButton = document.getElementById("quest-button");
     this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
 
@@ -120,7 +121,7 @@ export default class QuestManager {
     li.textContent = `${questTitle}`;
     pi.textContent = `${questFrom}`;
     li.setAttribute("id", questTitle); // Set the questTitle as the id
-    pi.setAttribute("data-quest-item", questFrom);
+    pi.setAttribute("data-quest-item", questTitle);
 
     this.quests.createQuest(
       questTitle,
@@ -181,7 +182,7 @@ export default class QuestManager {
 
     const availableQuestItems = Array.from(this.availableQuests.children);
     const questFromElement = availableQuestItems.find((element) => {
-      return element.getAttribute("data-quest-item") === questFrom;
+      return element.getAttribute("data-quest-item") === questTitle.trim();
     });
 
     availableQuestItems.find((element) => {
@@ -230,7 +231,7 @@ export default class QuestManager {
 
     const availableQuestItems = Array.from(this.ongoingQuests.children);
     const questFromElement = availableQuestItems.find((element) => {
-      return element.getAttribute("data-quest-item") === questFrom;
+      return element.getAttribute("data-quest-item") === questTitle.trim();
     });
 
     availableQuestItems.find((element) => {
@@ -239,6 +240,23 @@ export default class QuestManager {
           element.textContent = `${questTitle} `;
           this.availableQuests.appendChild(element);
           this.availableQuests.appendChild(questFromElement);
+        }
+      }
+    });
+  }
+
+  moveQuestToCompleted(questTitle) {
+    const ongoingQuests = Array.from(this.ongoingQuests.children);
+    const questFromElement = ongoingQuests.find((element) => {
+      return element.getAttribute("data-quest-item") === questTitle.trim();
+    });
+
+    ongoingQuests.find((element) => {
+      if (element.getAttribute("id")) {
+        if (element.getAttribute("id").toString() === questTitle.trim()) {
+          element.textContent = `${questTitle} `;
+          this.ongoingQuests.removeChild(element);
+          this.ongoingQuests.removeChild(questFromElement);
         }
       }
     });

@@ -116,13 +116,15 @@ export default class NPCLoader extends THREE.Object3D {
     questTitle = undefined,
     hasQuest = false,
     questType,
-    codeTemplate
+    codeTemplate,
+    questAnswer
   ) {
     this.hasQuest = hasQuest;
     if (hasQuest) {
       this.quest = dialogTexts[dialogTexts.length - 1];
       this.questTitle = questTitle;
       this.questCodeTemplate = codeTemplate;
+      this.questAnswer = questAnswer;
       // this.questManager.initialize();
       //   this.questManager.addQuestItem(
       //     this.quest,
@@ -365,7 +367,8 @@ export default class NPCLoader extends THREE.Object3D {
         this.questTitle,
         this.quest,
         this.npcName,
-        this.questCodeTemplate
+        this.questCodeTemplate,
+        this.questAnswer
       );
       console.log("Quest accepted.");
     }
