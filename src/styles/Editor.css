@@ -18,6 +18,10 @@
     margin: 5px;
   }
 
+  #ace-editor {
+    resize: horizontal;
+  }
+
   .active-quest-list {
     background-color: #3459a971;
     margin-top: 5px;
