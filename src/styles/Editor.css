@@ -102,6 +102,8 @@
     text-align: left;
     padding: 17px;
     height: 300px;
+    max-height: 300px;
+    overflow: auto;
   }
 
   @keyframes fadeIn {
