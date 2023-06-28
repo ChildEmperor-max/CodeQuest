@@ -177,6 +177,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   };
 
   const [questSelected, setQuestSelected] = useState(false);
+  const [questStarted, setQuestStarted] = useState(false);
   const QuestModal = () => {
     const handleQuestClick = async (quest_id) => {
       let questData = await fetchNpcQuestDialogById(quest_id);
@@ -189,6 +190,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
       setModalTitle(questTitle + " - " + questFrom);
       setModalDescription(questDescription);
       setQuestSelected(true);
+      setQuestStarted(false);
     };
 
     const ViewActiveQuests = () => {
@@ -265,10 +267,17 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
                     closeSelectedQuestModal();
                     setSelectedQuest(questTitle);
                     setSelectedQuestAnswer(quest_answer);
+                    setQuestStarted(true);
                   }}
                 >
-                  Start
-                  <FontAwesomeIcon icon={faArrowRight} />
+                  {questStarted ? (
+                    <span>Ok</span>
+                  ) : (
+                    <>
+                      <span>Start</span>
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </>
+                  )}
                 </button>
               </div>
             </>
@@ -350,7 +359,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
                   buttonText="Quest"
                 />
 
-                <span>{selectedQuest}</span>
+                {questStarted ? <span>{selectedQuest}</span> : ""}
               </div>
               <div>
                 <ButtonText

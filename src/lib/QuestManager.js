@@ -17,15 +17,6 @@ export default class QuestManager {
 
     this.popupContainer = document.getElementById("popupContainer");
     this.closePopupButton = document.getElementById("closeButton");
-
-    this.startQuestButton = document.createElement("button");
-    this.startQuestButton.textContent = "Start";
-    this.startQuestButton.style.display = "none";
-    this.startQuestButton.setAttribute("class", "quest-list-button");
-    this.removeQuestButton = document.createElement("button");
-    this.removeQuestButton.textContent = "Abandon";
-    this.removeQuestButton.style.display = "none";
-    this.removeQuestButton.setAttribute("class", "quest-list-button");
   }
   toggleQuestBox() {
     const viewQuestData = async () => {
@@ -71,6 +62,15 @@ export default class QuestManager {
   }
 
   initialize() {
+    this.startQuestButton = document.createElement("button");
+    this.startQuestButton.textContent = "Start";
+    this.startQuestButton.style.display = "none";
+    this.startQuestButton.setAttribute("class", "quest-list-button");
+    this.removeQuestButton = document.createElement("button");
+    this.removeQuestButton.textContent = "Abandon";
+    this.removeQuestButton.style.display = "none";
+    this.removeQuestButton.setAttribute("class", "quest-list-button");
+
     this.closePopupButton.addEventListener("click", () => {
       this.popupContainer.classList.add("fadeOut");
       setTimeout(() => {
@@ -78,8 +78,6 @@ export default class QuestManager {
         this.popupContainer.classList.remove("fadeOut");
       }, 800);
     });
-    this.questButton = document.getElementById("quest-button");
-    this.questButton.addEventListener("click", this.toggleQuestBox.bind(this));
 
     this.closeQuestButton = document.getElementById("close-quest-button");
     this.closeQuestButton.addEventListener(
