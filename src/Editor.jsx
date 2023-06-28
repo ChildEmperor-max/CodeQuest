@@ -141,17 +141,6 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
     setDarkMode(!darkMode);
   };
 
-  const viewSelectedQuestModal = () => {
-    setIsQuestModalOpen(true);
-    // if (questSelected) {
-    //   setModalTitle(questTitle + " - " + questFrom);
-    //   setModalDescription(questDescription);
-    // } else {
-    //   setModalTitle("Quests");
-    //   setModalDescription(questDescription);
-    // }
-  };
-
   const fetchActiveQuests = async () => {
     try {
       const npcData = await fetchNpcQuestDialog();
@@ -172,6 +161,21 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
     setIsQuestModalOpen(false);
   };
 
+  let startedQuest = questTitle ? true : false;
+
+  const viewSelectedQuestModal = () => {
+    setIsQuestModalOpen(true);
+    if (startedQuest) {
+      setModalTitle(questTitle + " - " + questFrom);
+      setModalDescription(questDescription);
+      setQuestSelected(true);
+    } else {
+      setQuestSelected(false);
+      setModalTitle("Quests");
+      setModalDescription(questDescription);
+    }
+  };
+
   const [questSelected, setQuestSelected] = useState(false);
   const QuestModal = () => {
     const handleQuestClick = async (quest_id) => {
@@ -180,7 +184,6 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
       questFrom = questData[0].npc_name;
       questDescription = questData[0].quest_description;
       quest_answer = questData[0].quest_answer;
-      setSelectedQuestAnswer(quest_answer);
 
       setEditorVal(questData[0].code_template);
       setModalTitle(questTitle + " - " + questFrom);
@@ -224,7 +227,24 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
           <button onClick={closeSelectedQuestModal}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
-          {questSelected ? (
+          {!questSelected ? (
+            <>
+              <button
+                onClick={() => {
+                  fetchActiveQuests();
+                }}
+                title="refresh"
+              >
+                <FontAwesomeIcon icon={faRefresh} />
+              </button>
+              <div className="quest-modal-header">
+                <span>{modalTitle}</span>
+              </div>
+              <div className="quest-modal-content">
+                <ViewActiveQuests />
+              </div>
+            </>
+          ) : (
             <>
               <button
                 onClick={() => {
@@ -244,28 +264,12 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
                   onClick={() => {
                     closeSelectedQuestModal();
                     setSelectedQuest(questTitle);
+                    setSelectedQuestAnswer(quest_answer);
                   }}
                 >
                   Start
                   <FontAwesomeIcon icon={faArrowRight} />
                 </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  fetchActiveQuests();
-                }}
-                title="refresh"
-              >
-                <FontAwesomeIcon icon={faRefresh} />
-              </button>
-              <div className="quest-modal-header">
-                <span>{modalTitle}</span>
-              </div>
-              <div className="quest-modal-content">
-                <ViewActiveQuests />
               </div>
             </>
           )}

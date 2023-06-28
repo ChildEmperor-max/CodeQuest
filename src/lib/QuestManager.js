@@ -256,7 +256,7 @@ export default class QuestManager {
 
   moveQuestToAvailable(questTitle, questFrom) {
     toggleEditor({
-      quest_title: questTitle,
+      quest_title: null,
       quest_description: null,
       quest_from: null,
       code_template: null,
