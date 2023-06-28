@@ -5,11 +5,11 @@ import QuestManager from "./lib/QuestManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTasks,
-  faChartBar,
   faCog,
   faUser,
   faMedal,
   faEdit,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 
 const questManager = new QuestManager();
@@ -75,7 +75,7 @@ export default function InterfaceHandler() {
           />
           <InterfaceButton
             name="Achievements"
-            icon={faChartBar}
+            icon={faTrophy}
             id="achivements-button"
             onclickEvent={toggleAchievements}
           />

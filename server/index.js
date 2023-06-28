@@ -26,6 +26,8 @@ import {
   handleFetchQuest,
   handleUpdateQuestStatus,
   handleFetchQuestById,
+  handleFetchCompletedQuests,
+  handleFetchCompletedQuestCount,
 } from "./handlers/questHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -97,6 +99,14 @@ app.post("/quests-update", (req, res) => {
 
 app.get("/quests", (req, res) => {
   handleFetchQuest(req, res, pool);
+});
+
+app.get("/quests/completed", (req, res) => {
+  handleFetchCompletedQuests(req, res, pool);
+});
+
+app.get("/quests/completed/count", (req, res) => {
+  handleFetchCompletedQuestCount(req, res, pool);
 });
 
 app.post("/dialog", (req, res) => {

@@ -27,6 +27,34 @@ export function handleFetchQuestById(id, res, pool) {
     });
 }
 
+export function handleFetchCompletedQuests(req, res, pool) {
+  pool
+    .query("SELECT * FROM quest WHERE quest_status = 'completed'")
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
+export function handleFetchCompletedQuestCount(req, res, pool) {
+  pool
+    .query("SELECT COUNT(*) FROM quest WHERE quest_status = 'completed'")
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export function handleUpdateQuestStatus(req, res, pool) {
   try {
     const questData = req.body;

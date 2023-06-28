@@ -1,16 +1,14 @@
 .character-profile-container {
     font-size: 14px;
-    width: 50%;
+    width: 45%;
     height: 60%;
     overflow: auto;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
     position: fixed;
     z-index: 1;
     top: 20%;
-    left: 25%;
+    left: 28%;
     display: flex;
-    background-color: rgb(66, 73, 78);
+    gap: 10px;
 }
 
 .left-side {
@@ -21,6 +19,7 @@
     justify-content: center;
     align-items: center;
     align-content: center;
+    background: linear-gradient(120deg, #7c7670 0%, #524c49 100%);
 }
 
 .left-side-text-container {
@@ -29,15 +28,19 @@
 }
 
 .left-side-text-container p {
+    pointer-events: none;
     margin: 0;
 }
 
 .right-side {
     background-color: rgb(108, 124, 129);
+    border: 2px solid rgba(0, 0, 0, 0.027);
+    /* background: linear-gradient(120deg, rgb(108, 124, 129) 0%, rgb(108, 124, 129) 100%); */
     top: 0;
     right: 0;
     width: 60%;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .right-side-text-container {
@@ -52,6 +55,7 @@
 #avatar {
     border-radius: 50%;
     background-color: rgb(3, 6, 56);
+    background: radial-gradient(circle, rgb(3, 6, 56), rgb(86, 91, 143));
     padding: 3px;
     width: 150px;
     height: auto;
@@ -84,6 +88,8 @@
     width: 50%;
     margin: 0 auto;
     margin-top: 20px;
+    font-weight: 600;
+    font-size: 15px;
 }
   
 
@@ -100,3 +106,19 @@
 #bio-content p {
     margin: 5px;
 }
+
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+  }
+  
+::-webkit-scrollbar-track {
+    background: #000; /* Background color of the scrollbar track */
+  }
+  
+::-webkit-scrollbar-thumb {
+    background: #414147; /* Color of the scrollbar thumb */
+  }
+  
+::-webkit-scrollbar-thumb:hover {
+    background: #5d5d64; /* Color of the scrollbar thumb on hover */
+  }

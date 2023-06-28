@@ -233,15 +233,37 @@ export function addQuestToTable(from, title, description, status, type) {
     });
 }
 
-export function fetchQuestTable() {
-  fetch(questAPI)
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+export async function fetchQuestTable() {
+  try {
+    const response = await fetch(questAPI);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export async function fetchCompletedQuests() {
+  try {
+    const response = await fetch(questAPI + "/completed");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export async function fetchCompletedQuestCount() {
+  try {
+    const response = await fetch(questAPI + "/completed/count");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 }
 
 export function addDialogToTable(npc_name, dialog, quest_title) {
