@@ -1,8 +1,9 @@
-const host = "http://localhost:3000/";
-// const host = "http://127.0.0.1:3000/";
+// const host = "http://localhost:3000/";
+const host = "http://127.0.0.1:3000/";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
+const achievementsAPI = host + "achievements";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -236,6 +237,17 @@ export function addQuestToTable(from, title, description, status, type) {
 export async function fetchQuestTable() {
   try {
     const response = await fetch(questAPI);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export async function fetchAchievements() {
+  try {
+    const response = await fetch(achievementsAPI);
     const data = await response.json();
     return data;
   } catch (error) {

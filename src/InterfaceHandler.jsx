@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CharacterProfile from "./CharacterProfile";
+import Achievements from "./Achievements";
 import toggleEditor from "./Editor";
 import QuestManager from "./lib/QuestManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +32,6 @@ export default function InterfaceHandler() {
 
   const toggleAchievements = () => {
     setAchievementsOpen(!isAchievementsOpen);
-    console.log("Achievements");
   };
 
   const toggleSettings = () => {
@@ -53,6 +53,7 @@ export default function InterfaceHandler() {
       {isCharacterProfileOpen ? (
         <CharacterProfile onClose={toggleCharacterProfile} />
       ) : null}
+      {isAchievementsOpen ? <Achievements onClose={toggleAchievements} /> : null}
       <div className="ui-container" id="interface-container">
         <div className="right-container">
           <InterfaceButton

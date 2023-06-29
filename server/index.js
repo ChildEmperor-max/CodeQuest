@@ -29,6 +29,7 @@ import {
   handleFetchCompletedQuests,
   handleFetchCompletedQuestCount,
 } from "./handlers/questHandler.js";
+import { handleFetchAchievements } from "./handlers/achievementsHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -61,6 +62,22 @@ app.post("/npc", (req, res) => {
   handleInsertNpc(req, res, pool);
 });
 
+app.post("/quests", (req, res) => {
+  handleInsertQuest(req, res, pool);
+});
+
+app.post("/quests-update", (req, res) => {
+  handleUpdateQuestStatus(req, res, pool);
+});
+
+app.post("/dialog", (req, res) => {
+  handleInsertDialog(req, res, pool);
+});
+
+app.post("/execute-java", (req, res) => {
+  handleSubmittedJavaAnswer(req, res, pool);
+});
+
 app.get("/npc", (req, res) => {
   handleFetchNpc(req, res, pool);
 });
@@ -89,14 +106,6 @@ app.get("/dialog/get-dialog/:name", (req, res) => {
   handleFetchDialogById(name, res, pool);
 });
 
-app.post("/quests", (req, res) => {
-  handleInsertQuest(req, res, pool);
-});
-
-app.post("/quests-update", (req, res) => {
-  handleUpdateQuestStatus(req, res, pool);
-});
-
 app.get("/quests", (req, res) => {
   handleFetchQuest(req, res, pool);
 });
@@ -109,16 +118,12 @@ app.get("/quests/completed/count", (req, res) => {
   handleFetchCompletedQuestCount(req, res, pool);
 });
 
-app.post("/dialog", (req, res) => {
-  handleInsertDialog(req, res, pool);
-});
-
 app.get("/dialog", (req, res) => {
   handleFetchDialog(req, res, pool);
 });
 
-app.post("/execute-java", (req, res) => {
-  handleSubmittedJavaAnswer(req, res, pool);
+app.get("/achievements", (req, res) => {
+  handleFetchAchievements(req, res, pool);
 });
 
 app.get("/", (req, res) => {

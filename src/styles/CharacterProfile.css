@@ -56,7 +56,8 @@
     border-radius: 50%;
     background-color: rgb(3, 6, 56);
     background: radial-gradient(circle, rgb(3, 6, 56), rgb(86, 91, 143));
-    padding: 3px;
+    box-sizing: border-box;
+    border: 5px solid rgb(204, 207, 72);
     width: 150px;
     height: auto;
     display: flex;

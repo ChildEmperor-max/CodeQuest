@@ -1,0 +1,58 @@
+.achievements-container {
+    position: fixed;
+    font-size: 14px;
+    width: 45%;
+    height: 60%;
+    overflow: auto;
+    position: fixed;
+    z-index: 1;
+    top: 20%;
+    left: 28%;
+    background-color: #141f45;
+    padding: 20px;
+  }
+
+.achieve-header {
+    text-align: center;
+    margin: 10px;
+}
+
+.achieve-content {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 30px; /* Set the gap between grid items */
+    border: none; /* Remove the border */
+    justify-content: center;
+    overflow: auto;
+}
+
+.achieve-content-badge {
+    position: relative;
+    margin: 10px;
+    text-align: center;
+}
+
+.badge-img {
+    width: 120px;
+    height: 120px;
+    transition: box-shadow 0.3s ease;
+    background-color: rgba(209, 159, 20, 0.592);
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.badge-img:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px 5px #3459a9; /* Add the glow effect on hover */
+}
+
+.achieve-content p {
+    padding: 10px;
+    /* background-color: #3459a9; */
+    border-bottom: 2px solid wheat;
+    border-style: groove;
+    border-left: none;
+    border-right: none;
+    border-top: none;;
+}
+  

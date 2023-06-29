@@ -98,12 +98,12 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
     executeJavaCodeAndHandleOutput()
       .then((response) => {
         if (!response.error) {
-          const variableNames = editorValue.match(/\b\w+\b\s*(?==)/g);
-          if (variableNames) {
-            variableNames.forEach((variableName) => {
-              console.log(variableName.trim());
-            });
-          }
+          // const variableNames = editorValue.match(/\b\w+\b\s*(?==)/g);
+          // if (variableNames) {
+          //   variableNames.forEach((variableName) => {
+          //     console.log(variableName.trim());
+          //   });
+          // }
           console.log(ans);
           let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
           let correctAnswer = ans.replace(/\b\w+\b\s*(?==)/g, "");

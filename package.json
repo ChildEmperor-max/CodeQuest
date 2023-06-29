@@ -14,6 +14,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@tweenjs/tween.js": "^20.0.3",
     "ace-builds": "^1.22.0",
+    "animate.css": "^4.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
