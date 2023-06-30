@@ -48,37 +48,35 @@ const Achievements = ({ onClose }) => {
   const AchievementBadge = ({ name, description, index }) => {
     return (
       <div className="achieve-badge-container">
-        <div className={`${flippedStates[index] ? "flipper" : ""}`}>
           <div className="achieve-content-badge-front">
-            <img
-              className="badge-img"
-              src="src/assets/icons/test-icon1.png"
-              onClick={() => flipBadge(index)}
-            />
-            <p>{name}</p>
+              <div className="flipper">
+                <img
+                  className="badge-img-front"
+                  src="src/assets/icons/test-icon1.png"
+                />
+              </div>
+            <p id="badge-name">{name}</p>
           </div>
           <div className="achieve-content-badge-back">
-            <img
-              className="badge-img"
-              src="src/assets/icons/test-icon1.png"
-              onClick={() => flipBadge(index)}
-            />
-            <p>{description}</p>
+              <div className="flipper">
+                <div className="badge-img-back">
+                  <p id="badge-description">{description}</p>
+                </div>
+              </div>
           </div>
-        </div>
       </div>
     );
   };
 
   return (
     <div className="achievements-container">
-      <div>
+      <div className="achieve-header-container">
         <button className="close-button" onClick={onClose}>
           <FontAwesomeIcon icon={faTimes} size="2x" />
         </button>
-      </div>
-      <div className="achieve-header">
-        <h2>Achievements</h2>
+        <div className="achieve-header">
+          <h2>Achievements</h2>
+        </div>
       </div>
       <div className="achieve-content">
         {achievementsData.map((achievement, index) => (
