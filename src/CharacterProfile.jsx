@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faTimes,
   faTrophy,
   faUser,
   faTasks,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   fetchCompletedQuests,
   fetchCompletedQuestCount,
 } from "./db/HandleTable";
+import CloseButtonModal from "./components/CloseButtonModal";
 
 const CharacterProfile = ({ onClose }) => {
   const [completedQuestCount, setCompletedQuestCount] = useState(0);
   const [currentTab, setCurrentTab] = useState(1);
+  const [userName, setUserName] = useState("Lorem Ipsum");
+  const [currentBio, setCurrentBio] = useState(
+    "Lorem ipsum dolor sit amet consectetu, adipisicing elit."
+  );
+  const [isEditingBio, setIsEditingBio] = useState(false);
 
   useEffect(() => {
     viewCompletedQuests()
@@ -50,21 +56,28 @@ const CharacterProfile = ({ onClose }) => {
   const RandomTextAnimation = ({ text, elementType = "span" }) => {
     const [randomText, setRandomText] = useState("");
     const [showRealText, setShowRealText] = useState(false);
-    const revealDelay = 600;
+    const revealDelay = 1600;
 
     useEffect(() => {
-      const interval = setInterval(generateRandomText, 80); // Adjust the interval duration as needed
+      const interval = setInterval(
+        generateRandomText,
+        Math.floor(Math.random() * (400 - 100 + 1)) + 100
+      ); // Adjust the interval duration as needed
       return () => clearInterval(interval);
     }, []);
 
     const generateRandomText = () => {
-      const characters = "abcdefghijklmnopqrstuvwxyz0123456789 ";
+      const characters = "01";
       let randomText = "";
       for (let i = 0; i < text.length; i++) {
         const randomChar =
           characters[Math.floor(Math.random() * characters.length)];
         randomText += randomChar;
       }
+      // var i = characters.length;
+      // while (i--) {
+      //   alert(characters.charAt(i));
+      // }
       setRandomText(randomText);
     };
 
@@ -82,8 +95,7 @@ const CharacterProfile = ({ onClose }) => {
       }
     }, [showRealText, text]);
 
-    const Element = elementType; // Dynamically assign the element type
-
+    const Element = elementType;
     return (
       <>
         {showRealText ? (
@@ -97,6 +109,31 @@ const CharacterProfile = ({ onClose }) => {
           </Element>
         )}
       </>
+    );
+  };
+
+  const editBio = () => {
+    setIsEditingBio(true);
+    console.log("editing bio");
+  };
+
+  const editAvatar = () => {
+    console.log("editing avatar");
+  };
+
+  const editUsername = () => {
+    console.log("editing username");
+  };
+
+  const EditProfileButton = ({ onClickEvent = null }) => {
+    return (
+      <button
+        className="profile-edit-button"
+        title="Edit"
+        onClick={onClickEvent}
+      >
+        <FontAwesomeIcon icon={faPen} size="xs" />
+      </button>
     );
   };
 
@@ -129,39 +166,51 @@ const CharacterProfile = ({ onClose }) => {
         />
       </div>
       <div className="right-side">
-        <button className="close-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} size="2x" />
-        </button>
+        <CloseButtonModal onClose={onClose} />
         <div className="right-side-text-container">
           {currentTab === 1 ? (
             <div id="profile-tab">
-              <img
-                src="/src/assets/icons/default-avatar.png"
-                id="avatar"
-                alt="Avatar"
-              />
+              <div id="avatar-container">
+                <img
+                  src="/src/assets/icons/default-avatar.png"
+                  id="avatar"
+                  alt="Avatar"
+                />
+                <EditProfileButton onClickEvent={editAvatar} />
+              </div>
               <div className="text-container">
-                <div id="character-username">
-                  <RandomTextAnimation text="Lorem Ipsum" elementType="h3" />
+                <div className="character-username-container">
+                  <div id="character-username">
+                    <EditProfileButton onClickEvent={editUsername} />
+                    <RandomTextAnimation text={userName} elementType="h3" />
+                  </div>
                 </div>
-                <div className="content-header">Bio</div>
-                <div id="bio-content">
-                  <RandomTextAnimation
-                    text="Lorem ipsum dolor sit amet consectetu, adipisicing elit."
-                    elementType="p"
-                  />
+                <div className="content-header-container">
+                  <div className="content-header">
+                    Bio
+                    <EditProfileButton onClickEvent={editBio} />
+                  </div>
                 </div>
-                <div>
-                  <span>Level: </span>
-                  <RandomTextAnimation text="1" elementType="span" />
-                </div>
-                <div>
-                  <span>Rank: </span>
-                  <RandomTextAnimation text="unranked" elementType="span" />
-                </div>
-                <div>
-                  <span>Exp: </span>
-                  <RandomTextAnimation text="0/20" elementType="span" />
+                {isEditingBio ? (
+                  <textarea defaultValue={currentBio} className="bio-content" />
+                ) : (
+                  <div className="bio-content">
+                    <RandomTextAnimation text={currentBio} elementType="p" />
+                  </div>
+                )}
+                <div className="profile-info-container">
+                  <div>
+                    <span>Level: </span>
+                    <RandomTextAnimation text="1" elementType="span" />
+                  </div>
+                  <div>
+                    <span>Rank: </span>
+                    <RandomTextAnimation text="unranked" elementType="span" />
+                  </div>
+                  <div>
+                    <span>Exp: </span>
+                    <RandomTextAnimation text="0/20" elementType="span" />
+                  </div>
                 </div>
               </div>
             </div>

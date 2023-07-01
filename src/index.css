@@ -18,6 +18,13 @@
   /* -webkit-text-size-adjust: 100%; */
 }
 
+.close-button-modal {
+  margin: 2px;
+  float: right;
+  font-size: 8px;
+  text-align: center;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

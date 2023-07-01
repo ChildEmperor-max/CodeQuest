@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { fetchAchievements } from "./db/HandleTable";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import CloseButtonModal from "./components/CloseButtonModal";
 import "animate.css";
 
 const Achievements = ({ onClose }) => {
   const [achievementsData, setAchievementsData] = useState([]);
-  const [flippedStates, setFlippedStates] = useState([]);
 
   useEffect(() => {
     viewAchievements()
       .then((data) => {
         setAchievementsData(data);
-        setFlippedStates(Array(data.length).fill(false)); // Initialize flippedStates array
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
@@ -29,41 +26,47 @@ const Achievements = ({ onClose }) => {
     }
   };
 
-  // const flipBadge = (index) => {
-  //   const newFlippedStates = Array(flippedStates.length).fill(false);
-  //   newFlippedStates[index] = true;
-  //   setFlippedStates(newFlippedStates);
-  //   console.log(newFlippedStates);
-  // };
-
-  const flipBadge = (index) => {
-    setFlippedStates((prevFlippedStates) => {
-      const newFlippedStates = [...prevFlippedStates];
-      newFlippedStates[index] = !newFlippedStates[index];
-      console.log(newFlippedStates);
-      return newFlippedStates;
-    });
-  };
-
-  const AchievementBadge = ({ name, description, index }) => {
+  const AchievementBadge = ({
+    name,
+    description,
+    status,
+    date_achieved,
+    index,
+  }) => {
     return (
       <div className="achieve-badge-container">
-          <div className="achieve-content-badge-front">
-              <div className="flipper">
-                <img
-                  className="badge-img-front"
-                  src="src/assets/icons/test-icon1.png"
-                />
-              </div>
-            <p id="badge-name">{name}</p>
+        <div className="date-achieved-tooltip-container animate__animated animate__fadeInUp">
+          <div className="date-achieved-tooltip">
+            {date_achieved ? (
+              <p>
+                Date achieved: <br />
+                {date_achieved}
+              </p>
+            ) : null}
           </div>
-          <div className="achieve-content-badge-back">
-              <div className="flipper">
-                <div className="badge-img-back">
-                  <p id="badge-description">{description}</p>
-                </div>
-              </div>
+        </div>
+        <div className="achieve-content-badge-front">
+          <div className="flipper">
+            <img
+              className={`badge-img-front ${
+                status === "locked" ? "locked" : "unlocked"
+              }`}
+              src="src/assets/icons/test-icon1.png"
+            />
           </div>
+          <p id="badge-name">{name}</p>
+        </div>
+        <div className="achieve-content-badge-back">
+          <div className="flipper">
+            <div
+              className={`badge-img-back ${
+                status === "locked" ? "locked" : "unlocked"
+              }`}
+            >
+              <p id="badge-description">{description}</p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -71,9 +74,7 @@ const Achievements = ({ onClose }) => {
   return (
     <div className="achievements-container">
       <div className="achieve-header-container">
-        <button className="close-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} size="2x" />
-        </button>
+        <CloseButtonModal onClose={onClose} />
         <div className="achieve-header">
           <h2>Achievements</h2>
         </div>
@@ -84,6 +85,8 @@ const Achievements = ({ onClose }) => {
             key={achievement.id}
             name={achievement.name}
             description={achievement.description}
+            status={achievement.status}
+            date_achieved={achievement.date_achieved}
             index={index}
           />
         ))}

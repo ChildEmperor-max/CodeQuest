@@ -10,7 +10,9 @@ import "./styles/NPCName.css";
 import "./styles/LoadingScreen.css";
 import "./styles/Interface.css";
 import "./styles/CharacterProfile.css";
-import "./styles/Achievements.css"
+import "./styles/Achievements.css";
+import "./styles/Settings.css";
+import "./styles/Leaderboard.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

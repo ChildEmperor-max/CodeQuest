@@ -1,5 +1,5 @@
 export function handleFetchAchievements(req, res, pool) {
-  pool.query("SELECT * FROM achievements", (err, result) => {
+  pool.query("SELECT * FROM achievements ORDER BY id ASC", (err, result) => {
     if (err) {
       console.error("Error executing database query:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });
