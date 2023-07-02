@@ -35,11 +35,11 @@ const Achievements = ({ onClose }) => {
   }) => {
     return (
       <div className="achieve-badge-container">
-        <div className="date-achieved-tooltip-container animate__animated animate__fadeInUp">
+        <div className="date-achieved-tooltip-container">
           <div className="date-achieved-tooltip">
             {date_achieved ? (
-              <p>
-                Date achieved: <br />
+              <p className="date-tooltip-text">
+                Date achieved:
                 {date_achieved}
               </p>
             ) : null}
@@ -81,14 +81,21 @@ const Achievements = ({ onClose }) => {
       </div>
       <div className="achieve-content">
         {achievementsData.map((achievement, index) => (
-          <AchievementBadge
-            key={achievement.id}
-            name={achievement.name}
-            description={achievement.description}
-            status={achievement.status}
-            date_achieved={achievement.date_achieved}
-            index={index}
-          />
+          <div className="achievement-wrapper" key={achievement.id}>
+            <AchievementBadge
+              name={achievement.name}
+              description={achievement.description}
+              status={achievement.status}
+              date_achieved={
+                achievement.date_achieved
+                  ? new Date(achievement.date_achieved).toLocaleDateString(
+                      "en-US"
+                    )
+                  : null
+              }
+              index={index}
+            />
+          </div>
         ))}
       </div>
     </div>

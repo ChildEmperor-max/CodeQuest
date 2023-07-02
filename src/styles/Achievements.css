@@ -3,7 +3,6 @@
   font-size: 14px;
   width: 55%;
   height: 90%;
-  overflow: auto;
   z-index: 2;
   top: 5%;
   left: 23%;
@@ -37,9 +36,14 @@
   grid-template-columns: 1fr 1fr 1fr;
   padding: 10px;
   grid-gap: 30px;
+  max-height: 90%;
   overflow: auto;
   box-sizing: border-box;
   background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
+}
+
+.achievement-wrapper {
+  width: 100%;
 }
 
 .achieve-badge-container {
@@ -61,7 +65,7 @@
   box-shadow: 0 0 10px 5px #98a934;
 }
 
-.achieve-badge-container:hover .date-achieved-tooltip-container {
+.achieve-badge-container:hover .date-tooltip-text {
   visibility: visible;
 }
 
@@ -156,20 +160,37 @@
 }
 
 .date-achieved-tooltip-container {
-  visibility: hidden;
-  position: absolute;
-  z-index: 113;
+  visibility: visible;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  border-radius: 10%;
+  z-index: 113;
 }
 
 .date-achieved-tooltip {
-  text-align: center;
+  position: relative;
   z-index: 113;
+  display: inline-block;
 }
+
+.date-achieved-tooltip .date-tooltip-text {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  width: 170px;
+  border-radius: 6px;
+  padding: 3px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 111;
+  transform: translateY(450%);
+}
+
+.date-tooltip-text {
+
+}
+
+
 
 
 
