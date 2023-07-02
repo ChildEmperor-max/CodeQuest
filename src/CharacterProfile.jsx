@@ -22,6 +22,39 @@ const CharacterProfile = ({ onClose }) => {
   const [isEditingBio, setIsEditingBio] = useState(false);
 
   useEffect(() => {
+    // var characters = " abcdefghijklmnopqrstuvwxyz";
+    // var nums = "0123456789";
+    // var str = "hello world12";
+    // var delay = 500;
+
+    // for (var i = 0; i < str.length; i++) {
+    //   for (var j = 0; j < characters.length; j++) {
+    //     if (str.charAt(i) === characters.charAt(j)) {
+    //       setTimeout(
+    //         function (char) {
+    //           console.log(char);
+    //         },
+    //         i * delay,
+    //         str.charAt(i)
+    //       );
+    //       break;
+    //     }
+    //   }
+
+    //   for (var k = 0; k < nums.length; k++) {
+    //     if (str.charAt(i) === nums.charAt(k)) {
+    //       setTimeout(
+    //         function (char) {
+    //           console.log(char);
+    //         },
+    //         i * delay,
+    //         str.charAt(i)
+    //       );
+    //       break;
+    //     }
+    //   }
+    // }
+
     viewCompletedQuests()
       .then((questData) => {
         setCompletedQuestCount(questData[0].count);
@@ -74,10 +107,6 @@ const CharacterProfile = ({ onClose }) => {
           characters[Math.floor(Math.random() * characters.length)];
         randomText += randomChar;
       }
-      // var i = characters.length;
-      // while (i--) {
-      //   alert(characters.charAt(i));
-      // }
       setRandomText(randomText);
     };
 
