@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CloseButtonModal from "./components/CloseButtonModal";
+import CloseButtonModal from "../components/CloseButtonModal";
+import GraphicsSettings from "./GraphicsSettings";
 
-const Settings = ({ onClose }) => {
+const Settings = ({
+  onClose,
+  antialias: { antialiasValue, setAntialiasValue },
+  shadowMap: { shadowMapValue, setShadowMapValue },
+}) => {
   const [currentTab, setCurrentTab] = useState(1);
 
   const viewGraphicsSettings = () => {
@@ -34,7 +39,12 @@ const Settings = ({ onClose }) => {
       </div>
       <div className="settings-content-container">
         <CloseButtonModal onClose={onClose} />
-        {currentTab === 1 ? <p>Graphics </p> : null}
+        {currentTab === 1 ? (
+          <GraphicsSettings
+            antialias={{ antialiasValue, setAntialiasValue }}
+            shadowMap={{ shadowMapValue, setShadowMapValue }}
+          />
+        ) : null}
         {currentTab === 2 ? <p>Controls </p> : null}
         {currentTab === 3 ? <p>Sounds </p> : null}
       </div>

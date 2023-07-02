@@ -14,7 +14,7 @@ import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
 
 export default class SceneInit {
-  constructor(canvasId) {
+  constructor(canvasId, renderer) {
     this.fov = 45;
     this.canvasId = canvasId;
 
@@ -24,7 +24,7 @@ export default class SceneInit {
     this.stats = undefined;
     this.camera = undefined;
     this.controls = undefined;
-    this.renderer = undefined;
+    this.renderer = renderer;
     this.textRenderer = undefined;
     this.player = undefined;
     this.npcs = [];
@@ -39,8 +39,6 @@ export default class SceneInit {
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
 
-    const canvas = document.getElementById(this.canvasId);
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     // this.renderer.shadowMap.enabled = true;

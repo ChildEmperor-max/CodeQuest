@@ -34,3 +34,39 @@
     box-sizing: border-box;
     background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
 }
+
+.graphics-container {
+}
+  
+.graphics-header {
+    border-bottom: 3px solid white;
+    padding: 0 15px;
+}
+  
+.graphics-content-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+}
+  
+.graphics-labels,
+.graphics-inputs {
+    height: 100%;
+}
+  
+.graphics-content-left {
+    width: 40%;
+}
+  
+.graphics-content-right {
+    width: 60%;
+    height: 100%;
+}
+
+.graphics-settings-item {
+    padding: 6px 0;
+}
+  
+  

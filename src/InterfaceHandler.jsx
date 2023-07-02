@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CharacterProfile from "./CharacterProfile";
-import Settings from "./Settings";
+import Settings from "./settings/Settings";
 import Achievements from "./Achievements";
 import Leaderboard from "./Leaderboard";
 import toggleEditor from "./Editor";
@@ -17,7 +17,12 @@ import {
 
 const questManager = new QuestManager();
 
-export default function InterfaceHandler() {
+export default function InterfaceHandler({
+  settings: {
+    antialias: { antialiasValue, setAntialiasValue },
+    shadowMap: { shadowMapValue, setShadowMapValue },
+  },
+}) {
   const [isCharacterProfileOpen, setCharacterProfileOpen] = useState(false);
   const [isLeaderboardOpen, setleaderboardOpen] = useState(false);
   const [isAchievementsOpen, setAchievementsOpen] = useState(false);
@@ -29,7 +34,6 @@ export default function InterfaceHandler() {
 
   const toggleLeaderboard = () => {
     setleaderboardOpen(!isLeaderboardOpen);
-    console.log("Leaderboard");
   };
 
   const toggleAchievements = () => {
@@ -38,7 +42,6 @@ export default function InterfaceHandler() {
 
   const toggleSettings = () => {
     setSettingsOpen(!isSettingsOpen);
-    console.log("Settings");
   };
 
   const InterfaceButton = ({ name, icon, id, onclickEvent = null }) => {
@@ -58,7 +61,19 @@ export default function InterfaceHandler() {
       {isAchievementsOpen ? (
         <Achievements onClose={toggleAchievements} />
       ) : null}
-      {isSettingsOpen ? <Settings onClose={toggleSettings} /> : null}
+      {isSettingsOpen ? (
+        <Settings
+          onClose={toggleSettings}
+          antialias={{
+            antialiasValue: antialiasValue,
+            setAntialiasValue: setAntialiasValue,
+          }}
+          shadowMap={{
+            shadowMapValue: shadowMapValue,
+            setShadowMapValue: setShadowMapValue,
+          }}
+        />
+      ) : null}
       {isLeaderboardOpen ? <Leaderboard onClose={toggleLeaderboard} /> : null}
       <div className="ui-container" id="interface-container">
         <div className="right-container">
