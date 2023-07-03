@@ -36,6 +36,7 @@
 }
 
 .graphics-container {
+    padding: 0 15px;
 }
   
 .graphics-header {
@@ -48,7 +49,6 @@
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-content: center;
-    padding: 0 15px;
 }
   
 .graphics-labels,
@@ -67,6 +67,11 @@
 
 .graphics-settings-item {
     padding: 6px 0;
+}
+
+.graphics-footer {
+    display: flex;
+    justify-content: end;
 }
   
   

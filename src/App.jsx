@@ -4,32 +4,31 @@ import SceneInit from "./lib/SceneInit";
 import * as THREE from "three";
 
 function App() {
-  const [antialias, setAntialias] = useState(false);
-  const [shadowMap, setShadowMap] = useState(true);
+  const [antialiasValue, setAntialiasValue] = useState(false);
+  const [shadowMap, setShadowMap] = useState(false);
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialiasValue });
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
     world.initialize();
     world.animate();
 
-    renderer.antialias = antialias;
     renderer.shadowMap = shadowMap;
 
     return () => {
       renderer.dispose();
     };
-  }, [antialias, shadowMap]);
+  }, [antialiasValue, shadowMap]);
 
   return (
     <div>
       <InterfaceHandler
         settings={{
           antialias: {
-            antialiasValue: antialias,
-            setAntialiasValue: setAntialias,
+            antialiasValue: antialiasValue,
+            setAntialiasValue: setAntialiasValue,
           },
           shadowMap: {
             shadowMapValue: shadowMap,
