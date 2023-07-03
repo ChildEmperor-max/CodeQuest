@@ -80,12 +80,6 @@
   transform-style: preserve-3d;
   position: relative;
 }
-.achieve-badge-container {
-    -webkit-perspective: 1000;
-    -moz-perspective: 1000;
-    -o-perspective: 1000;
-    perspective: 1000;
-  }
 .achieve-content-badge-front,
 .achieve-content-badge-back {
   text-align: center;
@@ -126,6 +120,12 @@
   padding: 5px;
   border-radius: 50%;
 }
+
+.small {
+  width: 60px;
+  height: 60px;
+}
+
 .badge-img-back {
   background-image: url("src/assets/icons/test-icon1-back.png");
   background-repeat: no-repeat;
@@ -187,7 +187,6 @@
 }
 
 .date-tooltip-text {
-
 }
 
 

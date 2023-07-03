@@ -11,6 +11,8 @@ import {
   fetchCompletedQuestCount,
 } from "./db/HandleTable";
 import CloseButtonModal from "./components/CloseButtonModal";
+import { fetchAchievements } from "./db/HandleTable";
+import AchievementBadge from "./components/AchievementBadge";
 
 const CharacterProfile = ({ onClose }) => {
   const [completedQuestCount, setCompletedQuestCount] = useState(0);
@@ -20,6 +22,11 @@ const CharacterProfile = ({ onClose }) => {
     "Lorem ipsum dolor sit amet consectetu, adipisicing elit."
   );
   const [isEditingBio, setIsEditingBio] = useState(false);
+  const [completedAchievementsData, setCompletedAchievementsData] = useState(
+    []
+  );
+  const [displayedAchievements, setDisplayedAchievements] = useState([]);
+  const [isHovered, setIsHovered] = useState("");
 
   useEffect(() => {
     // var characters = " abcdefghijklmnopqrstuvwxyz";
@@ -63,6 +70,39 @@ const CharacterProfile = ({ onClose }) => {
         console.error("[ERROR]:", error);
       });
   }, []);
+
+  useEffect(() => {
+    viewCompletedAchievements()
+      .then((data) => {
+        setCompletedAchievementsData(data);
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.date_achieved);
+          const dateB = new Date(b.date_achieved);
+          return dateB - dateA;
+        });
+        const latestData = sortedData.slice(0, 3); // Get the first three data entries
+        setDisplayedAchievements(latestData);
+      })
+      .catch((error) => {
+        console.error("[ERROR]:", error);
+      });
+  }, []);
+
+  const viewCompletedAchievements = async () => {
+    try {
+      var data = [];
+      const achievementsData = await fetchAchievements();
+      achievementsData.forEach((element) => {
+        if (element.status.trim() === "unlocked") {
+          data.push(element);
+        }
+      });
+      return data;
+    } catch (error) {
+      console.error("[ERROR]:", error);
+      throw error;
+    }
+  };
 
   const viewCompletedQuests = async () => {
     try {
@@ -199,47 +239,94 @@ const CharacterProfile = ({ onClose }) => {
         <div className="right-side-text-container">
           {currentTab === 1 ? (
             <div id="profile-tab">
-              <div id="avatar-container">
+              <div
+                id="avatar-container"
+                onMouseEnter={() => setIsHovered("avatar-hover")}
+                onMouseLeave={() => setIsHovered("")}
+              >
                 <img
                   src="/src/assets/icons/default-avatar.png"
                   id="avatar"
                   alt="Avatar"
                 />
-                <EditProfileButton onClickEvent={editAvatar} />
+                {isHovered === "avatar-hover" && (
+                  <EditProfileButton onClickEvent={editAvatar} />
+                )}
               </div>
               <div className="text-container">
-                <div className="character-username-container">
+                <div
+                  className="character-username-container"
+                  onMouseEnter={() => setIsHovered("username-hover")}
+                  onMouseLeave={() => setIsHovered("")}
+                >
                   <div id="character-username">
-                    <EditProfileButton onClickEvent={editUsername} />
-                    <RandomTextAnimation text={userName} elementType="h3" />
+                    {isHovered === "username-hover" && (
+                      <EditProfileButton onClickEvent={editUsername} />
+                    )}
+                    <h3>{userName}</h3>
+                    {/* <RandomTextAnimation text={userName} elementType="h3" /> */}
                   </div>
                 </div>
                 <div className="content-header-container">
-                  <div className="content-header">
+                  <div
+                    className="content-header"
+                    onMouseEnter={() => setIsHovered("bio-hover")}
+                    onMouseLeave={() => setIsHovered("")}
+                  >
                     Bio
-                    <EditProfileButton onClickEvent={editBio} />
+                    {isHovered === "bio-hover" && (
+                      <EditProfileButton onClickEvent={editBio} />
+                    )}
                   </div>
                 </div>
                 {isEditingBio ? (
                   <textarea defaultValue={currentBio} className="bio-content" />
                 ) : (
                   <div className="bio-content">
-                    <RandomTextAnimation text={currentBio} elementType="p" />
+                    {/* <RandomTextAnimation text={currentBio} elementType="p" /> */}
+                    <p>{currentBio}</p>
                   </div>
                 )}
                 <div className="profile-info-container">
                   <div>
                     <span>Level: </span>
-                    <RandomTextAnimation text="1" elementType="span" />
+                    {/* <RandomTextAnimation text="1" elementType="span" /> */}
+                    <span>1</span>
                   </div>
                   <div>
                     <span>Rank: </span>
-                    <RandomTextAnimation text="unranked" elementType="span" />
+                    {/* <RandomTextAnimation text="unranked" elementType="span" /> */}
+                    <span>unranked</span>
                   </div>
                   <div>
                     <span>Exp: </span>
-                    <RandomTextAnimation text="0/20" elementType="span" />
+                    {/* <RandomTextAnimation text="0/20" elementType="span" /> */}
+                    <span>0/20</span>
                   </div>
+                </div>
+                <div className="profile-displayed-achievements">
+                  {displayedAchievements.map((achievement, index) => (
+                    <div
+                      className="profile-displayed-badge"
+                      key={achievement.id}
+                    >
+                      <AchievementBadge
+                        name={achievement.name}
+                        description={achievement.description}
+                        status={achievement.status}
+                        date_achieved={
+                          achievement.date_achieved
+                            ? new Date(
+                                achievement.date_achieved
+                              ).toLocaleDateString("en-US")
+                            : null
+                        }
+                        index={index}
+                        large={false}
+                        flipOnHover={false}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -249,7 +336,31 @@ const CharacterProfile = ({ onClose }) => {
               <div className="text-container">
                 <div className="content-header">
                   <FontAwesomeIcon icon={faTrophy} color="gold" />
-                  Achivements
+                  Achievements <span>({completedAchievementsData.length})</span>
+                </div>
+                <div className="profile-achievements">
+                  {completedAchievementsData.map((achievement, index) => (
+                    <div
+                      className="profile-displayed-badge"
+                      key={achievement.id}
+                    >
+                      <AchievementBadge
+                        name={achievement.name}
+                        description={achievement.description}
+                        status={achievement.status}
+                        date_achieved={
+                          achievement.date_achieved
+                            ? new Date(
+                                achievement.date_achieved
+                              ).toLocaleDateString("en-US")
+                            : null
+                        }
+                        index={index}
+                        large={false}
+                        flipOnHover={false}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

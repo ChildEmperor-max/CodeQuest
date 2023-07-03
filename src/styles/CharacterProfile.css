@@ -57,6 +57,8 @@
     max-width: 450px;
     height: 100%;
     box-sizing: border-box;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
 }
 
@@ -155,6 +157,26 @@
     margin: 5px;
 }
 
+.profile-displayed-achievements {
+    border-top: 2px solid gold;
+    display: flex;
+    justify-content: start;
+}
+
+.profile-displayed-badge {
+    padding: 5px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-achievements {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
 .glitch {
     text-shadow: 0 0 10px rgb(9, 10, 71);
     animation: glitchy 0.5s step-end;
@@ -188,13 +210,13 @@
   }
   
 ::-webkit-scrollbar-track {
-    background: #000; /* Background color of the scrollbar track */
+    background: rgb(34, 55, 124); /* Background color of the scrollbar track */
   }
   
 ::-webkit-scrollbar-thumb {
-    background: #414147; /* Color of the scrollbar thumb */
+    background: rgb(43, 70, 156) /* Color of the scrollbar thumb on hover */
   }
   
 ::-webkit-scrollbar-thumb:hover {
-    background: #5d5d64; /* Color of the scrollbar thumb on hover */
+    background: rgb(23, 37, 83); /* Color of the scrollbar thumb */
   }
