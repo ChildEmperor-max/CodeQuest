@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
-const Checkbox = () => {
-  const [checked, setChecked] = useState(false);
+const Checkbox = ({ value, setValue }) => {
+  const [checked, setChecked] = useState(value);
 
   const handleChange = (event) => {
+    setValue(event.target.checked);
     setChecked(event.target.checked);
   };
 
