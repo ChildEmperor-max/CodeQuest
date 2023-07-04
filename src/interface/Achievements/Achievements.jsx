@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { fetchAchievements } from "./db/HandleTable";
-import CloseButtonModal from "./components/CloseButtonModal";
-import AchievementBadge from "./components/AchievementBadge";
+import { fetchAchievements } from "../../db/HandleTable";
+import CloseButtonModal from "../../components/CloseButtonModal";
+import AchievementBadge from "../../components/AchievementBadge";
 import "animate.css";
 
 const Achievements = ({ onClose }) => {

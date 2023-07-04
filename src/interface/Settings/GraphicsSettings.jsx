@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Checkbox from "../components/Checkbox";
-import Dropdown from "../components/Dropdown";
+import Checkbox from "../../components/Checkbox";
+import Dropdown from "../../components/Dropdown";
 
 const GraphicsSettings = ({
   antialias: { antialiasValue, setAntialiasValue },

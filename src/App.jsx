@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import InterfaceHandler from "./InterfaceHandler";
+import InterfaceHandler from "./interface/InterfaceHandler";
 import SceneInit from "./lib/SceneInit";
 import * as THREE from "three";
 

@@ -5,14 +5,17 @@ import {
   faUser,
   faTasks,
   faPen,
+  faCheck,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   fetchCompletedQuests,
   fetchCompletedQuestCount,
-} from "./db/HandleTable";
-import CloseButtonModal from "./components/CloseButtonModal";
-import { fetchAchievements } from "./db/HandleTable";
-import AchievementBadge from "./components/AchievementBadge";
+} from "../../db/HandleTable";
+import CloseButtonModal from "../../components/CloseButtonModal";
+import { fetchAchievements } from "../../db/HandleTable";
+import AchievementBadge from "../../components/AchievementBadge";
+import EditUsernameModal from "./EditUsernameModal";
 
 const CharacterProfile = ({ onClose }) => {
   const [completedQuestCount, setCompletedQuestCount] = useState(0);
@@ -21,12 +24,13 @@ const CharacterProfile = ({ onClose }) => {
   const [currentBio, setCurrentBio] = useState(
     "Lorem ipsum dolor sit amet consectetu, adipisicing elit."
   );
-  const [isEditingBio, setIsEditingBio] = useState(false);
   const [completedAchievementsData, setCompletedAchievementsData] = useState(
     []
   );
   const [displayedAchievements, setDisplayedAchievements] = useState([]);
   const [isHovered, setIsHovered] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingProfile, setEditingProfile] = useState("");
 
   useEffect(() => {
     // var characters = " abcdefghijklmnopqrstuvwxyz";
@@ -181,29 +185,45 @@ const CharacterProfile = ({ onClose }) => {
     );
   };
 
-  const editBio = () => {
-    setIsEditingBio(true);
-    console.log("editing bio");
-  };
-
-  const editAvatar = () => {
-    console.log("editing avatar");
-  };
-
-  const editUsername = () => {
-    console.log("editing username");
+  const editProfile = ({ profile }) => {
+    setIsEditing(true);
+    setEditingProfile(profile);
   };
 
   const EditProfileButton = ({ onClickEvent = null }) => {
     return (
-      <button
-        className="profile-edit-button"
-        title="Edit"
-        onClick={onClickEvent}
-      >
-        <FontAwesomeIcon icon={faPen} size="xs" />
-      </button>
+      <div className="profile-edit-button-container">
+        {isEditing ? (
+          <>
+            <button
+              className="profile-edit-button"
+              title="Save"
+              onClick={submitEditedProfile}
+            >
+              <FontAwesomeIcon icon={faCheck} size="xs" />
+            </button>
+          </>
+        ) : (
+          <button
+            className="profile-edit-button"
+            title="Edit"
+            onClick={onClickEvent}
+          >
+            <FontAwesomeIcon icon={faPen} size="xs" />
+          </button>
+        )}
+      </div>
     );
+  };
+
+  const submitEditedProfile = () => {
+    setIsEditing(false);
+    setEditingProfile("");
+  };
+
+  const closeEditedProfileModal = () => {
+    setIsEditing(false);
+    setEditingProfile("");
   };
 
   const SideNavButton = ({ name, icon, onClickEvent = null }) => {
@@ -216,120 +236,147 @@ const CharacterProfile = ({ onClose }) => {
   };
 
   return (
-    <div className="character-profile-container">
-      <div className="left-side">
-        <SideNavButton
-          name="Profile"
-          icon={faUser}
-          onClickEvent={viewProfileTab}
+    <>
+      {editingProfile === "username" ? (
+        <EditUsernameModal
+          currentUsername={userName}
+          setUserName={setUserName}
+          closeModal={closeEditedProfileModal}
         />
-        <SideNavButton
-          name="Achievements"
-          icon={faTrophy}
-          onClickEvent={viewAchievementsTab}
-        />
-        <SideNavButton
-          name="Completed Quests"
-          icon={faTasks}
-          onClickEvent={viewCompletedQuestsTab}
-        />
-      </div>
-      <div className="right-side">
-        <CloseButtonModal onClose={onClose} />
-        <div className="right-side-text-container">
+      ) : null}
+      <div className="character-profile-container">
+        <div className="left-side">
+          <SideNavButton
+            name="Profile"
+            icon={faUser}
+            onClickEvent={viewProfileTab}
+          />
+          <SideNavButton
+            name="Achievements"
+            icon={faTrophy}
+            onClickEvent={viewAchievementsTab}
+          />
+          <SideNavButton
+            name="Completed Quests"
+            icon={faTasks}
+            onClickEvent={viewCompletedQuestsTab}
+          />
+        </div>
+        <div className="right-side">
           {currentTab === 1 ? (
-            <div id="profile-tab">
-              <div
-                id="avatar-container"
-                onMouseEnter={() => setIsHovered("avatar-hover")}
-                onMouseLeave={() => setIsHovered("")}
-              >
-                <img
-                  src="/src/assets/icons/default-avatar.png"
-                  id="avatar"
-                  alt="Avatar"
-                />
-                {isHovered === "avatar-hover" && (
-                  <EditProfileButton onClickEvent={editAvatar} />
-                )}
+            <>
+              <div className="profile-header-container">
+                <CloseButtonModal onClose={onClose} />
+                <div className="profile-header">
+                  <h3>Profile</h3>
+                </div>
               </div>
-              <div className="text-container">
+              <div id="profile-tab">
                 <div
-                  className="character-username-container"
-                  onMouseEnter={() => setIsHovered("username-hover")}
+                  id="avatar-container"
+                  onMouseEnter={() => setIsHovered("avatar-hover")}
                   onMouseLeave={() => setIsHovered("")}
                 >
-                  <div id="character-username">
-                    {isHovered === "username-hover" && (
-                      <EditProfileButton onClickEvent={editUsername} />
-                    )}
-                    <h3>{userName}</h3>
-                    {/* <RandomTextAnimation text={userName} elementType="h3" /> */}
-                  </div>
+                  <img
+                    src="/src/assets/icons/default-avatar.png"
+                    id="avatar"
+                    alt="Avatar"
+                  />
+                  {isHovered === "avatar-hover" && (
+                    <EditProfileButton
+                      onClickEvent={() => editProfile({ profile: "avatar" })}
+                    />
+                  )}
                 </div>
-                <div className="content-header-container">
+                <div className="text-container">
                   <div
-                    className="content-header"
-                    onMouseEnter={() => setIsHovered("bio-hover")}
+                    className="character-username-container"
+                    onMouseEnter={() => setIsHovered("username-hover")}
                     onMouseLeave={() => setIsHovered("")}
                   >
-                    Bio
-                    {isHovered === "bio-hover" && (
-                      <EditProfileButton onClickEvent={editBio} />
-                    )}
-                  </div>
-                </div>
-                {isEditingBio ? (
-                  <textarea defaultValue={currentBio} className="bio-content" />
-                ) : (
-                  <div className="bio-content">
-                    {/* <RandomTextAnimation text={currentBio} elementType="p" /> */}
-                    <p>{currentBio}</p>
-                  </div>
-                )}
-                <div className="profile-info-container">
-                  <div>
-                    <span>Level: </span>
-                    {/* <RandomTextAnimation text="1" elementType="span" /> */}
-                    <span>1</span>
-                  </div>
-                  <div>
-                    <span>Rank: </span>
-                    {/* <RandomTextAnimation text="unranked" elementType="span" /> */}
-                    <span>unranked</span>
-                  </div>
-                  <div>
-                    <span>Exp: </span>
-                    {/* <RandomTextAnimation text="0/20" elementType="span" /> */}
-                    <span>0/20</span>
-                  </div>
-                </div>
-                <div className="profile-displayed-achievements">
-                  {displayedAchievements.map((achievement, index) => (
-                    <div
-                      className="profile-displayed-badge"
-                      key={achievement.id}
-                    >
-                      <AchievementBadge
-                        name={achievement.name}
-                        description={achievement.description}
-                        status={achievement.status}
-                        date_achieved={
-                          achievement.date_achieved
-                            ? new Date(
-                                achievement.date_achieved
-                              ).toLocaleDateString("en-US")
-                            : null
-                        }
-                        index={index}
-                        large={false}
-                        flipOnHover={false}
-                      />
+                    <div id="character-username">
+                      <h3>
+                        {userName}
+                        {isHovered === "username-hover" && (
+                          <EditProfileButton
+                            onClickEvent={() =>
+                              editProfile({ profile: "username" })
+                            }
+                          />
+                        )}
+                      </h3>
+                      {/* <RandomTextAnimation text={userName} elementType="h3" /> */}
                     </div>
-                  ))}
+                  </div>
+                  <div className="content-header-container">
+                    <div
+                      className="content-header"
+                      onMouseEnter={() => setIsHovered("bio-hover")}
+                      onMouseLeave={() => setIsHovered("")}
+                    >
+                      Bio
+                      {isHovered === "bio-hover" && (
+                        <EditProfileButton
+                          onClickEvent={() => editProfile({ profile: "bio" })}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {editingProfile === "bio" ? (
+                    <textarea
+                      defaultValue={currentBio}
+                      className="bio-content"
+                    />
+                  ) : (
+                    <div className="bio-content">
+                      {/* <RandomTextAnimation text={currentBio} elementType="p" /> */}
+                      <p>{currentBio}</p>
+                    </div>
+                  )}
+                  <div className="profile-info-container">
+                    <div>
+                      <span>Level: </span>
+                      {/* <RandomTextAnimation text="1" elementType="span" /> */}
+                      <span>1</span>
+                    </div>
+                    <div>
+                      <span>Rank: </span>
+                      {/* <RandomTextAnimation text="unranked" elementType="span" /> */}
+                      <span>unranked</span>
+                    </div>
+                    <div>
+                      <span>Exp: </span>
+                      {/* <RandomTextAnimation text="0/20" elementType="span" /> */}
+                      <span>0/20</span>
+                    </div>
+                  </div>
+                  <div className="profile-displayed-achievements">
+                    {displayedAchievements.map((achievement, index) => (
+                      <div
+                        className="profile-displayed-badge"
+                        key={achievement.id}
+                      >
+                        <AchievementBadge
+                          name={achievement.name}
+                          description={achievement.description}
+                          status={achievement.status}
+                          date_achieved={
+                            achievement.date_achieved
+                              ? new Date(
+                                  achievement.date_achieved
+                                ).toLocaleDateString("en-US")
+                              : null
+                          }
+                          index={index}
+                          large={false}
+                          flipOnHover={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           ) : null}
           {currentTab === 2 ? (
             <div id="achievements-tab">
@@ -377,7 +424,7 @@ const CharacterProfile = ({ onClose }) => {
           ) : null}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

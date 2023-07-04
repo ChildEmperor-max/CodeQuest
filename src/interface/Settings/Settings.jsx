@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CloseButtonModal from "../components/CloseButtonModal";
+import CloseButtonModal from "../../components/CloseButtonModal";
 import GraphicsSettings from "./GraphicsSettings";
 
 const Settings = ({

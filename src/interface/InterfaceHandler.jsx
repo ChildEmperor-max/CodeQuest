@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import CharacterProfile from "./CharacterProfile";
+import CharacterProfile from "./CharacterProfile/CharacterProfile";
 import Settings from "./settings/Settings";
-import Achievements from "./Achievements";
-import Leaderboard from "./Leaderboard";
-import toggleEditor from "./Editor";
-import QuestManager from "./lib/QuestManager";
+import Achievements from "./Achievements/Achievements";
+import Leaderboard from "./Leaderboard/Leaderboard";
+import toggleEditor from "../Editor";
+import QuestManager from "../lib/QuestManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTasks,
