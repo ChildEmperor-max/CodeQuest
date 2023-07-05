@@ -1,0 +1,30 @@
+.alert-modal-container {
+    position: absolute;
+    width: 300px;
+    height: 210px;
+    top: 30%;
+    left: 38%;
+    z-index: 5;
+    border-radius: 10%;
+    border-top: 3px solid rgb(255, 217, 0);
+    border-bottom: 3px solid rgb(255, 217, 0);
+    border-style: groove;
+    border-left: none;
+    border-right: none;
+    background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
+}
+
+.alert-modal-message {
+    padding: 20px;
+    text-align: center;
+}
+
+.alert-modal-buttons {
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+}
+
+.alert-modal-buttons button {
+    margin: 10px;
+}

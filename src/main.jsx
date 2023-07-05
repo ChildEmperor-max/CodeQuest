@@ -13,6 +13,7 @@ import "./styles/CharacterProfile.css";
 import "./styles/Achievements.css";
 import "./styles/Settings.css";
 import "./styles/Leaderboard.css";
+import "./styles/AlertModal.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
