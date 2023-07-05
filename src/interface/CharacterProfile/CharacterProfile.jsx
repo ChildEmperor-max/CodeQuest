@@ -13,6 +13,7 @@ import {
   fetchCompletedQuestCount,
 } from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
+import AlertModal from "../../components/AlertModal";
 import { fetchAchievements } from "../../db/HandleTable";
 import AchievementBadge from "../../components/AchievementBadge";
 import EditUsernameModal from "./EditUsernameModal";
@@ -24,6 +25,7 @@ const CharacterProfile = ({ onClose }) => {
   const [currentBio, setCurrentBio] = useState(
     "Lorem ipsum dolor sit amet consectetu, adipisicing elit."
   );
+  const [bioInputValue, setBioInputValue] = useState(currentBio);
   const [completedAchievementsData, setCompletedAchievementsData] = useState(
     []
   );
@@ -31,6 +33,7 @@ const CharacterProfile = ({ onClose }) => {
   const [isHovered, setIsHovered] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editingProfile, setEditingProfile] = useState("");
+  const [isSavingBio, setIsSavingBio] = useState(false);
 
   useEffect(() => {
     // var characters = " abcdefghijklmnopqrstuvwxyz";
@@ -218,7 +221,7 @@ const CharacterProfile = ({ onClose }) => {
 
   const submitEditedProfile = () => {
     setIsEditing(false);
-    setEditingProfile("");
+    editingProfile === "bio" && setIsSavingBio(true);
   };
 
   const closeEditedProfileModal = () => {
@@ -235,8 +238,30 @@ const CharacterProfile = ({ onClose }) => {
     );
   };
 
+  const handleBioInput = (event) => {
+    setBioInputValue(event.target.value);
+  };
+
+  const saveBioInput = () => {
+    setCurrentBio(bioInputValue);
+  };
+
   return (
     <>
+      {isSavingBio && (
+        <AlertModal
+          message={`Are you sure about your new bio? ${bioInputValue}`}
+          onConfirm={() => {
+            setEditingProfile("");
+            saveBioInput();
+            setIsSavingBio(false);
+          }}
+          onCancel={() => {
+            setEditingProfile("");
+            setIsSavingBio(false);
+          }}
+        />
+      )}
       {editingProfile === "username" ? (
         <EditUsernameModal
           currentUsername={userName}
@@ -268,7 +293,7 @@ const CharacterProfile = ({ onClose }) => {
               <div className="profile-header-container">
                 <CloseButtonModal onClose={onClose} />
                 <div className="profile-header">
-                  <h3>Profile</h3>
+                  <p>Profile</p>
                 </div>
               </div>
               <div id="profile-tab">
@@ -315,17 +340,18 @@ const CharacterProfile = ({ onClose }) => {
                       onMouseLeave={() => setIsHovered("")}
                     >
                       Bio
-                      {isHovered === "bio-hover" && (
+                      {isHovered === "bio-hover" || editingProfile === "bio" ? (
                         <EditProfileButton
                           onClickEvent={() => editProfile({ profile: "bio" })}
                         />
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   {editingProfile === "bio" ? (
                     <textarea
                       defaultValue={currentBio}
-                      className="bio-content"
+                      className="bio-content typing"
+                      onChange={handleBioInput}
                     />
                   ) : (
                     <div className="bio-content">
@@ -379,48 +405,65 @@ const CharacterProfile = ({ onClose }) => {
             </>
           ) : null}
           {currentTab === 2 ? (
-            <div id="achievements-tab">
-              <div className="text-container">
-                <div className="content-header">
-                  <FontAwesomeIcon icon={faTrophy} color="gold" />
-                  Achievements <span>({completedAchievementsData.length})</span>
-                </div>
-                <div className="profile-achievements">
-                  {completedAchievementsData.map((achievement, index) => (
-                    <div
-                      className="profile-displayed-badge"
-                      key={achievement.id}
-                    >
-                      <AchievementBadge
-                        name={achievement.name}
-                        description={achievement.description}
-                        status={achievement.status}
-                        date_achieved={
-                          achievement.date_achieved
-                            ? new Date(
-                                achievement.date_achieved
-                              ).toLocaleDateString("en-US")
-                            : null
-                        }
-                        index={index}
-                        large={false}
-                        flipOnHover={false}
-                      />
-                    </div>
-                  ))}
+            <>
+              <div className="profile-header-container">
+                <CloseButtonModal onClose={onClose} />
+                <div className="profile-header">
+                  <p>Achievements</p>
                 </div>
               </div>
-            </div>
+              <div id="achievements-tab">
+                <div className="text-container">
+                  <div className="content-header">
+                    <FontAwesomeIcon icon={faTrophy} color="gold" />
+                    Achievements{" "}
+                    <span>({completedAchievementsData.length})</span>
+                  </div>
+                  <div className="profile-achievements">
+                    {completedAchievementsData.map((achievement, index) => (
+                      <div
+                        className="profile-displayed-badge"
+                        key={achievement.id}
+                      >
+                        <AchievementBadge
+                          name={achievement.name}
+                          description={achievement.description}
+                          status={achievement.status}
+                          date_achieved={
+                            achievement.date_achieved
+                              ? new Date(
+                                  achievement.date_achieved
+                                ).toLocaleDateString("en-US")
+                              : null
+                          }
+                          index={index}
+                          large={false}
+                          flipOnHover={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
           ) : null}
 
           {currentTab === 3 ? (
-            <div id="completed-quests-tab">
-              <div className="text-container">
-                <div className="content-header">
-                  Completed quests: {completedQuestCount}
+            <>
+              <div className="profile-header-container">
+                <CloseButtonModal onClose={onClose} />
+                <div className="profile-header">
+                  <p>Completed quests</p>
                 </div>
               </div>
-            </div>
+              <div id="completed-quests-tab">
+                <div className="text-container">
+                  <div className="content-header">
+                    Completed quests: {completedQuestCount}
+                  </div>
+                </div>
+              </div>
+            </>
           ) : null}
         </div>
       </div>
