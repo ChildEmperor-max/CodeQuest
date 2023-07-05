@@ -201,9 +201,13 @@ export default class Player extends THREE.Object3D {
       if (deltaX < 0) {
         if (this.direction.x > 0) {
           newPosition.x = this.mesh.position.x;
+          console.log("1");
         }
       } else if (deltaX > 0) {
-        if (this.direction.x < 0) {
+        if (this.direction.x < 0 && this.direction.z < 0) {
+          newPosition.x = this.mesh.position.x;
+          console.log("2");
+        } else if (this.direction.x < 0) {
           newPosition.x = this.mesh.position.x;
         }
       }
@@ -211,10 +215,12 @@ export default class Player extends THREE.Object3D {
       if (deltaZ > 0) {
         if (this.direction.z < 0) {
           newPosition.z = this.mesh.position.z;
+          console.log("3");
         }
       } else if (deltaZ < 0) {
-        if (this.direction.z > 0) {
+        if (this.direction.z > 0 && this.direction.x > 0) {
           newPosition.z = this.mesh.position.z;
+          console.log("4");
         }
       }
     }
