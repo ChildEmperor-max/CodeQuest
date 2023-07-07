@@ -160,8 +160,12 @@
 
 .date-achieved-tooltip-container {
   visibility: visible;
-  display: flex;
-  z-index: 113;
+  z-index: 5;
+  margin: 0;
+  position: absolute;
+  font-size: 12px;
+
+  transform: translateY(-30%);
 }
 
 .date-achieved-tooltip {
@@ -170,7 +174,7 @@
   display: inline-block;
 }
 
-.date-achieved-tooltip .date-tooltip-text {
+.date-tooltip-text {
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -180,12 +184,7 @@
   padding: 3px 0;
   
   /* Position the tooltip */
-  position: absolute;
-  z-index: 111;
-  transform: translateY(450%);
-}
-
-.date-tooltip-text {
+  z-index: 5;
 }
 
 

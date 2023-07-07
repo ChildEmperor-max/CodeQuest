@@ -8,19 +8,10 @@ const AchievementBadge = ({
   index,
   large,
   flipOnHover,
+  onClickEvent = null,
 }) => {
   return (
-    <div className="achieve-badge-container">
-      <div className="date-achieved-tooltip-container">
-        <div className="date-achieved-tooltip">
-          {date_achieved ? (
-            <p className="date-tooltip-text">
-              Date achieved:
-              {date_achieved}
-            </p>
-          ) : null}
-        </div>
-      </div>
+    <div className="achieve-badge-container" onClick={onClickEvent}>
       <div className="achieve-content-badge-front">
         <div className={`${flipOnHover ? "flipper" : ""}`}>
           <img
@@ -29,6 +20,14 @@ const AchievementBadge = ({
             }`}
             src="src/assets/icons/test-icon1.png"
           />
+        </div>
+        <div className="date-achieved-tooltip-container">
+          {date_achieved ? (
+            <p className="date-tooltip-text">
+              Date achieved:
+              {date_achieved}
+            </p>
+          ) : null}
         </div>
         <p id="badge-name">{name}</p>
       </div>
