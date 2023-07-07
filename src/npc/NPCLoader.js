@@ -16,6 +16,7 @@ export default class NPCLoader extends THREE.Object3D {
     // Set the default rotation angle (in radians)
     // this.defaultRotationAngle = Math.PI / 2; // Example: 90 degrees
     this.questManager = new QuestManager();
+    // this.questManager.initialize();
     this.dialogContainer = document.getElementById("npc-dialog");
   }
 
@@ -117,9 +118,14 @@ export default class NPCLoader extends THREE.Object3D {
     hasQuest = false,
     questType,
     codeTemplate,
-    questAnswer
+    questAnswer,
+    questStatus
   ) {
-    this.hasQuest = hasQuest;
+    if (questStatus.trim() === "inactive") {
+      this.hasQuest = hasQuest;
+    } else {
+      this.hasQuest = false;
+    }
     if (hasQuest) {
       this.quest = dialogTexts[dialogTexts.length - 1];
       this.questTitle = questTitle;

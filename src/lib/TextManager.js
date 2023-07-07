@@ -53,28 +53,4 @@ export default class TextManager {
     vector.y = (-(vector.y - 1) / 2) * window.innerHeight - this.yOffset;
     return vector;
   }
-
-  //   createCSS3DObject(content) {
-  //     // convert the string to dome elements
-  //     var wrapper = document.createElement("div");
-  //     wrapper.innerHTML = content;
-  //     var div = wrapper.firstChild;
-
-  //     // set some values on the div to style it.
-  //     // normally you do this directly in HTML and
-  //     // CSS files.
-  //     div.style.width = "70px";
-  //     div.style.height = "70px";
-  //     div.style.opacity = 0.3;
-  //     div.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
-
-  //     // Change the font style
-  //     div.style.fontFamily = "Arial";
-  //     // div.style.fontSize = "24px";
-  //     div.style.color = "black";
-
-  //     // create a CSS3Dobject and return it.
-  //     var object = new CSS3DObject(div);
-  //     return object;
-  //   }
 }

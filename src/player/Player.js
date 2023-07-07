@@ -220,7 +220,8 @@ export default class Player extends THREE.Object3D {
       } else if (deltaZ < 0) {
         if (this.direction.z > 0 && this.direction.x > 0) {
           newPosition.z = this.mesh.position.z;
-          console.log("4");
+        } else if (this.direction.z > 0) {
+          newPosition.z = this.mesh.position.z;
         }
       }
     }
