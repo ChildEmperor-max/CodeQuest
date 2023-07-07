@@ -254,6 +254,30 @@ textarea {
     justify-content: center;
 }
 
+.pick-badge-display-container {
+    position: absolute;
+    width: 550px;
+    height: 250px;
+    z-index: 5;
+    top: 20%;
+    left: 30%;
+}
+
+.pick-badge-display-header {
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.062);
+    background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
+}
+
+.pick-badge-display-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .glitch {
     text-shadow: 0 0 10px rgb(9, 10, 71);
     animation: glitchy 0.5s step-end;

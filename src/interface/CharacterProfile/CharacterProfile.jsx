@@ -246,8 +246,55 @@ const CharacterProfile = ({ onClose }) => {
     setCurrentBio(bioInputValue);
   };
 
+  const [selectedBadge, setSelectedBadge] = useState(null);
+  const updateDisplayedAchievement = (newBadge) => {
+    displayedAchievements[selectedBadge] = newBadge;
+    setEditingProfile("");
+  };
+
+  const selectThisBadge = (index) => {
+    setEditingProfile("badge-display");
+    setSelectedBadge(index);
+  };
+
   return (
     <>
+      {editingProfile === "badge-display" && (
+        <div className="pick-badge-display-container">
+          <div className="pick-badge-display-header">
+            <CloseButtonModal
+              onClose={() => {
+                setEditingProfile("");
+              }}
+            />
+            <h3>Choose an Achievement to display</h3>
+          </div>
+          <div className="pick-badge-display-content">
+            {completedAchievementsData.map((achievement, index) => (
+              <div className="profile-displayed-badge" key={achievement.id}>
+                <AchievementBadge
+                  name={achievement.name}
+                  description={achievement.description}
+                  status={achievement.status}
+                  date_achieved={
+                    achievement.date_achieved
+                      ? new Date(achievement.date_achieved).toLocaleDateString(
+                          "en-US"
+                        )
+                      : null
+                  }
+                  index={index}
+                  large={false}
+                  flipOnHover={false}
+                  onClickEvent={() => {
+                    updateDisplayedAchievement(achievement);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {isSavingBio && (
         <AlertModal
           message={`Are you sure about your new bio? ${bioInputValue}`}
@@ -376,12 +423,10 @@ const CharacterProfile = ({ onClose }) => {
                       <span>0/20</span>
                     </div>
                   </div>
+
                   <div className="profile-displayed-achievements">
                     {displayedAchievements.map((achievement, index) => (
-                      <div
-                        className="profile-displayed-badge"
-                        key={achievement.id}
-                      >
+                      <div className="profile-displayed-badge" key={index}>
                         <AchievementBadge
                           name={achievement.name}
                           description={achievement.description}
@@ -396,6 +441,9 @@ const CharacterProfile = ({ onClose }) => {
                           index={index}
                           large={false}
                           flipOnHover={false}
+                          onClickEvent={() => {
+                            selectThisBadge(index);
+                          }}
                         />
                       </div>
                     ))}
