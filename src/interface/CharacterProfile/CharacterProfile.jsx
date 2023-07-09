@@ -8,10 +8,7 @@ import {
   faCheck,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  fetchCompletedQuests,
-  fetchCompletedQuestCount,
-} from "../../db/HandleTable";
+import { fetchCompletedQuestCount } from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
 import { fetchAchievements } from "../../db/HandleTable";
@@ -36,39 +33,6 @@ const CharacterProfile = ({ onClose }) => {
   const [isSavingBio, setIsSavingBio] = useState(false);
 
   useEffect(() => {
-    // var characters = " abcdefghijklmnopqrstuvwxyz";
-    // var nums = "0123456789";
-    // var str = "hello world12";
-    // var delay = 500;
-
-    // for (var i = 0; i < str.length; i++) {
-    //   for (var j = 0; j < characters.length; j++) {
-    //     if (str.charAt(i) === characters.charAt(j)) {
-    //       setTimeout(
-    //         function (char) {
-    //           console.log(char);
-    //         },
-    //         i * delay,
-    //         str.charAt(i)
-    //       );
-    //       break;
-    //     }
-    //   }
-
-    //   for (var k = 0; k < nums.length; k++) {
-    //     if (str.charAt(i) === nums.charAt(k)) {
-    //       setTimeout(
-    //         function (char) {
-    //           console.log(char);
-    //         },
-    //         i * delay,
-    //         str.charAt(i)
-    //       );
-    //       break;
-    //     }
-    //   }
-    // }
-
     viewCompletedQuests()
       .then((questData) => {
         setCompletedQuestCount(questData[0].count);
