@@ -6,7 +6,7 @@ import { viewNpcData, viewDialogData, viewQuestData } from "../db/HandleTable";
 export default class AlbyNPC extends NPCLoader {
   constructor(scene) {
     super(scene);
-    this.path = "/src/assets/models/animations/";
+    this.path = "/src/assets/models/alby/";
     this.quests = new Quests();
   }
   initialize(
@@ -14,7 +14,7 @@ export default class AlbyNPC extends NPCLoader {
     camera,
     player,
     canvas,
-    rotation = new THREE.Vector3(200, 0, 0),
+    rotation = new THREE.Vector3(0, 0, 0),
     modelPath = this.path,
     npcName = "Alby",
     scale = 0.01

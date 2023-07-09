@@ -464,13 +464,28 @@ export default class Player extends THREE.Object3D {
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(this.modelScale, this.modelScale, this.modelScale);
+
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.material.specular = new THREE.Color(0xffffff);
             child.castShadow = true;
             child.receiveShadow = true;
+            if (child.morphTargetInfluences !== undefined) {
+              var outlineMaterial1 = new THREE.MeshBasicMaterial({
+                color: 0xff0000,
+                side: THREE.BackSide,
+              });
+              var outlineMesh1 = new THREE.Mesh(
+                child.geometry,
+                outlineMaterial1
+              );
+              outlineMesh1.position = child.position;
+              outlineMesh1.scale.multiplyScalar(1.05);
+              scene.add(outlineMesh1);
+            }
           }
         });
+
         // fbx.rotation.y = Math.PI / 2;
         fbx.name = "Player";
         scene.add(fbx);

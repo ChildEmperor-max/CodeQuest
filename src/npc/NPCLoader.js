@@ -468,9 +468,22 @@ export default class NPCLoader extends THREE.Object3D {
             //       THREE.RepeatWrapping;
             //   }
             // }
-
             child.castShadow = true;
             child.receiveShadow = true;
+            if (Array.isArray(child.material)) {
+              for (let i = 0; i < materials.length; i++) {
+                const material = materials[i];
+                if (material instanceof THREE.MeshPhongMaterial) {
+                  // Replace the material with MeshToonMaterial
+                  const toonMaterial = new THREE.MeshToonMaterial({
+                    color: material.color,
+                    map: material.map,
+                    // Copy other relevant properties as needed
+                  });
+                  materials[i] = toonMaterial;
+                }
+              }
+            }
           }
         });
         // fbx.rotation.y = Math.PI / 2;

@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass.js";
 
 import Stats from "three/examples/jsm/libs/stats.module";
 import Player from "../player/Player";
@@ -53,6 +55,17 @@ export default class SceneInit {
     const cameraControls = new CameraControls(this.renderer);
     cameraControls.initialize();
     this.cameraControls = cameraControls;
+
+    const composer = new EffectComposer(this.renderer);
+    const outlinePass = new OutlinePass(
+      new THREE.Vector3(window.innerWidth, window.innerHeight),
+      this.scene,
+      this.cameraControls.camera
+    );
+    outlinePass.edgeStrength = 0.5; // Adjust the outline edge strength
+    outlinePass.edgeThickness = 0.5; // Adjust the outline edge thickness
+
+    composer.addPass(outlinePass);
 
     this.obstacles = [];
     this.player = new Player();
