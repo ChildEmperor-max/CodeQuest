@@ -1,4 +1,5 @@
 import React from "react";
+import "animate.css";
 
 const AchievementBadge = ({
   name,
@@ -15,9 +16,9 @@ const AchievementBadge = ({
       <div className="achieve-content-badge-front">
         <div className={`${flipOnHover ? "flipper" : ""}`}>
           <img
-            className={`badge-img-front ${large ? "" : "small"}  ${
-              status === "locked" ? "locked" : "unlocked"
-            }`}
+            className={`badge-img-front animate__animated animate__flipInX ${
+              large ? "" : "small"
+            }  ${status === "locked" ? "locked" : "unlocked"}`}
             src="src/assets/icons/test-icon1.png"
           />
         </div>
