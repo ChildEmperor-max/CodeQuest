@@ -17,7 +17,8 @@ export default class SampleNPC2 extends NPCLoader {
     rotation = new THREE.Vector3(200, 0, 0),
     modelPath = this.path,
     npcName = "SampleNPC2",
-    scale = 0.01
+    scale = 0.01,
+    destination = new THREE.Vector3(-8, 0, -120)
   ) {
     super.initialize(
       position,
@@ -27,7 +28,8 @@ export default class SampleNPC2 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination
     );
     async function fetchData(npcName) {
       try {

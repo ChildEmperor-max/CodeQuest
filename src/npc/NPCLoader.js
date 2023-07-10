@@ -29,6 +29,7 @@ export default class NPCLoader extends THREE.Object3D {
     modelPath,
     npcName,
     scale,
+    destination = null,
     modelTexturePath = undefined
   ) {
     this.canvas = document.getElementById(canvas);
@@ -47,11 +48,18 @@ export default class NPCLoader extends THREE.Object3D {
     this.isFinishedTyping = false;
     this.player = player;
 
+    this.movementSpeed = 6;
+    this.startPoint = position;
+    this.endPoint = destination;
+
+    this.goingForward = true;
+    this.isGrounded = true;
+
     this.collisionBox = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 5, 1.5), // Use appropriate dimensions for the collision box
+      new THREE.BoxGeometry(1.5, 5, 1.5),
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
     );
-    this.scene.add(this.collisionBox); // Add the collision box to the scene
+    this.scene.add(this.collisionBox);
   }
 
   update(delta) {
@@ -65,7 +73,91 @@ export default class NPCLoader extends THREE.Object3D {
         this.position.z
       );
       this.npcbox = new THREE.Box3().setFromObject(this.collisionBox);
+      if (this.endPoint) {
+        this.moveToDestination(this.startPoint, this.endPoint, delta);
+      }
+      this.updateAnimation();
     }
+  }
+
+  moveToDestination(startPoint, endPoint, delta) {
+    let direction;
+    let distance;
+    if (this.goingForward) {
+      direction = endPoint.clone().sub(startPoint).normalize();
+      distance = this.mesh.position.distanceTo(endPoint);
+
+      if (distance < 2) {
+        if (this.goingForward) {
+          direction = new THREE.Vector3(0, 0, 0);
+          setTimeout(() => {
+            this.goingForward = false;
+          }, 3000);
+        }
+      }
+    } else {
+      direction = startPoint.clone().sub(endPoint).normalize();
+      distance = this.mesh.position.distanceTo(startPoint);
+
+      if (distance < 2) {
+        if (!this.goingForward) {
+          direction = new THREE.Vector3(0, 0, 0);
+          setTimeout(() => {
+            this.goingForward = true;
+          }, 3000);
+        }
+      }
+    }
+
+    if (direction.x !== 0 || direction.z !== 0) {
+      const movement = direction
+        .clone()
+        .multiplyScalar(this.movementSpeed * delta);
+      const newPosition = this.mesh.position.clone().add(movement);
+
+      this.mesh.position.copy(newPosition);
+      const angle = Math.atan2(direction.x, direction.z);
+      this.mesh.rotation.y = angle;
+      // this.rotateTowards(endPoint);
+      this.position.set(
+        this.mesh.position.x,
+        this.mesh.position.y,
+        this.mesh.position.z
+      );
+
+      if (this.isGrounded) {
+        if (this.walkingAction) {
+          this.currentAction = this.walkingAction;
+          if (this.running) {
+            this.currentAction = this.runningAction;
+          }
+        }
+      } else {
+        if (this.fallingAction) {
+          this.currentAction = this.fallingAction;
+        }
+      }
+    } else {
+      if (this.idleAction) {
+        this.currentAction = this.idleAction;
+      }
+    }
+  }
+
+  updateAnimation() {
+    this.actions.forEach((action) => {
+      if (action) {
+        if (action !== this.currentAction) {
+          action.paused = true;
+          action.reset();
+          action.fadeIn(100);
+        } else {
+          action.paused = false;
+          action.play();
+          action.fadeOut(100);
+        }
+      }
+    });
   }
 
   talkToPlayer(talking = false, targetPosition) {
@@ -85,20 +177,6 @@ export default class NPCLoader extends THREE.Object3D {
       this.hideDialog();
       this.backToIdle();
     }
-    this.actions.forEach((action) => {
-      if (action) {
-        if (action !== this.currentAction) {
-          action.paused = true;
-          action.reset();
-          action.fadeIn(100);
-        } else {
-          action.paused = false;
-          action.reset();
-          action.play();
-          action.fadeOut(100);
-        }
-      }
-    });
   }
 
   backToIdle() {
@@ -516,6 +594,11 @@ export default class NPCLoader extends THREE.Object3D {
       this.talkingAction = this.actionClipAnimation(fbx, this.mixer);
       this.talkingAction.name = "Talking";
       this.actions.push(this.talkingAction);
+    });
+    this.fbxLoader.load(animationPath + "Walking.fbx", (fbx) => {
+      this.walkingAction = this.actionClipAnimation(fbx, this.mixer);
+      this.walkingAction.name = "Walking";
+      this.actions.push(this.walkingAction);
     });
   }
   actionClipAnimation(fbx, scale) {

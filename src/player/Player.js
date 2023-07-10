@@ -30,6 +30,7 @@ export default class Player extends THREE.Object3D {
     this.groundMesh = undefined;
     this.collisionBox = undefined;
     this.questManager = new QuestManager();
+    this.isTalkingToNpc = false;
   }
 
   initialize(scene, camera, position, obstacles, groundMesh) {
@@ -161,12 +162,18 @@ export default class Player extends THREE.Object3D {
           npc.talkToPlayer(true, this.position);
           this.rotateTowards(npc.position);
           this.enableNpcDetection = false;
+          if (!this.isTalkingToNpc) {
+            this.isTalkingToNpc = true;
+          }
         }
       } else {
         if (!this.enableNpcDetection) {
           this.enableNpcDetection = true;
         }
-        npc.talkToPlayer(false, npc.defaultRotation);
+        if (this.isTalkingToNpc) {
+          this.isTalkingToNpc = false;
+          npc.talkToPlayer(false, npc.defaultRotation);
+        }
       }
     }
   }
