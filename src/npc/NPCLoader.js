@@ -109,6 +109,10 @@ export default class NPCLoader extends THREE.Object3D {
       }
     }
 
+    if (this.isTalking) {
+      direction = new THREE.Vector3(0, 0, 0);
+    }
+
     if (direction.x !== 0 || direction.z !== 0) {
       const movement = direction
         .clone()
@@ -117,8 +121,19 @@ export default class NPCLoader extends THREE.Object3D {
 
       this.mesh.position.copy(newPosition);
       const angle = Math.atan2(direction.x, direction.z);
-      this.mesh.rotation.y = angle;
-      // this.rotateTowards(endPoint);
+      const rotateModelToAngle = (targetAngle) => {
+        let adjustedAngle = targetAngle;
+        if (adjustedAngle - this.mesh.rotation.y > Math.PI) {
+          adjustedAngle -= Math.PI * 2;
+        } else if (this.mesh.rotation.y - adjustedAngle > Math.PI) {
+          adjustedAngle += Math.PI * 2;
+        }
+        new TWEEN.Tween(this.mesh.rotation)
+          .to({ y: adjustedAngle }, 80)
+          .start();
+      };
+      rotateModelToAngle(angle);
+      // this.mesh.rotation.y = angle;
       this.position.set(
         this.mesh.position.x,
         this.mesh.position.y,
