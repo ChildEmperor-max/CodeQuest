@@ -5,8 +5,10 @@
     overflow: auto;
     position: fixed;
     z-index: 2;
-    top: 10%;
-    left: 28%;
+    /* top: 10%;
+    left: 28%; */
+    inset: 0;
+    margin: auto;
     display: flex;
     gap: 10px;
 }
@@ -193,6 +195,14 @@ textarea {
 
 #bio-content p {
     margin: 5px;
+}
+
+.bio-input-count {
+    float: right;
+}
+
+.red-text {
+    color: red;
 }
 
 .profile-displayed-achievements {

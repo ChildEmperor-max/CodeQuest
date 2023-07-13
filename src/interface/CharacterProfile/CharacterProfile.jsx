@@ -31,6 +31,8 @@ const CharacterProfile = ({ onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingProfile, setEditingProfile] = useState("");
   const [isSavingBio, setIsSavingBio] = useState(false);
+  const [bioLetterCount, setBioLetterCount] = useState(currentBio.length);
+  const [maxBioLetterCount, setMaxBioLetterCount] = useState(60);
 
   useEffect(() => {
     viewCompletedQuests()
@@ -204,6 +206,7 @@ const CharacterProfile = ({ onClose }) => {
 
   const handleBioInput = (event) => {
     setBioInputValue(event.target.value);
+    setBioLetterCount(event.target.value.length);
   };
 
   const saveBioInput = () => {
@@ -259,20 +262,35 @@ const CharacterProfile = ({ onClose }) => {
           </div>
         </div>
       )}
-      {isSavingBio && (
-        <AlertModal
-          message={`Are you sure about your new bio? ${bioInputValue}`}
-          onConfirm={() => {
-            setEditingProfile("");
-            saveBioInput();
-            setIsSavingBio(false);
-          }}
-          onCancel={() => {
-            setEditingProfile("");
-            setIsSavingBio(false);
-          }}
-        />
-      )}
+      {isSavingBio ? (
+        bioLetterCount <= maxBioLetterCount ? (
+          <AlertModal
+            message={`Are you sure about your new bio? ${bioInputValue}`}
+            onConfirm={() => {
+              setEditingProfile("");
+              saveBioInput();
+              setIsSavingBio(false);
+            }}
+            onCancel={() => {
+              setEditingProfile("");
+              setIsSavingBio(false);
+              setBioInputValue(currentBio);
+              setBioLetterCount(currentBio.length);
+            }}
+          />
+        ) : (
+          <AlertModal
+            message="Please keep your bio letters not exceed the maximum limit."
+            onOk={() => {
+              setEditingProfile("");
+              setIsSavingBio(false);
+              setBioInputValue(currentBio);
+              setBioLetterCount(currentBio.length);
+            }}
+          />
+        )
+      ) : null}
+
       {editingProfile === "username" ? (
         <EditUsernameModal
           currentUsername={userName}
@@ -359,11 +377,20 @@ const CharacterProfile = ({ onClose }) => {
                     </div>
                   </div>
                   {editingProfile === "bio" ? (
-                    <textarea
-                      defaultValue={currentBio}
-                      className="bio-content typing"
-                      onChange={handleBioInput}
-                    />
+                    <>
+                      <span
+                        className={`bio-input-count ${
+                          bioLetterCount >= maxBioLetterCount ? "red-text" : ""
+                        } `}
+                      >
+                        {bioLetterCount}/{maxBioLetterCount}
+                      </span>
+                      <textarea
+                        defaultValue={currentBio}
+                        className="bio-content typing"
+                        onChange={handleBioInput}
+                      />
+                    </>
                   ) : (
                     <div className="bio-content">
                       {/* <RandomTextAnimation text={currentBio} elementType="p" /> */}
