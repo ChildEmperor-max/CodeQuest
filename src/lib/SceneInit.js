@@ -108,7 +108,37 @@ export default class SceneInit {
       camera: this.cameraControls.camera,
     });
     this.updateWindowResize();
+    this.isFocused = () =>
+      typeof document.hidden !== "undefined" ? !document.hidden : null;
+
+    this.initAnim = true;
+    this.runAnim = false;
+    this.isPlay = false;
+
+    function startAnimation() {
+      if (this.initAnim) {
+        this.initAnim = false;
+        this.runAnim = true;
+        theta = 0;
+      }
+      // Start and Pause
+      if (this.runAnim) {
+        this.runAnim = false;
+        this.isPlay = true;
+        animate();
+      } else {
+        this.runAnim = true;
+        this.isPlay = false;
+      }
+    }
+
+    function stopAnimation() {
+      this.initAnim = true;
+      this.runAnim = false;
+      this.isPlay = false;
+    }
   }
+
   animate() {
     const delta = this.clock.getDelta();
 
@@ -128,8 +158,8 @@ export default class SceneInit {
       this.player.updateNpcDetection(this.npcs);
     }
 
-    window.requestAnimationFrame(this.animate.bind(this));
     this.render();
+    window.requestAnimationFrame(this.animate.bind(this));
   }
   playerDetectNpc(npcs, actionHint) {
     var nearNpcAction = undefined;
