@@ -18,6 +18,15 @@
   /* -webkit-text-size-adjust: 100%; */
 }
 
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: transform(-50%, 50%);
+  /* inset: 0;
+  margin: auto; */
+}
+
 .close-button-modal {
   margin: 2px;
   float: right;
