@@ -114,52 +114,66 @@ export default class SceneInit {
     this.initAnim = true;
     this.runAnim = false;
     this.isPlay = false;
+    this.animationId = null;
+  }
 
-    function startAnimation() {
-      if (this.initAnim) {
-        this.initAnim = false;
-        this.runAnim = true;
-        theta = 0;
-      }
-      // Start and Pause
-      if (this.runAnim) {
-        this.runAnim = false;
-        this.isPlay = true;
-        animate();
-      } else {
-        this.runAnim = true;
-        this.isPlay = false;
-      }
+  startAnimation() {
+    if (this.initAnim) {
+      this.initAnim = false;
+      this.runAnim = true;
     }
-
-    function stopAnimation() {
-      this.initAnim = true;
+    // Start and Pause
+    if (this.runAnim) {
       this.runAnim = false;
+      this.isPlay = true;
+      this.clock.start();
+      // this.animate();
+      if (this.animationId === null) {
+        this.animationId = window.requestAnimationFrame(
+          this.animate.bind(this)
+        );
+      }
+    } else {
+      this.runAnim = true;
       this.isPlay = false;
     }
   }
 
-  animate() {
-    const delta = this.clock.getDelta();
-
-    this.stats.update();
-
-    if (this.player) {
-      for (let i = 0; i < this.npcs.length; i++) {
-        if (this.npcs[i]) {
-          this.npcs[i].update(delta);
-        }
-      }
-      this.cameraControls.update(this.player.getPosition());
-      this.player.update(delta, this.npcs);
-
-      this.playerDetectNpc(this.npcs, this.textManager);
-
-      this.player.updateNpcDetection(this.npcs);
+  stopAnimation() {
+    this.initAnim = true;
+    this.runAnim = false;
+    this.isPlay = false;
+    if (this.animationId !== null) {
+      window.cancelAnimationFrame(this.animationId);
+      this.animationId = null;
     }
+  }
 
-    this.render();
-    window.requestAnimationFrame(this.animate.bind(this));
+  animate() {
+    if (this.isPlay) {
+      const delta = this.clock.getDelta();
+      this.stats.update();
+
+      if (this.player) {
+        for (let i = 0; i < this.npcs.length; i++) {
+          if (this.npcs[i]) {
+            this.npcs[i].update(delta);
+          }
+        }
+        this.cameraControls.update(this.player.getPosition());
+        this.player.update(delta, this.npcs);
+
+        this.playerDetectNpc(this.npcs, this.textManager);
+
+        this.player.updateNpcDetection(this.npcs);
+      }
+
+      this.render();
+      this.animationId = window.requestAnimationFrame(this.animate.bind(this));
+    } else {
+      console.log("stopped");
+      this.clock.stop();
+    }
   }
   playerDetectNpc(npcs, actionHint) {
     var nearNpcAction = undefined;

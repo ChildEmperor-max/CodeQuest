@@ -13,12 +13,35 @@ function App() {
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
     world.initialize();
-    world.animate();
+
+    const startAnimation = () => {
+      world.startAnimation();
+    };
+
+    const stopAnimation = () => {
+      world.stopAnimation();
+    };
+
+    // Handle page visibility change
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopAnimation();
+      } else {
+        startAnimation();
+      }
+    };
+
+    // Add event listeners for page visibility change
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    startAnimation();
 
     renderer.shadowMap = shadowMap;
 
     return () => {
       renderer.dispose();
+      // Remove event listeners for cleanup
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [antialiasValue, shadowMap]);
 
