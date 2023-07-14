@@ -19,12 +19,12 @@
 }
 
 .centered {
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  translate: transform(-50%, 50%);
-  /* inset: 0;
-  margin: auto; */
+  translate: transform(-50%, 50%); */
+  inset: 0;
+  margin: auto;
 }
 
 .close-button-modal {

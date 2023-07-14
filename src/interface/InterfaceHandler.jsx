@@ -3,6 +3,7 @@ import CharacterProfile from "./CharacterProfile/CharacterProfile";
 import Settings from "./settings/Settings";
 import Achievements from "./Achievements/Achievements";
 import Leaderboard from "./Leaderboard/Leaderboard";
+import ControlsHelper from "./Help/ControlsHelper";
 import toggleEditor from "../Editor";
 import QuestManager from "../lib/QuestManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +14,7 @@ import {
   faMedal,
   faEdit,
   faTrophy,
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 const questManager = new QuestManager();
@@ -27,6 +29,7 @@ export default function InterfaceHandler({
   const [isLeaderboardOpen, setleaderboardOpen] = useState(false);
   const [isAchievementsOpen, setAchievementsOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isControlsHelperOpen, setIsControlsHelperOpen] = useState(false);
 
   const toggleCharacterProfile = () => {
     setCharacterProfileOpen(!isCharacterProfileOpen);
@@ -42,6 +45,10 @@ export default function InterfaceHandler({
 
   const toggleSettings = () => {
     setSettingsOpen(!isSettingsOpen);
+  };
+
+  const toggleControlsHelper = () => {
+    setIsControlsHelperOpen(!isControlsHelperOpen);
   };
 
   const InterfaceButton = ({ name, icon, id, onclickEvent = null }) => {
@@ -75,6 +82,9 @@ export default function InterfaceHandler({
         />
       ) : null}
       {isLeaderboardOpen ? <Leaderboard onClose={toggleLeaderboard} /> : null}
+      {isControlsHelperOpen ? (
+        <ControlsHelper onClose={toggleControlsHelper} />
+      ) : null}
       <div className="ui-container" id="interface-container">
         <div className="right-container">
           <InterfaceButton
@@ -114,6 +124,12 @@ export default function InterfaceHandler({
             icon={faUser}
             id="profile-button"
             onclickEvent={toggleCharacterProfile}
+          />
+          <InterfaceButton
+            name="Help"
+            icon={faQuestionCircle}
+            id="help-button"
+            onclickEvent={toggleControlsHelper}
           />
         </div>
         <a>
