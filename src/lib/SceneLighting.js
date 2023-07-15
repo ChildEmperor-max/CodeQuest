@@ -20,11 +20,18 @@ export default class SceneLighting {
     const light = new THREE.DirectionalLight(0xffffff, 0.1);
     light.position.set(0, 210, 0);
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    // light.shadow.mapSize.width = 1024;
+    // light.shadow.mapSize.height = 1024;
     light.shadow.camera.near = 0.5;
     light.shadow.camera.far = 500;
+    light.shadow.camera.left = -300;
+    light.shadow.camera.right = 300;
+    light.shadow.camera.top = 300;
+    light.shadow.camera.bottom = -300;
     this.scene.add(light);
+
+    // const helper = new THREE.CameraHelper(light.shadow.camera);
+    // this.scene.add(helper);
 
     this.initSky(this.renderer);
   }

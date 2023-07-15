@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
-    const renderer = new THREE.WebGLRenderer({ canvas, antialiasValue });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: antialiasValue });
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
     world.initialize();
@@ -36,7 +36,12 @@ function App() {
 
     startAnimation();
 
-    renderer.shadowMap = shadowMap;
+    renderer.shadowMap.enabled = shadowMap;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
+    // THREE.BasicShadowMap
+    // THREE.PCFShadowMap (default)
+    // THREE.PCFSoftShadowMap
+    // THREE.VSMShadowMap
 
     return () => {
       renderer.dispose();
