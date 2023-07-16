@@ -51,11 +51,20 @@ export default function InterfaceHandler({
     setIsControlsHelperOpen(!isControlsHelperOpen);
   };
 
-  const InterfaceButton = ({ name, icon, id, onclickEvent = null }) => {
+  const InterfaceButton = ({
+    name,
+    icon,
+    id,
+    onclickEvent = null,
+    shortcutKey = null,
+  }) => {
     return (
       <button id={id} className="icon-button" onClick={onclickEvent}>
         <FontAwesomeIcon icon={icon} size="2xl" />
         <p className="button-text">{name}</p>
+        {shortcutKey ? (
+          <span className="shortcut-letter">{shortcutKey}</span>
+        ) : null}
       </button>
     );
   };
@@ -92,6 +101,7 @@ export default function InterfaceHandler({
             icon={faTasks}
             id="quest-button"
             onclickEvent={questManager.toggleQuestBox}
+            shortcutKey="Q"
           />
           <InterfaceButton
             name="Editor"

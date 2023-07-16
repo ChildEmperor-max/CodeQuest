@@ -132,7 +132,7 @@ export default class SceneInit {
       0
     );
     bloomPass.threshold = 0.2; // Adjust the threshold for the glow effect
-    bloomPass.strength = 0.3; // Reduce the strength of the glow effect
+    bloomPass.strength = 0.2; // Reduce the strength of the glow effect
     bloomPass.radius = 0.5; // Reduce the radius of the glow effect
     // this.renderer.physicallyCorrectLights = true; // This will be required for matching the glTF spec.
 
@@ -196,10 +196,9 @@ export default class SceneInit {
       this.render();
       this.animationId = window.requestAnimationFrame(this.animate.bind(this));
     } else {
-      console.log("stopped");
       this.clock.stop();
     }
-    this.composer.render();
+    // this.composer.render();
   }
   playerDetectNpc(npcs, actionHint) {
     var nearNpcAction = undefined;

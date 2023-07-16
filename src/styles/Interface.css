@@ -18,10 +18,21 @@
 }
 
 .icon-button {
+  position: relative;
   background-color: #1417299d;
   border: none;
   outline: none;
   margin: 5px;
+}
+
+.shortcut-letter {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  padding: 3px 6px;
+  background-color: #1417299d;
+  color: #fff;
+  border-radius: 4px;
 }
 
 #quest-button,
