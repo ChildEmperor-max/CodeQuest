@@ -25,6 +25,22 @@ var keys = {
     pressed: false,
     justPressed: false,
   },
+  p: {
+    pressed: false,
+    justPressed: false,
+  },
+  r: {
+    pressed: false,
+    justPressed: false,
+  },
+  f: {
+    pressed: false,
+    justPressed: false,
+  },
+  h: {
+    pressed: false,
+    justPressed: false,
+  },
   shift: {
     pressed: false,
     justPressed: false,
@@ -67,6 +83,22 @@ const handleKeyDown = (event) => {
       keys.q.justPressed = !keys.q.justPressed;
       keys.q.pressed = true;
       break;
+    case "KeyP":
+      keys.p.justPressed = !keys.p.justPressed;
+      keys.p.pressed = true;
+      break;
+    case "KeyR":
+      keys.r.justPressed = !keys.r.justPressed;
+      keys.r.pressed = true;
+      break;
+    case "KeyF":
+      keys.f.justPressed = !keys.f.justPressed;
+      keys.f.pressed = true;
+      break;
+    case "KeyH":
+      keys.h.justPressed = !keys.h.justPressed;
+      keys.h.pressed = true;
+      break;
     case "ShiftLeft":
       keys.shift.justPressed = !keys.shift.justPressed;
       keys.shift.pressed = true;
@@ -103,6 +135,18 @@ const handleKeyUp = (event) => {
       break;
     case "KeyQ":
       keys.q.pressed = false;
+      break;
+    case "KeyP":
+      keys.p.pressed = false;
+      break;
+    case "KeyR":
+      keys.r.pressed = false;
+      break;
+    case "KeyF":
+      keys.f.pressed = false;
+      break;
+    case "KeyH":
+      keys.f.pressed = false;
       break;
     case "ShiftLeft":
       keys.shift.pressed = false;

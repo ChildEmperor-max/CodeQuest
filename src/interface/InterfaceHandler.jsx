@@ -6,6 +6,10 @@ import Leaderboard from "./Leaderboard/Leaderboard";
 import ControlsHelper from "./Help/ControlsHelper";
 import toggleEditor from "../Editor";
 import QuestManager from "../lib/QuestManager";
+import keys, {
+  enableKeyListeners,
+  disableKeyListeners,
+} from "../lib/KeyControls";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTasks,
@@ -32,34 +36,36 @@ export default function InterfaceHandler({
   const [isControlsHelperOpen, setIsControlsHelperOpen] = useState(false);
 
   const toggleCharacterProfile = () => {
-    setCharacterProfileOpen(!isCharacterProfileOpen);
+    setCharacterProfileOpen(
+      (isCharacterProfileOpen) => !isCharacterProfileOpen
+    );
   };
 
   const toggleLeaderboard = () => {
-    setleaderboardOpen(!isLeaderboardOpen);
+    setleaderboardOpen((isLeaderboardOpen) => !isLeaderboardOpen);
   };
 
   const toggleAchievements = () => {
-    setAchievementsOpen(!isAchievementsOpen);
+    setAchievementsOpen((isAchievementsOpen) => !isAchievementsOpen);
   };
 
   const toggleSettings = () => {
-    setSettingsOpen(!isSettingsOpen);
+    setSettingsOpen((isSettingsOpen) => !isSettingsOpen);
   };
 
   const toggleControlsHelper = () => {
-    setIsControlsHelperOpen(!isControlsHelperOpen);
+    setIsControlsHelperOpen((isControlsHelperOpen) => !isControlsHelperOpen);
   };
 
   const InterfaceButton = ({
     name,
     icon,
     id,
-    onclickEvent = null,
+    onClickEvent = null,
     shortcutKey = null,
   }) => {
     return (
-      <button id={id} className="icon-button" onClick={onclickEvent}>
+      <button id={id} className="icon-button" onClick={onClickEvent}>
         <FontAwesomeIcon icon={icon} size="2xl" />
         <p className="button-text">{name}</p>
         {shortcutKey ? (
@@ -68,6 +74,23 @@ export default function InterfaceHandler({
       </button>
     );
   };
+
+  useEffect(() => {
+    const handleKeyToggle = (event) => {
+      if (event.code === "KeyP" && keys.p.pressed) {
+        toggleCharacterProfile();
+      }
+      if (event.code === "KeyH" && keys.h.pressed) {
+        toggleControlsHelper();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyToggle);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyToggle);
+    };
+  }, []);
 
   return (
     <>
@@ -100,32 +123,32 @@ export default function InterfaceHandler({
             name="Quests"
             icon={faTasks}
             id="quest-button"
-            onclickEvent={questManager.toggleQuestBox}
+            onClickEvent={questManager.toggleQuestBox}
             shortcutKey="Q"
           />
           <InterfaceButton
             name="Editor"
             icon={faEdit}
             id="toggle-editor-button"
-            onclickEvent={toggleEditor}
+            onClickEvent={toggleEditor}
           />
           <InterfaceButton
             name="Leaderboard"
             icon={faMedal}
             id="leaderboard-button"
-            onclickEvent={toggleLeaderboard}
+            onClickEvent={toggleLeaderboard}
           />
           <InterfaceButton
             name="Achievements"
             icon={faTrophy}
             id="achivements-button"
-            onclickEvent={toggleAchievements}
+            onClickEvent={toggleAchievements}
           />
           <InterfaceButton
             name="Settings"
             icon={faCog}
             id="settings-button"
-            onclickEvent={toggleSettings}
+            onClickEvent={toggleSettings}
           />
         </div>
         <div className="left-container">
@@ -133,13 +156,15 @@ export default function InterfaceHandler({
             name="Profile"
             icon={faUser}
             id="profile-button"
-            onclickEvent={toggleCharacterProfile}
+            onClickEvent={toggleCharacterProfile}
+            shortcutKey="P"
           />
           <InterfaceButton
             name="Help"
             icon={faQuestionCircle}
             id="help-button"
-            onclickEvent={toggleControlsHelper}
+            onClickEvent={toggleControlsHelper}
+            shortcutKey="H"
           />
         </div>
         <a>

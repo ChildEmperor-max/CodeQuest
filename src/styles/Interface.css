@@ -27,11 +27,12 @@
 
 .shortcut-letter {
   position: absolute;
-  bottom: -10px;
-  right: -10px;
-  padding: 3px 6px;
-  background-color: #1417299d;
+  bottom: -8px;
+  right: -8px;
+  padding: 2px 5px;
+  background-color: #141729;
   color: #fff;
+  font-size: 12px;
   border-radius: 4px;
 }
 
