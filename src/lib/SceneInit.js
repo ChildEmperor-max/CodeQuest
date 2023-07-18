@@ -5,7 +5,7 @@ import Player from "../player/Player";
 import SceneLighting from "./SceneLighting";
 import CameraControls from "./CameraControls";
 import { LoadWorld } from "../world/LoadWorld";
-// import { LoadWorld } from "../world/SampleWorld";
+// import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import QuestManager from "./QuestManager";
 
@@ -19,11 +19,11 @@ import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
 
 export default class SceneInit {
-  constructor(canvasId, renderer) {
+  constructor(canvasId, renderer, scene) {
     this.fov = 45;
     this.canvasId = canvasId;
 
-    this.scene = undefined;
+    this.scene = scene;
     this.axesHelper = undefined;
     this.clock = undefined;
     this.stats = undefined;
@@ -38,8 +38,6 @@ export default class SceneInit {
   }
 
   initialize() {
-    this.scene = new THREE.Scene();
-
     this.axesHelper = new THREE.AxesHelper(8);
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();

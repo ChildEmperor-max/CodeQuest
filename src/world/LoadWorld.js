@@ -2,9 +2,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 
 const loader = new GLTFLoader();
-let textureLoader = new THREE.TextureLoader();
-let groundTexture = textureLoader.load("src/assets/world/greffen.png");
-groundTexture.flipY = false;
 
 export function LoadWorld() {
   return new Promise((resolve, reject) => {
@@ -32,10 +29,7 @@ export function LoadWorld() {
         terrainMesh.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
-            // child.receiveShadow = true;
-            if (child.name === "Plane") {
-              child.receiveShadow = true;
-            }
+            child.receiveShadow = true;
           }
           if (child.isMesh && child.name.startsWith("Walkable_")) {
             child.visible = false;
@@ -48,12 +42,6 @@ export function LoadWorld() {
             // const obstacleCollisionBox = new THREE.Box3().setFromObject(child);
             // child.obstacleCollisionBox = obstacleCollisionBox;
           }
-          // if (child.isMesh) {
-          //   if (child.name === "Plane") {
-          //     child.material = new THREE.MeshBasicMaterial();
-          //     child.material.map = groundTexture;
-          //   }
-          // }
         });
 
         resolve({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints });

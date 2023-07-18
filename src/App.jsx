@@ -9,9 +9,13 @@ function App() {
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: antialiasValue });
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: antialiasValue,
+    });
+    const mainScene = new THREE.Scene();
 
-    const world = new SceneInit("myThreeJsCanvas", renderer);
+    const world = new SceneInit("myThreeJsCanvas", renderer, mainScene);
     world.initialize();
 
     const startAnimation = () => {

@@ -22,10 +22,10 @@ export default class FirstHouseInterior {
           const obstacles = [];
           const spawnPoint = new THREE.Vector3(0, 0, 0);
 
-          const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
-          const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
-          const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
-          const npcSpawnPoint4 = new THREE.Vector3(3, 0, -145);
+          const npcSpawnPoint1 = new THREE.Vector3(0, 0, -14);
+          const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -13);
+          const npcSpawnPoint3 = new THREE.Vector3(3, 0, -13);
+          const npcSpawnPoint4 = new THREE.Vector3(3, 0, -14);
           const npcSpawnPoints = [
             npcSpawnPoint1,
             npcSpawnPoint2,
