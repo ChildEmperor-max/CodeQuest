@@ -13,9 +13,8 @@ function App() {
       canvas,
       antialias: antialiasValue,
     });
-    const mainScene = new THREE.Scene();
 
-    const world = new SceneInit("myThreeJsCanvas", renderer, mainScene);
+    const world = new SceneInit("myThreeJsCanvas", renderer);
     world.initialize();
 
     const startAnimation = () => {

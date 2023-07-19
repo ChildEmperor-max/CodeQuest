@@ -31,9 +31,11 @@ export default class Player extends THREE.Object3D {
     this.collisionBox = undefined;
     this.questManager = new QuestManager();
     this.isTalkingToNpc = false;
+    this.onTransferArea = false;
+    this.transferArea = null;
   }
 
-  initialize(scene, camera, position, obstacles, groundMesh) {
+  initialize(scene, camera, position, obstacles, groundMesh, transferAreas) {
     this.scene = scene;
     this.walkingSpeed = 10;
     this.movementSpeed = this.walkingSpeed;
@@ -46,6 +48,7 @@ export default class Player extends THREE.Object3D {
     this.camera = camera;
     this.add(camera);
     this.groundMesh = groundMesh;
+    this.transferAreas = transferAreas;
     // this.obstacles.push(groundMesh);
     this.raycastCollidables = new THREE.Raycaster(
       new THREE.Vector3(position.x, position.y, position.z),
@@ -234,6 +237,16 @@ export default class Player extends THREE.Object3D {
     }
   }
 
+  areaDetection(areaCollisionBox, areaObject) {
+    if (this.playerbox.intersectsBox(areaCollisionBox)) {
+      this.onTransferArea = true;
+      this.transferArea = areaObject;
+    } else {
+      this.onTransferArea = false;
+      this.transferArea = null;
+    }
+  }
+
   movement(delta) {
     const cameraDirection = new THREE.Vector3();
     this.camera.getWorldDirection(cameraDirection);
@@ -280,17 +293,26 @@ export default class Player extends THREE.Object3D {
 
       this.playerbox = new THREE.Box3().setFromObject(this.collisionBox);
       if (this.playerbox) {
-        for (let i = 0; i < this.npcs.length; i++) {
-          if (this.npcs[i].npcbox) {
-            this.boxCollision(this.npcs[i].npcbox, newPosition);
+        if (this.npcs) {
+          for (let i = 0; i < this.npcs.length; i++) {
+            if (this.npcs[i].npcbox) {
+              this.boxCollision(this.npcs[i].npcbox, newPosition);
+            }
           }
         }
       }
-      this.obstacles.forEach((collisionObject) => {
-        const boundingBox = new THREE.Box3().setFromObject(collisionObject);
-        this.boxCollision(boundingBox, newPosition);
-      });
-
+      if (this.obstacles) {
+        this.obstacles.forEach((collisionObject) => {
+          const boundingBox = new THREE.Box3().setFromObject(collisionObject);
+          this.boxCollision(boundingBox, newPosition);
+        });
+      }
+      if (this.transferAreas) {
+        this.transferAreas.forEach((object) => {
+          const boundingBox = new THREE.Box3().setFromObject(object);
+          this.areaDetection(boundingBox, object);
+        });
+      }
       this.mesh.position.copy(newPosition);
       const angle = Math.atan2(this.direction.x, this.direction.z);
 
@@ -416,10 +438,10 @@ export default class Player extends THREE.Object3D {
       }
     } else {
       // if there is no ground
-      this.mesh.position.y -= 9.81 * deltaTime;
-      this.position.y = this.mesh.position.y;
-      this.direction.y -= 9.81 * deltaTime;
-      this.isGrounded = false;
+      // this.mesh.position.y -= 9.81 * deltaTime;
+      // this.position.y = this.mesh.position.y;
+      // this.direction.y -= 9.81 * deltaTime;
+      // this.isGrounded = false;
     }
 
     this.position.add(this.direction.clone().multiplyScalar(deltaTime));

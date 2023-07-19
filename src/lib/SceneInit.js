@@ -5,7 +5,7 @@ import Player from "../player/Player";
 import SceneLighting from "./SceneLighting";
 import CameraControls from "./CameraControls";
 import { LoadWorld } from "../world/LoadWorld";
-// import { LoadSampleWorld } from "../world/SampleWorld";
+import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import QuestManager from "./QuestManager";
 
@@ -17,13 +17,14 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
+import keys from "./KeyControls";
 
 export default class SceneInit {
-  constructor(canvasId, renderer, scene) {
+  constructor(canvasId, renderer) {
     this.fov = 45;
     this.canvasId = canvasId;
 
-    this.scene = scene;
+    this.scene = undefined;
     this.axesHelper = undefined;
     this.clock = undefined;
     this.stats = undefined;
@@ -38,6 +39,9 @@ export default class SceneInit {
   }
 
   initialize() {
+    this.mainWorld = new THREE.Scene();
+    this.firstHouseInteriorScene = new THREE.Scene();
+    this.scene = this.mainWorld;
     this.axesHelper = new THREE.AxesHelper(8);
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
@@ -58,49 +62,61 @@ export default class SceneInit {
     this.cameraControls = cameraControls;
 
     this.obstacles = [];
+    this.transferAreas = [];
     this.player = new Player();
     LoadWorld()
-      .then(({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints }) => {
-        this.scene.add(terrainMesh);
-        this.groundMesh = terrainMesh;
-        this.obstacles = obstacles;
-        this.player.initialize(
-          this.scene,
-          this.cameraControls.camera,
-          spawnPoint,
+      .then(
+        ({
+          terrainMesh,
           obstacles,
-          this.groundMesh
-        );
+          spawnPoint,
+          npcSpawnPoints,
+          transferAreas,
+        }) => {
+          this.mainWorld.add(terrainMesh);
+          this.groundMesh = terrainMesh;
+          this.obstacles = obstacles;
+          this.transferAreas = transferAreas;
+          this.player.initialize(
+            this.mainWorld,
+            this.cameraControls.camera,
+            spawnPoint,
+            obstacles,
+            this.groundMesh,
+            transferAreas
+          );
 
-        this.sampleNPC1 = new SampleNPC1(this.scene);
-        this.sampleNPC1.initialize(
-          npcSpawnPoints[0],
-          this.cameraControls.camera,
-          this.player,
-          this.canvasId
-        );
-        this.npcs.push(this.sampleNPC1);
+          this.sampleNPC1 = new SampleNPC1(this.mainWorld);
+          this.sampleNPC1.initialize(
+            npcSpawnPoints[0],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId
+          );
+          this.npcs.push(this.sampleNPC1);
 
-        this.sampleNPC2 = new SampleNPC2(this.scene);
-        this.sampleNPC2.initialize(
-          npcSpawnPoints[1],
-          this.cameraControls.camera,
-          this.player,
-          this.canvasId
-        );
-        this.npcs.push(this.sampleNPC2);
+          this.sampleNPC2 = new SampleNPC2(this.mainWorld);
+          this.sampleNPC2.initialize(
+            npcSpawnPoints[1],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId
+          );
+          this.npcs.push(this.sampleNPC2);
 
-        this.albyNPC = new AlbyNPC(this.scene);
-        this.albyNPC.initialize(
-          npcSpawnPoints[2],
-          this.cameraControls.camera,
-          this.player,
-          this.canvasId
-        );
-        this.npcs.push(this.albyNPC);
+          this.albyNPC = new AlbyNPC(this.mainWorld);
+          this.albyNPC.initialize(
+            npcSpawnPoints[2],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId
+          );
+          this.npcs.push(this.albyNPC);
 
-        document.getElementById("interface-container").style.display = "block";
-      })
+          document.getElementById("interface-container").style.display =
+            "block";
+        }
+      )
       .catch((error) => {
         console.log("error loading terrain mesh: ", error);
       });
@@ -138,6 +154,7 @@ export default class SceneInit {
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(renderPass);
     this.composer.addPass(bloomPass);
+    this.isLoadingWorld = false;
   }
 
   startAnimation() {
@@ -187,6 +204,7 @@ export default class SceneInit {
         this.player.update(delta, this.npcs);
 
         this.playerDetectNpc(this.npcs, this.textManager);
+        this.playerOnTransferArea(this.textManager);
 
         this.player.updateNpcDetection(this.npcs);
       }
@@ -198,6 +216,51 @@ export default class SceneInit {
     }
     // this.composer.render();
   }
+  loadFirstHouseInteriorScene() {
+    LoadSampleWorld()
+      .then(({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints }) => {
+        this.firstHouseInteriorScene.add(terrainMesh);
+        this.groundMesh = terrainMesh;
+        this.obstacles = obstacles;
+        this.player.initialize(
+          this.firstHouseInteriorScene,
+          this.cameraControls.camera,
+          spawnPoint,
+          obstacles,
+          this.groundMesh
+        );
+      })
+      .catch((error) => {
+        console.log("error loading terrain mesh: ", error);
+      });
+  }
+  removePlayerFromScene(scene) {
+    if (this.player) {
+      scene.remove(this.player);
+    }
+  }
+
+  playerOnTransferArea(actionHint) {
+    if (this.player.onTransferArea) {
+      actionHint.showText(this.player.transferArea.position);
+
+      if (keys.e.pressed) {
+        if (!this.isLoadingWorld) {
+          this.scene = this.firstHouseInteriorScene;
+          this.removePlayerFromScene(this.mainWorld);
+          this.loadFirstHouseInteriorScene();
+
+          const sceneLighting = new SceneLighting(this.scene, this.renderer);
+          sceneLighting.initialize();
+          this.isLoadingWorld = true;
+          this.player.onTransferArea = false;
+        }
+      }
+    } else {
+      actionHint.hideText();
+    }
+  }
+
   playerDetectNpc(npcs, actionHint) {
     var nearNpcAction = undefined;
     var nearNpcName = undefined;

@@ -13,6 +13,7 @@ export function LoadWorld() {
         terrainMesh.position.set(3, 0, 3);
         terrainMesh.scale.set(1, 1, 1);
         const obstacles = [];
+        const transferAreas = [];
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
@@ -34,6 +35,10 @@ export function LoadWorld() {
           if (child.isMesh && child.name.startsWith("Walkable_")) {
             child.visible = false;
           }
+          if (child.isMesh && child.name.startsWith("TransferArea_")) {
+            transferAreas.push(child);
+            child.visible = false;
+          }
           if (child.isMesh && child.name.startsWith("Collision_")) {
             obstacles.push(child);
             child.visible = false;
@@ -44,7 +49,13 @@ export function LoadWorld() {
           }
         });
 
-        resolve({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints });
+        resolve({
+          terrainMesh,
+          obstacles,
+          spawnPoint,
+          npcSpawnPoints,
+          transferAreas,
+        });
       },
       undefined,
       function (error) {
