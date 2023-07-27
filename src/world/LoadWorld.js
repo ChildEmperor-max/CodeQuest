@@ -14,6 +14,7 @@ export function LoadWorld() {
         terrainMesh.scale.set(1, 1, 1);
         const obstacles = [];
         const transferAreas = [];
+
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);

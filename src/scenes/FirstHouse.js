@@ -6,7 +6,6 @@ export default class FirstHouseInterior {
     this.scene = new THREE.Scene();
     this.axesHelper = new THREE.AxesHelper(8);
     this.scene.add(this.axesHelper);
-    this.clock = new THREE.Clock();
     this.loader = new GLTFLoader();
   }
 

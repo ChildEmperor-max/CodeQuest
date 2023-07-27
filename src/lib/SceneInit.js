@@ -40,7 +40,7 @@ export default class SceneInit {
 
   initialize() {
     this.mainWorld = new THREE.Scene();
-    this.firstHouseInteriorScene = new THREE.Scene();
+    this.albyHouseScene = new THREE.Scene();
     this.scene = this.mainWorld;
     this.axesHelper = new THREE.AxesHelper(8);
     this.scene.add(this.axesHelper);
@@ -57,13 +57,14 @@ export default class SceneInit {
     this.stats = Stats();
     // document.body.appendChild(this.stats.dom);
 
-    const cameraControls = new CameraControls(this.renderer);
-    cameraControls.initialize();
-    this.cameraControls = cameraControls;
-
     this.obstacles = [];
     this.transferAreas = [];
     this.player = new Player();
+
+    const cameraControls = new CameraControls(this.renderer);
+    cameraControls.initialize(this.obstacles);
+    this.cameraControls = cameraControls;
+
     LoadWorld()
       .then(
         ({
@@ -115,6 +116,8 @@ export default class SceneInit {
 
           document.getElementById("interface-container").style.display =
             "block";
+
+          this.cameraControls.addObstacles(this.obstacles);
         }
       )
       .catch((error) => {
@@ -200,7 +203,7 @@ export default class SceneInit {
             this.npcs[i].update(delta);
           }
         }
-        this.cameraControls.update(this.player.getPosition());
+        this.cameraControls.update(this.player);
         this.player.update(delta, this.npcs);
 
         this.playerDetectNpc(this.npcs, this.textManager);
@@ -216,14 +219,14 @@ export default class SceneInit {
     }
     // this.composer.render();
   }
-  loadFirstHouseInteriorScene() {
+  loadAlbyHouseScene() {
     LoadSampleWorld()
       .then(({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints }) => {
-        this.firstHouseInteriorScene.add(terrainMesh);
+        this.albyHouseScene.add(terrainMesh);
         this.groundMesh = terrainMesh;
         this.obstacles = obstacles;
         this.player.initialize(
-          this.firstHouseInteriorScene,
+          this.albyHouseScene,
           this.cameraControls.camera,
           spawnPoint,
           obstacles,
@@ -246,14 +249,16 @@ export default class SceneInit {
 
       if (keys.e.pressed) {
         if (!this.isLoadingWorld) {
-          this.scene = this.firstHouseInteriorScene;
-          this.removePlayerFromScene(this.mainWorld);
-          this.loadFirstHouseInteriorScene();
+          if (this.player.transferArea.name === "TransferArea_AlbyHouse") {
+            this.scene = this.albyHouseScene;
+            this.removePlayerFromScene(this.mainWorld);
+            this.loadAlbyHouseScene();
 
-          const sceneLighting = new SceneLighting(this.scene, this.renderer);
-          sceneLighting.initialize();
-          this.isLoadingWorld = true;
-          this.player.onTransferArea = false;
+            const sceneLighting = new SceneLighting(this.scene, this.renderer);
+            sceneLighting.initialize();
+            this.isLoadingWorld = true;
+            this.player.onTransferArea = false;
+          }
         }
       }
     } else {
