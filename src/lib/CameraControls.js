@@ -16,7 +16,7 @@ export default class CameraControls {
     );
     // Modify the render distance
     // this.camera.near = 1; // Adjust the near clipping plane distance
-    // this.camera.far = 200; // Adjust the far clipping plane distance
+    // this.camera.far = 100; // Adjust the far clipping plane distance
 
     this.camera.position.set(0, 10, 10);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -24,6 +24,8 @@ export default class CameraControls {
     this.controls.zoomSpeed = 0.5;
     this.controls.rotateSpeed = 0.5;
     this.controls.enablePan = false;
+    this.controls.minDistance = 9.0;
+    this.controls.maxDistance = 18.0;
     this.controls.update();
     this.camera.updateProjectionMatrix();
     // Update the camera's projection matrix to apply the changes
@@ -38,13 +40,15 @@ export default class CameraControls {
     this.cameraControls.enabled = false;
     this.cameraControls.update();
 
-    this.obstacles = obstacles;
+    this.obstacles = [];
 
     this.prevCameraPosition = new THREE.Vector3();
+    this.floor = undefined;
   }
 
-  addObstacles(obstacles) {
+  addCollidables(obstacles, floor) {
     this.obstacles = obstacles;
+    this.floor = floor;
   }
 
   update(objectToFollow) {
@@ -65,21 +69,25 @@ export default class CameraControls {
       movementDirection.normalize();
       this.prevCameraPosition.copy(this.camera.position);
 
-      this.collisionDetection(
-        objectToFollow.getPosition(),
-        this.camera,
-        this.obstacles,
-        movementDirection
-      );
+      if (this.floor) {
+        this.collisionDetection(
+          objectToFollow.getPosition(),
+          this.camera,
+          this.obstacles,
+          this.floor,
+          movementDirection
+        );
+      }
     }
   }
 
-  collisionDetection(target, camera, obstacles, movementDirection) {
+  collisionDetection(target, camera, obstacles, floor, movementDirection) {
     let intersects = [];
     const direction = new THREE.Vector3()
       .subVectors(camera.position, target)
       .normalize();
     const raycaster = new THREE.Raycaster(target, camera.position);
+    const allObstacles = obstacles.concat(floor);
     intersects = raycaster.intersectObjects(obstacles);
     if (intersects.length > 0) {
       const distanceToCollision = intersects[0].distance;
