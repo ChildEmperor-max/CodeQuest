@@ -69,13 +69,15 @@ export default class SceneInit {
       .then(
         ({
           terrainMesh,
+          worldFloor,
+          walkables,
           obstacles,
           spawnPoint,
           npcSpawnPoints,
           transferAreas,
         }) => {
           this.mainWorld.add(terrainMesh);
-          this.groundMesh = terrainMesh;
+          this.groundMesh = worldFloor;
           this.obstacles = obstacles;
           this.transferAreas = transferAreas;
           this.player.initialize(
@@ -83,6 +85,7 @@ export default class SceneInit {
             this.cameraControls.camera,
             spawnPoint,
             obstacles,
+            walkables,
             this.groundMesh,
             transferAreas
           );
@@ -117,7 +120,7 @@ export default class SceneInit {
           document.getElementById("interface-container").style.display =
             "block";
 
-          this.cameraControls.addObstacles(this.obstacles);
+          this.cameraControls.addCollidables(this.obstacles, worldFloor);
         }
       )
       .catch((error) => {
@@ -221,18 +224,26 @@ export default class SceneInit {
   }
   loadAlbyHouseScene() {
     LoadSampleWorld()
-      .then(({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints }) => {
-        this.albyHouseScene.add(terrainMesh);
-        this.groundMesh = terrainMesh;
-        this.obstacles = obstacles;
-        this.player.initialize(
-          this.albyHouseScene,
-          this.cameraControls.camera,
-          spawnPoint,
+      .then(
+        ({
+          terrainMesh,
+          worldFloor,
           obstacles,
-          this.groundMesh
-        );
-      })
+          spawnPoint,
+          npcSpawnPoints,
+        }) => {
+          this.albyHouseScene.add(terrainMesh);
+          this.groundMesh = terrainMesh;
+          this.obstacles = obstacles;
+          this.player.initialize(
+            this.albyHouseScene,
+            this.cameraControls.camera,
+            spawnPoint,
+            obstacles,
+            this.groundMesh
+          );
+        }
+      )
       .catch((error) => {
         console.log("error loading terrain mesh: ", error);
       });

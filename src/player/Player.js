@@ -35,7 +35,15 @@ export default class Player extends THREE.Object3D {
     this.transferArea = null;
   }
 
-  initialize(scene, camera, position, obstacles, groundMesh, transferAreas) {
+  initialize(
+    scene,
+    camera,
+    position,
+    obstacles,
+    walkables,
+    groundMesh,
+    transferAreas
+  ) {
     this.scene = scene;
     this.walkingSpeed = 10;
     this.movementSpeed = this.walkingSpeed;
@@ -44,12 +52,12 @@ export default class Player extends THREE.Object3D {
     this.loadModel(scene);
     this.position.set(position.x, position.y, position.z);
     this.obstacles = obstacles;
+    this.walkables = walkables;
     this.height = 5;
     this.camera = camera;
     this.add(camera);
     this.groundMesh = groundMesh;
     this.transferAreas = transferAreas;
-    // this.obstacles.push(groundMesh);
     this.raycastCollidables = new THREE.Raycaster(
       new THREE.Vector3(position.x, position.y, position.z),
       this.raycastCollideDirection
@@ -117,7 +125,9 @@ export default class Player extends THREE.Object3D {
   update(delta, npcs) {
     this.npcs = npcs;
     if (this.mesh) {
-      this.movement(delta);
+      if (this.walkables) {
+        this.movement(delta);
+      }
       this.updateAnimation();
       this.motion(delta);
       this.mixer.update(delta);

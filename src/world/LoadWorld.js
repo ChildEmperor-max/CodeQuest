@@ -13,7 +13,9 @@ export function LoadWorld() {
         terrainMesh.position.set(3, 0, 3);
         terrainMesh.scale.set(1, 1, 1);
         const obstacles = [];
+        const walkables = [];
         const transferAreas = [];
+        let worldFloor;
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
@@ -35,6 +37,7 @@ export function LoadWorld() {
           }
           if (child.isMesh && child.name.startsWith("Walkable_")) {
             child.visible = false;
+            walkables.push(child);
           }
           if (child.isMesh && child.name.startsWith("TransferArea_")) {
             transferAreas.push(child);
@@ -48,10 +51,16 @@ export function LoadWorld() {
             // const obstacleCollisionBox = new THREE.Box3().setFromObject(child);
             // child.obstacleCollisionBox = obstacleCollisionBox;
           }
+          if (child.name.startsWith("Plane_")) {
+            worldFloor = child;
+            walkables.push(worldFloor);
+          }
         });
 
         resolve({
           terrainMesh,
+          worldFloor,
+          walkables,
           obstacles,
           spawnPoint,
           npcSpawnPoints,

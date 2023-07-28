@@ -14,6 +14,7 @@ export function LoadSampleWorld() {
         terrainMesh.scale.set(3, 3, 3);
         const obstacles = [];
         const spawnPoint = new THREE.Vector3(-12, 0, 0);
+        let worldFloor = null;
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -14);
         const npcSpawnPoint2 = new THREE.Vector3(-11, 0, -14);
@@ -32,10 +33,19 @@ export function LoadSampleWorld() {
               obstacles.push(child);
               child.visible = false;
             }
+            if (child.name.startsWith("Plane_")) {
+              worldFloor = child;
+            }
           }
         });
 
-        resolve({ terrainMesh, obstacles, spawnPoint, npcSpawnPoints });
+        resolve({
+          terrainMesh,
+          worldFloor,
+          obstacles,
+          spawnPoint,
+          npcSpawnPoints,
+        });
       },
       undefined,
       function (error) {
