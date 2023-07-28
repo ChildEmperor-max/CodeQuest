@@ -228,20 +228,25 @@ export default class SceneInit {
         ({
           terrainMesh,
           worldFloor,
+          walkables,
           obstacles,
           spawnPoint,
           npcSpawnPoints,
+          transferAreas,
         }) => {
           this.albyHouseScene.add(terrainMesh);
-          this.groundMesh = terrainMesh;
+          this.groundMesh = worldFloor;
           this.obstacles = obstacles;
           this.player.initialize(
             this.albyHouseScene,
             this.cameraControls.camera,
             spawnPoint,
             obstacles,
-            this.groundMesh
+            walkables,
+            this.groundMesh,
+            transferAreas
           );
+          this.cameraControls.addCollidables(obstacles, worldFloor);
         }
       )
       .catch((error) => {

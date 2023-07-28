@@ -6,15 +6,17 @@ const loader = new GLTFLoader();
 export function LoadSampleWorld() {
   return new Promise((resolve, reject) => {
     loader.load(
-      "/src/assets/world/SampleWorld.glb",
+      "/src/assets/world/AlbyHouse/AlbyHouseInside.glb",
       function (gltf) {
         const terrainMesh = gltf.scene;
         terrainMesh.name = "terrain";
         terrainMesh.position.set(3, 0, 3);
-        terrainMesh.scale.set(3, 3, 3);
+        terrainMesh.scale.set(1, 1, 1);
+        const spawnPoint = new THREE.Vector3(0, 5, 5);
         const obstacles = [];
-        const spawnPoint = new THREE.Vector3(-12, 0, 0);
-        let worldFloor = null;
+        const walkables = [];
+        const transferAreas = [];
+        let worldFloor;
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -14);
         const npcSpawnPoint2 = new THREE.Vector3(-11, 0, -14);
@@ -26,14 +28,18 @@ export function LoadSampleWorld() {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            child.material = material;
+            // child.material = material;
+          }
+          if (child.isMesh && child.name.startsWith("Walkable_")) {
+            child.visible = false;
+            walkables.push(child);
           }
           if (child.isMesh) {
             if (child.name.startsWith("Collision_")) {
               obstacles.push(child);
               child.visible = false;
             }
-            if (child.name.startsWith("Plane_")) {
+            if (child.name.startsWith("Floor_")) {
               worldFloor = child;
             }
           }
@@ -42,9 +48,11 @@ export function LoadSampleWorld() {
         resolve({
           terrainMesh,
           worldFloor,
+          walkables,
           obstacles,
           spawnPoint,
           npcSpawnPoints,
+          transferAreas,
         });
       },
       undefined,
