@@ -35,6 +35,10 @@ export function LoadSampleWorld() {
             walkables.push(child);
           }
           if (child.isMesh) {
+            if (child.name.startsWith("TransferArea_")) {
+              transferAreas.push(child);
+              child.visible = false;
+            }
             if (child.name.startsWith("Collision_")) {
               obstacles.push(child);
               child.visible = false;

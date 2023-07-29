@@ -275,6 +275,17 @@ export default class SceneInit {
             this.isLoadingWorld = true;
             this.player.onTransferArea = false;
           }
+          if (this.player.transferArea.name === "TransferArea_MainWorld") {
+            console.log("switching to main world...");
+            //   this.scene = this.mainWorld;
+            //   this.removePlayerFromScene(this.albyHouseScene);
+            //   this.loadAlbyHouseScene();
+
+            //   const sceneLighting = new SceneLighting(this.scene, this.renderer);
+            //   sceneLighting.initialize();
+            //   this.isLoadingWorld = true;
+            //   this.player.onTransferArea = false;
+          }
         }
       }
     } else {
