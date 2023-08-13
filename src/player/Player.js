@@ -33,6 +33,7 @@ export default class Player extends THREE.Object3D {
     this.isTalkingToNpc = false;
     this.onTransferArea = false;
     this.transferArea = null;
+    this.currentSpeed = 0;
   }
 
   initialize(
@@ -55,7 +56,6 @@ export default class Player extends THREE.Object3D {
     this.walkables = walkables;
     this.height = 5;
     this.camera = camera;
-    this.add(camera);
     this.groundMesh = groundMesh;
     this.transferAreas = transferAreas;
     this.raycastCollidables = new THREE.Raycaster(
@@ -360,6 +360,7 @@ export default class Player extends THREE.Object3D {
         this.runningIcon.classList.replace("sprint-disabled", "sprint-enabled");
       }
     } else {
+      this.currentSpeed = 0;
       this.runningIcon.classList.replace("sprint-enabled", "sprint-disabled");
       this.runningIcon.classList.remove("sprint-triggered");
       keys.shift.justPressed = false;
@@ -384,6 +385,7 @@ export default class Player extends THREE.Object3D {
     } else {
       this.movementSpeed = this.walkingSpeed;
     }
+    this.currentSpeed = this.movementSpeed;
   }
 
   updateAnimation() {
