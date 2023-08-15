@@ -65,7 +65,73 @@ export default class SceneInit {
     cameraControls.initialize(this.obstacles);
     this.cameraControls = cameraControls;
 
-    this.loadMainWorld();
+    LoadWorld()
+      .then(
+        ({
+          terrainMesh,
+          worldFloor,
+          walkables,
+          obstacles,
+          spawnPoint,
+          npcSpawnPoints,
+          transferAreas,
+        }) => {
+          this.mainWorld.add(terrainMesh);
+          this.groundMesh = worldFloor;
+          this.obstacles = obstacles;
+          this.transferAreas = transferAreas;
+          this.player.initialize(
+            this.mainWorld,
+            this.cameraControls.camera,
+            spawnPoint,
+            obstacles,
+            walkables,
+            this.groundMesh,
+            transferAreas
+          );
+
+          this.sampleNPC1 = new SampleNPC1(this.mainWorld);
+          this.sampleNPC1.initialize(
+            npcSpawnPoints[0],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId,
+            this.groundMesh
+          );
+          this.npcs.push(this.sampleNPC1);
+
+          this.sampleNPC2 = new SampleNPC2(this.mainWorld);
+          this.sampleNPC2.initialize(
+            npcSpawnPoints[1],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId,
+            this.groundMesh
+          );
+          this.npcs.push(this.sampleNPC2);
+
+          this.albyNPC = new AlbyNPC(this.mainWorld);
+          this.albyNPC.initialize(
+            npcSpawnPoints[2],
+            this.cameraControls.camera,
+            this.player,
+            this.canvasId,
+            this.groundMesh
+          );
+          this.npcs.push(this.albyNPC);
+
+          this.cameraControls.setTrackPosition(this.player.getPosition());
+
+          document.getElementById("interface-container").style.display =
+            "block";
+
+          this.cameraControls.addCollidables(this.obstacles, worldFloor);
+          this.isLoadingWorld = false;
+        }
+      )
+      .catch((error) => {
+        console.log("error loading terrain mesh: ", error);
+      });
 
     this.textManager = new TextManager(this.scene);
     this.textManager.initialize({
@@ -163,73 +229,6 @@ export default class SceneInit {
     // this.composer.render();
   }
 
-  loadMainWorld() {
-    LoadWorld()
-      .then(
-        ({
-          terrainMesh,
-          worldFloor,
-          walkables,
-          obstacles,
-          spawnPoint,
-          npcSpawnPoints,
-          transferAreas,
-        }) => {
-          this.mainWorld.add(terrainMesh);
-          this.groundMesh = worldFloor;
-          this.obstacles = obstacles;
-          this.transferAreas = transferAreas;
-          this.player.initialize(
-            this.mainWorld,
-            this.cameraControls.camera,
-            spawnPoint,
-            obstacles,
-            walkables,
-            this.groundMesh,
-            transferAreas
-          );
-
-          this.sampleNPC1 = new SampleNPC1(this.mainWorld);
-          this.sampleNPC1.initialize(
-            npcSpawnPoints[0],
-            this.cameraControls.camera,
-            this.player,
-            this.canvasId
-          );
-          this.npcs.push(this.sampleNPC1);
-
-          this.sampleNPC2 = new SampleNPC2(this.mainWorld);
-          this.sampleNPC2.initialize(
-            npcSpawnPoints[1],
-            this.cameraControls.camera,
-            this.player,
-            this.canvasId
-          );
-          this.npcs.push(this.sampleNPC2);
-
-          this.albyNPC = new AlbyNPC(this.mainWorld);
-          this.albyNPC.initialize(
-            npcSpawnPoints[2],
-            this.cameraControls.camera,
-            this.player,
-            this.canvasId
-          );
-          this.npcs.push(this.albyNPC);
-
-          this.cameraControls.setTrackPosition(this.player.getPosition());
-
-          document.getElementById("interface-container").style.display =
-            "block";
-
-          this.cameraControls.addCollidables(this.obstacles, worldFloor);
-          this.isLoadingWorld = false;
-        }
-      )
-      .catch((error) => {
-        console.log("error loading terrain mesh: ", error);
-      });
-  }
-
   loadAlbyHouseScene() {
     LoadSampleWorld()
       .then(
@@ -316,6 +315,7 @@ export default class SceneInit {
     }
     if (nearNpcAction) {
       actionHint.showText(nearNpcAction.getPosition());
+      console.log(nearNpcAction.getPosition());
       if (nearNpcAction.isTalking) {
         actionHint.hideText();
       }

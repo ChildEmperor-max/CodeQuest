@@ -18,6 +18,7 @@ export default class NPCLoader extends THREE.Object3D {
     this.questManager = new QuestManager();
     // this.questManager.initialize();
     this.dialogContainer = document.getElementById("npc-dialog");
+    this.rayLength = 0.02;
   }
 
   initialize(
@@ -25,6 +26,7 @@ export default class NPCLoader extends THREE.Object3D {
     camera,
     player,
     canvas,
+    groundMesh,
     rotation,
     modelPath,
     npcName,
@@ -32,6 +34,7 @@ export default class NPCLoader extends THREE.Object3D {
     destination = null,
     modelTexturePath = undefined
   ) {
+    this.groundMesh = groundMesh;
     this.canvas = document.getElementById(canvas);
     this.position.set(position.x, position.y, position.z);
     this.textureLoader = new TextureLoader();
@@ -47,6 +50,7 @@ export default class NPCLoader extends THREE.Object3D {
     this.dialogShown = false;
     this.isFinishedTyping = false;
     this.player = player;
+    this.height = 5;
 
     this.movementSpeed = 6;
     this.startPoint = position;
@@ -77,6 +81,64 @@ export default class NPCLoader extends THREE.Object3D {
         this.moveToDestination(this.startPoint, this.endPoint, delta);
       }
       this.updateAnimation();
+      this.updatePositionToGround(delta);
+    }
+  }
+
+  findIntersectionHeight(from_vec3, object_to_intersect) {
+    const raycastGround = new THREE.Raycaster(
+      new THREE.Vector3(from_vec3.x, from_vec3.y + 2, from_vec3.z),
+      new THREE.Vector3(0, -this.rayLength, 0)
+    );
+
+    let intersectionHeight = null;
+    const intersectsGround = raycastGround.intersectObject(object_to_intersect);
+    if (intersectsGround.length > 0) {
+      const intersectedObject = intersectsGround[0].object;
+      intersectionHeight = intersectsGround[0].point.y;
+    }
+
+    return intersectionHeight;
+  }
+
+  updatePositionToGround(deltaTime) {
+    const groundHeight = this.findIntersectionHeight(
+      this.mesh.position,
+      this.groundMesh
+    );
+    const targetPosition = new THREE.Vector3(
+      this.mesh.position.x,
+      groundHeight,
+      this.mesh.position.z
+    );
+    this.position.set(
+      this.mesh.position.x,
+      this.mesh.position.y,
+      this.mesh.position.z
+    );
+    const lerpFactor = 0.1; // Adjust the lerp factor to control the speed of interpolation
+
+    if (groundHeight !== null) {
+      const reachableHeight = groundHeight + this.height / 2;
+      // follow ground height
+      if (this.mesh.position.y <= reachableHeight) {
+        this.mesh.position.y = groundHeight;
+        // this.position.lerp(targetPosition, lerpFactor);
+        this.position.y = this.mesh.position.y;
+        this.isGrounded = true;
+      } else {
+        // if the ground is too low
+        this.mesh.position.y -= 9.81 * deltaTime;
+        // this.position.lerp(this.mesh.position, lerpFactor);
+        this.position.y = this.mesh.position.y;
+        this.isGrounded = false;
+      }
+    } else {
+      // if there is no ground
+      // this.mesh.position.y -= 9.81 * deltaTime;
+      // this.position.y = this.mesh.position.y;
+      // this.direction.y -= 9.81 * deltaTime;
+      // this.isGrounded = false;
     }
   }
 

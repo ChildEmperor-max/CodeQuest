@@ -6,6 +6,7 @@ import { viewNpcData, viewDialogData, viewQuestData } from "../db/HandleTable";
 export default class SampleNPC1 extends NPCLoader {
   constructor(scene) {
     super(scene);
+    this;
     this.path = "/src/assets/models/animations/";
     this.quests = new Quests();
   }
@@ -14,6 +15,7 @@ export default class SampleNPC1 extends NPCLoader {
     camera,
     player,
     canvas,
+    groundMesh,
     rotation = new THREE.Vector3(0, 0, 0),
     modelPath = this.path,
     npcName = "SampleNPC1",
@@ -24,6 +26,7 @@ export default class SampleNPC1 extends NPCLoader {
       camera,
       player,
       canvas,
+      groundMesh,
       rotation,
       modelPath,
       npcName,
