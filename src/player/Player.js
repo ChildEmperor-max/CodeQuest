@@ -433,19 +433,20 @@ export default class Player extends THREE.Object3D {
     const lerpFactor = 0.1; // Adjust the lerp factor to control the speed of interpolation
 
     if (groundHeight !== null) {
-      const maxHeight = groundHeight + this.height / 2;
-      if (this.mesh.position.y <= maxHeight) {
+      const reachableHeight = groundHeight + this.height / 2;
+      // follow ground height
+      if (this.mesh.position.y <= reachableHeight) {
         this.mesh.position.y = groundHeight;
         // this.position.lerp(targetPosition, lerpFactor);
         this.position.y = this.mesh.position.y;
-        this.direction.y = Math.max(0, this.direction.y);
         this.isGrounded = true;
       } else {
-        // fall
+        // if the ground is too low
         this.mesh.position.y -= 9.81 * deltaTime;
         // this.position.lerp(this.mesh.position, lerpFactor);
         this.position.y = this.mesh.position.y;
         this.direction.y -= 9.81 * deltaTime;
+        this.direction.y = Math.max(0, this.direction.y);
         this.isGrounded = false;
       }
     } else {

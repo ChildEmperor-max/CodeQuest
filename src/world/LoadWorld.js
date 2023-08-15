@@ -19,7 +19,7 @@ export function LoadWorld() {
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
-        const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
+        const npcSpawnPoint1 = new THREE.Vector3(0, 10, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
         const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
         const npcSpawnPoint4 = new THREE.Vector3(3, 0, -145);

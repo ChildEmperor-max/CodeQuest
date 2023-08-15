@@ -68,15 +68,44 @@ export default class CameraController {
         this.cameraControl.getPosition().y,
         this.cameraControl.getPosition().z
       );
-      if (objectToFollow.currentSpeed != 0) {
-        this.cameraControl.setPosition(
-          camPos.x +
-            objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
-          camPos.y,
-          camPos.z +
-            objectToFollow.currentSpeed * delta * objectToFollow.direction.z
-        );
+
+      if (objectToFollow.currentSpeed !== 0) {
+        const distance = objectToFollow.getPosition().distanceTo(camPos);
+
+        if (distance > 20) {
+          // Calculate the new y position to prevent it from increasing
+          const newY = camPos.y - (distance - 20); // Adjust this value as needed
+
+          this.cameraControl.setPosition(
+            camPos.x +
+              objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
+            newY,
+            camPos.z +
+              objectToFollow.currentSpeed * delta * objectToFollow.direction.z
+          );
+        } else {
+          this.cameraControl.setPosition(
+            camPos.x +
+              objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
+            camPos.y,
+            camPos.z +
+              objectToFollow.currentSpeed * delta * objectToFollow.direction.z
+          );
+        }
       }
+
+      console.log(objectToFollow.getPosition().distanceTo(camPos));
+
+      // if (objectToFollow.currentSpeed != 0) {
+      //   this.cameraControl.setPosition(
+      //     camPos.x +
+      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
+      //     camPos.y +
+      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.y,
+      //     camPos.z +
+      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.z
+      //   );
+      // }
       this.cameraControl.update(delta);
 
       const movementDirection = new THREE.Vector3()
@@ -85,48 +114,6 @@ export default class CameraController {
       movementDirection.y = 0; // If you want to exclude vertical movement (e.g., flying camera)
       movementDirection.normalize();
       this.prevCameraPosition.copy(this.camera.position);
-
-      if (this.floor) {
-        this.collisionDetection(
-          objectToFollow.getPosition(),
-          this.camera,
-          this.obstacles,
-          this.floor,
-          movementDirection
-        );
-      }
-    }
-  }
-
-  collisionDetection(target, camera, obstacles, floor, movementDirection) {
-    let intersects = [];
-    const direction = new THREE.Vector3()
-      .subVectors(camera.position, target)
-      .normalize();
-    const raycaster = new THREE.Raycaster(target, camera.position);
-    const allObstacles = obstacles.concat(floor);
-
-    intersects = raycaster.intersectObjects(obstacles);
-    if (intersects.length > 0) {
-      const distanceToCollision = intersects[0].distance;
-      const distanceToTarget = target.distanceTo(camera.position);
-      const distance = new THREE.Vector3(
-        camera.position.x - target.x,
-        camera.position.y - target.y,
-        camera.position.z - target.z
-      );
-      // console.log("collision distance: ", distanceToCollision);
-      // console.log("last camera pos: ", this.lastCameraPosition);
-      if (distanceToCollision < this.lastCameraPosition) {
-        const intersectedObject = intersects[0].object;
-        camera.position.set(
-          intersects[0].point.x - target.x,
-          intersects[0].point.y - target.y,
-          intersects[0].point.z - target.z
-        );
-      }
-    } else {
-      // this.lastCameraPosition = this.controls.getDistance();
     }
   }
 }
