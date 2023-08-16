@@ -314,10 +314,10 @@ export default class SceneInit {
       }
     }
     if (nearNpcAction) {
-      actionHint.showText(nearNpcAction.getPosition());
-      console.log(nearNpcAction.getPosition());
       if (nearNpcAction.isTalking) {
         actionHint.hideText();
+      } else {
+        actionHint.showText(nearNpcAction.getPosition());
       }
     } else {
       actionHint.hideText();

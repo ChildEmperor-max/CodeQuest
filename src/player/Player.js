@@ -3,6 +3,7 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
 import QuestManager from "../lib/QuestManager";
 import keys from "../lib/KeyControls";
+import TextManager from "../lib/TextManager";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -23,6 +24,7 @@ export default class Player extends THREE.Object3D {
     this.raycastCollideDirection = new THREE.Vector3(0, -this.rayLength, 0);
     this.caster = new THREE.Raycaster();
     this.direction = new THREE.Vector3(0, 0, 0);
+    this.directionTracker = new THREE.Vector3(0, 0, 0);
     this.obstacles = [];
     this.actions = [];
     this.questsList = [];
@@ -56,6 +58,7 @@ export default class Player extends THREE.Object3D {
     this.walkables = walkables;
     this.height = 5;
     this.camera = camera;
+    // this.add(camera);
     this.groundMesh = groundMesh;
     this.transferAreas = transferAreas;
     this.raycastCollidables = new THREE.Raycaster(
@@ -76,6 +79,11 @@ export default class Player extends THREE.Object3D {
     this.runningIcon = document.getElementById("sprint-icon");
     this.runningIcon.addEventListener("click", function () {
       keys.shift.justPressed = !keys.shift.justPressed;
+    });
+    this.textManager = new TextManager(this.scene);
+    this.textManager.initialize({
+      text: "E",
+      camera: this.camera,
     });
   }
 
@@ -168,9 +176,9 @@ export default class Player extends THREE.Object3D {
       var collided = npcDetectionShape.containsPoint(npcPosition);
 
       if (collided) {
-        // if (!npc.isTalking) {
-        //   this.textManager.showText(npcPosition);
-        // }
+        if (!npc.isTalking) {
+          this.textManager.showText(npcPosition);
+        }
         if (keys.e.pressed) {
           npc.talkToPlayer(true, this.position);
           this.rotateTowards(npc.position);
@@ -218,6 +226,7 @@ export default class Player extends THREE.Object3D {
     if (this.playerbox.intersectsBox(box_to_collide)) {
       var deltaX = this.playerbox.min.x - box_to_collide.min.x;
       var deltaZ = this.playerbox.max.z - box_to_collide.max.z;
+      this.directionTracker.set(0, 0, 0);
       if (deltaX < 0) {
         if (this.direction.x > 0) {
           newPosition.x = this.mesh.position.x;
@@ -292,6 +301,7 @@ export default class Player extends THREE.Object3D {
 
     this.updatePositionToGround(delta);
     this.direction.normalize();
+    this.directionTracker.copy(this.direction);
   }
 
   motion(delta) {

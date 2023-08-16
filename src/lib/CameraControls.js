@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as TWEEN from "@tweenjs/tween.js";
 import CameraControls from "camera-controls";
 
 export default class CameraController {
@@ -13,6 +14,7 @@ export default class CameraController {
       0.1,
       1000
     );
+    this.camLimiter = 18;
     // Modify the render distance
     // this.camera.near = 1; // Adjust the near clipping plane distance
     // this.camera.far = 100; // Adjust the far clipping plane distance
@@ -51,16 +53,17 @@ export default class CameraController {
       playerPosition.z + cameraOffset,
       playerPosition.x,
       playerPosition.y,
-      playerPosition.z
+      playerPosition.z,
+      true
     );
   }
 
-  update(objectToFollow, delta) {
-    if (objectToFollow) {
+  update(player, delta) {
+    if (player) {
       const pos = new THREE.Vector3(
-        objectToFollow.getPosition().x,
-        objectToFollow.getPosition().y + 4,
-        objectToFollow.getPosition().z
+        player.getPosition().x,
+        player.getPosition().y + 4,
+        player.getPosition().z
       );
       this.cameraControl.setTarget(pos.x, pos.y, pos.z);
       const camPos = new THREE.Vector3(
@@ -69,41 +72,26 @@ export default class CameraController {
         this.cameraControl.getPosition().z
       );
 
-      if (objectToFollow.currentSpeed !== 0) {
-        const distance = objectToFollow.getPosition().distanceTo(camPos);
-
-        if (distance > 20) {
-          // Calculate the new y position to prevent it from increasing
-          const newY = camPos.y - (distance - 20); // Adjust this value as needed
-
-          this.cameraControl.setPosition(
-            camPos.x +
-              objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
-            newY,
-            camPos.z +
-              objectToFollow.currentSpeed * delta * objectToFollow.direction.z
-          );
-        } else {
-          this.cameraControl.setPosition(
-            camPos.x +
-              objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
-            camPos.y,
-            camPos.z +
-              objectToFollow.currentSpeed * delta * objectToFollow.direction.z
-          );
-        }
+      if (player.currentSpeed !== 0) {
+        const distance = player.getPosition().distanceTo(camPos);
+        const newY = camPos.y - (distance - this.camLimiter);
+        // get the player movement speed per second instead of a defined constant speed
+        this.cameraControl.setPosition(
+          camPos.x + player.currentSpeed * delta * player.directionTracker.x,
+          newY,
+          camPos.z + player.currentSpeed * delta * player.directionTracker.z,
+          true
+        );
       }
 
-      console.log(objectToFollow.getPosition().distanceTo(camPos));
-
-      // if (objectToFollow.currentSpeed != 0) {
+      // if (player.currentSpeed != 0) {
       //   this.cameraControl.setPosition(
       //     camPos.x +
-      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.x,
+      //       player.currentSpeed * delta * player.direction.x,
       //     camPos.y +
-      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.y,
+      //       player.currentSpeed * delta * player.direction.y,
       //     camPos.z +
-      //       objectToFollow.currentSpeed * delta * objectToFollow.direction.z
+      //       player.currentSpeed * delta * player.direction.z
       //   );
       // }
       this.cameraControl.update(delta);
