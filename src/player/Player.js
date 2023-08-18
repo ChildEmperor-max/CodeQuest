@@ -25,6 +25,7 @@ export default class Player extends THREE.Object3D {
     this.caster = new THREE.Raycaster();
     this.direction = new THREE.Vector3(0, 0, 0);
     this.directionTracker = new THREE.Vector3(0, 0, 0);
+    this.positionTracker = new THREE.Vector3(0, 0, 0);
     this.obstacles = [];
     this.actions = [];
     this.questsList = [];
@@ -323,8 +324,10 @@ export default class Player extends THREE.Object3D {
       }
       if (this.obstacles) {
         this.obstacles.forEach((collisionObject) => {
-          const boundingBox = new THREE.Box3().setFromObject(collisionObject);
-          this.boxCollision(boundingBox, newPosition);
+          if (!collisionObject.name.startsWith("Plane_")) {
+            const boundingBox = new THREE.Box3().setFromObject(collisionObject);
+            this.boxCollision(boundingBox, newPosition);
+          }
         });
       }
       if (this.transferAreas) {
@@ -440,15 +443,16 @@ export default class Player extends THREE.Object3D {
       groundHeight,
       this.mesh.position.z
     );
-    const lerpFactor = 0.1; // Adjust the lerp factor to control the speed of interpolation
+    const lerpFactor = 0.08;
 
     if (groundHeight !== null) {
       const reachableHeight = groundHeight + this.height / 2;
       // follow ground height
       if (this.mesh.position.y <= reachableHeight) {
         this.mesh.position.y = groundHeight;
-        // this.position.lerp(targetPosition, lerpFactor);
-        this.position.y = this.mesh.position.y;
+        this.positionTracker.lerp(targetPosition, lerpFactor);
+        this.position.lerp(targetPosition, 0.5);
+        // this.position.y = this.mesh.position.y;
         this.isGrounded = true;
       } else {
         // if the ground is too low
@@ -472,6 +476,10 @@ export default class Player extends THREE.Object3D {
 
   getPosition() {
     return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+  }
+
+  getPositionTracker() {
+    return this.positionTracker.y;
   }
 
   loadModel(scene) {
