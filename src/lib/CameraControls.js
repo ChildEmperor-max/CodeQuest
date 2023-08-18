@@ -1,27 +1,14 @@
 import * as THREE from "three";
-import * as TWEEN from "@tweenjs/tween.js";
 import CameraControls from "camera-controls";
 
 export default class CameraController {
-  constructor(renderer) {
+  constructor(renderer, camera) {
     this.renderer = renderer;
+    this.camera = camera;
   }
 
-  initialize(obstacles) {
-    this.camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    this.camLimiter = 18;
-    // Modify the render distance
-    // this.camera.near = 1; // Adjust the near clipping plane distance
-    // this.camera.far = 100; // Adjust the far clipping plane distance
-
-    this.camera.position.set(0, 10, 10);
-
-    this.obstacles = [];
+  initialize() {
+    this.collidables = [];
 
     this.prevCameraPosition = new THREE.Vector3();
     this.floor = undefined;
@@ -33,12 +20,17 @@ export default class CameraController {
       this.camera,
       this.renderer.domElement
     );
+    this.cameraControl.smoothTime = 0.8;
+    this.camLimiter = 15;
+
+    this.lerpVector = new THREE.Vector3();
   }
 
-  addCollidables(obstacles, floor) {
-    this.obstacles = obstacles;
+  addCollidables(collidables, floor) {
+    this.collidables = collidables;
     this.floor = floor;
-    this.cameraControl.colliderMeshes = obstacles;
+    this.cameraControl.colliderMeshes = collidables;
+    this.cameraControl.colliderMeshes.push(this.floor);
   }
 
   setTrackPosition(playerPosition) {
@@ -62,7 +54,7 @@ export default class CameraController {
     if (player) {
       const pos = new THREE.Vector3(
         player.getPosition().x,
-        player.getPosition().y + 4,
+        player.getPositionTracker() + 4,
         player.getPosition().z
       );
       this.cameraControl.setTarget(pos.x, pos.y, pos.z);
@@ -73,26 +65,12 @@ export default class CameraController {
       );
 
       if (player.currentSpeed !== 0) {
-        const distance = player.getPosition().distanceTo(camPos);
-        const newY = camPos.y - (distance - this.camLimiter);
-        // get the player movement speed per second instead of a defined constant speed
-        this.cameraControl.setPosition(
-          camPos.x + player.currentSpeed * delta * player.directionTracker.x,
-          newY,
-          camPos.z + player.currentSpeed * delta * player.directionTracker.z,
-          true
-        );
+        this.updateTracker(camPos, player, delta);
       }
-
-      // if (player.currentSpeed != 0) {
-      //   this.cameraControl.setPosition(
-      //     camPos.x +
-      //       player.currentSpeed * delta * player.direction.x,
-      //     camPos.y +
-      //       player.currentSpeed * delta * player.direction.y,
-      //     camPos.z +
-      //       player.currentSpeed * delta * player.direction.z
-      //   );
+      // if (this.cameraControl.currentAction === 1) {
+      //   this.camLimiter = player.getPosition().distanceTo(camPos);
+      // } else {
+      //   this.camLimiter = 15;
       // }
       this.cameraControl.update(delta);
 
@@ -103,5 +81,46 @@ export default class CameraController {
       movementDirection.normalize();
       this.prevCameraPosition.copy(this.camera.position);
     }
+  }
+
+  updateTracker(camPos, player, delta) {
+    const distance = player.getPosition().distanceTo(camPos);
+    const newY = camPos.y - (distance - this.camLimiter);
+
+    const targetX =
+      camPos.x + player.currentSpeed * delta * player.directionTracker.x;
+    const targetZ =
+      camPos.z + player.currentSpeed * delta * player.directionTracker.z;
+
+    const dynamicRangeX = 10;
+    const dynamicRangeZ = 10;
+
+    // Calculate dynamic ranges based on player position and movement
+    const minX = player.getPosition().x - dynamicRangeX; // Adjust dynamicRangeX as needed
+    const maxX = player.getPosition().x + dynamicRangeX;
+    const minZ = player.getPosition().z - dynamicRangeZ; // Adjust dynamicRangeZ as needed
+    const maxZ = player.getPosition().z + dynamicRangeZ;
+
+    const targetPosition = new THREE.Vector3(targetX, newY, targetZ);
+    const lerpFactor = 0.15;
+    this.lerpVector.lerp(targetPosition, lerpFactor);
+
+    // Clamp the target x and z within the dynamic ranges
+    const clampedTargetX = THREE.MathUtils.clamp(targetX, minX, maxX);
+    const clampedTargetZ = THREE.MathUtils.clamp(targetZ, minZ, maxZ);
+    this.cameraControl.setPosition(
+      clampedTargetX,
+      this.lerpVector.y,
+      clampedTargetZ,
+      true
+    );
+    //   this.cameraControl.setPosition(
+    //     camPos.x +
+    //       player.currentSpeed * delta * player.direction.x,
+    //     camPos.y +
+    //       player.currentSpeed * delta * player.direction.y,
+    //     camPos.z +
+    //       player.currentSpeed * delta * player.direction.z
+    //   );
   }
 }

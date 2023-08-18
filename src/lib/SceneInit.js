@@ -33,6 +33,7 @@ export default class SceneInit {
     this.renderer = renderer;
     this.textRenderer = undefined;
     this.player = undefined;
+    this.cameraControls = undefined;
     this.npcs = [];
     this.questManager = new QuestManager();
     this.questManager.initialize();
@@ -61,9 +62,19 @@ export default class SceneInit {
     this.transferAreas = [];
     this.player = new Player();
 
-    const cameraControls = new CameraController(this.renderer);
-    cameraControls.initialize(this.obstacles);
-    this.cameraControls = cameraControls;
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    // Modify the render distance
+    // this.camera.near = 1; // Adjust the near clipping plane distance
+    // this.camera.far = 100; // Adjust the far clipping plane distance
+    this.camera.position.set(0, 10, 10);
+
+    this.cameraControls = new CameraController(this.renderer, this.camera);
+    this.cameraControls.initialize();
 
     LoadWorld()
       .then(
@@ -79,10 +90,12 @@ export default class SceneInit {
           this.mainWorld.add(terrainMesh);
           this.groundMesh = worldFloor;
           this.obstacles = obstacles;
+          const collidables = obstacles;
           this.transferAreas = transferAreas;
+
           this.player.initialize(
             this.mainWorld,
-            this.cameraControls.camera,
+            this.camera,
             spawnPoint,
             obstacles,
             walkables,
@@ -93,7 +106,7 @@ export default class SceneInit {
           this.sampleNPC1 = new SampleNPC1(this.mainWorld);
           this.sampleNPC1.initialize(
             npcSpawnPoints[0],
-            this.cameraControls.camera,
+            this.camera,
             this.player,
             this.canvasId,
             this.groundMesh
@@ -103,7 +116,7 @@ export default class SceneInit {
           this.sampleNPC2 = new SampleNPC2(this.mainWorld);
           this.sampleNPC2.initialize(
             npcSpawnPoints[1],
-            this.cameraControls.camera,
+            this.camera,
             this.player,
             this.canvasId,
             this.groundMesh
@@ -113,30 +126,28 @@ export default class SceneInit {
           this.albyNPC = new AlbyNPC(this.mainWorld);
           this.albyNPC.initialize(
             npcSpawnPoints[2],
-            this.cameraControls.camera,
+            this.camera,
             this.player,
             this.canvasId,
             this.groundMesh
           );
           this.npcs.push(this.albyNPC);
 
-          this.cameraControls.setTrackPosition(this.player.getPosition());
-
           document.getElementById("interface-container").style.display =
             "block";
-
-          this.cameraControls.addCollidables(this.obstacles, worldFloor);
+          this.cameraControls.addCollidables(collidables, this.groundMesh);
+          this.cameraControls.setTrackPosition(this.player.getPosition());
           this.isLoadingWorld = false;
         }
       )
       .catch((error) => {
-        console.log("error loading terrain mesh: ", error);
+        console.log("error loading world mesh: ", error);
       });
 
     this.textManager = new TextManager(this.scene);
     this.textManager.initialize({
       text: "E",
-      camera: this.cameraControls.camera,
+      camera: this.camera,
     });
     this.updateWindowResize();
     this.isFocused = () =>
@@ -147,7 +158,7 @@ export default class SceneInit {
     this.isPlay = false;
     this.animationId = null;
 
-    const renderPass = new RenderPass(this.scene, this.cameraControls.camera);
+    const renderPass = new RenderPass(this.scene, this.camera);
 
     // Create the bloom pass for the glow effect
     // Create the bloom pass for the glow effect
@@ -212,7 +223,9 @@ export default class SceneInit {
             this.npcs[i].update(delta);
           }
         }
-        this.cameraControls.update(this.player, delta);
+        if (this.cameraControls) {
+          this.cameraControls.update(this.player, delta);
+        }
         this.player.update(delta, this.npcs);
 
         this.playerDetectNpc(this.npcs, this.textManager);
@@ -246,7 +259,7 @@ export default class SceneInit {
           this.obstacles = obstacles;
           this.player.initialize(
             this.albyHouseScene,
-            this.cameraControls.camera,
+            this.camera,
             spawnPoint,
             obstacles,
             walkables,
@@ -329,7 +342,7 @@ export default class SceneInit {
 
   render() {
     this.uniforms.u_time.value += this.clock.getDelta();
-    this.renderer.render(this.scene, this.cameraControls.camera);
+    this.renderer.render(this.scene, this.camera);
   }
 
   updateWindowResize() {
@@ -342,9 +355,9 @@ export default class SceneInit {
   }
 
   onWindowResize() {
-    this.cameraControls.camera.aspect = window.innerWidth / window.innerHeight;
-    this.cameraControls.camera.updateProjectionMatrix();
-    this.cameraControls.camera.updateMatrixWorld();
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.camera.updateMatrixWorld();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 }
