@@ -17,6 +17,11 @@ export default class QuestManager {
 
     this.popupContainer = document.getElementById("popupContainer");
     this.closePopupButton = document.getElementById("closeButton");
+
+    this.startQuestButton = document.createElement("button");
+    this.removeQuestButton = document.createElement("button");
+    this.startQuestButton.style.display = "none";
+    this.removeQuestButton.style.display = "none";
   }
   toggleQuestBox() {
     const viewQuestData = async () => {
@@ -62,11 +67,11 @@ export default class QuestManager {
   }
 
   initialize() {
-    this.startQuestButton = document.createElement("button");
+    // this.startQuestButton = document.createElement("button");
     this.startQuestButton.textContent = "Start";
     this.startQuestButton.style.display = "none";
     this.startQuestButton.setAttribute("class", "quest-list-button");
-    this.removeQuestButton = document.createElement("button");
+    // this.removeQuestButton = document.createElement("button");
     this.removeQuestButton.textContent = "Abandon";
     this.removeQuestButton.style.display = "none";
     this.removeQuestButton.setAttribute("class", "quest-list-button");
@@ -226,6 +231,8 @@ export default class QuestManager {
           element.textContent = `${questTitle}: ${questDesc}`;
           var br = document.createElement("br");
           element.appendChild(br);
+          element.appendChild(this.startQuestButton);
+          element.appendChild(this.removeQuestButton);
 
           if (!this.addedStartQuestListener) {
             this.removeQuestButton.addEventListener("click", () => {
@@ -242,8 +249,6 @@ export default class QuestManager {
             });
             this.addedStartQuestListener = true;
           }
-          element.appendChild(this.startQuestButton);
-          element.appendChild(this.removeQuestButton);
 
           this.ongoingQuests.appendChild(element);
           this.ongoingQuests.appendChild(questFromElement);
