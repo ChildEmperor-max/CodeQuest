@@ -37,6 +37,7 @@ export default class Player extends THREE.Object3D {
     this.onTransferArea = false;
     this.transferArea = null;
     this.currentSpeed = 0;
+    this.isDoneLoading = false;
   }
 
   initialize(
@@ -474,12 +475,20 @@ export default class Player extends THREE.Object3D {
     this.position.add(this.direction.clone().multiplyScalar(deltaTime));
   }
 
+  isMoving() {
+    return this.currentSpeed !== 0;
+  }
+
   getPosition() {
     return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
   }
 
   getPositionTracker() {
-    return this.positionTracker.y;
+    return new THREE.Vector3(
+      this.position.x,
+      this.positionTracker.y,
+      this.position.z
+    );
   }
 
   loadModel(scene) {
@@ -514,6 +523,7 @@ export default class Player extends THREE.Object3D {
     loadingManager.onLoad = () => {
       loadingGameScreenText.textContent = "";
       loadingGameScreenDiv.style.display = "none";
+      this.isDoneLoading = true;
     };
 
     this.fbxLoader = new FBXLoader(loadingManager);
