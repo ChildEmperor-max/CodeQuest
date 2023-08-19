@@ -4,7 +4,7 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import Player from "../player/Player";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraControls";
-import { LoadWorld } from "../world/LoadWorld";
+import { LoadWorld, updateWorldRender } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import QuestManager from "./QuestManager";
@@ -61,17 +61,18 @@ export default class SceneInit {
     this.obstacles = [];
     this.transferAreas = [];
     this.player = new Player();
+    const renderDistance = 1000;
 
     this.camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      renderDistance
     );
     // Modify the render distance
-    // this.camera.near = 1; // Adjust the near clipping plane distance
-    // this.camera.far = 100; // Adjust the far clipping plane distance
-    this.camera.position.set(0, 10, 10);
+    // this.camera.near = 1;
+    // this.camera.far = 100;
+    this.camera.position.set(0, 10, -110);
 
     this.cameraControls = new CameraController(this.renderer, this.camera);
     this.cameraControls.initialize();
@@ -79,7 +80,7 @@ export default class SceneInit {
     LoadWorld()
       .then(
         ({
-          terrainMesh,
+          worldMesh,
           worldFloor,
           walkables,
           obstacles,
@@ -87,7 +88,7 @@ export default class SceneInit {
           npcSpawnPoints,
           transferAreas,
         }) => {
-          this.mainWorld.add(terrainMesh);
+          this.mainWorld.add(worldMesh);
           this.groundMesh = worldFloor;
           this.obstacles = obstacles;
           const collidables = obstacles;
@@ -227,6 +228,7 @@ export default class SceneInit {
           this.cameraControls.update(this.player, delta);
         }
         this.player.update(delta, this.npcs);
+        // updateWorldRender(this.player.getPosition());
 
         this.playerDetectNpc(this.npcs, this.textManager);
         this.playerOnTransferArea(this.textManager);
@@ -335,9 +337,6 @@ export default class SceneInit {
     } else {
       actionHint.hideText();
     }
-    // if (nearNpcName) {
-    //   console.log(nearNpcName);
-    // }
   }
 
   render() {
