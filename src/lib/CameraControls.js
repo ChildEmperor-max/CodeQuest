@@ -41,7 +41,7 @@ export default class CameraController {
 
   setTrackPosition(playerPosition) {
     const cameraOffset = 10;
-    this.cameraControl.setFocalOffset(0, 4, 0, true);
+    this.cameraControl.setFocalOffset(0, 4, 0);
     this.cameraControl.setOrbitPoint(0, 4, 0);
     this.cameraControl.minDistance = 6.0;
     this.cameraControl.maxDistance = 18.0;
@@ -84,20 +84,18 @@ export default class CameraController {
         this.lerpFactor = 0.15;
       }
 
-      if (player.isMoving()) {
-        this.cameraControl.setTarget(
-          this.lerpCamPos.x,
-          this.lerpCamPos.y,
-          this.lerpCamPos.z
-        );
-        this.updateTracker(camPos, player, delta, cameraMovementDir);
-      } else {
-        this.cameraControl.setTarget(
-          this.lerpCamPos.x,
-          pos.y,
-          this.lerpCamPos.z
-        );
-      }
+      // if (player.isMoving()) {
+      // this.cameraControl.setTarget(
+      //   this.lerpCamPos.x,
+      //   this.lerpCamPos.y,
+      //   this.lerpCamPos.z
+      // );
+      // this.cameraControl.setTarget(pos.x, pos.y, pos.z);
+      this.cameraControl.setTarget(this.lerpCamPos.x, pos.y, this.lerpCamPos.z);
+      this.updateTracker(camPos, player, delta, cameraMovementDir);
+      // } else {
+      // this.cameraControl.setTarget(this.lerpCamPos.x, pos.y, this.lerpCamPos.z);
+      // }
       this.cameraControl.update(delta);
     }
   }
@@ -108,11 +106,17 @@ export default class CameraController {
     const movementView =
       camPos.y - player.currentSpeed * delta * cameraMovementDir.y;
 
+    const targetPosition = new THREE.Vector3(0, player.jumpDistance, 0);
+    this.lerpVector.lerp(targetPosition, 0.1);
+
     if (player.isMoving()) {
-      this.cameraTargetY = defaultView;
+      this.cameraTargetY = camPos.y + this.lerpVector.y;
+      // this.cameraTargetY = this.lerpVector.y;
+      // this.cameraTargetY = defaultView;
     } else {
       this.cameraTargetY = camPos.y;
     }
+    // console.log(player.movingDirection);
 
     const targetX =
       camPos.x + player.currentSpeed * delta * player.directionTracker.x;
@@ -127,21 +131,13 @@ export default class CameraController {
     const minZ = player.getPosition().z - dynamicRangeZ;
     const maxZ = player.getPosition().z + dynamicRangeZ;
 
-    const targetPosition = new THREE.Vector3(
-      targetX,
-      this.cameraTargetY,
-      targetZ
-    );
-    this.lerpVector.lerp(targetPosition, this.lerpFactor);
-
     const clampedTargetX = THREE.MathUtils.clamp(targetX, minX, maxX);
     const clampedTargetZ = THREE.MathUtils.clamp(targetZ, minZ, maxZ);
 
     this.cameraControl.setPosition(
       clampedTargetX,
       this.cameraTargetY,
-      clampedTargetZ,
-      true
+      clampedTargetZ
     );
   }
 }
