@@ -38,6 +38,8 @@ export default class Player extends THREE.Object3D {
     this.transferArea = null;
     this.currentSpeed = 0;
     this.isDoneLoading = false;
+    this.movingDirection = "flat";
+    this.jumpDistance = 0;
   }
 
   initialize(
@@ -87,6 +89,7 @@ export default class Player extends THREE.Object3D {
       text: "E",
       camera: this.camera,
     });
+    this.previousPlayerY = this.position.y;
   }
 
   raycasterDebug(from_vec3) {
@@ -308,6 +311,33 @@ export default class Player extends THREE.Object3D {
 
   motion(delta) {
     if (this.direction.x !== 0 || this.direction.z !== 0) {
+      const currentPlayerY = this.position.y;
+
+      // const targetPosition = new THREE.Vector3(
+      //   0,
+      //   groundHeight,
+      //   0
+      // );
+      // const lerpFactor = 0.08;
+      // this.positionTracker.lerp(targetPosition, lerpFactor);
+
+      // Compare with the previous frame's Y-coordinate to determine movement direction
+      if (Math.trunc(currentPlayerY) == Math.trunc(this.previousPlayerY)) {
+        this.movingDirection = "flat";
+        this.jumpDistance = 0;
+      }
+      if (currentPlayerY > this.previousPlayerY + 0.1) {
+        this.movingDirection = "up";
+        this.jumpDistance = currentPlayerY - this.previousPlayerY;
+      }
+      if (currentPlayerY < this.previousPlayerY - 0.1) {
+        this.movingDirection = "down";
+        this.jumpDistance = currentPlayerY - this.previousPlayerY;
+      }
+
+      // Update the previous Y-coordinate for the next frame
+      this.previousPlayerY = currentPlayerY;
+
       const movement = this.direction
         .clone()
         .multiplyScalar(this.movementSpeed * delta);
