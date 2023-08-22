@@ -45,6 +45,7 @@ export function LoadSampleWorld() {
             }
             if (child.name.startsWith("Floor_")) {
               worldFloor = child;
+              walkables.push(worldFloor);
             }
           }
         });
