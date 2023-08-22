@@ -56,7 +56,7 @@ export function LoadWorld() {
             // const obstacleCollisionBox = new THREE.Box3().setFromObject(child);
             // child.obstacleCollisionBox = obstacleCollisionBox;
           }
-          if (child.name.startsWith("Plane_")) {
+          if (child.name.startsWith("Floor")) {
             worldFloor = child;
             walkables.push(worldFloor);
           }

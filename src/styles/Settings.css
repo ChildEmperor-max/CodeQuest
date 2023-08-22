@@ -14,8 +14,8 @@
 .settings-navbar {
     top: 0;
     left: 0;
-    width: 180px;
-    max-width: 180px;
+    width: 30%;
+    /* max-width: 180px; */
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -28,8 +28,8 @@
 .settings-content-container {
     top: 0;
     right: 0;
-    width: 450px;
-    max-width: 450px;
+    width: 80%;
+    /* max-width: 450px; */
     height: 100%;
     box-sizing: border-box;
     background: linear-gradient(120deg, rgb(34, 55, 124) 0%, rgb(69, 103, 214) 100%);

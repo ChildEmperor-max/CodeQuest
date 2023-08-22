@@ -355,7 +355,7 @@ export default class Player extends THREE.Object3D {
       }
       if (this.obstacles) {
         this.obstacles.forEach((collisionObject) => {
-          if (!collisionObject.name.startsWith("Plane_")) {
+          if (!collisionObject.name.startsWith("Floor")) {
             const boundingBox = new THREE.Box3().setFromObject(collisionObject);
             this.boxCollision(boundingBox, newPosition);
           }

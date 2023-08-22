@@ -40,9 +40,9 @@ export default class SceneInit {
   }
 
   initialize() {
-    this.mainWorld = new THREE.Scene();
+    this.mainWorldScene = new THREE.Scene();
     this.albyHouseScene = new THREE.Scene();
-    this.scene = this.mainWorld;
+    this.scene = this.mainWorldScene;
     this.axesHelper = new THREE.AxesHelper(8);
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
@@ -77,73 +77,7 @@ export default class SceneInit {
     this.cameraControls = new CameraController(this.renderer, this.camera);
     this.cameraControls.initialize();
 
-    LoadWorld()
-      .then(
-        ({
-          worldMesh,
-          worldFloor,
-          walkables,
-          obstacles,
-          spawnPoint,
-          npcSpawnPoints,
-          transferAreas,
-        }) => {
-          this.mainWorld.add(worldMesh);
-          this.groundMesh = worldFloor;
-          this.obstacles = obstacles;
-          const collidables = obstacles;
-          this.transferAreas = transferAreas;
-
-          this.player.initialize(
-            this.mainWorld,
-            this.camera,
-            spawnPoint,
-            obstacles,
-            walkables,
-            this.groundMesh,
-            transferAreas
-          );
-
-          this.sampleNPC1 = new SampleNPC1(this.mainWorld);
-          this.sampleNPC1.initialize(
-            npcSpawnPoints[0],
-            this.camera,
-            this.player,
-            this.canvasId,
-            this.groundMesh
-          );
-          this.npcs.push(this.sampleNPC1);
-
-          this.sampleNPC2 = new SampleNPC2(this.mainWorld);
-          this.sampleNPC2.initialize(
-            npcSpawnPoints[1],
-            this.camera,
-            this.player,
-            this.canvasId,
-            this.groundMesh
-          );
-          this.npcs.push(this.sampleNPC2);
-
-          this.albyNPC = new AlbyNPC(this.mainWorld);
-          this.albyNPC.initialize(
-            npcSpawnPoints[2],
-            this.camera,
-            this.player,
-            this.canvasId,
-            this.groundMesh
-          );
-          this.npcs.push(this.albyNPC);
-
-          document.getElementById("interface-container").style.display =
-            "block";
-          this.cameraControls.addCollidables(collidables, this.groundMesh);
-          this.cameraControls.setTrackPosition(this.player.getPosition());
-          this.isLoadingWorld = false;
-        }
-      )
-      .catch((error) => {
-        console.log("error loading world mesh: ", error);
-      });
+    this.loadMainWorld();
 
     this.textManager = new TextManager(this.scene);
     this.textManager.initialize({
@@ -179,6 +113,8 @@ export default class SceneInit {
     this.composer.addPass(renderPass);
     this.composer.addPass(bloomPass);
     this.isLoadingWorld = false;
+
+    this.hasMainWorldNPCLoaded = false;
   }
 
   startAnimation() {
@@ -244,6 +180,79 @@ export default class SceneInit {
     // this.composer.render();
   }
 
+  loadMainWorld() {
+    LoadWorld()
+      .then(
+        ({
+          worldMesh,
+          worldFloor,
+          walkables,
+          obstacles,
+          spawnPoint,
+          npcSpawnPoints,
+          transferAreas,
+        }) => {
+          this.mainWorldScene.add(worldMesh);
+          this.groundMesh = worldFloor;
+          this.obstacles = obstacles;
+          const collidables = obstacles;
+          this.transferAreas = transferAreas;
+
+          this.player.initialize(
+            this.mainWorldScene,
+            this.camera,
+            spawnPoint,
+            obstacles,
+            walkables,
+            worldFloor,
+            transferAreas
+          );
+
+          if (!this.hasMainWorldNPCLoaded) {
+            this.sampleNPC1 = new SampleNPC1(this.mainWorldScene);
+            this.sampleNPC1.initialize(
+              npcSpawnPoints[0],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcs.push(this.sampleNPC1);
+
+            this.sampleNPC2 = new SampleNPC2(this.mainWorldScene);
+            this.sampleNPC2.initialize(
+              npcSpawnPoints[1],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcs.push(this.sampleNPC2);
+
+            this.albyNPC = new AlbyNPC(this.mainWorldScene);
+            this.albyNPC.initialize(
+              npcSpawnPoints[2],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcs.push(this.albyNPC);
+            this.hasMainWorldNPCLoaded = true;
+          }
+
+          document.getElementById("interface-container").style.display =
+            "block";
+          this.cameraControls.addCollidables(collidables, this.groundMesh);
+          this.cameraControls.setTrackPosition(this.player.getPosition());
+          this.isLoadingWorld = false;
+        }
+      )
+      .catch((error) => {
+        console.log("error loading world mesh: ", error);
+      });
+  }
+
   loadAlbyHouseScene() {
     LoadSampleWorld()
       .then(
@@ -257,18 +266,22 @@ export default class SceneInit {
           transferAreas,
         }) => {
           this.albyHouseScene.add(terrainMesh);
-          this.groundMesh = worldFloor;
           this.obstacles = obstacles;
+          this.groundMesh = worldFloor;
+          this.walkables = walkables;
+          this.transferAreas = transferAreas;
+
           this.player.initialize(
             this.albyHouseScene,
             this.camera,
             spawnPoint,
             obstacles,
             walkables,
-            this.groundMesh,
+            worldFloor,
             transferAreas
           );
           this.cameraControls.addCollidables(obstacles, worldFloor);
+          // this.cameraControls.setTrackPosition(this.player.getPosition());
           this.isLoadingWorld = false;
         }
       )
@@ -290,7 +303,7 @@ export default class SceneInit {
         if (!this.isLoadingWorld) {
           if (this.player.transferArea.name === "TransferArea_AlbyHouse") {
             this.scene = this.albyHouseScene;
-            this.removePlayerFromScene(this.mainWorld);
+            this.removePlayerFromScene(this.mainWorldScene);
             this.loadAlbyHouseScene();
 
             const sceneLighting = new SceneLighting(this.scene, this.renderer);
@@ -299,10 +312,11 @@ export default class SceneInit {
             this.player.onTransferArea = false;
           }
           if (this.player.transferArea.name === "TransferArea_MainWorld") {
-            this.scene = this.mainWorld;
+            this.scene = this.mainWorldScene;
             this.removePlayerFromScene(this.albyHouseScene);
-            // this.loadMainWorld();
+            this.loadMainWorld();
             this.isLoadingWorld = true;
+            this.cameraControls.setTrackPosition(this.player.getPosition());
             this.player.onTransferArea = false;
           }
         }
