@@ -44,7 +44,7 @@ export default class SceneInit {
     this.albyHouseScene = new THREE.Scene();
     this.scene = this.mainWorldScene;
     this.axesHelper = new THREE.AxesHelper(8);
-    this.scene.add(this.axesHelper);
+    // this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -78,6 +78,7 @@ export default class SceneInit {
     this.cameraControls.initialize();
 
     this.loadMainWorld();
+    // this.loadAlbyHouseScene();
 
     this.textManager = new TextManager(this.scene);
     this.textManager.initialize({
@@ -181,6 +182,7 @@ export default class SceneInit {
   }
 
   loadMainWorld() {
+    this.scene = this.mainWorldScene;
     LoadWorld()
       .then(
         ({
@@ -254,6 +256,7 @@ export default class SceneInit {
   }
 
   loadAlbyHouseScene() {
+    this.scene = this.albyHouseScene;
     LoadSampleWorld()
       .then(
         ({
@@ -281,6 +284,11 @@ export default class SceneInit {
             transferAreas
           );
           this.cameraControls.addCollidables(obstacles, worldFloor);
+          // this.cameraControls.cameraControl.setPosition(
+          //   this.player.getPosition().x,
+          //   this.player.getPosition().y + 5,
+          //   this.player.getPosition().z + 5
+          // );
           // this.cameraControls.setTrackPosition(this.player.getPosition());
           this.isLoadingWorld = false;
         }
