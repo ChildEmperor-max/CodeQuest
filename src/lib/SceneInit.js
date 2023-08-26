@@ -52,8 +52,8 @@ export default class SceneInit {
     // this.renderer.shadowMap.enabled = true;
     // this.renderer.shadowMap.type = THREE.VSMShadowMap;
 
-    const sceneLighting = new SceneLighting(this.scene, this.renderer);
-    sceneLighting.initialize();
+    this.sceneLighting = new SceneLighting(this.scene, this.renderer);
+    this.sceneLighting.initialize();
 
     this.stats = Stats();
     // document.body.appendChild(this.stats.dom);
@@ -173,6 +173,10 @@ export default class SceneInit {
         this.player.updateNpcDetection(this.npcs);
       }
 
+      if (this.worldAnimationsMixer) {
+        this.worldAnimationsMixer.update(delta);
+      }
+
       this.render();
       this.animationId = window.requestAnimationFrame(this.animate.bind(this));
     } else {
@@ -193,12 +197,14 @@ export default class SceneInit {
           spawnPoint,
           npcSpawnPoints,
           transferAreas,
+          worldAnimationsMixer,
         }) => {
           this.mainWorldScene.add(worldMesh);
           this.groundMesh = worldFloor;
           this.obstacles = obstacles;
           const collidables = obstacles;
           this.transferAreas = transferAreas;
+          this.worldAnimationsMixer = worldAnimationsMixer;
 
           this.player.initialize(
             this.mainWorldScene,

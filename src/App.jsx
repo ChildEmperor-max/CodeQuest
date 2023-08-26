@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
-  const [shadowMap, setShadowMap] = useState(false);
+  const [shadowMap, setShadowMap] = useState(true);
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
@@ -40,7 +40,7 @@ function App() {
     startAnimation();
 
     renderer.shadowMap.enabled = shadowMap;
-    renderer.shadowMap.type = THREE.VSMShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     // THREE.BasicShadowMap
     // THREE.PCFShadowMap (default)
     // THREE.PCFSoftShadowMap

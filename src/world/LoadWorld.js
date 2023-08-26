@@ -11,6 +11,7 @@ export function LoadWorld() {
       "/src/assets/world/codequest_map.glb",
       function (gltf) {
         const worldMesh = gltf.scene;
+        const worldAnimationsMixer = new THREE.AnimationMixer(worldMesh);
         worldMesh.name = "terrain";
         worldMesh.position.set(3, 0, 3);
         worldMesh.scale.set(1, 1, 1);
@@ -32,6 +33,10 @@ export function LoadWorld() {
           npcSpawnPoint4,
         ];
 
+        gltf.animations.forEach((clip) => {
+          worldAnimationsMixer.clipAction(clip).play();
+        });
+
         worldMesh.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
@@ -40,6 +45,10 @@ export function LoadWorld() {
               child.frustumCulled = false;
             }
           }
+          // if (child.name.startsWith("Floor")) {
+          //   child.castShadow = true;
+          //   child.receiveShadow = true;
+          // }
           if (child.isMesh && child.name.startsWith("Walkable_")) {
             child.visible = false;
             walkables.push(child);
@@ -70,6 +79,7 @@ export function LoadWorld() {
           spawnPoint,
           npcSpawnPoints,
           transferAreas,
+          worldAnimationsMixer,
         });
       },
       undefined,

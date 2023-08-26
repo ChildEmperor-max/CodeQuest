@@ -21,6 +21,8 @@ import {
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
+import Player from "../player/Player";
+
 const questManager = new QuestManager();
 
 export default function InterfaceHandler({
@@ -34,6 +36,7 @@ export default function InterfaceHandler({
   const [isAchievementsOpen, setAchievementsOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isControlsHelperOpen, setIsControlsHelperOpen] = useState(false);
+  const player = new Player();
 
   const toggleCharacterProfile = () => {
     setCharacterProfileOpen(
@@ -42,6 +45,7 @@ export default function InterfaceHandler({
   };
 
   const toggleLeaderboard = () => {
+    console.log(player.position)
     setleaderboardOpen((isLeaderboardOpen) => !isLeaderboardOpen);
   };
 

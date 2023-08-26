@@ -12,28 +12,41 @@ export default class SceneLighting {
     let ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     this.scene.add(ambientLight);
 
-    let spotLight = new THREE.SpotLight(0xffffff, 1);
-    spotLight.castShadow = true;
-    spotLight.position.set(0, 264, 32);
-    this.scene.add(spotLight);
+    // let spotLight = new THREE.SpotLight(0xffffff, 1);
+    // spotLight.castShadow = true;
+    // spotLight.position.set(0, 264, 32);
+    // this.scene.add(spotLight);
 
-    const light = new THREE.DirectionalLight(0xffffff, 0.1);
-    light.position.set(0, 210, 0);
-    light.castShadow = true;
-    // light.shadow.mapSize.width = 1024;
-    // light.shadow.mapSize.height = 1024;
-    light.shadow.camera.near = 0.5;
-    light.shadow.camera.far = 500;
-    light.shadow.camera.left = -300;
-    light.shadow.camera.right = 300;
-    light.shadow.camera.top = 300;
-    light.shadow.camera.bottom = -300;
-    this.scene.add(light);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    this.directionalLight.position.set(0, 410, 100);
+    this.directionalLight.castShadow = true;
+
+    this.directionalLight.shadowMapWidth = 4048;
+    this.directionalLight.shadowMapHeight = 4048;
+
+    // this.directionalLight.shadow.camera.near = 0.5;
+    // this.directionalLight.shadow.camera.far = 500;
+
+    this.directionalLight.position.x += 20;
+    this.directionalLight.position.y += 20;
+    this.directionalLight.position.z += 20;
+
+    this.directionalLight.shadow.camera.left = -250;
+    this.directionalLight.shadow.camera.right = 250;
+    this.directionalLight.shadow.camera.top = 250;
+    this.directionalLight.shadow.camera.bottom = -250;
+
+    // this.directionalLight.shadow.blurSamples = 25;
+    this.directionalLight.shadow.bias = -0.005;
+
+    this.scene.add(this.directionalLight);
+    const helper = new THREE.CameraHelper(this.directionalLight.shadow.camera);
+    this.scene.add(helper);
 
     // const helper = new THREE.CameraHelper(light.shadow.camera);
     // this.scene.add(helper);
 
-    this.initSky(this.renderer);
+    // this.initSky(this.renderer);
   }
 
   initSky(renderer) {
