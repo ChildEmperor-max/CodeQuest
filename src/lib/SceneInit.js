@@ -18,6 +18,7 @@ import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
 import keys from "./KeyControls";
+import { addGrassShader, updateGrassShader } from "../world/grassShader";
 
 export default class SceneInit {
   constructor(canvasId, renderer) {
@@ -43,8 +44,8 @@ export default class SceneInit {
     this.mainWorldScene = new THREE.Scene();
     this.albyHouseScene = new THREE.Scene();
     this.scene = this.mainWorldScene;
-    this.axesHelper = new THREE.AxesHelper(8);
-    // this.scene.add(this.axesHelper);
+    this.axesHelper = new THREE.AxesHelper(518);
+    this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -116,6 +117,20 @@ export default class SceneInit {
     this.isLoadingWorld = false;
 
     this.hasMainWorldNPCLoaded = false;
+
+    const grassBladeCount = 25000;
+    const grassBladeHeight = 1.8;
+    const grassAreaSize = new THREE.Vector3(48.5, 0, 50);
+    const grassBladeAngle = 0.195;
+    const grassAreaPosition = new THREE.Vector3(-32.5, -1.5, -85);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize,
+      grassBladeAngle,
+      grassAreaPosition
+    );
   }
 
   startAnimation() {
@@ -165,6 +180,7 @@ export default class SceneInit {
           this.cameraControls.update(this.player, delta);
         }
         this.player.update(delta, this.npcs);
+        updateGrassShader(this.clock);
         // updateWorldRender(this.player.getPosition());
 
         this.playerDetectNpc(this.npcs, this.textManager);
