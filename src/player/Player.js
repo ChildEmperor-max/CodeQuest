@@ -229,35 +229,31 @@ export default class Player extends THREE.Object3D {
 
   boxCollision(box_to_collide, newPosition) {
     if (this.playerbox.intersectsBox(box_to_collide)) {
-      var deltaX = this.playerbox.min.x - box_to_collide.min.x;
-      var deltaZ = this.playerbox.max.z - box_to_collide.max.z;
-      this.directionTracker.set(0, 0, 0);
-      if (deltaX < 0) {
+      let rightSide = Math.abs(this.playerbox.min.x - box_to_collide.max.x);
+      let leftSide = Math.abs(this.playerbox.max.x - box_to_collide.min.x);
+      let frontSide = Math.abs(this.playerbox.max.z - box_to_collide.min.z);
+      let backSide = Math.abs(this.playerbox.min.z - box_to_collide.max.z);
+
+      let minDistance = Math.min(rightSide, leftSide, frontSide, backSide);
+
+      if (minDistance === rightSide) {
+        if (this.direction.x < 0) {
+          newPosition.x = this.mesh.position.x;
+        }
+      } else if (minDistance === leftSide) {
         if (this.direction.x > 0) {
           newPosition.x = this.mesh.position.x;
-          console.log("1");
         }
-      } else if (deltaX > 0) {
-        if (this.direction.x < 0 && this.direction.z < 0) {
-          newPosition.x = this.mesh.position.x;
-          console.log("2");
-        } else if (this.direction.x < 0) {
-          newPosition.x = this.mesh.position.x;
+      } else if (minDistance === frontSide) {
+        if (this.direction.z > 0) {
+          newPosition.z = this.mesh.position.z;
         }
-      }
-
-      if (deltaZ > 0) {
+      } else if (minDistance === backSide) {
         if (this.direction.z < 0) {
           newPosition.z = this.mesh.position.z;
-          console.log("3");
-        }
-      } else if (deltaZ < 0) {
-        if (this.direction.z > 0 && this.direction.x > 0) {
-          newPosition.z = this.mesh.position.z;
-        } else if (this.direction.z > 0) {
-          newPosition.z = this.mesh.position.z;
         }
       }
+      this.directionTracker.set(0, 0, 0);
     }
   }
 
@@ -558,7 +554,8 @@ export default class Player extends THREE.Object3D {
 
     this.fbxLoader = new FBXLoader(loadingManager);
 
-    const playerModelPath = "/src/assets/models/animations/";
+    const animationsPath = "/src/assets/models/animations/";
+    const playerModelPath = "/src/assets/player/";
     this.fbxLoader.load(
       playerModelPath + "model.fbx",
       (fbx) => {
@@ -595,7 +592,7 @@ export default class Player extends THREE.Object3D {
         this.mixer = new THREE.AnimationMixer(this.mesh);
         // this.mixer.timeScale = 7.0;
 
-        this.loadAnimation(this.mixer, playerModelPath);
+        this.loadAnimation(this.mixer, animationsPath);
       },
       undefined,
       (error) => {
