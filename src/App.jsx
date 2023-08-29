@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
-  const [shadowMap, setShadowMap] = useState(true);
+  const [shadowMap, setShadowMap] = useState(false);
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
