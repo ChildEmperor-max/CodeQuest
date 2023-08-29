@@ -27,6 +27,13 @@
     right: 0;
   }
 
+  .quest-side-button {
+    display: none;
+    float: right;
+    font-size: 15px;
+    padding: 7px;
+  }
+
   #close-quest-button:hover {
     cursor: pointer;
   }
@@ -46,12 +53,12 @@
     padding: 10px;
     color: white;
   }
-  #OngoingQuests, #AvailableQuests, #StoryQuest {
+  #OngoingQuests, #SideQuests, #StoryQuest {
     /* background-color: #3459a971; */
     width: 100%;
     /* margin: 10px; */
   }
-  #OngoingQuests h3, #AvailableQuests h3, #StoryQuest h3 {
+  #OngoingQuests h3, #SideQuests h3, #StoryQuest h3 {
     background-color: #3459a971;
     padding: 10px;
     font-weight: 600;
@@ -70,16 +77,25 @@
     padding-right: 10px;
   }
 
-  #Ongoing li:hover,
-  #Ongoing li:hover span{
+  #StoryQuestList li:hover,
+  #StoryQuestList li:hover span,
+  #Available li:hover,
+  #Available li:hover span{
     cursor: pointer;
     border-left: 2px solid white;
   }
 
-  #Ongoing li:hover {
+  #StoryQuestList li:hover,
+  #Available li:hover {
     animation: fadeIn 0.3s ease-in-out;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Border glow effect */
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
+  }
+
+  #StoryQuestList li:hover button,
+  #Available li:hover button {
+    animation: buttonSlideToBottom 0.2s ease-in-out;
+    display: inline-block !important;
   }
 
   .quest-list-button {
