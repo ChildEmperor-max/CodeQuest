@@ -19,7 +19,6 @@ import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
 import keys from "./KeyControls";
 import { addGrassShader, updateGrassShader } from "../world/grassShader";
-import { addGrassShader, updateGrassShader } from "../world/grassShader";
 
 export default class SceneInit {
   constructor(canvasId, renderer) {
