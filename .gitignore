@@ -136,4 +136,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Large world files
 src/assets/world/codequest_map.glb
+src/assets/world/MainWorld.blend
+src/assets/world/MainWorld.blend1
+src/assets/world/AlbyHouse/AlbyHouse.blend
+src/assets/world/AlbyHouse/AlbyHouse.blend1
