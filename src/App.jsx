@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import InterfaceHandler from "./interface/InterfaceHandler";
 import SceneInit from "./lib/SceneInit";
 import * as THREE from "three";
+import Player from "./player/Player";
 
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
-  const [shadowMap, setShadowMap] = useState(true);
+  const [shadowMap, setShadowMap] = useState(false);
+  const player = new Player();
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
@@ -15,7 +17,7 @@ function App() {
     });
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
-    world.initialize();
+    world.initialize(player);
 
     const startAnimation = () => {
       world.startAnimation();
@@ -66,6 +68,8 @@ function App() {
             setShadowMapValue: setShadowMap,
           },
         }}
+
+        playerInstance={player}
       />
       <canvas
         id="myThreeJsCanvas"

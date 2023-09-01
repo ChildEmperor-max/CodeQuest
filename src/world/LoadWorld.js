@@ -19,6 +19,8 @@ export function LoadWorld() {
         const walkables = [];
         const transferAreas = [];
         let worldFloor;
+        let albyHouseDoorActions = [];
+        let doors = [];
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
@@ -34,7 +36,12 @@ export function LoadWorld() {
         ];
 
         gltf.animations.forEach((clip) => {
-          worldAnimationsMixer.clipAction(clip).play();
+          if (clip.name.startsWith("obstacle_Mill_Blades")) {
+            worldAnimationsMixer.clipAction(clip).play();
+          }
+          if (clip.name.startsWith("AlbyHouseDoor")) {
+            albyHouseDoorActions.push(clip);
+          }
         });
 
         worldMesh.traverse(function (child) {
@@ -65,6 +72,9 @@ export function LoadWorld() {
             // const obstacleCollisionBox = new THREE.Box3().setFromObject(child);
             // child.obstacleCollisionBox = obstacleCollisionBox;
           }
+          if (child.name === "House_Door") {
+            doors.push(child);
+          }
           if (child.name.startsWith("Floor")) {
             worldFloor = child;
             walkables.push(worldFloor);
@@ -80,6 +90,8 @@ export function LoadWorld() {
           npcSpawnPoints,
           transferAreas,
           worldAnimationsMixer,
+          albyHouseDoorActions,
+          doors,
         });
       },
       undefined,

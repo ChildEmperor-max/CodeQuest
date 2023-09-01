@@ -1,3 +1,11 @@
+# Specific files
+codequest_map.glb
+MainWorld.blend
+MainWorld.blend1
+AlbyHouse.blend
+AlbyHouse.blend1
+
+
 # Logs
 logs
 *.log

@@ -1,6 +1,6 @@
 export function handleFetchQuest(req, res, pool) {
   // Query the database and return quest data
-  pool.query("SELECT * FROM quest", (err, result) => {
+  pool.query("SELECT * FROM quest ORDER BY id ASC", (err, result) => {
     if (err) {
       console.error("Error executing database query:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });

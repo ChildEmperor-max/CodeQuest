@@ -18,6 +18,7 @@ import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
 import AlbyNPC from "../npc/AlbyNPC";
 import keys from "./KeyControls";
+import { addGrassShader, updateGrassShader } from "../world/grassShader";
 
 export default class SceneInit {
   constructor(canvasId, renderer) {
@@ -39,12 +40,12 @@ export default class SceneInit {
     this.questManager.initialize();
   }
 
-  initialize() {
+  initialize(player) {
     this.mainWorldScene = new THREE.Scene();
     this.albyHouseScene = new THREE.Scene();
     this.scene = this.mainWorldScene;
-    this.axesHelper = new THREE.AxesHelper(8);
-    // this.scene.add(this.axesHelper);
+    this.axesHelper = new THREE.AxesHelper(518);
+    this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -60,7 +61,7 @@ export default class SceneInit {
 
     this.obstacles = [];
     this.transferAreas = [];
-    this.player = new Player();
+    this.player = player;
     const renderDistance = 1000;
 
     this.camera = new THREE.PerspectiveCamera(
@@ -116,6 +117,23 @@ export default class SceneInit {
     this.isLoadingWorld = false;
 
     this.hasMainWorldNPCLoaded = false;
+
+    const grassBladeCount = 25000;
+    const grassBladeHeight = 1.8;
+    const grassAreaSize = new THREE.Vector3(48.5, 0, 50);
+    const grassBladeAngle = 0.195;
+    const grassAreaPosition = new THREE.Vector3(-32.5, -1.5, -85);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize,
+      grassBladeAngle,
+      grassAreaPosition
+    );
+
+    this.albyHouseDoorOpening = true;
+    this.testPressed = false;
   }
 
   startAnimation() {
@@ -165,10 +183,12 @@ export default class SceneInit {
           this.cameraControls.update(this.player, delta);
         }
         this.player.update(delta, this.npcs);
+        updateGrassShader(this.clock);
+
         // updateWorldRender(this.player.getPosition());
 
         this.playerDetectNpc(this.npcs, this.textManager);
-        this.playerOnTransferArea(this.textManager);
+        this.playerOnDoor(this.textManager);
 
         this.player.updateNpcDetection(this.npcs);
       }
@@ -198,6 +218,8 @@ export default class SceneInit {
           npcSpawnPoints,
           transferAreas,
           worldAnimationsMixer,
+          albyHouseDoorActions,
+          doors,
         }) => {
           this.mainWorldScene.add(worldMesh);
           this.groundMesh = worldFloor;
@@ -205,6 +227,19 @@ export default class SceneInit {
           const collidables = obstacles;
           this.transferAreas = transferAreas;
           this.worldAnimationsMixer = worldAnimationsMixer;
+
+          this.closeDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
+            albyHouseDoorActions[0]
+          );
+          this.openDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
+            albyHouseDoorActions[1]
+          );
+          this.doors = doors;
+
+          // this.obstacles.forEach((element) => {
+          //   let box = new THREE.BoxHelper(element, 0xffff00);
+          //   this.scene.add(box);
+          // });
 
           this.player.initialize(
             this.mainWorldScene,
@@ -309,31 +344,42 @@ export default class SceneInit {
     }
   }
 
-  playerOnTransferArea(actionHint) {
+  playerOnDoor(actionHint) {
     if (this.player.onTransferArea) {
-      actionHint.showText(this.player.transferArea.position);
+      const textPosition = new THREE.Vector3(
+        this.player.getPosition().x - 1,
+        this.player.getPosition().y + 3,
+        this.player.getPosition().z
+      );
+      actionHint.showText(textPosition);
+      // actionHint.showText(this.player.transferArea.position);
 
       if (keys.e.pressed) {
-        if (!this.isLoadingWorld) {
-          if (this.player.transferArea.name === "TransferArea_AlbyHouse") {
-            this.scene = this.albyHouseScene;
-            this.removePlayerFromScene(this.mainWorldScene);
-            this.loadAlbyHouseScene();
+        if (this.player.transferArea.name === "TransferArea_AlbyHouse") {
+          if (!this.testPressed) {
+            this.albyHouseDoorOpening = !this.albyHouseDoorOpening;
 
-            const sceneLighting = new SceneLighting(this.scene, this.renderer);
-            sceneLighting.initialize();
-            this.isLoadingWorld = true;
-            this.player.onTransferArea = false;
-          }
-          if (this.player.transferArea.name === "TransferArea_MainWorld") {
-            this.scene = this.mainWorldScene;
-            this.removePlayerFromScene(this.albyHouseScene);
-            this.loadMainWorld();
-            this.isLoadingWorld = true;
-            this.cameraControls.setTrackPosition(this.player.getPosition());
-            this.player.onTransferArea = false;
+            if (!this.albyHouseDoorOpening) {
+              // Play the open door animation
+              this.closeDoorAlbyHouse.stop(); // Stop the close door animation if it's running
+              this.openDoorAlbyHouse.reset(); // Reset the animation
+              this.openDoorAlbyHouse.clampWhenFinished = true;
+              this.openDoorAlbyHouse.setLoop(THREE.LoopOnce);
+              this.openDoorAlbyHouse.play();
+            } else {
+              // Play the close door animation
+              this.openDoorAlbyHouse.stop(); // Stop the open door animation if it's running
+              this.closeDoorAlbyHouse.reset(); // Reset the animation
+              this.closeDoorAlbyHouse.clampWhenFinished = true;
+              this.closeDoorAlbyHouse.setLoop(THREE.LoopOnce);
+              this.closeDoorAlbyHouse.play();
+            }
+
+            this.testPressed = true;
           }
         }
+      } else {
+        this.testPressed = false;
       }
     } else {
       actionHint.hideText();

@@ -3,6 +3,7 @@ import CharacterProfile from "./CharacterProfile/CharacterProfile";
 import Settings from "./settings/Settings";
 import Achievements from "./Achievements/Achievements";
 import Leaderboard from "./Leaderboard/Leaderboard";
+import Quests from "./Quests/Quests";
 import ControlsHelper from "./Help/ControlsHelper";
 import toggleEditor from "../Editor";
 import QuestManager from "../lib/QuestManager";
@@ -21,22 +22,20 @@ import {
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Player from "../player/Player";
-
-const questManager = new QuestManager();
-
 export default function InterfaceHandler({
   settings: {
     antialias: { antialiasValue, setAntialiasValue },
     shadowMap: { shadowMapValue, setShadowMapValue },
   },
+  playerInstance
 }) {
+  const [isQuestsOpen, setIsQuestsOpen] = useState(false);
   const [isCharacterProfileOpen, setCharacterProfileOpen] = useState(false);
   const [isLeaderboardOpen, setleaderboardOpen] = useState(false);
   const [isAchievementsOpen, setAchievementsOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isControlsHelperOpen, setIsControlsHelperOpen] = useState(false);
-  const player = new Player();
+  const [isPlayerInInteractZone, setIsPlayerInInteractZone] = useState(false);
 
   const toggleCharacterProfile = () => {
     setCharacterProfileOpen(
@@ -44,8 +43,11 @@ export default function InterfaceHandler({
     );
   };
 
+  const toggleQuests = () => {
+    setIsQuestsOpen((isQuestsOpen) => !isQuestsOpen);
+  };
+
   const toggleLeaderboard = () => {
-    console.log(player.position)
     setleaderboardOpen((isLeaderboardOpen) => !isLeaderboardOpen);
   };
 
@@ -98,6 +100,7 @@ export default function InterfaceHandler({
 
   return (
     <>
+      {isQuestsOpen ? <Quests onClose={toggleQuests} /> : null}
       {isCharacterProfileOpen ? (
         <CharacterProfile onClose={toggleCharacterProfile} />
       ) : null}
@@ -127,7 +130,8 @@ export default function InterfaceHandler({
             name="Quests"
             icon={faTasks}
             id="quest-button"
-            onClickEvent={questManager.toggleQuestBox}
+            onClickEvent={toggleQuests}
+            // onClickEvent={questManager.toggleQuestBox}
             shortcutKey="Q"
           />
           <InterfaceButton
