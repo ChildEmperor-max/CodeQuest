@@ -1,18 +1,12 @@
 import * as THREE from "three";
 
 import Stats from "three/examples/jsm/libs/stats.module";
-import Player from "../player/Player";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraControls";
 import { LoadWorld, updateWorldRender } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import QuestManager from "./QuestManager";
-
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 
 import SampleNPC1 from "../npc/SampleNPC1";
 import SampleNPC2 from "../npc/SampleNPC2";
@@ -97,25 +91,6 @@ export default class SceneInit {
     this.isPlay = false;
     this.animationId = null;
 
-    const renderPass = new RenderPass(this.scene, this.camera);
-
-    // Create the bloom pass for the glow effect
-    // Create the bloom pass for the glow effect
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      1,
-      0,
-      0
-    );
-    bloomPass.threshold = 0.2; // Adjust the threshold for the glow effect
-    bloomPass.strength = 0.2; // Reduce the strength of the glow effect
-    bloomPass.radius = 0.5; // Reduce the radius of the glow effect
-    // this.renderer.physicallyCorrectLights = true; // This will be required for matching the glTF spec.
-
-    // Create the effect composer and add the passes
-    this.composer = new EffectComposer(this.renderer);
-    this.composer.addPass(renderPass);
-    this.composer.addPass(bloomPass);
     this.isLoadingWorld = false;
 
     this.hasMainWorldNPCLoaded = false;
