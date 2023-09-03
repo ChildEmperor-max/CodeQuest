@@ -28,6 +28,8 @@ export default function InterfaceHandler({
     shadowMap: { shadowMapValue, setShadowMapValue },
   },
   playerInstance,
+  npcInstances,
+  cameraInstance,
 }) {
   const interfaces = {
     none: "none",
@@ -119,6 +121,7 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.helper ? (
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       ) : null}
+
       <div className="ui-container" id="interface-container">
         <div className="right-container">
           <InterfaceButton
