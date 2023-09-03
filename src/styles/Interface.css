@@ -17,6 +17,17 @@
     display: flex;
 }
 
+.npc-name-display {
+  position: absolute;
+  color: white;
+  font-size: 20px;
+
+  /* Text border color */
+  -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
 .icon-button {
   position: relative;
   background-color: #1417299d;
