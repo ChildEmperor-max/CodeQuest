@@ -4,13 +4,20 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import QuestManager from "../lib/QuestManager";
-import { addNpcToTable, addDialogToTable } from "../db/HandleTable";
+import DynamicLabel from "../lib/DynamicLabelDisplay";
+
+import {
+  addNpcToTable,
+  addDialogToTable,
+  viewNpcData,
+  viewDialogData,
+  viewQuestData,
+} from "../db/HandleTable";
 
 export default class NPCLoader extends THREE.Object3D {
-  constructor(scene) {
+  constructor() {
     super();
     this.mesh = undefined;
-    this.scene = scene;
     this.actions = [];
     this.stateMachine = new StateMachine(new IdleState(this));
     // Set the default rotation angle (in radians)
@@ -22,6 +29,7 @@ export default class NPCLoader extends THREE.Object3D {
   }
 
   initialize(
+    scene,
     position,
     camera,
     player,
@@ -34,6 +42,8 @@ export default class NPCLoader extends THREE.Object3D {
     destination = null,
     modelTexturePath = undefined
   ) {
+    this.dynamicLabel = new DynamicLabel();
+    this.scene = scene;
     this.groundMesh = groundMesh;
     this.canvas = document.getElementById(canvas);
     this.position.set(position.x, position.y, position.z);
@@ -51,6 +61,18 @@ export default class NPCLoader extends THREE.Object3D {
     this.isFinishedTyping = false;
     this.player = player;
     this.height = 5;
+    this.nameDisplayYposition = 5;
+    this.camera = camera;
+
+    // Set Dynamic Npc name label
+    this.dynamicLabel.setNpcNameLabel({
+      text: npcName,
+      camera: camera,
+      position: this.position,
+      yOffset: this.nameDisplayYposition,
+    });
+    this.dynamicLabel.showNpcNameLabel(this.position, camera);
+    this.npcNameDisplayRange = 30;
 
     this.movementSpeed = 6;
     this.startPoint = position;
@@ -64,6 +86,77 @@ export default class NPCLoader extends THREE.Object3D {
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
     );
     this.scene.add(this.collisionBox);
+
+    async function fetchData(npcName) {
+      try {
+        const npcData = await viewNpcData(npcName);
+
+        const dialogData = await viewDialogData(npcData[0].dialog_id);
+        const dialogString = dialogData[0].dialog;
+        const dialogWithoutBrackets = dialogString.slice(1, -1);
+        const dialogArray = dialogWithoutBrackets
+          .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+          .map((item) => item.trim());
+
+        var npcDialog = dialogArray;
+        var npcHasQuest = false;
+        var questTitle = null;
+        var questType = null;
+        var codeTemplate = null;
+        var questAnswer = null;
+        let questStatus = null;
+
+        if (npcData[0].quest_id !== null) {
+          const questData = await viewQuestData(npcData[0].quest_id);
+
+          npcHasQuest = true;
+          questTitle = questData[0].quest_title;
+          questType = questData[0].quest_type;
+          codeTemplate = questData[0].code_template;
+          questAnswer = questData[0].quest_answer;
+          questStatus = questData[0].quest_status;
+        }
+
+        return {
+          npcDialog,
+          npcHasQuest,
+          questTitle,
+          questType,
+          codeTemplate,
+          questAnswer,
+          questStatus,
+        };
+      } catch (error) {
+        console.error("[ERROR]:", error);
+      }
+    }
+
+    const handleData = async (npcName) => {
+      try {
+        const {
+          npcDialog,
+          npcHasQuest,
+          questTitle,
+          questType,
+          codeTemplate,
+          questAnswer,
+          questStatus,
+        } = await fetchData(npcName);
+        this.createDialogBox(
+          npcDialog,
+          questTitle,
+          npcHasQuest,
+          questType,
+          codeTemplate,
+          questAnswer,
+          questStatus
+        );
+      } catch (error) {
+        console.error("[ERROR]:", error);
+      }
+    };
+
+    handleData.call(this, npcName);
   }
 
   update(delta) {
@@ -82,6 +175,16 @@ export default class NPCLoader extends THREE.Object3D {
       }
       this.updateAnimation();
       this.updatePositionToGround(delta);
+
+      if (
+        Math.abs(this.player.getPosition().distanceTo(this.getPosition())) >=
+        this.npcNameDisplayRange
+      ) {
+        this.dynamicLabel.hideNpcNameLabel();
+      } else {
+        this.dynamicLabel.showNpcNameLabel(this.position, this.camera);
+      }
+      this.dynamicLabel.updateNpcNameLabel(this.position, this.camera);
     }
   }
 
