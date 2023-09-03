@@ -35,14 +35,16 @@ export function LoadWorld() {
           npcSpawnPoint4,
         ];
 
-        gltf.animations.forEach((clip) => {
-          if (clip.name.startsWith("obstacle_Mill_Blades")) {
-            worldAnimationsMixer.clipAction(clip).play();
-          }
-          if (clip.name.startsWith("AlbyHouseDoor")) {
-            albyHouseDoorActions.push(clip);
-          }
-        });
+        if (gltf.animations !== undefined) {
+          gltf.animations.forEach((clip) => {
+            if (clip.name.startsWith("obstacle_Mill_Blades")) {
+              worldAnimationsMixer.clipAction(clip).play();
+            }
+            if (clip.name.startsWith("AlbyHouseDoor")) {
+              albyHouseDoorActions.push(clip);
+            }
+          });
+        }
 
         worldMesh.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
