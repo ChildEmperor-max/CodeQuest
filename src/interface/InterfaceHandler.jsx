@@ -27,40 +27,29 @@ export default function InterfaceHandler({
     antialias: { antialiasValue, setAntialiasValue },
     shadowMap: { shadowMapValue, setShadowMapValue },
   },
-  playerInstance
+  playerInstance,
 }) {
-  const [isQuestsOpen, setIsQuestsOpen] = useState(false);
-  const [isCharacterProfileOpen, setCharacterProfileOpen] = useState(false);
-  const [isLeaderboardOpen, setleaderboardOpen] = useState(false);
-  const [isAchievementsOpen, setAchievementsOpen] = useState(false);
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [isControlsHelperOpen, setIsControlsHelperOpen] = useState(false);
+  const interfaces = {
+    none: "none",
+    quests: "quests",
+    profile: "profile",
+    leaderboard: "leaderboard",
+    achievements: "achievements",
+    settings: "settings",
+    helper: "helper",
+  };
+  const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
+    interfaces.none
+  );
+
   const [isPlayerInInteractZone, setIsPlayerInInteractZone] = useState(false);
 
-  const toggleCharacterProfile = () => {
-    setCharacterProfileOpen(
-      (isCharacterProfileOpen) => !isCharacterProfileOpen
-    );
-  };
-
-  const toggleQuests = () => {
-    setIsQuestsOpen((isQuestsOpen) => !isQuestsOpen);
-  };
-
-  const toggleLeaderboard = () => {
-    setleaderboardOpen((isLeaderboardOpen) => !isLeaderboardOpen);
-  };
-
-  const toggleAchievements = () => {
-    setAchievementsOpen((isAchievementsOpen) => !isAchievementsOpen);
-  };
-
-  const toggleSettings = () => {
-    setSettingsOpen((isSettingsOpen) => !isSettingsOpen);
-  };
-
-  const toggleControlsHelper = () => {
-    setIsControlsHelperOpen((isControlsHelperOpen) => !isControlsHelperOpen);
+  const toggleInterface = (interfaceName) => {
+    if (currentOpenedInterface === interfaceName) {
+      setCurrentOpenedInterface(interfaces.none); // Close the current interface
+    } else {
+      setCurrentOpenedInterface(interfaceName); // Open the selected interface
+    }
   };
 
   const InterfaceButton = ({
@@ -84,10 +73,10 @@ export default function InterfaceHandler({
   useEffect(() => {
     const handleKeyToggle = (event) => {
       if (event.code === "KeyP" && keys.p.pressed) {
-        toggleCharacterProfile();
+        toggleInterface(interfaces.profile);
       }
       if (event.code === "KeyH" && keys.h.pressed) {
-        toggleControlsHelper();
+        toggleInterface(interfaces.helper);
       }
     };
 
@@ -96,20 +85,24 @@ export default function InterfaceHandler({
     return () => {
       window.removeEventListener("keydown", handleKeyToggle);
     };
-  }, []);
+  }, [currentOpenedInterface]);
 
   return (
     <>
-      {isQuestsOpen ? <Quests onClose={toggleQuests} /> : null}
-      {isCharacterProfileOpen ? (
-        <CharacterProfile onClose={toggleCharacterProfile} />
+      {currentOpenedInterface === interfaces.quests ? (
+        <Quests onClose={() => toggleInterface(interfaces.quests)} />
       ) : null}
-      {isAchievementsOpen ? (
-        <Achievements onClose={toggleAchievements} />
+      {currentOpenedInterface === interfaces.profile ? (
+        <CharacterProfile onClose={() => toggleInterface(interfaces.profile)} />
       ) : null}
-      {isSettingsOpen ? (
+      {currentOpenedInterface === interfaces.achievements ? (
+        <Achievements
+          onClose={() => toggleInterface(interfaces.achievements)}
+        />
+      ) : null}
+      {currentOpenedInterface === interfaces.settings ? (
         <Settings
-          onClose={toggleSettings}
+          onClose={() => toggleInterface(interfaces.settings)}
           antialias={{
             antialiasValue: antialiasValue,
             setAntialiasValue: setAntialiasValue,
@@ -120,9 +113,11 @@ export default function InterfaceHandler({
           }}
         />
       ) : null}
-      {isLeaderboardOpen ? <Leaderboard onClose={toggleLeaderboard} /> : null}
-      {isControlsHelperOpen ? (
-        <ControlsHelper onClose={toggleControlsHelper} />
+      {currentOpenedInterface === interfaces.leaderboard ? (
+        <Leaderboard onClose={() => toggleInterface(interfaces.leaderboard)} />
+      ) : null}
+      {currentOpenedInterface === interfaces.helper ? (
+        <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       ) : null}
       <div className="ui-container" id="interface-container">
         <div className="right-container">
@@ -130,7 +125,7 @@ export default function InterfaceHandler({
             name="Quests"
             icon={faTasks}
             id="quest-button"
-            onClickEvent={toggleQuests}
+            onClickEvent={() => toggleInterface(interfaces.quests)}
             // onClickEvent={questManager.toggleQuestBox}
             shortcutKey="Q"
           />
@@ -144,19 +139,19 @@ export default function InterfaceHandler({
             name="Leaderboard"
             icon={faMedal}
             id="leaderboard-button"
-            onClickEvent={toggleLeaderboard}
+            onClickEvent={() => toggleInterface(interfaces.leaderboard)}
           />
           <InterfaceButton
             name="Achievements"
             icon={faTrophy}
             id="achivements-button"
-            onClickEvent={toggleAchievements}
+            onClickEvent={() => toggleInterface(interfaces.achievements)}
           />
           <InterfaceButton
             name="Settings"
             icon={faCog}
             id="settings-button"
-            onClickEvent={toggleSettings}
+            onClickEvent={() => toggleInterface(interfaces.settings)}
           />
         </div>
         <div className="left-container">
@@ -164,14 +159,14 @@ export default function InterfaceHandler({
             name="Profile"
             icon={faUser}
             id="profile-button"
-            onClickEvent={toggleCharacterProfile}
+            onClickEvent={() => toggleInterface(interfaces.profile)}
             shortcutKey="P"
           />
           <InterfaceButton
             name="Help"
             icon={faQuestionCircle}
             id="help-button"
-            onClickEvent={toggleControlsHelper}
+            onClickEvent={() => toggleInterface(interfaces.helper)}
             shortcutKey="H"
           />
         </div>
