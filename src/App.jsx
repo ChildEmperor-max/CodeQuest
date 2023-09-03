@@ -3,11 +3,32 @@ import InterfaceHandler from "./interface/InterfaceHandler";
 import SceneInit from "./lib/SceneInit";
 import * as THREE from "three";
 import Player from "./player/Player";
+import SampleNPC1 from "./npc/SampleNPC1";
+import SampleNPC2 from "./npc/SampleNPC2";
+import AlbyNPC from "./npc/AlbyNPC";
 
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
   const [shadowMap, setShadowMap] = useState(false);
   const player = new Player();
+
+  const renderDistance = 1000;
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    renderDistance
+  );
+
+  const sampleNPC1 = new SampleNPC1();
+  const sampleNPC2 = new SampleNPC2();
+  const albyNPC = new AlbyNPC();
+
+  const npcs = {
+    sampleNPC1: sampleNPC1,
+    sampleNPC2: sampleNPC2,
+    albyNPC: albyNPC,
+  };
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
@@ -17,7 +38,7 @@ function App() {
     });
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
-    world.initialize(player);
+    world.initialize(player, npcs, camera);
 
     const startAnimation = () => {
       world.startAnimation();
@@ -68,8 +89,9 @@ function App() {
             setShadowMapValue: setShadowMap,
           },
         }}
-
         playerInstance={player}
+        npcInstances={npcs}
+        cameraInstance={camera}
       />
       <canvas
         id="myThreeJsCanvas"
