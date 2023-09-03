@@ -212,13 +212,15 @@ export default class SceneInit {
           this.transferAreas = transferAreas;
           this.worldAnimationsMixer = worldAnimationsMixer;
 
-          this.closeDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
-            albyHouseDoorActions[0]
-          );
-          this.openDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
-            albyHouseDoorActions[1]
-          );
-          this.doors = doors;
+          if (albyHouseDoorActions.length !== 0) {
+            this.closeDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
+              albyHouseDoorActions[0]
+            );
+            this.openDoorAlbyHouse = this.worldAnimationsMixer.clipAction(
+              albyHouseDoorActions[1]
+            );
+            this.doors = doors;
+          }
 
           // this.obstacles.forEach((element) => {
           //   let box = new THREE.BoxHelper(element, 0xffff00);
