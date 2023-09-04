@@ -18,7 +18,7 @@ export default class Loader {
     this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
       const progress = (itemsLoaded / itemsTotal) * 100;
       const formattedProgress = progress.toFixed(0);
-      this.loadingGameScreenText.textContent = `${text} ... ${formattedProgress}%`;
+      this.loadingGameScreenText.textContent = `${text} ${formattedProgress}%`;
     };
 
     this.loadingManager.onLoad = () => {
