@@ -1,13 +1,16 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
+import Loader from "../lib/Loader";
 
-const loader = new GLTFLoader();
+const loader = new Loader("Loading world ...");
+
+const worldLoader = new GLTFLoader(loader.loadingManager);
 const visibilityThreshold = 100;
 let objectsToRender = [];
 
 export function LoadWorld() {
   return new Promise((resolve, reject) => {
-    loader.load(
+    worldLoader.load(
       "/src/assets/world/codequest_map.glb",
       function (gltf) {
         const worldMesh = gltf.scene;

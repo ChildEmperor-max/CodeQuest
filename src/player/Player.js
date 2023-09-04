@@ -4,6 +4,7 @@ import * as TWEEN from "@tweenjs/tween.js";
 import QuestManager from "../lib/QuestManager";
 import keys from "../lib/KeyControls";
 import TextManager from "../lib/TextManager";
+import Loader from "../lib/Loader";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -519,7 +520,7 @@ export default class Player extends THREE.Object3D {
 
   loadModel(scene) {
     // this.modelScale = 0.01;
-    const loadingManager = new THREE.LoadingManager();
+    // const loadingManager = new THREE.LoadingManager();
     // loadingManager.setURLModifier(function (url) {
     //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/发.png") {
     //     url = "/src/assets/models/hutao/tex/发.png";
@@ -532,27 +533,9 @@ export default class Player extends THREE.Object3D {
     //   }
     //   return url;
     // });
-    var loadingGameScreenDiv = document.getElementById("loading-game-screen");
-    var loadingGameScreenText = document.getElementById(
-      "loading-game-screen-text"
-    );
-    loadingManager.onStart = () => {
-      loadingGameScreenDiv.style.display = "block";
-      loadingGameScreenText.textContent = "Loading...";
-    };
-    loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      const progress = (itemsLoaded / itemsTotal) * 100;
-      const formattedProgress = progress.toFixed(0); // Format the progress to two decimal places
-      loadingGameScreenText.textContent = `Loading... ${formattedProgress}%`;
-    };
+    const loader = new Loader("Loading Player ...");
 
-    loadingManager.onLoad = () => {
-      loadingGameScreenText.textContent = "";
-      loadingGameScreenDiv.style.display = "none";
-      this.isDoneLoading = true;
-    };
-
-    this.fbxLoader = new FBXLoader(loadingManager);
+    this.fbxLoader = new FBXLoader(loader.loadingManager);
 
     const animationsPath = "/src/assets/models/animations/";
     const playerModelPath = "/src/assets/player/";
