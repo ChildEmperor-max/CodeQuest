@@ -22,10 +22,13 @@
   color: white;
   font-size: 20px;
 
-  /* Text border color */
   -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
   font-weight: bold;
   font-family: Arial, sans-serif;
+
+  transform: translate(-50%, -50%);
+  top: 50%; /* Vertically center */
+  left: 50%; /* Horizontally center */
 }
 
 .icon-button {

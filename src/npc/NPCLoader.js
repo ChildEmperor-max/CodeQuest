@@ -61,7 +61,7 @@ export default class NPCLoader extends THREE.Object3D {
     this.isFinishedTyping = false;
     this.player = player;
     this.height = 5;
-    this.nameDisplayYposition = 5;
+    this.nameDisplayYposition = 75;
     this.camera = camera;
 
     // Set Dynamic Npc name label
