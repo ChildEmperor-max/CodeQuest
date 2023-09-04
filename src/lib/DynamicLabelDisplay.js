@@ -4,7 +4,6 @@ export default class DynamicLabel {
     this.npcNameLabel = document.createElement("div");
     this.npcNameLabel.setAttribute("class", "npc-name-display");
     this.labelShownFlag;
-    // for xOffset, get the center of the label
     this.xOffset = 0;
     this.yOffset = 150;
   }

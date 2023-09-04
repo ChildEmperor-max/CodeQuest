@@ -29,6 +29,7 @@
   transform: translate(-50%, -50%);
   top: 50%; /* Vertically center */
   left: 50%; /* Horizontally center */
+  cursor:default;
 }
 
 .icon-button {
