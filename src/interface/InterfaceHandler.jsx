@@ -45,6 +45,7 @@ export default function InterfaceHandler({
   );
 
   const [isPlayerInInteractZone, setIsPlayerInInteractZone] = useState(false);
+  const [isPlayerRunning, setIsPlayerRunning] = useState(false);
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -72,6 +73,19 @@ export default function InterfaceHandler({
     );
   };
 
+  useEffect(() => {
+    const handleRunningChange = (event) => {
+      setIsPlayerRunning(event.detail);
+    };
+  
+    document.addEventListener('playerInstanceRunningChanged', handleRunningChange);
+  
+    return () => {
+      document.removeEventListener('playerInstanceRunningChanged', handleRunningChange);
+    };
+  }, [isPlayerRunning]);
+  
+  
   useEffect(() => {
     const handleKeyToggle = (event) => {
       if (event.code === "KeyP" && keys.p.pressed) {
@@ -175,12 +189,13 @@ export default function InterfaceHandler({
         </div>
         <a>
           <div
-            className="sprint-image-container sprint-disabled"
+            className={`sprint-image-container ${isPlayerRunning ? 'sprint-triggered' : 'sprint-enabled'}`}
             id="sprint-icon"
           >
             <img
-              src="src/assets/icons/circle-running-icon-no-bg.png"
+              src="src/assets/icons/circle-running-icon-no-bg.svg"
               alt="Sprint"
+              className="svg"
             />
           </div>
         </a>

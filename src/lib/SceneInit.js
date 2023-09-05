@@ -229,35 +229,36 @@ export default class SceneInit {
           );
 
           if (!this.hasMainWorldNPCLoaded) {
-            this.npcs.sampleNPC1.initialize(
-              this.mainWorldScene,
-              npcSpawnPoints[0],
-              this.camera,
-              this.player,
-              this.canvasId,
-              this.groundMesh
-            );
-            this.npcArray.push(this.npcs.sampleNPC1);
+            // LOAD NPC'S
+            // this.npcs.sampleNPC1.initialize(
+            //   this.mainWorldScene,
+            //   npcSpawnPoints[0],
+            //   this.camera,
+            //   this.player,
+            //   this.canvasId,
+            //   this.groundMesh
+            // );
+            // this.npcArray.push(this.npcs.sampleNPC1);
 
-            this.npcs.sampleNPC2.initialize(
-              this.mainWorldScene,
-              npcSpawnPoints[1],
-              this.camera,
-              this.player,
-              this.canvasId,
-              this.groundMesh
-            );
-            this.npcArray.push(this.npcs.sampleNPC2);
+            // this.npcs.sampleNPC2.initialize(
+            //   this.mainWorldScene,
+            //   npcSpawnPoints[1],
+            //   this.camera,
+            //   this.player,
+            //   this.canvasId,
+            //   this.groundMesh
+            // );
+            // this.npcArray.push(this.npcs.sampleNPC2);
 
-            this.npcs.albyNPC.initialize(
-              this.mainWorldScene,
-              npcSpawnPoints[2],
-              this.camera,
-              this.player,
-              this.canvasId,
-              this.groundMesh
-            );
-            this.npcArray.push(this.npcs.albyNPC);
+            // this.npcs.albyNPC.initialize(
+            //   this.mainWorldScene,
+            //   npcSpawnPoints[2],
+            //   this.camera,
+            //   this.player,
+            //   this.canvasId,
+            //   this.groundMesh
+            // );
+            // this.npcArray.push(this.npcs.albyNPC);
 
             this.hasMainWorldNPCLoaded = true;
           }

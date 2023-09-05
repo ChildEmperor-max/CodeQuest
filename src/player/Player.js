@@ -394,16 +394,16 @@ export default class Player extends THREE.Object3D {
           }
         }
       }
-      if (this.running) {
-        this.runningIcon.classList.add("sprint-triggered");
-      } else {
-        this.runningIcon.classList.remove("sprint-triggered");
-        this.runningIcon.classList.replace("sprint-disabled", "sprint-enabled");
-      }
+      // if (this.running) {
+      //   this.runningIcon.classList.add("sprint-triggered");
+      // } else {
+      //   this.runningIcon.classList.remove("sprint-triggered");
+      //   this.runningIcon.classList.replace("sprint-disabled", "sprint-enabled");
+      // }
     } else {
       this.currentSpeed = 0;
-      this.runningIcon.classList.replace("sprint-enabled", "sprint-disabled");
-      this.runningIcon.classList.remove("sprint-triggered");
+      // this.runningIcon.classList.replace("sprint-enabled", "sprint-disabled");
+      // this.runningIcon.classList.remove("sprint-triggered");
       keys.shift.justPressed = false;
       if (this.idleAction) {
         this.currentAction = this.idleAction;
@@ -427,6 +427,21 @@ export default class Player extends THREE.Object3D {
       this.movementSpeed = this.walkingSpeed;
     }
     this.currentSpeed = this.movementSpeed;
+
+    this.updatePlayerInstanceRunning(isRunning);
+    // Whenever playerInstance.running changes
+  }
+
+  updatePlayerInstanceRunning(newValue) {
+    if (this.isRunning !== newValue) {
+      this.isRunning = newValue;
+
+      // Dispatch a custom event only when the value changes
+      const event = new CustomEvent("playerInstanceRunningChanged", {
+        detail: newValue,
+      });
+      document.dispatchEvent(event);
+    }
   }
 
   updateAnimation() {

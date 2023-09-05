@@ -11,7 +11,7 @@ let objectsToRender = [];
 export function LoadWorld() {
   return new Promise((resolve, reject) => {
     worldLoader.load(
-      "/src/assets/world/codequest_map.glb",
+      "/src/assets/world/SampleWorld.glb",
       function (gltf) {
         const worldMesh = gltf.scene;
         const worldAnimationsMixer = new THREE.AnimationMixer(worldMesh);
