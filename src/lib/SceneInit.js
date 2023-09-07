@@ -7,6 +7,7 @@ import { LoadWorld, updateWorldRender } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import QuestManager from "./QuestManager";
+import DynamicLabel from "./DynamicLabelDisplay";
 
 import keys from "./KeyControls";
 import { addGrassShader, updateGrassShader } from "../world/grassShader";
@@ -39,6 +40,7 @@ export default class SceneInit {
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
     this.npcs = npcs;
+    this.dynamicLabel = new DynamicLabel();
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
@@ -109,6 +111,7 @@ export default class SceneInit {
 
     this.albyHouseDoorOpening = true;
     this.testPressed = false;
+    this.nearNpcAction = undefined;
   }
 
   startAnimation() {
@@ -162,10 +165,7 @@ export default class SceneInit {
 
         // updateWorldRender(this.player.getPosition());
 
-        this.playerDetectNpc(this.npcArray, this.textManager);
         this.playerOnDoor(this.textManager);
-
-        this.player.updateNpcDetection(this.npcArray);
       }
 
       if (this.worldAnimationsMixer) {
@@ -230,35 +230,35 @@ export default class SceneInit {
 
           if (!this.hasMainWorldNPCLoaded) {
             // LOAD NPC'S
-            // this.npcs.sampleNPC1.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[0],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC1);
+            this.npcs.sampleNPC1.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[0],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC1);
 
-            // this.npcs.sampleNPC2.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[1],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC2);
+            this.npcs.sampleNPC2.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[1],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC2);
 
-            // this.npcs.albyNPC.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[2],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.albyNPC);
+            this.npcs.albyNPC.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[2],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.albyNPC);
 
             this.hasMainWorldNPCLoaded = true;
           }
@@ -333,16 +333,14 @@ export default class SceneInit {
             this.albyHouseDoorOpening = !this.albyHouseDoorOpening;
 
             if (!this.albyHouseDoorOpening) {
-              // Play the open door animation
-              this.closeDoorAlbyHouse.stop(); // Stop the close door animation if it's running
-              this.openDoorAlbyHouse.reset(); // Reset the animation
+              this.closeDoorAlbyHouse.stop();
+              this.openDoorAlbyHouse.reset();
               this.openDoorAlbyHouse.clampWhenFinished = true;
               this.openDoorAlbyHouse.setLoop(THREE.LoopOnce);
               this.openDoorAlbyHouse.play();
             } else {
-              // Play the close door animation
-              this.openDoorAlbyHouse.stop(); // Stop the open door animation if it's running
-              this.closeDoorAlbyHouse.reset(); // Reset the animation
+              this.openDoorAlbyHouse.stop();
+              this.closeDoorAlbyHouse.reset();
               this.closeDoorAlbyHouse.clampWhenFinished = true;
               this.closeDoorAlbyHouse.setLoop(THREE.LoopOnce);
               this.closeDoorAlbyHouse.play();
@@ -353,33 +351,6 @@ export default class SceneInit {
         }
       } else {
         this.testPressed = false;
-      }
-    } else {
-      actionHint.hideText();
-    }
-  }
-
-  playerDetectNpc(npcs, actionHint) {
-    var nearNpcAction = undefined;
-    var nearNpcName = undefined;
-    var actionHintDistance = 4;
-    var npcNameDistance = 40;
-    for (let i = 0; i < npcs.length; i++) {
-      var npcDistance = npcs[i]
-        .getPosition()
-        .distanceTo(this.player.getPosition());
-      if (npcDistance <= actionHintDistance) {
-        nearNpcAction = npcs[i];
-      }
-      if (npcDistance <= npcNameDistance) {
-        nearNpcName = npcs[i].npcName;
-      }
-    }
-    if (nearNpcAction) {
-      if (nearNpcAction.isTalking) {
-        actionHint.hideText();
-      } else {
-        actionHint.showText(nearNpcAction.getPosition());
       }
     } else {
       actionHint.hideText();

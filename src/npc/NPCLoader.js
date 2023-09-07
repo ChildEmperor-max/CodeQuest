@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import * as TWEEN from "@tweenjs/tween.js";
+import Interactibles from "../lib/Interactibles";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import QuestManager from "../lib/QuestManager";
-import DynamicLabel from "../lib/DynamicLabelDisplay";
 
 import {
   addNpcToTable,
@@ -14,7 +14,7 @@ import {
   viewQuestData,
 } from "../db/HandleTable";
 
-export default class NPCLoader extends THREE.Object3D {
+export default class NPCLoader extends Interactibles {
   constructor() {
     super();
     this.mesh = undefined;
@@ -42,7 +42,7 @@ export default class NPCLoader extends THREE.Object3D {
     destination = null,
     modelTexturePath = undefined
   ) {
-    this.dynamicLabel = new DynamicLabel();
+    super.initialize(position, camera, player);
     this.scene = scene;
     this.groundMesh = groundMesh;
     this.canvas = document.getElementById(canvas);
@@ -61,7 +61,6 @@ export default class NPCLoader extends THREE.Object3D {
     this.isFinishedTyping = false;
     this.player = player;
     this.height = 5;
-    this.nameDisplayYposition = 75;
     this.camera = camera;
 
     // Set Dynamic Npc name label
@@ -156,10 +155,11 @@ export default class NPCLoader extends THREE.Object3D {
       }
     };
 
-    handleData.call(this, npcName);
+    // handleData.call(this, npcName);
   }
 
   update(delta) {
+    super.update(delta);
     if (this.mixer) {
       this.mixer.update(delta);
       this.stateMachine.update();
@@ -175,17 +175,20 @@ export default class NPCLoader extends THREE.Object3D {
       }
       this.updateAnimation();
       this.updatePositionToGround(delta);
-
-      if (
-        Math.abs(this.player.getPosition().distanceTo(this.getPosition())) >=
-        this.npcNameDisplayRange
-      ) {
-        this.dynamicLabel.hideNpcNameLabel();
-      } else {
-        this.dynamicLabel.showNpcNameLabel(this.position, this.camera);
-      }
-      this.dynamicLabel.updateNpcNameLabel(this.position, this.camera);
+      this.updateFloatingName();
     }
+  }
+
+  updateFloatingName() {
+    if (
+      Math.abs(this.player.getPosition().distanceTo(this.getPosition())) >=
+      this.npcNameDisplayRange
+    ) {
+      this.dynamicLabel.hideNpcNameLabel();
+    } else {
+      this.dynamicLabel.showNpcNameLabel(this.position, this.camera);
+    }
+    this.dynamicLabel.updateNpcNameLabel(this.position, this.camera);
   }
 
   findIntersectionHeight(from_vec3, object_to_intersect) {
@@ -786,9 +789,5 @@ export default class NPCLoader extends THREE.Object3D {
     const animationClip = fbx.animations[0];
     const animationAction = this.mixer.clipAction(animationClip);
     return animationAction;
-  }
-
-  getPosition() {
-    return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
   }
 }
