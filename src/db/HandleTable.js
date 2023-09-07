@@ -1,5 +1,5 @@
-// const host = "http://localhost:3000/";
-const host = "http://127.0.0.1:3000/";
+const host = "http://localhost:3000/";
+// const host = "http://127.0.0.1:3000/";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
@@ -43,6 +43,24 @@ export function executeJavaCode(data) {
 export const viewNpcData = async (name) => {
   try {
     const npcData = await fetchNpcDataByName(name);
+    return npcData;
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
+
+export const viewNpcIdByName = async (name) => {
+  try {
+    const npcData = await fetchNpcIdByName(name);
+    return npcData;
+  } catch (error) {
+    console.error("[ERROR]:", error);
+  }
+};
+
+export const viewDialogById = async (id) => {
+  try {
+    const npcData = await fetchDialogByNpcId(id);
     return npcData;
   } catch (error) {
     console.error("[ERROR]:", error);
@@ -140,6 +158,20 @@ export function fetchNpcQuestDialogById(id) {
 
 export function fetchNpcDataByName(name) {
   return fetch(npcAPI + "/get-npc/" + name)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching NPC data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchNpcIdByName(name) {
+  return fetch(npcAPI + "/get-npc-id/" + name)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Error fetching NPC data: " + response.statusText);
@@ -318,5 +350,19 @@ export function fetchDialogTable() {
     })
     .catch((error) => {
       console.error("Error:", error);
+    });
+}
+
+export function fetchDialogByNpcId(id) {
+  return fetch(dialogAPI + "/get-dialog-by-id/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Dialog data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
     });
 }

@@ -13,6 +13,7 @@ import {
   handleInsertDialog,
   handleFetchDialog,
   handleFetchDialogById,
+  handleFetchDialogByNpcId,
 } from "./handlers/dialogHandler.js";
 import {
   handleInsertNpc,
@@ -20,6 +21,7 @@ import {
   fetchNpcQuestDialog,
   fetchNpcQuestDialogById,
   handleFetchNpcDataByName,
+  handleFetchIdByName,
 } from "./handlers/npcHandler.js";
 import {
   handleInsertQuest,
@@ -96,6 +98,11 @@ app.get("/npc/get-npc/:name", (req, res) => {
   handleFetchNpcDataByName(name, res, pool);
 });
 
+app.get("/npc/get-npc-id/:id", (req, res) => {
+  const name = req.params.name;
+  handleFetchIdByName(name, res, pool);
+});
+
 app.get("/quests/get-quest/:name", (req, res) => {
   const name = req.params.name;
   handleFetchQuestById(name, res, pool);
@@ -104,6 +111,11 @@ app.get("/quests/get-quest/:name", (req, res) => {
 app.get("/dialog/get-dialog/:name", (req, res) => {
   const name = req.params.name;
   handleFetchDialogById(name, res, pool);
+});
+
+app.get("/dialog/get-dialog-by-id/:id", (req, res) => {
+  const npc_id = req.params.id;
+  handleFetchDialogByNpcId(npc_id, res, pool);
 });
 
 app.get("/quests", (req, res) => {

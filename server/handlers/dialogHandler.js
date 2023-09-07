@@ -1,3 +1,4 @@
+import fs from "fs";
 export function handleFetchDialog(req, res, pool) {
   // Query the database to fetch all dialogs
   pool.query("SELECT * FROM dialog", (err, result) => {
@@ -14,7 +15,6 @@ export function handleFetchDialog(req, res, pool) {
 }
 
 export function handleFetchDialogById(id, res, pool) {
-  // Query the database and return quest data
   pool
     .query("SELECT * FROM dialog WHERE id = $1", [id])
     .then((result) => {
@@ -26,6 +26,18 @@ export function handleFetchDialogById(id, res, pool) {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     });
+}
+
+export async function handleFetchDialogByNpcId(id, res, pool) {
+  try {
+    const query = fs.readFileSync("server/sql/getDialogByNpcId.sql", "utf8");
+    const result = await pool.query(query, [id]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
 }
 
 export function handleInsertDialog(req, res, pool) {

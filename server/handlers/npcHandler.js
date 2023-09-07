@@ -13,6 +13,20 @@ export function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
+export function handleFetchIdByName(name, res, pool) {
+  pool
+    .query("SELECT id FROM npc WHERE TRIM(npc_name) = $1", [name])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export async function fetchNpcQuestDialogById(id, res, pool) {
   try {
     const query = fs.readFileSync(
