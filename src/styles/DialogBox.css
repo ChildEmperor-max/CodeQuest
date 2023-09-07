@@ -7,8 +7,7 @@
     padding: 30px;
     background-color: #3d3d3dd7;
     box-sizing: border-box;
-    display: none;
-    /* z-index: 9999; */
+    z-index: 2;
     backdrop-filter: blur(5px); /* Apply the blur effect */
 
   }

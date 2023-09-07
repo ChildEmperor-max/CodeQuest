@@ -108,7 +108,7 @@ export default class QuestManager {
       }
     };
 
-    addNpcQuestData();
+    // addNpcQuestData();
   }
 
   addQuestItem(

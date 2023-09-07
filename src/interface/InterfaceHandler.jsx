@@ -5,6 +5,7 @@ import Achievements from "./Achievements/Achievements";
 import Leaderboard from "./Leaderboard/Leaderboard";
 import Quests from "./Quests/Quests";
 import ControlsHelper from "./Help/ControlsHelper";
+import DialogBox from "./DialogBox/DialogBox";
 import toggleEditor from "../Editor";
 import QuestManager from "../lib/QuestManager";
 import keys, {
@@ -44,8 +45,9 @@ export default function InterfaceHandler({
     interfaces.none
   );
 
-  const [isPlayerInInteractZone, setIsPlayerInInteractZone] = useState(false);
   const [isPlayerRunning, setIsPlayerRunning] = useState(false);
+
+  const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -77,15 +79,34 @@ export default function InterfaceHandler({
     const handleRunningChange = (event) => {
       setIsPlayerRunning(event.detail);
     };
-  
-    document.addEventListener('playerInstanceRunningChanged', handleRunningChange);
-  
+
+    document.addEventListener(
+      "playerInstanceRunningChanged",
+      handleRunningChange
+    );
+
     return () => {
-      document.removeEventListener('playerInstanceRunningChanged', handleRunningChange);
+      document.removeEventListener(
+        "playerInstanceRunningChanged",
+        handleRunningChange
+      );
     };
   }, [isPlayerRunning]);
-  
-  
+
+  useEffect(() => {
+    const handlePlayerNpcInteraction = (event) => {
+      setIsPlayerInteractingNpc(event.detail);
+    };
+    document.addEventListener("playerInteractNpc", handlePlayerNpcInteraction);
+
+    return () => {
+      document.removeEventListener(
+        "playerInteractNpc",
+        handlePlayerNpcInteraction
+      );
+    };
+  }, [isPlayerInteractingNpc]);
+
   useEffect(() => {
     const handleKeyToggle = (event) => {
       if (event.code === "KeyP" && keys.p.pressed) {
@@ -105,6 +126,9 @@ export default function InterfaceHandler({
 
   return (
     <>
+      {isPlayerInteractingNpc !== null ? (
+        <DialogBox npc_name={isPlayerInteractingNpc} />
+      ) : null}
       {currentOpenedInterface === interfaces.quests ? (
         <Quests onClose={() => toggleInterface(interfaces.quests)} />
       ) : null}
@@ -189,7 +213,9 @@ export default function InterfaceHandler({
         </div>
         <a>
           <div
-            className={`sprint-image-container ${isPlayerRunning ? 'sprint-triggered' : 'sprint-enabled'}`}
+            className={`sprint-image-container ${
+              isPlayerRunning ? "sprint-triggered" : "sprint-enabled"
+            }`}
             id="sprint-icon"
           >
             <img
