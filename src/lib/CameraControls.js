@@ -81,7 +81,7 @@ export default class CameraController {
       if (!player.isDoneLoading) {
         this.lerpFactor = 0.9;
       } else {
-        this.lerpFactor = 0.75;
+        this.lerpFactor = 0.65;
       }
 
       // if (player.isMoving()) {
