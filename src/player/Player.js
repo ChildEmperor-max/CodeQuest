@@ -3,7 +3,6 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
 import QuestManager from "../lib/QuestManager";
 import keys from "../lib/KeyControls";
-import TextManager from "../lib/TextManager";
 import Loader from "../lib/Loader";
 
 export default class Player extends THREE.Object3D {
@@ -76,21 +75,20 @@ export default class Player extends THREE.Object3D {
       new THREE.MeshBasicMaterial({ visible: false })
     );
     scene.add(this.collisionBox);
+
     //flags
     this.isGrounded = true;
     this.questListShown = false;
     this.enableNpcDetection = true;
     this.isRunning = false;
+    this.interactingWithNpc = null;
+
+    this.previousPlayerY = this.position.y;
+
     this.runningIcon = document.getElementById("sprint-icon");
     this.runningIcon.addEventListener("click", function () {
       keys.shift.justPressed = !keys.shift.justPressed;
     });
-    this.textManager = new TextManager(this.scene);
-    this.textManager.initialize({
-      text: "E",
-      camera: this.camera,
-    });
-    this.previousPlayerY = this.position.y;
   }
 
   raycasterDebug(from_vec3) {
@@ -172,38 +170,51 @@ export default class Player extends THREE.Object3D {
     }
   }
 
-  updateNpcDetection(npcs) {
-    var npcDetectionShape = new THREE.Sphere(this.position, 5);
-    for (var i = 0; i < npcs.length; i++) {
-      var npc = npcs[i];
-      var npcPosition = new THREE.Vector3();
-      npc.getWorldPosition(npcPosition);
-
-      var collided = npcDetectionShape.containsPoint(npcPosition);
-
-      if (collided) {
-        if (!npc.isTalking) {
-          this.textManager.showText(npcPosition);
+  onNpcZone(npc) {
+    if (npc) {
+      if (keys.e.pressed) {
+        npc.talkToPlayer(true, this.position);
+        this.rotateTowards(npc.position);
+        if (!this.isTalkingToNpc) {
+          this.isTalkingToNpc = true;
         }
-        if (keys.e.pressed) {
-          npc.talkToPlayer(true, this.position);
-          this.rotateTowards(npc.position);
-          this.enableNpcDetection = false;
-          if (!this.isTalkingToNpc) {
-            this.isTalkingToNpc = true;
-          }
-        }
-      } else {
-        if (!this.enableNpcDetection) {
-          this.enableNpcDetection = true;
-        }
-        if (this.isTalkingToNpc) {
-          this.isTalkingToNpc = false;
-          npc.talkToPlayer(false, npc.defaultRotation);
-        }
+        this.updatePlayerInteractNpc(npc.npcName);
       }
     }
   }
+
+  // updateNpcDetection(npcs) {
+  //   var npcDetectionShape = new THREE.Sphere(this.position, 5);
+  //   for (var i = 0; i < npcs.length; i++) {
+  //     var npc = npcs[i];
+  //     var npcPosition = new THREE.Vector3();
+  //     npc.getWorldPosition(npcPosition);
+
+  //     var collided = npcDetectionShape.containsPoint(npcPosition);
+
+  //     if (collided) {
+  //       if (!npc.isTalking) {
+  //         this.textManager.showText(npcPosition);
+  //       }
+  //       if (keys.e.pressed) {
+  //         npc.talkToPlayer(true, this.position);
+  //         this.rotateTowards(npc.position);
+  //         this.enableNpcDetection = false;
+  //         if (!this.isTalkingToNpc) {
+  //           this.isTalkingToNpc = true;
+  //         }
+  //       }
+  //     } else {
+  //       if (!this.enableNpcDetection) {
+  //         this.enableNpcDetection = true;
+  //       }
+  //       if (this.isTalkingToNpc) {
+  //         this.isTalkingToNpc = false;
+  //         npc.talkToPlayer(false, npc.defaultRotation);
+  //       }
+  //     }
+  //   }
+  // }
 
   rotateTowards(targetPosition) {
     if (this.mesh) {
@@ -394,16 +405,8 @@ export default class Player extends THREE.Object3D {
           }
         }
       }
-      // if (this.running) {
-      //   this.runningIcon.classList.add("sprint-triggered");
-      // } else {
-      //   this.runningIcon.classList.remove("sprint-triggered");
-      //   this.runningIcon.classList.replace("sprint-disabled", "sprint-enabled");
-      // }
     } else {
       this.currentSpeed = 0;
-      // this.runningIcon.classList.replace("sprint-enabled", "sprint-disabled");
-      // this.runningIcon.classList.remove("sprint-triggered");
       keys.shift.justPressed = false;
       if (this.idleAction) {
         this.currentAction = this.idleAction;
@@ -429,7 +432,6 @@ export default class Player extends THREE.Object3D {
     this.currentSpeed = this.movementSpeed;
 
     this.updatePlayerInstanceRunning(isRunning);
-    // Whenever playerInstance.running changes
   }
 
   updatePlayerInstanceRunning(newValue) {
@@ -439,6 +441,17 @@ export default class Player extends THREE.Object3D {
       // Dispatch a custom event only when the value changes
       const event = new CustomEvent("playerInstanceRunningChanged", {
         detail: newValue,
+      });
+      document.dispatchEvent(event);
+    }
+  }
+
+  updatePlayerInteractNpc(npcName) {
+    if (this.interactingWithNpc !== npcName) {
+      this.interactingWithNpc = npcName;
+      // Dispatch a custom event only when the value changes
+      const event = new CustomEvent("playerInteractNpc", {
+        detail: npcName,
       });
       document.dispatchEvent(event);
     }
