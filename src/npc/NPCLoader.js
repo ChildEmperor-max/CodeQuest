@@ -176,6 +176,12 @@ export default class NPCLoader extends Interactibles {
       this.updateAnimation();
       this.updatePositionToGround(delta);
       this.updateFloatingName();
+
+      if (this.player.interactingWithNpc === this.npcName) {
+        this.rotateTowards(this.player.getPosition());
+      } else {
+        this.rotateTowards(this.defaultRotation);
+      }
     }
   }
 
@@ -345,6 +351,7 @@ export default class NPCLoader extends Interactibles {
 
   talkToPlayer(talking = false, targetPosition) {
     if (talking) {
+      this.isInteracting = true;
       this.rotateTowards(targetPosition);
       this.transitionedToIdle = false;
       if (!this.transitionedToInteracting) {
@@ -356,6 +363,7 @@ export default class NPCLoader extends Interactibles {
         }
       }
     } else {
+      this.isInteracting = false;
       this.rotateTowards(targetPosition);
       this.hideDialog();
       this.backToIdle();
@@ -625,7 +633,6 @@ export default class NPCLoader extends Interactibles {
   acceptQuest() {
     this.isTalking = false;
     this.currentDialogIndex = 0;
-    this.talkToPlayer(false, this.defaultRotation);
     this.hideDialog();
     clearInterval(this.typingAnimation);
     if (this.hasQuest) {
@@ -644,7 +651,6 @@ export default class NPCLoader extends Interactibles {
   rejectQuest() {
     this.isTalking = false;
     this.currentDialogIndex = 0;
-    this.talkToPlayer(false, this.defaultRotation);
     this.hideDialog();
     clearInterval(this.typingAnimation);
   }
@@ -652,7 +658,6 @@ export default class NPCLoader extends Interactibles {
   doneTalking() {
     this.isTalking = false;
     this.currentDialogIndex = 0;
-    this.talkToPlayer(false, this.defaultRotation);
     this.hideDialog();
     clearInterval(this.typingAnimation);
   }

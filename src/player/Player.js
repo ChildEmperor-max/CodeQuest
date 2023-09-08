@@ -173,14 +173,28 @@ export default class Player extends THREE.Object3D {
   onNpcZone(npc) {
     if (npc) {
       if (keys.e.pressed) {
-        npc.talkToPlayer(true, this.position);
-        this.rotateTowards(npc.position);
         if (!this.isTalkingToNpc) {
           this.isTalkingToNpc = true;
+          this.rotateTowards(npc.position);
+          this.updatePlayerInteractNpc(npc.npcName);
         }
-        this.updatePlayerInteractNpc(npc.npcName);
       }
+    } else {
+      this.isTalkingToNpc = false;
+      this.updatePlayerInteractNpc(null);
     }
+  }
+
+  getNearNpcName() {
+    return this.interactingWithNpc;
+  }
+
+  updatePlayerInteractNpc(npcName) {
+    this.interactingWithNpc = npcName;
+    const event = new CustomEvent("playerInteractNpc", {
+      detail: npcName,
+    });
+    document.dispatchEvent(event);
   }
 
   // updateNpcDetection(npcs) {
@@ -441,17 +455,6 @@ export default class Player extends THREE.Object3D {
       // Dispatch a custom event only when the value changes
       const event = new CustomEvent("playerInstanceRunningChanged", {
         detail: newValue,
-      });
-      document.dispatchEvent(event);
-    }
-  }
-
-  updatePlayerInteractNpc(npcName) {
-    if (this.interactingWithNpc !== npcName) {
-      this.interactingWithNpc = npcName;
-      // Dispatch a custom event only when the value changes
-      const event = new CustomEvent("playerInteractNpc", {
-        detail: npcName,
       });
       document.dispatchEvent(event);
     }
