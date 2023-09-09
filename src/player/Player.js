@@ -8,6 +8,7 @@ import Loader from "../lib/Loader";
 export default class Player extends THREE.Object3D {
   constructor() {
     super();
+    this.name = "Player";
     this.mesh = undefined;
     this.rayY = 1;
     this.rayLength = 0.02;
