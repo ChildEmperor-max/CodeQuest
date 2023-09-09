@@ -62,6 +62,7 @@ export default class NPCLoader extends Interactibles {
     this.player = player;
     this.height = 5;
     this.camera = camera;
+    this.direction = new THREE.Vector3(0, 0, 0);
 
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
@@ -89,73 +90,20 @@ export default class NPCLoader extends Interactibles {
     async function fetchData(npcName) {
       try {
         const npcData = await viewNpcData(npcName);
-
-        const dialogData = await viewDialogData(npcData[0].dialog_id);
-        const dialogString = dialogData[0].dialog;
-        const dialogWithoutBrackets = dialogString.slice(1, -1);
-        const dialogArray = dialogWithoutBrackets
-          .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-          .map((item) => item.trim());
-
-        var npcDialog = dialogArray;
-        var npcHasQuest = false;
-        var questTitle = null;
-        var questType = null;
-        var codeTemplate = null;
-        var questAnswer = null;
-        let questStatus = null;
-
-        if (npcData[0].quest_id !== null) {
-          const questData = await viewQuestData(npcData[0].quest_id);
-
-          npcHasQuest = true;
-          questTitle = questData[0].quest_title;
-          questType = questData[0].quest_type;
-          codeTemplate = questData[0].code_template;
-          questAnswer = questData[0].quest_answer;
-          questStatus = questData[0].quest_status;
+        let dialogData;
+        if (npcData[0].dialog_id) {
+          this.hasDialog = true;
+          //   // dialogData = await viewDialogData(npcData[0].dialog_id);
+        } else {
+          this.hasDialog = false;
         }
-
-        return {
-          npcDialog,
-          npcHasQuest,
-          questTitle,
-          questType,
-          codeTemplate,
-          questAnswer,
-          questStatus,
-        };
+        return npcData;
       } catch (error) {
         console.error("[ERROR]:", error);
       }
     }
 
-    const handleData = async (npcName) => {
-      try {
-        const {
-          npcDialog,
-          npcHasQuest,
-          questTitle,
-          questType,
-          codeTemplate,
-          questAnswer,
-          questStatus,
-        } = await fetchData(npcName);
-        this.createDialogBox(
-          npcDialog,
-          questTitle,
-          npcHasQuest,
-          questType,
-          codeTemplate,
-          questAnswer,
-          questStatus
-        );
-      } catch (error) {
-        console.error("[ERROR]:", error);
-      }
-    };
-
-    // handleData.call(this, npcName);
+    fetchData.call(this, npcName);
   }
 
   update(delta) {
@@ -179,8 +127,9 @@ export default class NPCLoader extends Interactibles {
 
       if (this.player.interactingWithNpc === this.npcName) {
         this.rotateTowards(this.player.getPosition());
+        this.isTalking = true;
       } else {
-        this.rotateTowards(this.defaultRotation);
+        this.isTalking = false;
       }
     }
   }
@@ -255,27 +204,26 @@ export default class NPCLoader extends Interactibles {
   }
 
   moveToDestination(startPoint, endPoint, delta) {
-    let direction;
     let distance;
     if (this.goingForward) {
-      direction = endPoint.clone().sub(startPoint).normalize();
+      this.direction = endPoint.clone().sub(startPoint).normalize();
       distance = this.mesh.position.distanceTo(endPoint);
 
       if (distance < 2) {
         if (this.goingForward) {
-          direction = new THREE.Vector3(0, 0, 0);
+          this.direction = new THREE.Vector3(0, 0, 0);
           setTimeout(() => {
             this.goingForward = false;
           }, 3000);
         }
       }
     } else {
-      direction = startPoint.clone().sub(endPoint).normalize();
+      this.direction = startPoint.clone().sub(endPoint).normalize();
       distance = this.mesh.position.distanceTo(startPoint);
 
       if (distance < 2) {
         if (!this.goingForward) {
-          direction = new THREE.Vector3(0, 0, 0);
+          this.direction = new THREE.Vector3(0, 0, 0);
           setTimeout(() => {
             this.goingForward = true;
           }, 3000);
@@ -284,17 +232,17 @@ export default class NPCLoader extends Interactibles {
     }
 
     if (this.isTalking) {
-      direction = new THREE.Vector3(0, 0, 0);
+      this.direction = new THREE.Vector3(0, 0, 0);
     }
 
-    if (direction.x !== 0 || direction.z !== 0) {
-      const movement = direction
+    if (this.direction.x !== 0 || this.direction.z !== 0) {
+      const movement = this.direction
         .clone()
         .multiplyScalar(this.movementSpeed * delta);
       const newPosition = this.mesh.position.clone().add(movement);
 
       this.mesh.position.copy(newPosition);
-      const angle = Math.atan2(direction.x, direction.z);
+      const angle = Math.atan2(this.direction.x, this.direction.z);
       const rotateModelToAngle = (targetAngle) => {
         let adjustedAngle = targetAngle;
         if (adjustedAngle - this.mesh.rotation.y > Math.PI) {
