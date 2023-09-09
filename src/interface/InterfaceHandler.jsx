@@ -31,6 +31,7 @@ export default function InterfaceHandler({
   playerInstance,
   npcInstances,
   cameraInstance,
+  cameraControllerInstance
 }) {
   const interfaces = {
     none: "none",
@@ -40,6 +41,7 @@ export default function InterfaceHandler({
     achievements: "achievements",
     settings: "settings",
     helper: "helper",
+    codedemo: "codedemo"
   };
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -74,6 +76,26 @@ export default function InterfaceHandler({
       </button>
     );
   };
+
+  const AlbyInterface = () => {
+    return (
+      <div className="alby-interface centered">
+        <div className="alby-interface-content">
+          <div className="code-snippet">
+              <code>
+                <div className="code-snippet">
+                  <div className="line">{`public class script {`}</div>
+                  <div className="line highlight">{`  public static void main(String args[]) {`}</div>
+                  <div className="line">{`    System.out.println("Hello World!");`}</div>
+                  <div className="line">{`  }`}</div>
+                  <div className="line">{`}`}</div>
+                </div>
+              </code>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const handleRunningChange = (event) => {
@@ -127,8 +149,16 @@ export default function InterfaceHandler({
   return (
     <>
       {isPlayerInteractingNpc !== null ? (
-        <DialogBox npc_name={isPlayerInteractingNpc} />
+        <DialogBox
+          npc_name={isPlayerInteractingNpc}
+          onClose={() => setIsPlayerInteractingNpc(null)}
+          playerInstance={playerInstance}
+          npcInstances={npcInstances}
+          cameraInstance={cameraInstance}
+          cameraControllerInstance={cameraControllerInstance} />
       ) : null}
+      {/* {currentOpenedInterface === interfaces.codedemo ? <AlbyInterface /> : null} */}
+      {/* <AlbyInterface /> */}
       {currentOpenedInterface === interfaces.quests ? (
         <Quests onClose={() => toggleInterface(interfaces.quests)} />
       ) : null}
