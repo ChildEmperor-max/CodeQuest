@@ -12,6 +12,7 @@ export default class Interactibles extends THREE.Object3D {
     this.interactRange = 5;
     this.player = player;
     this.isInteracting = false;
+    this.hasDialog = false;
 
     this.dynamicLabel.setInteractLabel({
       camera: camera,
@@ -22,10 +23,12 @@ export default class Interactibles extends THREE.Object3D {
 
   update(delta) {
     if (this.npcNearPlayer()) {
-      this.dynamicLabel.showInteractLabel(this.position, this.camera);
-      this.player.onNpcZone(this);
-      if (this.player.interactingWithNpc === this.npcName) {
-        this.dynamicLabel.hideInteractLabel();
+      if (this.hasDialog) {
+        this.dynamicLabel.showInteractLabel(this.position, this.camera);
+        this.player.onNpcZone(this);
+        if (this.player.interactingWithNpc === this.npcName) {
+          this.dynamicLabel.hideInteractLabel();
+        }
       }
     } else {
       this.dynamicLabel.hideInteractLabel();
@@ -44,6 +47,10 @@ export default class Interactibles extends THREE.Object3D {
   }
 
   getPosition() {
+    return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+  }
+
+  getPositionTracker() {
     return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
   }
 }
