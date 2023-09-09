@@ -15,6 +15,7 @@ import "./styles/Settings.css";
 import "./styles/Leaderboard.css";
 import "./styles/AlertModal.css";
 import "./styles/ControlsHelper.css";
+import "./styles/AlbyInterface.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
