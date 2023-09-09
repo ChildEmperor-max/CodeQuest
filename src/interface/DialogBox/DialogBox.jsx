@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import {
   viewNpcIdByName,
   viewDialogById,
   viewNpcData,
 } from "../../db/HandleTable";
 
-const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInstance, cameraControllerInstance }) => {
+import { animateCameraToTarget } from "../../lib/cameraAnimation";
+
+const DialogBox = ({
+  npc_name,
+  onClose,
+  playerInstance,
+  npcInstances,
+  cameraInstance,
+  cameraControllerInstance,
+}) => {
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
   const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
@@ -22,7 +29,7 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
   useEffect(() => {
     const handlePlayerNpcInteraction = (event) => {
       setIsPlayerInteractingNpc(event.detail);
-      cameraControllerInstance.currentTarget = playerInstance
+      cameraControllerInstance.currentTarget = playerInstance;
     };
     document.addEventListener("playerInteractNpc", handlePlayerNpcInteraction);
 
@@ -42,24 +49,24 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
         const dialogArray = dialogWithoutBrackets
           .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
           .map((item) => item.trim());
-        
+
         let dialogArr;
         if (data[0].is_array) {
-          dialogArr = data[0].dialog.split("---")
+          dialogArr = data[0].dialog.split("---");
           setCurrentDialog(dialogArr[0]);
         } else {
           setCurrentDialog(data[0].dialog);
           const responses = data.filter(
             (dialog) => dialog.response_to === data[0].id
           );
-      
+
           setCurrentResponses(responses);
         }
 
         if (npcInstances.albyNPC.npcName === npc_name) {
-          setCurrentTalkingNpc(npcInstances.albyNPC)
+          setCurrentTalkingNpc(npcInstances.albyNPC);
         }
-        
+
         setDialogData(data);
         setDialogArray(dialogArr);
         setCurrentId(1);
@@ -79,15 +86,13 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
 
       // console.log(dialogResponses)
 
-      const test = dialogData.filter(
-        (dialog) => dialog.id === currentId
-      );
+      const test = dialogData.filter((dialog) => dialog.id === currentId);
       if (test[0].stage === "end" && nextPage + 1 < dialogArray.length) {
         onClose();
         playerInstance.onNpcZone(null);
         setCurrentId(0);
       }
-      
+
       if (nextPage + 1 < dialogArray.length) {
         setCurrentDialog(dialogArray[nextPage]);
         setCurrentResponses([]);
@@ -105,59 +110,43 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
       }
     } catch (error) {
       onClose();
-      console.log(error)
+      console.log(
+        "Error[NOT SEVERE]: Tried to show a nonexistent dialog page. This is to hide the dialog box when there is no next dialog."
+      );
       playerInstance.onNpcZone(null);
     }
   };
 
   const switchCameraTarget = () => {
     if (currentId === 6) {
-    cameraControllerInstance.currentTarget = currentTalkingNpc;
+      cameraControllerInstance.currentTarget = currentTalkingNpc;
 
-    const targetPosition = {
-      x: playerInstance.getPosition().x + 2,
-      y: playerInstance.getPosition().y + 5,
-      z: playerInstance.getPosition().z + 2,
-    };
-
-    const animateCamera = (timestamp) => {
-      const progress = (timestamp - startTime) / 5000; // 1000 ms = 1 second
-
-      const newPosition = {
-        x: lerp(cameraControllerInstance.getPosition().x, targetPosition.x, progress),
-        y: lerp(cameraControllerInstance.getPosition().y, targetPosition.y, progress),
-        z: lerp(cameraControllerInstance.getPosition().z, targetPosition.z, progress),
+      const targetPosition = {
+        x: playerInstance.getPosition().x + 2,
+        y: playerInstance.getPosition().y + 5,
+        z: playerInstance.getPosition().z + 2,
       };
+      const animationDuration = 5000;
 
-      cameraControllerInstance.updateControllerPosition(newPosition.x, newPosition.y, newPosition.z);
-
-      if (progress < 1) {
-        requestAnimationFrame(animateCamera);
-      }
-    };
-
-    const startTime = performance.now();
-
-    // Start the animation
-    requestAnimationFrame(animateCamera);
+      animateCameraToTarget(
+        cameraControllerInstance,
+        targetPosition,
+        animationDuration
+      );
     } else {
       // cameraControllerInstance.setTrackPosition(playerInstance)
-      cameraControllerInstance.currentTarget = playerInstance
+      cameraControllerInstance.currentTarget = playerInstance;
     }
-  }
-
-  function lerp(start, end, progress) {
-    return start + progress * (end - start);
-  }
+  };
 
   const convertToArray = ({ dialog, id }) => {
     if (id !== currentId) {
       const result = dialog.split("---");
-      setCurrentDialog(result[0])
+      setCurrentDialog(result[0]);
       setDialogArray(result);
       setCurrentResponses([]);
     }
-  }
+  };
 
   const getAllResponse = ({ id }) => {
     const nextDialogObj = dialogData.find(
@@ -168,24 +157,28 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
     );
 
     setCurrentResponses(responses);
-    return nextDialogObj
-  }
+    return nextDialogObj;
+  };
 
   const handleResponse = ({ id }) => {
-    const nextDialogObj = getAllResponse({ id: id })
+    const nextDialogObj = getAllResponse({ id: id });
     if (nextDialogObj.is_array) {
-      convertToArray({ dialog: nextDialogObj.dialog, id: id })
+      convertToArray({ dialog: nextDialogObj.dialog, id: id });
       // setCurrentId(id);
     } else {
-      setCurrentDialog(nextDialogObj.dialog)
+      setCurrentDialog(nextDialogObj.dialog);
     }
-    setCurrentId(nextDialogObj.id)
-  }
+    setCurrentId(nextDialogObj.id);
+  };
 
   const DialogButton = ({ text, event }) => {
     return (
       <button className="npc-dialog-button" onClick={event}>
-        {text === "Next" ? <FontAwesomeIcon icon={faChevronRight} size="lg" /> : text}
+        {text === "Next" ? (
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        ) : (
+          text
+        )}
       </button>
     );
   };
@@ -207,7 +200,11 @@ const DialogBox = ({ npc_name, onClose, playerInstance, npcInstances, cameraInst
       <p className="npc-dialog-text">{currentDialog}</p>
       {currentResponses.length > 0 ? (
         currentResponses.map((response, index) => (
-          <DialogButton key={index} text={response.dialog} event={() => handleResponse(response)} />
+          <DialogButton
+            key={index}
+            text={response.dialog}
+            event={() => handleResponse(response)}
+          />
         ))
       ) : (
         <DialogButton text={"Next"} event={handleNextDialog} />
