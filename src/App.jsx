@@ -6,6 +6,7 @@ import Player from "./player/Player";
 import SampleNPC1 from "./npc/SampleNPC1";
 import SampleNPC2 from "./npc/SampleNPC2";
 import AlbyNPC from "./npc/AlbyNPC";
+import CameraController from "./lib/CameraControls";
 
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
@@ -19,6 +20,7 @@ function App() {
     0.1,
     renderDistance
   );
+  const cameraControls = new CameraController();
 
   const sampleNPC1 = new SampleNPC1();
   const sampleNPC2 = new SampleNPC2();
@@ -30,6 +32,7 @@ function App() {
     albyNPC: albyNPC,
   };
 
+
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
     const renderer = new THREE.WebGLRenderer({
@@ -38,7 +41,7 @@ function App() {
     });
 
     const world = new SceneInit("myThreeJsCanvas", renderer);
-    world.initialize(player, npcs, camera);
+    world.initialize(player, npcs, camera, cameraControls);
 
     const startAnimation = () => {
       world.startAnimation();
@@ -92,6 +95,7 @@ function App() {
         playerInstance={player}
         npcInstances={npcs}
         cameraInstance={camera}
+        cameraControllerInstance={cameraControls}
       />
       <canvas
         id="myThreeJsCanvas"
