@@ -1,0 +1,69 @@
+.alby-interface {
+    height: 95%;
+    width: 85%;
+    position: fixed;
+    z-index: 2;
+
+    background-color: rgba(255, 255, 255, 0.114);
+    color: black;
+    border-radius: 5px;
+    border: 50px solid rgb(25, 105, 216);
+    
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+
+    transform-origin: center;
+    animation: pop-out 1s ease-in-out;
+}
+
+.alby-interface-content {
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.code-snippet {
+    background-color: #09034b;
+    padding: 20px;
+    white-space: pre;
+    position: relative;
+    color: #bababa;
+}
+
+.code-snippet code {
+    font-size: 30px;
+}
+
+.line {
+    counter-increment: line;
+    padding-left: 2em; /* Add some space for line numbers */
+    position: relative;
+}
+
+.line::before {
+    content: counter(line);
+    position: absolute;
+    left: 0;
+    width: 1.5em; /* Adjust as needed */
+    text-align: right;
+    color: rgb(75, 75, 75);
+    text-align: center;
+}
+
+.highlight {
+    background-color: rgb(42, 72, 148); /* Highlight color */
+    color: white; /* Text color for highlighted lines */
+}
+
+@keyframes pop-out {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
