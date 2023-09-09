@@ -2,13 +2,13 @@ import * as THREE from "three";
 import CameraControls from "camera-controls";
 
 export default class CameraController {
-  constructor(renderer, camera) {
-    this.renderer = renderer;
-    this.camera = camera;
+  constructor() {
     this.hasStarted = false;
   }
 
-  initialize() {
+  initialize(renderer, camera, target) {
+    this.renderer = renderer;
+    this.camera = camera;
     this.collidables = [];
 
     this.prevCameraPosition = new THREE.Vector3();
@@ -26,10 +26,12 @@ export default class CameraController {
 
     this.lerpVector = new THREE.Vector3();
     this.lerpCamPos = new THREE.Vector3();
+    this.cutsceneLerp = new THREE.Vector3();
     this.lerpFactor = 0.15;
     this.cameraTargetY = 10;
 
     this.isDoneLoading = false;
+    this.currentTarget = target;
   }
 
   addCollidables(collidables, floor) {
@@ -39,20 +41,26 @@ export default class CameraController {
     this.cameraControl.colliderMeshes.push(this.floor);
   }
 
-  setTrackPosition(playerPosition) {
+  setTrackPosition(target) {
     const cameraOffset = 10;
     this.cameraControl.setFocalOffset(0, 4, 0);
     this.cameraControl.setOrbitPoint(0, 4, 0);
     this.cameraControl.minDistance = 6.0;
     this.cameraControl.maxDistance = 18.0;
     this.cameraControl.setLookAt(
-      playerPosition.x,
-      playerPosition.y + cameraOffset,
-      playerPosition.z + cameraOffset,
-      playerPosition.x,
-      playerPosition.y,
-      playerPosition.z
+      target.getPosition().x,
+      target.getPosition().y + cameraOffset,
+      target.getPosition().z + cameraOffset,
+      target.getPosition().x,
+      target.getPosition().y,
+      target.getPosition().z
     );
+    this.currentTarget = target;
+    if (target.npcName) {
+      if (target.npcName === "Alby") {
+        console.log("test");
+      }
+    }
   }
 
   update(player, delta) {
@@ -62,7 +70,12 @@ export default class CameraController {
         player.getPositionTracker().y + 4,
         player.getPositionTracker().z
       );
-      const targetCamPos = new THREE.Vector3(pos.x, pos.y, pos.z);
+      const targetCamPos = new THREE.Vector3(
+        this.currentTarget.getPositionTracker().x,
+        this.currentTarget.getPositionTracker().y + 4,
+        this.currentTarget.getPositionTracker().z
+      );
+      // const targetCamPos = new THREE.Vector3(pos.x, pos.y, pos.z);
       this.lerpCamPos.lerp(targetCamPos, this.lerpFactor);
 
       const camPos = new THREE.Vector3(
@@ -134,10 +147,35 @@ export default class CameraController {
     const clampedTargetX = THREE.MathUtils.clamp(targetX, minX, maxX);
     const clampedTargetZ = THREE.MathUtils.clamp(targetZ, minZ, maxZ);
 
-    this.cameraControl.setPosition(
+    this.updateControllerPosition(
       clampedTargetX,
       this.cameraTargetY,
       clampedTargetZ
     );
+    // this.cameraControl.setPosition(
+    //   clampedTargetX,
+    //   this.cameraTargetY,
+    //   clampedTargetZ
+    // );
+  }
+
+  updateControllerPosition(x, y, z, smoothing = false) {
+    if (smoothing) {
+      const targetCamPos = new THREE.Vector3(x, y, z);
+      // const targetCamPos = new THREE.Vector3(pos.x, pos.y, pos.z);
+      this.cutsceneLerp.lerp(targetCamPos, 0.1);
+      this.cameraControl.setPosition(
+        this.cutsceneLerp.x,
+        this.cutsceneLerp.y,
+        this.cutsceneLerp.z
+      );
+      console.log("test");
+    } else {
+      this.cameraControl.setPosition(x, y, z);
+    }
+  }
+
+  getPosition() {
+    return this.cameraControl.getPosition(new THREE.Vector3());
   }
 }
