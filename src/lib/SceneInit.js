@@ -32,7 +32,7 @@ export default class SceneInit {
     this.questManager.initialize();
   }
 
-  initialize(player, npcs, camera) {
+  initialize(player, npcs, camera, cameraControls) {
     this.mainWorldScene = new THREE.Scene();
     this.albyHouseScene = new THREE.Scene();
     this.scene = this.mainWorldScene;
@@ -62,8 +62,8 @@ export default class SceneInit {
     // this.camera.far = 100;
     this.camera.position.set(0, 10, -110);
 
-    this.cameraControls = new CameraController(this.renderer, this.camera);
-    this.cameraControls.initialize();
+    cameraControls.initialize(this.renderer, this.camera, player);
+    this.cameraControls = cameraControls;
 
     this.loadMainWorld();
     // this.loadAlbyHouseScene();
@@ -266,7 +266,8 @@ export default class SceneInit {
           document.getElementById("interface-container").style.display =
             "block";
           this.cameraControls.addCollidables(collidables, this.groundMesh);
-          this.cameraControls.setTrackPosition(this.player.getPosition());
+          this.cameraControls.setTrackPosition(this.player);
+          // this.cameraControls.currentTarget = this.npcs.albyNPC;
           this.isLoadingWorld = false;
         }
       )
