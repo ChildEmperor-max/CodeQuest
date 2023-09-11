@@ -5,13 +5,14 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import QuestManager from "../lib/QuestManager";
+import Quests from "../db/quests";
 
 import {
   addNpcToTable,
   addDialogToTable,
   viewNpcData,
   viewDialogData,
-  viewQuestData,
+  viewQuestById,
 } from "../db/HandleTable";
 
 export default class NPCLoader extends Interactibles {
@@ -43,6 +44,7 @@ export default class NPCLoader extends Interactibles {
     modelTexturePath = undefined
   ) {
     super.initialize(position, camera, player);
+    this.quests = new Quests();
     this.scene = scene;
     this.groundMesh = groundMesh;
     this.canvas = document.getElementById(canvas);
@@ -69,7 +71,7 @@ export default class NPCLoader extends Interactibles {
       text: npcName,
       camera: camera,
       position: this.position,
-      yOffset: this.nameDisplayYposition,
+      yOffset: 120,
     });
     this.dynamicLabel.showNpcNameLabel(this.position, camera);
     this.npcNameDisplayRange = 30;
@@ -87,10 +89,30 @@ export default class NPCLoader extends Interactibles {
     );
     this.scene.add(this.collisionBox);
 
+    async function fetchNpcQuest(id) {
+      try {
+        const quest = await viewQuestById(id);
+        const test = new Quests().type;
+        if (quest[0].quest_type.trim() === test.story) {
+          this.hasStoryQuest = true;
+          this.questIconIsSet = true;
+        } else if (quest[0].quest_type.trim() === test.side) {
+          this.hasSideQuest = true;
+          this.questIconIsSet = true;
+        }
+      } catch (error) {
+        console.log("fetchNpcQuest, NPCLoader.js: ", error);
+      }
+    }
+
     async function fetchData(npcName) {
       try {
         const npcData = await viewNpcData(npcName);
         let dialogData;
+        if (npcData[0].quest_id) {
+          this.hasQuest = true;
+          fetchNpcQuest.call(this, npcData[0].quest_id);
+        }
         if (npcData[0].dialog_id) {
           this.hasDialog = true;
           //   // dialogData = await viewDialogData(npcData[0].dialog_id);
