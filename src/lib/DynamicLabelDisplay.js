@@ -2,8 +2,10 @@ export default class DynamicLabel {
   constructor() {
     this.labelShownFlag;
     this.nameXOffset = 0;
-    this.namenameYOffset = 150;
+    this.namenameYOffset = 0;
     this.interactXOffset = 0;
+    this.interactYOffset = 0;
+    this.questIconYOffset = 0;
   }
 
   // NAME LABEL
@@ -13,7 +15,7 @@ export default class DynamicLabel {
     this.npcNameLabel.innerHTML = text;
     this.nameYOffset = yOffset;
 
-    var coords = this.toXYCoords(position, camera);
+    var coords = this.toXYCoords(position, camera, yOffset);
     this.npcNameLabel.style.top = coords.y + "px";
     this.npcNameLabel.style.left = coords.x + "px";
 
@@ -21,8 +23,8 @@ export default class DynamicLabel {
     //   hideNpcNameLabel();
   }
 
-  updateNpcNameLabel(position, camera) {
-    var coords = this.toXYCoords(position, camera);
+  updateNpcNameLabel(position, camera, yOffset) {
+    var coords = this.toXYCoords(position, camera, yOffset);
     this.npcNameLabel.style.top = coords.y + "px";
     this.npcNameLabel.style.left = coords.x + "px";
   }
@@ -30,7 +32,7 @@ export default class DynamicLabel {
   showNpcNameLabel(position, camera) {
     this.labelShownFlag = true;
     this.npcNameLabel.style.display = "block";
-    this.updateNpcNameLabel(position, camera);
+    this.updateNpcNameLabel(position, camera, this.nameYOffset);
   }
 
   hideNpcNameLabel() {
@@ -45,7 +47,7 @@ export default class DynamicLabel {
     this.interactLabel.innerHTML = "E";
     this.interactYOffset = yOffset;
 
-    var coords = this.toXYCoords(position, camera);
+    var coords = this.toXYCoords(position, camera, yOffset);
     this.interactLabel.style.top = coords.y + "px";
     this.interactLabel.style.left = coords.x + "px";
 
@@ -53,26 +55,59 @@ export default class DynamicLabel {
     document.body.appendChild(this.interactLabel);
   }
 
-  updateInteractLabel(position, camera) {
-    var coords = this.toXYCoords(position, camera);
+  updateInteractLabel(position, camera, yOffset) {
+    var coords = this.toXYCoords(position, camera, yOffset);
     this.interactLabel.style.top = coords.y + "px";
     this.interactLabel.style.left = coords.x + "px";
   }
 
   showInteractLabel(position, camera) {
     this.interactLabel.style.display = "flex";
-    this.updateInteractLabel(position, camera);
+    this.updateInteractLabel(position, camera, this.interactYOffset);
   }
 
   hideInteractLabel() {
     this.interactLabel.style.display = "none";
   }
 
-  toXYCoords(position, camera) {
+  // QUESTS ICON
+  setQuestIcon({ camera, position, yOffset, storyQuest }) {
+    this.questIcon = document.createElement("div");
+    this.questIcon.setAttribute(
+      "id",
+      storyQuest ? "story-quest-icon" : "side-quest-icon"
+    );
+    this.questIcon.innerHTML = "!";
+    this.questIconYOffset = yOffset;
+
+    var coords = this.toXYCoords(position, camera, yOffset);
+    this.questIcon.style.top = coords.y + "px";
+    this.questIcon.style.left = coords.x + "px";
+
+    document.body.appendChild(this.questIcon);
+    this.hideQuestIcon();
+  }
+
+  updateQuestIcon(position, camera, yOffset) {
+    var coords = this.toXYCoords(position, camera, yOffset);
+    this.questIcon.style.top = coords.y + "px";
+    this.questIcon.style.left = coords.x + "px";
+  }
+
+  showQuestIcon(position, camera) {
+    this.questIcon.style.display = "flex";
+    this.updateQuestIcon(position, camera, this.questIconYOffset);
+  }
+
+  hideQuestIcon() {
+    this.questIcon.style.display = "none";
+  }
+
+  toXYCoords(position, camera, yOffset) {
     var vector = position.clone();
     vector.project(camera);
-    vector.x = ((vector.x + 1) / 2) * window.innerWidth - this.nameXOffset;
-    vector.y = (-(vector.y - 1) / 2) * window.innerHeight - this.nameYOffset;
+    vector.x = ((vector.x + 1) / 2) * window.innerWidth;
+    vector.y = (-(vector.y - 1) / 2) * window.innerHeight - yOffset;
     return vector;
   }
 }
