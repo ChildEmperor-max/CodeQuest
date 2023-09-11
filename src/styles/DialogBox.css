@@ -1,24 +1,36 @@
+:root {
+  --main-dialog-color: rgba(61, 61, 61, 0.788);
+  --side-dialog-color: rgba(255, 255, 255, 0);
+}
+
 .npc-dialog-container {
     position: fixed;
     left: 0;
     bottom: 0;
-    /* margin: 20px; */
     width: 100%;
-    padding: 30px;
-    background-color: #3d3d3dd7;
+    padding-bottom: 30px;
+    padding-right: 30px;
+    background: linear-gradient(90deg, var(--side-dialog-color) 0%, var(--main-dialog-color) 20%, var(--main-dialog-color) 50%, var(--main-dialog-color) 80%, var(--side-dialog-color) 100%);
     box-sizing: border-box;
     z-index: 3;
-    -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-    backdrop-filter: blur(5px); /* Apply the blur effect */
   }
   .npc-dialog-name {
     padding: 2px;
     border-bottom: 2px solid #7a7a7aab;
-    width: 20%;
     margin-bottom: 2px;
+    text-align: center;
+    margin-right: 215px;
+    margin-left: 215px;
   }
   .npc-dialog-text {
     margin-bottom: 1px;
+    margin-right: 215px;
+    margin-left: 215px;
+  }
+
+  .npc-dialog-button-container {
+    margin-right: 215px;
+    margin-left: 215px;
   }
   
   .npc-dialog-button {
