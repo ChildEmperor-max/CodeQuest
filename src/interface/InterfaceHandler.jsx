@@ -31,7 +31,7 @@ export default function InterfaceHandler({
   playerInstance,
   npcInstances,
   cameraInstance,
-  cameraControllerInstance
+  cameraControllerInstance,
 }) {
   const interfaces = {
     none: "none",
@@ -41,7 +41,7 @@ export default function InterfaceHandler({
     achievements: "achievements",
     settings: "settings",
     helper: "helper",
-    codedemo: "codedemo"
+    codedemo: "codedemo",
   };
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -57,6 +57,11 @@ export default function InterfaceHandler({
     } else {
       setCurrentOpenedInterface(interfaceName); // Open the selected interface
     }
+  };
+
+  const closeDialogBox = () => {
+    setIsPlayerInteractingNpc(null);
+    cameraControllerInstance.currentTarget = playerInstance;
   };
 
   const InterfaceButton = ({
@@ -82,20 +87,20 @@ export default function InterfaceHandler({
       <div className="alby-interface centered">
         <div className="alby-interface-content">
           <div className="code-snippet">
-              <code>
-                <div className="code-snippet">
-                  <div className="line">{`public class script {`}</div>
-                  <div className="line highlight">{`  public static void main(String args[]) {`}</div>
-                  <div className="line">{`    System.out.println("Hello World!");`}</div>
-                  <div className="line">{`  }`}</div>
-                  <div className="line">{`}`}</div>
-                </div>
-              </code>
+            <code>
+              <div className="code-snippet">
+                <div className="line">{`public class script {`}</div>
+                <div className="line highlight">{`  public static void main(String args[]) {`}</div>
+                <div className="line">{`    System.out.println("Hello World!");`}</div>
+                <div className="line">{`  }`}</div>
+                <div className="line">{`}`}</div>
+              </div>
+            </code>
           </div>
         </div>
       </div>
     );
-  }
+  };
 
   useEffect(() => {
     const handleRunningChange = (event) => {
@@ -137,6 +142,9 @@ export default function InterfaceHandler({
       if (event.code === "KeyH" && keys.h.pressed) {
         toggleInterface(interfaces.helper);
       }
+      if (event.code === "KeyQ" && keys.q.pressed) {
+        toggleInterface(interfaces.quests);
+      }
     };
 
     window.addEventListener("keydown", handleKeyToggle);
@@ -150,12 +158,13 @@ export default function InterfaceHandler({
     <>
       {isPlayerInteractingNpc !== null ? (
         <DialogBox
-          npc_name={isPlayerInteractingNpc}
-          onClose={() => setIsPlayerInteractingNpc(null)}
+          npc={isPlayerInteractingNpc}
+          onClose={() => closeDialogBox()}
           playerInstance={playerInstance}
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
-          cameraControllerInstance={cameraControllerInstance} />
+          cameraControllerInstance={cameraControllerInstance}
+        />
       ) : null}
       {/* {currentOpenedInterface === interfaces.codedemo ? <AlbyInterface /> : null} */}
       {/* <AlbyInterface /> */}
