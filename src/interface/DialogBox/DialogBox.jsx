@@ -6,11 +6,12 @@ import {
   viewDialogById,
   viewNpcData,
 } from "../../db/HandleTable";
+import TypingAnimation from "./TypingAnimation";
 
 import { animateCameraToTarget } from "../../lib/cameraAnimation";
 
 const DialogBox = ({
-  npc_name,
+  npc,
   onClose,
   playerInstance,
   npcInstances,
@@ -18,13 +19,16 @@ const DialogBox = ({
   cameraControllerInstance,
 }) => {
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
-  const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
   const [dialogData, setDialogData] = useState([]);
   const [dialogArray, setDialogArray] = useState([]);
   const [currentId, setCurrentId] = useState(1);
   const [currentDialog, setCurrentDialog] = useState("");
   const [currentResponses, setCurrentResponses] = useState([]);
+
+  const [typingFinished, setTypingFinished] = useState(false);
+  const [skipTypingAnimation, setSkipTypingAnimation] = useState(false);
+  const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
   useEffect(() => {
     const handlePlayerNpcInteraction = (event) => {
@@ -41,15 +45,13 @@ const DialogBox = ({
     };
   }, [isPlayerInteractingNpc]);
 
+  const handleTypingFinish = (typing) => {
+    setTypingFinished(typing);
+  };
+
   useEffect(() => {
     getNpcDialog()
       .then((data) => {
-        const dialogString = data[0].dialog;
-        const dialogWithoutBrackets = dialogString.slice(1, -1);
-        const dialogArray = dialogWithoutBrackets
-          .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-          .map((item) => item.trim());
-
         let dialogArr;
         if (data[0].is_array) {
           dialogArr = data[0].dialog.split("---");
@@ -63,76 +65,41 @@ const DialogBox = ({
           setCurrentResponses(responses);
         }
 
-        if (npcInstances.albyNPC.npcName === npc_name) {
-          setCurrentTalkingNpc(npcInstances.albyNPC);
-        }
-
         setDialogData(data);
         setDialogArray(dialogArr);
         setCurrentId(1);
-        // setCurrentDialog(data[0].dialog);
+
+        // playTypingAnimation(currentDialog);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-  }, [npc_name]);
 
-  const handleNextDialog = () => {
-    try {
-      const nextPage = dialogArray.indexOf(currentDialog) + 1;
-      const dialogResponses = dialogData.filter(
-        (dialog) => dialog.response_to === currentId
-      );
+    setCurrentTalkingNpc(npc);
 
-      // console.log(dialogResponses)
+    cameraControllerInstance.currentTarget = npc;
+    moveCameraToTarget(playerInstance, 3);
+  }, [npc]);
 
-      const test = dialogData.filter((dialog) => dialog.id === currentId);
-      if (test[0].stage === "end" && nextPage + 1 < dialogArray.length) {
-        onClose();
-        playerInstance.onNpcZone(null);
-        setCurrentId(0);
-      }
+  const moveCameraToTarget = (target, offset) => {
+    const targetPosition = {
+      x: target.getPosition().x + offset,
+      y: target.getPosition().y + 5,
+      z: target.getPosition().z + offset,
+    };
+    const animationDuration = 5000;
 
-      if (nextPage + 1 < dialogArray.length) {
-        setCurrentDialog(dialogArray[nextPage]);
-        setCurrentResponses([]);
-      } else {
-        setCurrentDialog(dialogArray[nextPage]);
-        const responses = dialogData.filter(
-          (dialog) => dialog.response_to === currentId
-        );
-        setCurrentResponses(responses);
-        switchCameraTarget();
-        if (dialogArray[nextPage] === undefined) {
-          onClose();
-          playerInstance.onNpcZone(null);
-        }
-      }
-    } catch (error) {
-      onClose();
-      console.log(
-        "Error[NOT SEVERE]: Tried to show a nonexistent dialog page. This is to hide the dialog box when there is no next dialog."
-      );
-      playerInstance.onNpcZone(null);
-    }
+    animateCameraToTarget(
+      cameraControllerInstance,
+      targetPosition,
+      animationDuration
+    );
   };
 
   const switchCameraTarget = () => {
     if (currentId === 6) {
       cameraControllerInstance.currentTarget = currentTalkingNpc;
-
-      const targetPosition = {
-        x: playerInstance.getPosition().x + 2,
-        y: playerInstance.getPosition().y + 5,
-        z: playerInstance.getPosition().z + 2,
-      };
-      const animationDuration = 5000;
-
-      animateCameraToTarget(
-        cameraControllerInstance,
-        targetPosition,
-        animationDuration
-      );
+      moveCameraToTarget(playerInstance, 2);
     } else {
       // cameraControllerInstance.setTrackPosition(playerInstance)
       cameraControllerInstance.currentTarget = playerInstance;
@@ -160,11 +127,57 @@ const DialogBox = ({
     return nextDialogObj;
   };
 
+  const handleNextDialog = () => {
+    if (typingFinished) {
+      setSkipTypingAnimation(false);
+      try {
+        const nextPage = dialogArray.indexOf(currentDialog) + 1;
+
+        const currentActiveDialog = dialogData.filter(
+          (dialog) => dialog.id === currentId
+        );
+        if (
+          currentActiveDialog[0].stage === "end" &&
+          nextPage + 1 < dialogArray.length
+        ) {
+          onClose();
+          playerInstance.onNpcZone(null);
+          setCurrentId(0);
+        }
+
+        if (nextPage + 1 < dialogArray.length) {
+          setCurrentDialog(dialogArray[nextPage]);
+          setCurrentResponses([]);
+        } else {
+          setCurrentDialog(dialogArray[nextPage]);
+          const responses = dialogData.filter(
+            (dialog) => dialog.response_to === currentId
+          );
+          setCurrentResponses(responses);
+          switchCameraTarget();
+          if (dialogArray[nextPage] === undefined) {
+            onClose();
+            playerInstance.onNpcZone(null);
+          }
+        }
+      } catch (error) {
+        onClose();
+        console.log(
+          "Error[NOT SEVERE]: Tried to show a nonexistent dialog page. This is to hide the dialog box when there is no next dialog."
+        );
+        playerInstance.onNpcZone(null);
+      }
+    } else {
+      setSkipTypingAnimation(true);
+      setTypingFinished(true);
+    }
+  };
+
   const handleResponse = ({ id }) => {
+    setSkipTypingAnimation(false);
     const nextDialogObj = getAllResponse({ id: id });
     if (nextDialogObj.is_array) {
       convertToArray({ dialog: nextDialogObj.dialog, id: id });
-      // setCurrentId(id);
     } else {
       setCurrentDialog(nextDialogObj.dialog);
     }
@@ -185,8 +198,8 @@ const DialogBox = ({
 
   const getNpcDialog = async () => {
     try {
-      const npc = await viewNpcData(npc_name);
-      const dialog = await viewDialogById(npc[0].id);
+      const npcData = await viewNpcData(npc.npcName);
+      const dialog = await viewDialogById(npcData[0].id);
       return dialog;
     } catch (error) {
       console.error("[ERROR]:", error);
@@ -196,19 +209,28 @@ const DialogBox = ({
 
   return (
     <div className="npc-dialog-container">
-      <p className="npc-dialog-name">{npc_name}</p>
-      <p className="npc-dialog-text">{currentDialog}</p>
-      {currentResponses.length > 0 ? (
-        currentResponses.map((response, index) => (
-          <DialogButton
-            key={index}
-            text={response.dialog}
-            event={() => handleResponse(response)}
-          />
-        ))
-      ) : (
-        <DialogButton text={"Next"} event={handleNextDialog} />
-      )}
+      <div className="npc-dialog-name">{npc ? <p>{npc.npcName}</p> : null}</div>
+      <div className="npc-dialog-text">
+        <TypingAnimation
+          text={currentDialog}
+          delay={30}
+          onFinishedTyping={handleTypingFinish}
+          skipAnimation={skipTypingAnimation}
+        />
+      </div>
+      <div className="npc-dialog-button-container">
+        {currentResponses.length > 0 && typingFinished ? (
+          currentResponses.map((response, index) => (
+            <DialogButton
+              key={index}
+              text={response.dialog}
+              event={() => handleResponse(response)}
+            />
+          ))
+        ) : (
+          <DialogButton text={"Next"} event={handleNextDialog} />
+        )}
+      </div>
     </div>
   );
 };
