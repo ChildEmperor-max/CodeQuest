@@ -155,7 +155,7 @@ export default class Player extends THREE.Object3D {
       //   this.updateRaycasterVisuals();
       // }
     }
-    this.updateQuestVisibility();
+    // this.updateQuestVisibility();
   }
   updateQuestVisibility() {
     if (keys.q.justPressed) {
@@ -177,7 +177,7 @@ export default class Player extends THREE.Object3D {
         if (!this.isTalkingToNpc) {
           this.isTalkingToNpc = true;
           this.rotateTowards(npc.position);
-          this.updatePlayerInteractNpc(npc.npcName);
+          this.updatePlayerInteractNpc(npc);
         }
       }
     } else {
@@ -190,10 +190,14 @@ export default class Player extends THREE.Object3D {
     return this.interactingWithNpc;
   }
 
-  updatePlayerInteractNpc(npcName) {
-    this.interactingWithNpc = npcName;
+  updatePlayerInteractNpc(npc) {
+    if (npc) {
+      this.interactingWithNpc = npc.npcName;
+    } else {
+      this.interactingWithNpc = null;
+    }
     const event = new CustomEvent("playerInteractNpc", {
-      detail: npcName,
+      detail: npc,
     });
     document.dispatchEvent(event);
   }
