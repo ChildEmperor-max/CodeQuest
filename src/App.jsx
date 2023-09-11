@@ -32,6 +32,7 @@ function App() {
     albyNPC: albyNPC,
   };
 
+  const npcArray = [sampleNPC1, sampleNPC2, albyNPC];
 
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
@@ -93,7 +94,7 @@ function App() {
           },
         }}
         playerInstance={player}
-        npcInstances={npcs}
+        npcInstances={npcArray}
         cameraInstance={camera}
         cameraControllerInstance={cameraControls}
       />
