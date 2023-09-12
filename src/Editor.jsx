@@ -145,7 +145,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
     try {
       const npcData = await fetchNpcQuestDialog();
       const filteredQuests = npcData.filter(
-        (element) => element.quest_status.trim() === "active"
+        (element) => element.quest_status === "active"
       );
       setActiveQuests(filteredQuests);
     } catch (error) {
@@ -287,6 +287,14 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
     );
   };
 
+  const PanelButton = ({ icon, onClick, title }) => {
+    return (
+      <button className="panel-buttons" onClick={onClick} title={title}>
+        <FontAwesomeIcon icon={icon} />
+      </button>
+    );
+  };
+
   const ButtonText = ({
     onClick,
     disabled = false,
@@ -326,20 +334,16 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
                 />
                 <div className="button-text-container">
                   <div className="grouped-buttons">
-                    <button
-                      className="panel-buttons"
+                    <PanelButton
                       onClick={increaseFontSize}
                       title="Increase font size"
-                    >
-                      <FontAwesomeIcon icon={faPlus} />
-                    </button>
-                    <button
-                      className="panel-buttons"
+                      icon={faPlus}
+                    />
+                    <PanelButton
                       onClick={decreaseFontSize}
                       title="Decrease font size"
-                    >
-                      <FontAwesomeIcon icon={faMinus} />
-                    </button>
+                      icon={faMinus}
+                    />
                   </div>
                   <span className="button-text">Font size</span>
                 </div>
