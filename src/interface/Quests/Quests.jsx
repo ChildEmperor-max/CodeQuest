@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import { fetchQuestTable, fetchNpcQuestDialog } from "../../db/HandleTable";
 import toggleEditor from "../../Editor";
+import ManageQuest from "../../db/ManageQuest";
 
 const Quests = ({ onClose }) => {
+  const manageQuest = new ManageQuest();
   const [questsData, setQuestsData] = useState([]);
 
   useEffect(() => {
@@ -26,7 +28,17 @@ const Quests = ({ onClose }) => {
     }
   };
 
-  const test = () => {};
+  const handleQuestAbandon = (quest_id) => {
+    toggleEditor({
+      quest_title: null,
+      quest_description: null,
+      quest_from: null,
+      code_template: null,
+      quest_answer: null,
+      setVisible: false,
+    });
+    manageQuest.abandonQuest(quest_id);
+  };
 
   const SideButton = ({ quest }) => {
     return (
@@ -35,16 +47,7 @@ const Quests = ({ onClose }) => {
           <>
             <button
               className="quest-side-button"
-              onClick={() =>
-                toggleEditor({
-                  quest_title: null,
-                  quest_description: null,
-                  quest_from: null,
-                  code_template: null,
-                  quest_answer: null,
-                  setVisible: false,
-                })
-              }
+              onClick={() => handleQuestAbandon(quest.id)}
             >
               Abandon
             </button>
@@ -79,7 +82,7 @@ const Quests = ({ onClose }) => {
         <h3>Story Quest</h3>
         <ul id="StoryQuestList">
           {questsData.map((quest, index) =>
-            quest.quest_type === "story" && quest.quest_status === "active" ? (
+            quest.quest_type === "story" ? (
               <li key={index}>
                 {quest.quest_title} <SideButton quest={quest} />
               </li>
