@@ -1,5 +1,5 @@
 import toggleEditor from "../Editor";
-import Quests from "../db/quests";
+import Quests from "../db/ManageQuest";
 import { fetchNpcQuestDialog, fetchQuestTable } from "../db/HandleTable";
 
 export default class QuestManager {
