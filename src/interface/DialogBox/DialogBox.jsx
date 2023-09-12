@@ -3,6 +3,7 @@ import DialogButton from "./DialogButton";
 import { viewDialogById, viewNpcData } from "../../db/HandleTable";
 import TypingAnimation from "./TypingAnimation";
 import { animateCameraToTarget } from "../../lib/cameraAnimation";
+import ManageQuest from "../../db/ManageQuest";
 
 const DialogBox = ({
   npc,
@@ -13,6 +14,7 @@ const DialogBox = ({
   cameraControllerInstance,
   onQuestStarted,
 }) => {
+  const questManager = new ManageQuest();
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
 
   const [dialogData, setDialogData] = useState([]);
@@ -178,6 +180,7 @@ const DialogBox = ({
     }
     if (quest_id) {
       onQuestStarted();
+      questManager.updateQuestStatus(quest_id, questManager.status.active);
     }
     setCurrentId(nextNpcDialog.id);
   };
