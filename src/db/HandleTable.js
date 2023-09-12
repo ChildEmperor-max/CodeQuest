@@ -1,5 +1,5 @@
-// const host = "http://localhost:3000/";
-const host = "http://127.0.0.1:3000/";
+const host = "http://localhost:3000/";
+// const host = "http://127.0.0.1:3000/";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
@@ -67,7 +67,7 @@ export const viewDialogById = async (id) => {
   }
 };
 
-export const viewQuestData = async (id) => {
+export const viewQuestById = async (id) => {
   try {
     const questData = await fetchQuestById(id);
     return questData;
