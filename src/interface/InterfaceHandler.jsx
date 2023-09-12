@@ -8,6 +8,7 @@ import ControlsHelper from "./Help/ControlsHelper";
 import DialogBox from "./DialogBox/DialogBox";
 import toggleEditor from "../Editor";
 import QuestManager from "../lib/QuestManager";
+import Popup from "./Popups/Popup";
 import keys, {
   enableKeyListeners,
   disableKeyListeners,
@@ -50,6 +51,16 @@ export default function InterfaceHandler({
   const [isPlayerRunning, setIsPlayerRunning] = useState(false);
 
   const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleShowPopup = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -156,6 +167,13 @@ export default function InterfaceHandler({
 
   return (
     <>
+      {showPopup && (
+        <Popup
+          header={"Quest Started"}
+          message={"Quest title here"}
+          onClose={() => setShowPopup(false)}
+        />
+      )}
       {isPlayerInteractingNpc !== null ? (
         <DialogBox
           npc={isPlayerInteractingNpc}
@@ -164,6 +182,7 @@ export default function InterfaceHandler({
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
+          onQuestStarted={() => setShowPopup(true)}
         />
       ) : null}
       {/* {currentOpenedInterface === interfaces.codedemo ? <AlbyInterface /> : null} */}

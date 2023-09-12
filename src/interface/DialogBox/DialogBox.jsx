@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import {
-  viewNpcIdByName,
-  viewDialogById,
-  viewNpcData,
-} from "../../db/HandleTable";
+import DialogButton from "./DialogButton";
+import { viewDialogById, viewNpcData } from "../../db/HandleTable";
 import TypingAnimation from "./TypingAnimation";
-
 import { animateCameraToTarget } from "../../lib/cameraAnimation";
 
 const DialogBox = ({
@@ -17,6 +11,7 @@ const DialogBox = ({
   npcInstances,
   cameraInstance,
   cameraControllerInstance,
+  onQuestStarted,
 }) => {
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
 
@@ -173,27 +168,18 @@ const DialogBox = ({
     }
   };
 
-  const handleResponse = ({ id }) => {
+  const handleResponse = ({ id, quest_id }) => {
     setSkipTypingAnimation(false);
-    const nextDialogObj = getAllResponse({ id: id });
-    if (nextDialogObj.is_array) {
-      convertToArray({ dialog: nextDialogObj.dialog, id: id });
+    const nextNpcDialog = getAllResponse({ id: id });
+    if (nextNpcDialog.is_array) {
+      convertToArray({ dialog: nextNpcDialog.dialog, id: id });
     } else {
-      setCurrentDialog(nextDialogObj.dialog);
+      setCurrentDialog(nextNpcDialog.dialog);
     }
-    setCurrentId(nextDialogObj.id);
-  };
-
-  const DialogButton = ({ text, event }) => {
-    return (
-      <button className="npc-dialog-button" onClick={event}>
-        {text === "Next" ? (
-          <FontAwesomeIcon icon={faChevronRight} size="lg" />
-        ) : (
-          text
-        )}
-      </button>
-    );
+    if (quest_id) {
+      onQuestStarted();
+    }
+    setCurrentId(nextNpcDialog.id);
   };
 
   const getNpcDialog = async () => {
@@ -224,7 +210,7 @@ const DialogBox = ({
             <DialogButton
               key={index}
               text={response.dialog}
-              event={() => handleResponse(response)}
+              event={() => handleResponse(response, response.quest_id)}
             />
           ))
         ) : (
