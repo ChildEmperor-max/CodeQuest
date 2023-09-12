@@ -31,7 +31,7 @@ const Quests = ({ onClose }) => {
   const SideButton = ({ quest }) => {
     return (
       <>
-        {quest.quest_status.trim() === "active" ? (
+        {quest.quest_status === "active" ? (
           <>
             <button
               className="quest-side-button"
@@ -79,8 +79,7 @@ const Quests = ({ onClose }) => {
         <h3>Story Quest</h3>
         <ul id="StoryQuestList">
           {questsData.map((quest, index) =>
-            quest.quest_type.trim() === "story" &&
-            quest.quest_status.trim() === "active" ? (
+            quest.quest_type === "story" && quest.quest_status === "active" ? (
               <li key={index}>
                 {quest.quest_title} <SideButton quest={quest} />
               </li>
@@ -92,7 +91,7 @@ const Quests = ({ onClose }) => {
         <h3>Side Quests</h3>
         <ul id="Available">
           {questsData.map((quest, index) =>
-            quest.quest_type.trim() === "side" ? (
+            quest.quest_type === "side" ? (
               <li key={index}>
                 {quest.quest_title} <SideButton quest={quest} />
               </li>
