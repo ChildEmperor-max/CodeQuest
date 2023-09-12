@@ -212,7 +212,7 @@ export function fetchDialogById(id) {
     });
 }
 
-export function updateQuestDataStatus(quest_title, quest_status) {
+export function updateQuestDataStatus(quest_id, quest_status) {
   return new Promise((resolve, reject) => {
     fetch(questAPI + "-update", {
       method: "POST",
@@ -220,7 +220,7 @@ export function updateQuestDataStatus(quest_title, quest_status) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        quest_title: quest_title,
+        quest_id: quest_id,
         quest_status: quest_status,
       }),
     })
