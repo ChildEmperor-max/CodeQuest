@@ -5,7 +5,7 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import QuestManager from "../lib/QuestManager";
-import Quests from "../db/quests";
+import ManageQuest from "../db/ManageQuest";
 
 import {
   addNpcToTable,
@@ -44,7 +44,6 @@ export default class NPCLoader extends Interactibles {
     modelTexturePath = undefined
   ) {
     super.initialize(position, camera, player);
-    this.quests = new Quests();
     this.scene = scene;
     this.groundMesh = groundMesh;
     this.canvas = document.getElementById(canvas);
@@ -92,11 +91,11 @@ export default class NPCLoader extends Interactibles {
     async function fetchNpcQuest(id) {
       try {
         const quest = await viewQuestById(id);
-        const test = new Quests().type;
-        if (quest[0].quest_type.trim() === test.story) {
+        const test = new ManageQuest().type;
+        if (quest[0].quest_type === test.story) {
           this.hasStoryQuest = true;
           this.questIconIsSet = true;
-        } else if (quest[0].quest_type.trim() === test.side) {
+        } else if (quest[0].quest_type === test.side) {
           this.hasSideQuest = true;
           this.questIconIsSet = true;
         }
