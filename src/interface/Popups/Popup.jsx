@@ -4,6 +4,7 @@ import "./Popup.css";
 const Popup = ({ header, message, onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const timeout = 5000;
+  // this should be the exact duration of the closing animation
   const closeAnimationTimeout = 1000;
 
   const handleClose = () => {
