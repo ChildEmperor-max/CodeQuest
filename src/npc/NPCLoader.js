@@ -69,10 +69,10 @@ export default class NPCLoader extends Interactibles {
     this.dynamicLabel.setNpcNameLabel({
       text: npcName,
       camera: camera,
-      position: this.position,
-      yOffset: 120,
+      position: this.getNameLabelPosition(),
     });
-    this.dynamicLabel.showNpcNameLabel(this.position, camera);
+    this.nameLabelYOffset = 6;
+    this.dynamicLabel.showNpcNameLabel(this.getNameLabelPosition(), camera);
     this.npcNameDisplayRange = 30;
 
     this.movementSpeed = 6;
@@ -162,9 +162,11 @@ export default class NPCLoader extends Interactibles {
     ) {
       this.dynamicLabel.hideNpcNameLabel();
     } else {
-      this.dynamicLabel.showNpcNameLabel(this.position, this.camera);
+      this.dynamicLabel.showNpcNameLabel(
+        this.getNameLabelPosition(),
+        this.camera
+      );
     }
-    this.dynamicLabel.updateNpcNameLabel(this.position, this.camera);
   }
 
   findIntersectionHeight(from_vec3, object_to_intersect) {
@@ -660,6 +662,14 @@ export default class NPCLoader extends Interactibles {
         .to({ y: angle }, rotationSpeed)
         .start();
     }
+  }
+
+  getNameLabelPosition() {
+    return new THREE.Vector3(
+      this.position.x,
+      this.position.y + this.nameLabelYOffset,
+      this.position.z
+    );
   }
 
   loadModel(modelPath, npcName, modelTexturePath, scale) {
