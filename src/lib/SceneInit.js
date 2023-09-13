@@ -42,6 +42,7 @@ export default class SceneInit {
     this.npcs = npcs;
     this.dynamicLabel = new DynamicLabel();
 
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     // this.renderer.shadowMap.enabled = true;
