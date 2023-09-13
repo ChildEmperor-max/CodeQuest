@@ -97,9 +97,6 @@ const DialogBox = ({
     if (currentId === 6) {
       cameraControllerInstance.currentTarget = currentTalkingNpc;
       moveCameraToTarget(playerInstance, 2);
-    } else {
-      // cameraControllerInstance.setTrackPosition(playerInstance)
-      cameraControllerInstance.currentTarget = playerInstance;
     }
   };
 
