@@ -22,8 +22,7 @@ export default class Interactibles extends THREE.Object3D {
 
     this.dynamicLabel.setInteractLabel({
       camera: camera,
-      position: position,
-      yOffset: 120,
+      position: this.getInteractIconPosition(),
     });
   }
 
@@ -32,8 +31,7 @@ export default class Interactibles extends THREE.Object3D {
       const storyQuest = this.hasStoryQuest;
       this.dynamicLabel.setQuestIcon({
         camera: this.camera,
-        position: this.position,
-        yOffset: 200,
+        position: this.getQuestIconPosition(),
         storyQuest,
       });
 
@@ -47,7 +45,10 @@ export default class Interactibles extends THREE.Object3D {
       this.setQuestIcon();
       if (this.finishedQuestSetting) {
         if (this.npcNearPlayer(this.questIconRange)) {
-          this.dynamicLabel.showQuestIcon(this.position, this.camera);
+          this.dynamicLabel.showQuestIcon(
+            this.getQuestIconPosition(),
+            this.camera
+          );
         } else {
           this.dynamicLabel.hideQuestIcon();
         }
@@ -66,7 +67,10 @@ export default class Interactibles extends THREE.Object3D {
 
   isInteractable() {
     if (this.hasDialog) {
-      this.dynamicLabel.showInteractLabel(this.position, this.camera);
+      this.dynamicLabel.showInteractLabel(
+        this.getInteractIconPosition(),
+        this.camera
+      );
       this.player.onNpcZone(this);
       if (this.interactingWithPlayer()) {
         this.dynamicLabel.hideInteractLabel();
@@ -91,5 +95,21 @@ export default class Interactibles extends THREE.Object3D {
 
   getPositionTracker() {
     return new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+  }
+
+  getQuestIconPosition() {
+    return new THREE.Vector3(
+      this.position.x,
+      this.position.y + 7.5,
+      this.position.z
+    );
+  }
+
+  getInteractIconPosition() {
+    return new THREE.Vector3(
+      this.position.x,
+      this.position.y + 3,
+      this.position.z
+    );
   }
 }
