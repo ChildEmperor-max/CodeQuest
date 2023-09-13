@@ -54,14 +54,6 @@ export default function InterfaceHandler({
 
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleShowPopup = () => {
-    setShowPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
-
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
       setCurrentOpenedInterface(interfaces.none); // Close the current interface
