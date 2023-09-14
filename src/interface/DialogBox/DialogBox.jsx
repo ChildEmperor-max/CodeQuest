@@ -55,9 +55,17 @@ const DialogBox = ({
           setCurrentDialog(dialogArr[0]);
         } else {
           setCurrentDialog(data[0].dialog);
-          const responses = data.filter(
-            (dialog) => dialog.response_to === data[0].id
-          );
+          // const responses = data.filter(
+          //   (dialog) => dialog.response_to === data[0].id
+          // );
+
+          const responses = data.filter((dialog) => {
+            const jsArray = dialog.response_to;
+            if (!Array.isArray(jsArray)) {
+              return false;
+            }
+            return jsArray.includes(data[0].id);
+          });
 
           setCurrentResponses(responses);
         }
@@ -110,15 +118,29 @@ const DialogBox = ({
   };
 
   const getAllResponse = ({ id }) => {
-    const nextDialogObj = dialogData.find(
-      (dialog) => dialog.response_to === id
-    );
-    const responses = dialogData.filter(
-      (dialog) => dialog.response_to === nextDialogObj.id
-    );
+    // const nextDialogObj = dialogData.find(
+    //   (dialog) => dialog.response_to === id
+    // );
+    const nextDialogObj = dialogData.filter((dialog) => {
+      const jsArray = dialog.response_to;
+      if (!Array.isArray(jsArray)) {
+        return false;
+      }
+      return jsArray.includes(id);
+    });
+    // const responses = dialogData.filter(
+    //   (dialog) => dialog.response_to === nextDialogObj.id
+    // );
+    const responses = dialogData.filter((dialog) => {
+      const jsArray = dialog.response_to;
+      if (!Array.isArray(jsArray)) {
+        return false;
+      }
+      return jsArray.includes(nextDialogObj[0].id);
+    });
 
     setCurrentResponses(responses);
-    return nextDialogObj;
+    return nextDialogObj[0];
   };
 
   const handleNextDialog = () => {
@@ -144,9 +166,17 @@ const DialogBox = ({
           setCurrentResponses([]);
         } else {
           setCurrentDialog(dialogArray[nextPage]);
-          const responses = dialogData.filter(
-            (dialog) => dialog.response_to === currentId
-          );
+          // const responses = dialogData.filter(
+          //   (dialog) => dialog.response_to === currentId
+          // );
+          const responses = dialogData.filter((dialog) => {
+            const jsArray = dialog.response_to;
+            if (!Array.isArray(jsArray)) {
+              return false;
+            }
+            return jsArray.includes(currentId);
+          });
+
           setCurrentResponses(responses);
           switchCameraTarget();
           if (dialogArray[nextPage] === undefined) {

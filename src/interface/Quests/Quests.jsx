@@ -34,6 +34,7 @@ const Quests = ({ onClose }) => {
 
   const handleQuestAbandon = () => {
     toggleEditor({
+      quest_id: null,
       quest_title: null,
       quest_description: null,
       quest_from: null,
@@ -73,6 +74,7 @@ const Quests = ({ onClose }) => {
               className="quest-side-button"
               onClick={() =>
                 toggleEditor({
+                  quest_id: quest.id,
                   quest_title: quest.quest_title,
                   quest_description: quest.quest_description,
                   quest_from: quest.npc_name,
@@ -123,7 +125,8 @@ const Quests = ({ onClose }) => {
           <h3>Side Quests</h3>
           <ul id="Available">
             {questsData.map((quest, index) =>
-              quest.quest_type === "side" ? (
+              quest.quest_type === "side" &&
+              quest.quest_status !== "completed" ? (
                 <li key={index}>
                   {quest.quest_title} <SideButton quest={quest} />
                 </li>
