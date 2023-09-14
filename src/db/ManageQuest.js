@@ -2,6 +2,7 @@ import {
   fetchNpcQuestDialog,
   updateQuestDataStatus,
   executeJavaCode,
+  viewQuestById,
 } from "./HandleTable";
 
 // Separate script acting as a temporary placeholder for a database
@@ -21,6 +22,10 @@ class ManageQuest {
 
   fetchQuest() {
     fetchNpcQuestDialog();
+  }
+
+  async getQuestDataById(quest_id) {
+    return await viewQuestById(quest_id);
   }
 
   createQuest(title, description, status, from, type) {
