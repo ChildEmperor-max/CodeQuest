@@ -176,10 +176,20 @@ const DialogBox = ({
       setCurrentDialog(nextNpcDialog.dialog);
     }
     if (quest_id) {
-      onQuestStarted();
-      questManager.updateQuestStatus(quest_id, questManager.status.active);
+      acceptQuest(quest_id);
     }
     setCurrentId(nextNpcDialog.id);
+  };
+
+  const acceptQuest = async (quest_id) => {
+    try {
+      const quest = await questManager.getQuestDataById(quest_id);
+      questManager.updateQuestStatus(quest_id, questManager.status.active);
+      onQuestStarted(quest[0].quest_title);
+    } catch (error) {
+      console.error("Error accepting the quest:", error);
+      throw error;
+    }
   };
 
   const getNpcDialog = async () => {
