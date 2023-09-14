@@ -39,6 +39,7 @@ import {
 } from "./db/HandleTable";
 import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
 import QuestManager from "./lib/QuestManager";
+import ManageQuest from "./db/ManageQuest";
 
 let questManager = new QuestManager();
 const handleEditorChange = (newValue) => {
@@ -62,6 +63,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   const [activeQuests, setActiveQuests] = useState([]);
   const [selectedQuestAnswer, setSelectedQuestAnswer] = useState(questAnswer);
   const [selectedQuest, setSelectedQuest] = useState("");
+  const manageQuest = new ManageQuest();
 
   useEffect(() => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
@@ -111,8 +113,13 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
             playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
           ) {
             console.log("CORRECT!");
-            updateQuestDataStatus(questTitle, "completed");
+            console.log(questId);
+            // updateQuestDataStatus(questId, "completed");
             questManager.moveQuestToCompleted(questTitle);
+            manageQuest.updateQuestStatus(
+              questId,
+              manageQuest.status.completed
+            );
             fetchActiveQuests();
             questTitle = null;
           } else {
@@ -417,6 +424,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
 
 let visible = false;
 let editorValue = "";
+let questId = null;
 let questTitle = null;
 let questFrom = null;
 let questDescription = null;
@@ -436,6 +444,7 @@ const root = ReactDOM.createRoot(document.getElementById("editor"));
 // );
 
 export default function toggleEditor({
+  quest_id = null,
   quest_title = null,
   quest_description = null,
   quest_from = null,
@@ -443,6 +452,9 @@ export default function toggleEditor({
   quest_answer = null,
   setVisible = true,
 }) {
+  if (quest_id) {
+    questId = quest_id;
+  }
   if (quest_title) {
     questTitle = quest_title;
   }
