@@ -53,6 +53,8 @@ export default function InterfaceHandler({
   const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
   const [showPopup, setShowPopup] = useState(false);
+  const [popupHeader, setPopupHeader] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -157,12 +159,18 @@ export default function InterfaceHandler({
     };
   }, [currentOpenedInterface]);
 
+  const handlePopupContent = (header, message) => {
+    setPopupHeader(header);
+    setPopupMessage(message);
+    setShowPopup(true);
+  };
+
   return (
     <>
       {showPopup && (
         <Popup
-          header={"Quest Started"}
-          message={"Quest title here"}
+          header={popupHeader}
+          message={popupMessage}
           onClose={() => setShowPopup(false)}
         />
       )}
@@ -174,7 +182,9 @@ export default function InterfaceHandler({
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
-          onQuestStarted={() => setShowPopup(true)}
+          onQuestStarted={(quest_title) => {
+            handlePopupContent("Quest started", quest_title);
+          }}
         />
       ) : null}
       {/* {currentOpenedInterface === interfaces.codedemo ? <AlbyInterface /> : null} */}
