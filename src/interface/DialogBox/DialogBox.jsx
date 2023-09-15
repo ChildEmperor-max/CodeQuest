@@ -215,7 +215,7 @@ const DialogBox = ({
     try {
       const quest = await questManager.getQuestDataById(quest_id);
       questManager.updateQuestStatus(quest_id, questManager.status.active);
-      onQuestStarted(quest[0].quest_title);
+      onQuestStarted(quest[0].quest_title, quest[0].quest_description);
     } catch (error) {
       console.error("Error accepting the quest:", error);
       throw error;
