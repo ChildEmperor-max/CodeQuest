@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
-import { fetchQuestTable, fetchNpcQuestDialog } from "../../db/HandleTable";
-import toggleEditor from "../../Editor";
+import { fetchNpcQuestDialog } from "../../db/HandleTable";
 import ManageQuest from "../../db/ManageQuest";
 import AlertModal from "../../components/AlertModal";
+import CodeEditor from "../Editor/CodeEditor";
 
 const Quests = ({ onClose }) => {
   const manageQuest = new ManageQuest();
@@ -11,6 +11,8 @@ const Quests = ({ onClose }) => {
   const [abandonQuestAlert, setAbandonQuestAlert] = useState(false);
   const [currentQuestId, setCurrentQuestId] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [selectedQuest, setSelectedQuest] = useState(null);
 
   useEffect(() => {
     viewQuests()
@@ -32,16 +34,11 @@ const Quests = ({ onClose }) => {
     }
   };
 
+  const handleEditorOpen = () => {
+    setIsEditorOpen(!isEditorOpen);
+  };
+
   const handleQuestAbandon = () => {
-    toggleEditor({
-      quest_id: null,
-      quest_title: null,
-      quest_description: null,
-      quest_from: null,
-      code_template: null,
-      quest_answer: null,
-      setVisible: false,
-    });
     manageQuest.abandonQuest(currentQuestId);
     setAbandonQuestAlert(false);
     onClose();
@@ -72,16 +69,10 @@ const Quests = ({ onClose }) => {
             ) : null}
             <button
               className="quest-side-button"
-              onClick={() =>
-                toggleEditor({
-                  quest_id: quest.id,
-                  quest_title: quest.quest_title,
-                  quest_description: quest.quest_description,
-                  quest_from: quest.npc_name,
-                  code_template: quest.code_template,
-                  quest_answer: quest.quest_answer,
-                })
-              }
+              onClick={() => {
+                setSelectedQuest(quest);
+                setIsEditorOpen(true);
+              }}
             >
               Start
             </button>
@@ -95,6 +86,9 @@ const Quests = ({ onClose }) => {
 
   return (
     <>
+      {isEditorOpen && (
+        <CodeEditor quest_data={selectedQuest} onClose={handleEditorOpen} />
+      )}
       {abandonQuestAlert && (
         <AlertModal
           message={alertMessage}

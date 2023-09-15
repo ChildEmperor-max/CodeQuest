@@ -6,7 +6,7 @@ import Leaderboard from "./Leaderboard/Leaderboard";
 import Quests from "./Quests/Quests";
 import ControlsHelper from "./Help/ControlsHelper";
 import DialogBox from "./DialogBox/DialogBox";
-import toggleEditor from "../Editor";
+import CodeEditor from "./Editor/CodeEditor";
 import QuestManager from "../lib/QuestManager";
 import Popup from "./Popups/Popup";
 import keys, {
@@ -43,6 +43,7 @@ export default function InterfaceHandler({
     settings: "settings",
     helper: "helper",
     codedemo: "codedemo",
+    editor: "editor",
   };
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -192,6 +193,12 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.quests ? (
         <Quests onClose={() => toggleInterface(interfaces.quests)} />
       ) : null}
+      {currentOpenedInterface === interfaces.editor && (
+        <CodeEditor
+          quest_data={null}
+          onClose={() => toggleInterface(interfaces.editor)}
+        />
+      )}
       {currentOpenedInterface === interfaces.profile ? (
         <CharacterProfile onClose={() => toggleInterface(interfaces.profile)} />
       ) : null}
@@ -234,7 +241,7 @@ export default function InterfaceHandler({
             name="Editor"
             icon={faEdit}
             id="toggle-editor-button"
-            onClickEvent={toggleEditor}
+            onClickEvent={() => toggleInterface(interfaces.editor)}
           />
           <InterfaceButton
             name="Leaderboard"
