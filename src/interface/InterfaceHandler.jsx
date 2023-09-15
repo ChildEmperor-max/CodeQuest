@@ -56,6 +56,7 @@ export default function InterfaceHandler({
   const [showPopup, setShowPopup] = useState(false);
   const [popupHeader, setPopupHeader] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
+  const [popupDescription, setPopupDescription] = useState(null);
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -160,9 +161,10 @@ export default function InterfaceHandler({
     };
   }, [currentOpenedInterface]);
 
-  const handlePopupContent = (header, message) => {
+  const handlePopupContent = (header, message, description) => {
     setPopupHeader(header);
     setPopupMessage(message);
+    setPopupDescription(description);
     setShowPopup(true);
   };
 
@@ -172,6 +174,7 @@ export default function InterfaceHandler({
         <Popup
           header={popupHeader}
           message={popupMessage}
+          description={popupDescription}
           onClose={() => setShowPopup(false)}
         />
       )}
@@ -183,8 +186,8 @@ export default function InterfaceHandler({
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
-          onQuestStarted={(quest_title) => {
-            handlePopupContent("Quest started", quest_title);
+          onQuestStarted={(title, description) => {
+            handlePopupContent("Quest started", title, description);
           }}
         />
       ) : null}
