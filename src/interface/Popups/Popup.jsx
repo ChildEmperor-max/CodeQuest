@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Popup.css";
 
-const Popup = ({ header, message, onClose }) => {
+const Popup = ({
+  header,
+  message,
+  description = null,
+  onClose,
+  positiveStyle = true,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const timeout = 5000;
   // this should be the exact duration of the closing animation
@@ -25,10 +31,15 @@ const Popup = ({ header, message, onClose }) => {
   }, [timeout]);
 
   return (
-    <div className={`popup ${isOpen ? "open" : "close"}`}>
+    <div
+      className={`popup ${isOpen ? "open" : "close"} ${
+        positiveStyle ? "positive" : "negative"
+      } `}
+    >
       <div className="popup-content">
         <p>{header}</p>
         <p>{message}</p>
+        {description && <p>{description}</p>}
         <button onClick={handleClose}>Okay</button>
       </div>
     </div>

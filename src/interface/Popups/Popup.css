@@ -1,4 +1,3 @@
-/* Popup.css */
 .popup {
     display: none;
     position: fixed;
@@ -24,6 +23,27 @@
     0 0 60px 10px #fff,
     0 0 100px 30px #f0f,
     0 0 140px 50px #0ff;
+  }
+
+  .positive {
+    box-shadow:
+    0 0 60px 10px #fff,
+    0 0 100px 30px #f0f,
+    0 0 140px 50px #0ff;
+  }
+
+  .negative {
+    box-shadow:
+    0 0 60px 10px #fff,
+    0 0 100px 30px #f0f,
+    0 0 140px 50px rgb(255, 38, 0);
+  }
+
+  .neutral {
+    box-shadow:
+    0 0 60px 10px #fff,
+    0 0 100px 30px rgb(196, 136, 196),
+    0 0 140px 50px rgb(137, 177, 177);
   }
   
   .popup.open {

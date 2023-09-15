@@ -40,6 +40,7 @@ import PanelButton from "./PanelButton";
 import ManageQuest from "../../db/ManageQuest";
 import QuestManager from "../../lib/QuestManager";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
+import Popup from "../Popups/Popup";
 
 const CodeEditor = ({ quest_data, onClose }) => {
   const [editorValue, setEditorValue] = useState("");
@@ -56,6 +57,12 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [selectedQuestAnswer, setSelectedQuestAnswer] = useState("");
   const [selectedQuest, setSelectedQuest] = useState("");
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupHeader, setPopupHeader] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupDescription, setPopupDescription] = useState(null);
+  const [popupPositiveStyle, setPopupPositiveStyle] = useState(true);
+
   const manageQuest = new ManageQuest();
   const questManager = new QuestManager();
 
@@ -63,9 +70,13 @@ const CodeEditor = ({ quest_data, onClose }) => {
     setEditorValue(newValue);
   };
 
-  //   const handleOutput = (res) => {
-  //     output = res;
-  //   };
+  const handlePopupContent = (header, message, description, positive) => {
+    setPopupHeader(header);
+    setPopupMessage(message);
+    setPopupDescription(description);
+    setPopupPositiveStyle(positive);
+    setShowPopup(true);
+  };
 
   useEffect(() => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
@@ -121,17 +132,27 @@ const CodeEditor = ({ quest_data, onClose }) => {
             console.log("CORRECT!");
             console.log(quest_data.id);
             // updateQuestDataStatus(questId, "completed");
-            questManager.moveQuestToCompleted(questTitle);
+            // questManager.moveQuestToCompleted(questTitle);
             manageQuest.updateQuestStatus(
               quest_data.id,
               manageQuest.status.completed
             );
             fetchActiveQuests();
             // questTitle = null;
-            onQuestFinished();
+            handlePopupContent(
+              "Quest Completed",
+              quest_data.quest_title,
+              quest_data.quest_description,
+              true
+            );
           } else {
             console.log("WRONG! ");
-            questManager.showWrongAnswerPopup();
+            handlePopupContent(
+              "Wrong answer",
+              quest_data.quest_title,
+              "You can try again, don't worry!",
+              false
+            );
           }
         }
       })
@@ -303,6 +324,15 @@ const CodeEditor = ({ quest_data, onClose }) => {
 
   return (
     <>
+      {showPopup && (
+        <Popup
+          header={popupHeader}
+          message={popupMessage}
+          description={popupDescription}
+          onClose={() => setShowPopup(false)}
+          positiveStyle={popupPositiveStyle}
+        />
+      )}
       {isQuestModalOpen ? <QuestModal /> : null}
       <div id="ace-editor-panel">
         <>
