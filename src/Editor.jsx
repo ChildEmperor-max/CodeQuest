@@ -41,7 +41,6 @@ import { enableKeyListeners, disableKeyListeners } from "./lib/KeyControls";
 import QuestManager from "./lib/QuestManager";
 import ManageQuest from "./db/ManageQuest";
 
-let questManager = new QuestManager();
 const handleEditorChange = (newValue) => {
   editorValue = newValue;
 };
@@ -64,6 +63,7 @@ function Editor({ onChange, visible, code_template, quest_answer, onOutput }) {
   const [selectedQuestAnswer, setSelectedQuestAnswer] = useState(questAnswer);
   const [selectedQuest, setSelectedQuest] = useState("");
   const manageQuest = new ManageQuest();
+  let questManager = new QuestManager();
 
   useEffect(() => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");

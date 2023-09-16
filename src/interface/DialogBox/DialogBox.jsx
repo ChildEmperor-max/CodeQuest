@@ -13,8 +13,9 @@ const DialogBox = ({
   cameraInstance,
   cameraControllerInstance,
   onQuestStarted,
+  onOpenEditor,
 }) => {
-  const questManager = new ManageQuest();
+  const manageQuest = new ManageQuest();
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
 
   const [dialogData, setDialogData] = useState([]);
@@ -165,6 +166,13 @@ const DialogBox = ({
           setCurrentDialog(dialogArray[nextPage]);
           setCurrentResponses([]);
         } else {
+          if (currentActiveDialog[0].open_editor) {
+            if (
+              npc.currentQuest[0].quest_status === manageQuest.status.active
+            ) {
+              onOpenEditor(npc.currentQuest[0]);
+            }
+          }
           setCurrentDialog(dialogArray[nextPage]);
           // const responses = dialogData.filter(
           //   (dialog) => dialog.response_to === currentId
@@ -213,9 +221,9 @@ const DialogBox = ({
 
   const acceptQuest = async (quest_id) => {
     try {
-      const quest = await questManager.getQuestDataById(quest_id);
-      questManager.updateQuestStatus(quest_id, questManager.status.active);
-      onQuestStarted(quest[0].quest_title);
+      const quest = await manageQuest.getQuestDataById(quest_id);
+      manageQuest.updateQuestStatus(quest_id, manageQuest.status.active);
+      onQuestStarted(quest[0].quest_title, quest[0].quest_description);
     } catch (error) {
       console.error("Error accepting the quest:", error);
       throw error;

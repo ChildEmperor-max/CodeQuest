@@ -302,22 +302,22 @@ export default class QuestManager {
     document.getElementById("popup-text-header").textContent =
       "Quest completed";
     document.getElementById("quest-item").textContent = questTitle;
-    this.quests.updateQuestStatus(questTitle, this.quests.status.completed);
+    // this.quests.updateQuestStatus(questTitle, this.quests.status.completed);
 
-    const ongoingQuests = Array.from(this.ongoingQuests.children);
-    const questFromElement = ongoingQuests.find((element) => {
-      return element.getAttribute("data-quest-item") === questTitle.trim();
-    });
+    // const ongoingQuests = Array.from(this.ongoingQuests.children);
+    // const questFromElement = ongoingQuests.find((element) => {
+    //   return element.getAttribute("data-quest-item") === questTitle.trim();
+    // });
 
-    ongoingQuests.find((element) => {
-      if (element.getAttribute("id")) {
-        if (element.getAttribute("id").toString() === questTitle.trim()) {
-          element.textContent = `${questTitle} `;
-          this.ongoingQuests.removeChild(element);
-          this.ongoingQuests.removeChild(questFromElement);
-        }
-      }
-    });
+    // ongoingQuests.find((element) => {
+    //   if (element.getAttribute("id")) {
+    //     if (element.getAttribute("id").toString() === questTitle.trim()) {
+    //       element.textContent = `${questTitle} `;
+    //       this.ongoingQuests.removeChild(element);
+    //       this.ongoingQuests.removeChild(questFromElement);
+    //     }
+    //   }
+    // });
   }
 
   showWrongAnswerPopup() {

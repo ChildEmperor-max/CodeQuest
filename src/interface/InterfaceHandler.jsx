@@ -6,7 +6,7 @@ import Leaderboard from "./Leaderboard/Leaderboard";
 import Quests from "./Quests/Quests";
 import ControlsHelper from "./Help/ControlsHelper";
 import DialogBox from "./DialogBox/DialogBox";
-import toggleEditor from "../Editor";
+import CodeEditor from "./Editor/CodeEditor";
 import QuestManager from "../lib/QuestManager";
 import Popup from "./Popups/Popup";
 import keys, {
@@ -43,6 +43,7 @@ export default function InterfaceHandler({
     settings: "settings",
     helper: "helper",
     codedemo: "codedemo",
+    editor: "editor",
   };
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -55,6 +56,9 @@ export default function InterfaceHandler({
   const [showPopup, setShowPopup] = useState(false);
   const [popupHeader, setPopupHeader] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
+  const [popupDescription, setPopupDescription] = useState(null);
+
+  const [currentEditorQuest, setCurrentEditorQuest] = useState(null);
 
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -159,9 +163,10 @@ export default function InterfaceHandler({
     };
   }, [currentOpenedInterface]);
 
-  const handlePopupContent = (header, message) => {
+  const handlePopupContent = (header, message, description) => {
     setPopupHeader(header);
     setPopupMessage(message);
+    setPopupDescription(description);
     setShowPopup(true);
   };
 
@@ -171,6 +176,7 @@ export default function InterfaceHandler({
         <Popup
           header={popupHeader}
           message={popupMessage}
+          description={popupDescription}
           onClose={() => setShowPopup(false)}
         />
       )}
@@ -182,8 +188,12 @@ export default function InterfaceHandler({
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
-          onQuestStarted={(quest_title) => {
-            handlePopupContent("Quest started", quest_title);
+          onQuestStarted={(title, description) => {
+            handlePopupContent("Quest started", title, description);
+          }}
+          onOpenEditor={(quest) => {
+            setCurrentEditorQuest(quest);
+            setCurrentOpenedInterface(interfaces.editor);
           }}
         />
       ) : null}
@@ -192,6 +202,12 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.quests ? (
         <Quests onClose={() => toggleInterface(interfaces.quests)} />
       ) : null}
+      {currentOpenedInterface === interfaces.editor && (
+        <CodeEditor
+          quest_data={currentEditorQuest}
+          onClose={() => toggleInterface(interfaces.editor)}
+        />
+      )}
       {currentOpenedInterface === interfaces.profile ? (
         <CharacterProfile onClose={() => toggleInterface(interfaces.profile)} />
       ) : null}
@@ -234,7 +250,7 @@ export default function InterfaceHandler({
             name="Editor"
             icon={faEdit}
             id="toggle-editor-button"
-            onClickEvent={toggleEditor}
+            onClickEvent={() => toggleInterface(interfaces.editor)}
           />
           <InterfaceButton
             name="Leaderboard"
