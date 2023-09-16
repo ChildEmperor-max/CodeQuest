@@ -58,6 +58,8 @@ export default function InterfaceHandler({
   const [popupMessage, setPopupMessage] = useState("");
   const [popupDescription, setPopupDescription] = useState(null);
 
+  const [currentEditorQuest, setCurrentEditorQuest] = useState(null);
+
   const toggleInterface = (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
       setCurrentOpenedInterface(interfaces.none); // Close the current interface
@@ -189,6 +191,10 @@ export default function InterfaceHandler({
           onQuestStarted={(title, description) => {
             handlePopupContent("Quest started", title, description);
           }}
+          onOpenEditor={(quest) => {
+            setCurrentEditorQuest(quest);
+            setCurrentOpenedInterface(interfaces.editor);
+          }}
         />
       ) : null}
       {/* {currentOpenedInterface === interfaces.codedemo ? <AlbyInterface /> : null} */}
@@ -198,7 +204,7 @@ export default function InterfaceHandler({
       ) : null}
       {currentOpenedInterface === interfaces.editor && (
         <CodeEditor
-          quest_data={null}
+          quest_data={currentEditorQuest}
           onClose={() => toggleInterface(interfaces.editor)}
         />
       )}
