@@ -1,13 +1,14 @@
 .alby-interface {
-    height: 95%;
+    height: 85%;
     width: 85%;
     position: fixed;
-    z-index: 2;
+    overflow: hidden;
+    z-index: 3;
 
     background-color: rgba(255, 255, 255, 0.114);
-    color: black;
+    /* color: black; */
     border-radius: 5px;
-    border: 50px solid rgb(25, 105, 216);
+    border: 30px solid rgb(25, 105, 216);
     
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);

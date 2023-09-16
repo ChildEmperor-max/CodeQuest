@@ -82,6 +82,8 @@ export default class NPCLoader extends Interactibles {
     this.goingForward = true;
     this.isGrounded = true;
 
+    this.currentQuest = null;
+
     this.collisionBox = new THREE.Mesh(
       new THREE.BoxGeometry(1.5, 5, 1.5),
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
@@ -90,12 +92,12 @@ export default class NPCLoader extends Interactibles {
 
     async function fetchNpcQuest(id) {
       try {
-        const quest = await viewQuestById(id);
+        this.currentQuest = await viewQuestById(id);
         const test = new ManageQuest().type;
-        if (quest[0].quest_type === test.story) {
+        if (this.currentQuest[0].quest_type === test.story) {
           this.hasStoryQuest = true;
           this.questIconIsSet = true;
-        } else if (quest[0].quest_type === test.side) {
+        } else if (this.currentQuest[0].quest_type === test.side) {
           this.hasSideQuest = true;
           this.questIconIsSet = true;
         }

@@ -38,7 +38,6 @@ import {
 import ButtonText from "./ButtonText";
 import PanelButton from "./PanelButton";
 import ManageQuest from "../../db/ManageQuest";
-import QuestManager from "../../lib/QuestManager";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import Popup from "../Popups/Popup";
 
@@ -48,13 +47,10 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
-  const [editorWidth, setEditorWidth] = useState("600px");
   const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("Accepted quests");
   const [modalDescription, setModalDescription] = useState("");
-  const [editorVal, setEditorVal] = useState("");
   const [activeQuests, setActiveQuests] = useState([]);
-  const [selectedQuestAnswer, setSelectedQuestAnswer] = useState("");
   const [selectedQuest, setSelectedQuest] = useState("");
 
   const [showPopup, setShowPopup] = useState(false);
@@ -64,7 +60,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [popupPositiveStyle, setPopupPositiveStyle] = useState(true);
 
   const manageQuest = new ManageQuest();
-  const questManager = new QuestManager();
 
   const handleEditorChange = (newValue) => {
     setEditorValue(newValue);
@@ -82,6 +77,12 @@ const CodeEditor = ({ quest_data, onClose }) => {
     ace.config.set("basePath", "/node_modules/ace-builds/src");
     if (quest_data) {
       setEditorValue(quest_data.code_template);
+    } else {
+      setEditorValue(`public class script {
+      public static void main(String args[]) {
+            
+      }
+  }`);
     }
     disableKeyListeners();
   }, []);
@@ -91,7 +92,10 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const executeJavaCodeAndHandleOutput = () => {
     setLoading(true);
     setEditorValue(editorValue);
-    return executeJavaCode({ code: editorValue, quest: quest_data.quest_title })
+    return executeJavaCode({
+      code: editorValue,
+      quest: quest_data ? quest_data.quest_title : null,
+    })
       .then((response) => {
         if (response.error) {
           setOutput(response.error);
@@ -132,7 +136,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
             console.log("CORRECT!");
             console.log(quest_data.id);
             // updateQuestDataStatus(questId, "completed");
-            // questManager.moveQuestToCompleted(questTitle);
             manageQuest.updateQuestStatus(
               quest_data.id,
               manageQuest.status.completed
@@ -246,7 +249,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
               <p>No active quests found.</p>
               <button
                 onClick={() => {
-                  questManager.toggleQuestBox();
                   closeSelectedQuestModal();
                 }}
               >
@@ -334,92 +336,94 @@ const CodeEditor = ({ quest_data, onClose }) => {
         />
       )}
       {isQuestModalOpen ? <QuestModal /> : null}
-      <div id="ace-editor-panel">
-        <>
-          <div id="editor-panel-buttons">
-            <div>
-              <ButtonText
-                onClick={executeCode}
-                disabled={loading}
-                title="Run script"
-                icon={faPlay}
-                buttonText="Run"
-              />
-              <div className="button-text-container">
-                <div className="grouped-buttons">
-                  <PanelButton
-                    onClick={increaseFontSize}
-                    title="Increase font size"
-                    icon={faPlus}
-                  />
-                  <PanelButton
-                    onClick={decreaseFontSize}
-                    title="Decrease font size"
-                    icon={faMinus}
-                  />
+      <div className="alby-interface centered">
+        <div id="ace-editor-panel">
+          <>
+            <div id="editor-panel-buttons">
+              <div>
+                <ButtonText
+                  onClick={executeCode}
+                  disabled={loading}
+                  title="Run script"
+                  icon={faPlay}
+                  buttonText="Run"
+                />
+                <div className="button-text-container">
+                  <div className="grouped-buttons">
+                    <PanelButton
+                      onClick={increaseFontSize}
+                      title="Increase font size"
+                      icon={faPlus}
+                    />
+                    <PanelButton
+                      onClick={decreaseFontSize}
+                      title="Decrease font size"
+                      icon={faMinus}
+                    />
+                  </div>
+                  <span className="button-text">Font size</span>
                 </div>
-                <span className="button-text">Font size</span>
+
+                <ButtonText
+                  onClick={toggleDarkMode}
+                  disabled={loading}
+                  title="Toggle Dark mode"
+                  icon={darkMode ? faMoon : faSun}
+                  buttonText={darkMode ? "Dark" : "Light"}
+                />
+
+                <ButtonText
+                  onClick={viewSelectedQuestModal}
+                  title="Selected quest"
+                  icon={faQuestionCircle}
+                  buttonText="Quest"
+                />
+
+                {questStarted ? <span>{selectedQuest}</span> : ""}
               </div>
-
-              <ButtonText
-                onClick={toggleDarkMode}
-                disabled={loading}
-                title="Toggle Dark mode"
-                icon={darkMode ? faMoon : faSun}
-                buttonText={darkMode ? "Dark" : "Light"}
-              />
-
-              <ButtonText
-                onClick={viewSelectedQuestModal}
-                title="Selected quest"
-                icon={faQuestionCircle}
-                buttonText="Quest"
-              />
-
-              {questStarted ? <span>{selectedQuest}</span> : ""}
+              <div>
+                <ButtonText
+                  onClick={() => {
+                    quest_data && submitPlayerAnswer(quest_data.quest_answer);
+                  }}
+                  disabled={loading || !quest_data}
+                  title="Submit answer"
+                  icon={faCheck}
+                  buttonText="Submit"
+                />
+                <ButtonText
+                  onClick={() => {
+                    onClose();
+                    setSelectedQuest(null);
+                    enableKeyListeners();
+                  }}
+                  title="Close"
+                  icon={faTimes}
+                  buttonText="Close"
+                />
+              </div>
             </div>
-            <div>
-              <ButtonText
-                onClick={() => {
-                  quest_data && submitPlayerAnswer(quest_data.quest_answer);
-                }}
-                disabled={loading}
-                title="Submit answer"
-                icon={faCheck}
-                buttonText="Submit"
-              />
-              <ButtonText
-                onClick={() => {
-                  onClose();
-                  setSelectedQuest(null);
-                  enableKeyListeners();
-                }}
-                title="Close"
-                icon={faTimes}
-                buttonText="Close"
-              />
+            <AceEditor
+              id="editor"
+              mode="java"
+              theme={editorTheme}
+              onChange={handleEditorChange}
+              fontSize={fontSize}
+              name="ace-editor"
+              editorProps={{ $blockScrolling: true }}
+              setOptions={{
+                enableBasicAutocompletion: true,
+              }}
+              value={editorValue}
+              style={{ width: `100%`, height: `100%` }}
+            />
+            <div className="java-output-message">
+              Terminal:
+              <br />
+              {loading ? "Executing..." : output}
             </div>
-          </div>
-          <AceEditor
-            id="editor"
-            mode="java"
-            theme={editorTheme}
-            onChange={handleEditorChange}
-            fontSize={fontSize}
-            name="ace-editor"
-            editorProps={{ $blockScrolling: true }}
-            setOptions={{
-              enableBasicAutocompletion: true,
-            }}
-            value={editorValue}
-            style={{ width: editorWidth }}
-          />
-          <div className="java-output-message">
-            Output:
-            <br />
-            {loading ? "Executing..." : output}
-          </div>
-        </>
+          </>
+        </div>
       </div>
     </>
   );
