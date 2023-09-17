@@ -9,9 +9,6 @@ import {
   faTimes,
   faCheck,
   faTasks,
-  faRefresh,
-  faArrowRight,
-  faArrowLeft,
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import AceEditor from "react-ace";
@@ -30,16 +27,13 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
-import {
-  executeJavaCode,
-  fetchNpcQuestDialog,
-  fetchNpcQuestDialogById,
-} from "../../db/HandleTable";
+import { executeJavaCode, fetchNpcQuestDialog } from "../../db/HandleTable";
 import ButtonText from "./ButtonText";
 import PanelButton from "./PanelButton";
 import ManageQuest from "../../db/ManageQuest";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import Popup from "../Popups/Popup";
+import ActiveQuestsModal from "./ActiveQuestsModal";
 
 const CodeEditor = ({ quest_data, onClose }) => {
   const [editorValue, setEditorValue] = useState("");
@@ -48,8 +42,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [fontSize, setFontSize] = useState(14);
   const [darkMode, setDarkMode] = useState(false);
   const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("Accepted quests");
-  const [modalDescription, setModalDescription] = useState("");
   const [activeQuests, setActiveQuests] = useState([]);
   const [selectedQuest, setSelectedQuest] = useState("");
 
@@ -79,10 +71,10 @@ const CodeEditor = ({ quest_data, onClose }) => {
       setEditorValue(quest_data.code_template);
     } else {
       setEditorValue(`public class script {
-      public static void main(String args[]) {
-            
-      }
-  }`);
+    public static void main(String args[]) {
+          
+    }
+}`);
     }
     disableKeyListeners();
   }, []);
@@ -135,13 +127,11 @@ const CodeEditor = ({ quest_data, onClose }) => {
           ) {
             console.log("CORRECT!");
             console.log(quest_data.id);
-            // updateQuestDataStatus(questId, "completed");
             manageQuest.updateQuestStatus(
               quest_data.id,
               manageQuest.status.completed
             );
             fetchActiveQuests();
-            // questTitle = null;
             handlePopupContent(
               "Quest Completed",
               quest_data.quest_title,
@@ -195,10 +185,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
     fetchActiveQuests();
   }, []);
 
-  const closeSelectedQuestModal = () => {
-    setIsQuestModalOpen(false);
-  };
-
   //   let startedQuest = questTitle ? true : false;
 
   const viewSelectedQuestModal = () => {
@@ -214,116 +200,6 @@ const CodeEditor = ({ quest_data, onClose }) => {
     // }
   };
 
-  const [questSelected, setQuestSelected] = useState(false);
-  const [questStarted, setQuestStarted] = useState(false);
-  const QuestModal = () => {
-    const handleQuestClick = async (quest_id) => {
-      let questData = await fetchNpcQuestDialogById(quest_id);
-      //   questTitle = questData[0].quest_title;
-      //   questFrom = questData[0].npc_name;
-      //   questDescription = questData[0].quest_description;
-      //   quest_answer = questData[0].quest_answer;
-
-      //   setEditorVal(questData[0].code_template);
-      //   setModalTitle(questTitle + " - " + questFrom);
-      //   setModalDescription(questDescription);
-      //   setQuestSelected(true);
-      //   setQuestStarted(false);
-    };
-
-    const ViewActiveQuests = () => {
-      return (
-        <>
-          {activeQuests.length > 0 ? (
-            activeQuests.map((element) => (
-              <p
-                className="active-quest-list"
-                key={element.id}
-                onClick={() => handleQuestClick(element.id)}
-              >
-                {element.quest_title}
-              </p>
-            ))
-          ) : (
-            <>
-              <p>No active quests found.</p>
-              <button
-                onClick={() => {
-                  closeSelectedQuestModal();
-                }}
-              >
-                View Quests
-              </button>
-            </>
-          )}
-        </>
-      );
-    };
-
-    return (
-      <div className="quest-modal-container">
-        <div className="quest-modal-content-container">
-          <button onClick={closeSelectedQuestModal}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-          {!questSelected ? (
-            <>
-              <button
-                onClick={() => {
-                  fetchActiveQuests();
-                }}
-                title="refresh"
-              >
-                <FontAwesomeIcon icon={faRefresh} />
-              </button>
-              <div className="quest-modal-header">
-                <span>{modalTitle}</span>
-              </div>
-              <div className="quest-modal-content">
-                <ViewActiveQuests />
-              </div>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  setQuestSelected(false);
-                  setModalTitle("Accepted quests");
-                }}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} />
-              </button>
-
-              <div className="quest-modal-header">
-                <span>{modalTitle}</span>
-              </div>
-              <div className="quest-modal-content">
-                <li>{modalDescription}</li>
-                <button
-                  onClick={() => {
-                    closeSelectedQuestModal();
-                    // setSelectedQuest(questTitle);
-                    // setSelectedQuestAnswer(quest_answer);
-                    setQuestStarted(true);
-                  }}
-                >
-                  {questStarted ? (
-                    <span>Ok</span>
-                  ) : (
-                    <>
-                      <span>Start</span>
-                      <FontAwesomeIcon icon={faArrowRight} />
-                    </>
-                  )}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       {showPopup && (
@@ -335,8 +211,14 @@ const CodeEditor = ({ quest_data, onClose }) => {
           positiveStyle={popupPositiveStyle}
         />
       )}
-      {isQuestModalOpen ? <QuestModal /> : null}
       <div className="alby-interface centered">
+        {isQuestModalOpen ? (
+          <ActiveQuestsModal
+            active_quests={activeQuests}
+            quest_data={quest_data}
+            onClose={() => setIsQuestModalOpen(false)}
+          />
+        ) : null}
         <div id="ace-editor-panel">
           <>
             <div id="editor-panel-buttons">
@@ -379,7 +261,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
                   buttonText="Quest"
                 />
 
-                {questStarted ? <span>{selectedQuest}</span> : ""}
+                {quest_data ? <span>{selectedQuest}</span> : ""}
               </div>
               <div>
                 <ButtonText
