@@ -37,9 +37,9 @@ const Popup = ({
       } `}
     >
       <div className="popup-content">
-        <p>{header}</p>
-        <p>{message}</p>
-        {description && <p>{description}</p>}
+        <p id="popup-header">{header}</p>
+        <p id="popup-message">{message}</p>
+        {description && <p id="popup-description">{description}</p>}
         <button onClick={handleClose}>Okay</button>
       </div>
     </div>

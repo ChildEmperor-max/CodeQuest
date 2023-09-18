@@ -1,3 +1,9 @@
+:root {
+  --box-shadow-color-positive: #0ff;
+  --box-shadow-color-negative: rgb(255, 38, 0);
+  --box-shadow-color-neutral: rgb(196, 136, 196);
+}
+
 .popup {
     display: none;
     position: fixed;
@@ -10,6 +16,9 @@
     border-radius: 5px;
     transition: opacity 2.3s ease-in-out;
     transform-origin: center;
+
+    width: 400px;
+    max-width: 400px;
 
     border-radius: 10%;
     border-top: 3px solid rgb(255, 217, 0);
@@ -30,6 +39,7 @@
     0 0 60px 10px #fff,
     0 0 100px 30px #f0f,
     0 0 140px 50px #0ff;
+    --box-shadow-color: #0ff;
   }
 
   .negative {
@@ -37,6 +47,7 @@
     0 0 60px 10px #fff,
     0 0 100px 30px #f0f,
     0 0 140px 50px rgb(255, 38, 0);
+    --box-shadow-color: rgb(255, 38, 0);
   }
 
   .neutral {
@@ -64,6 +75,21 @@
   .popup-content p {
     margin: 10px;
   }
+
+  #popup-header {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  #popup-message {
+    font-size: 30px;
+    font-weight: 800;
+  }
+
+  #popup-description {
+    font-size: 15px;
+    font-weight: 200;
+  }
   
   @keyframes fade-scale-in {
     0% {
@@ -78,7 +104,7 @@
       box-shadow:
       0 0 60px 30px #fff,
       0 0 100px 60px #f0f,
-      0 0 140px 90px #0ff;
+      0 0 140px 90px var(--box-shadow-color);
     }
     100% {
       opacity: 1;
@@ -86,7 +112,7 @@
       box-shadow:
       0 0 60px 10px #fff,
     0 0 100px 30px #f0f,
-    0 0 140px 50px #0ff;
+    0 0 140px 50px var(--box-shadow-color);
     }
   }
   @keyframes fade-scale-out {
@@ -96,7 +122,7 @@
         box-shadow:
         0 0 60px 10px #fff,
     0 0 100px 30px #f0f,
-    0 0 140px 50px #0ff;
+    0 0 140px 50px var(--box-shadow-color);
     }
     100% {
       opacity: 0;
@@ -105,5 +131,6 @@
       0 0 60px 30px #ffffff00,
       0 0 100px 60px rgba(255, 0, 255, 0),
       0 0 140px 90px rgba(0, 255, 255, 0);
+      display: none;
     }
   }
