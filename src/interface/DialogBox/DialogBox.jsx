@@ -14,6 +14,7 @@ const DialogBox = ({
   cameraControllerInstance,
   onQuestStarted,
   onOpenEditor,
+  onOpenQuestHint,
 }) => {
   const manageQuest = new ManageQuest();
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
@@ -56,26 +57,12 @@ const DialogBox = ({
           setCurrentDialog(dialogArr[0]);
         } else {
           setCurrentDialog(data[0].dialog);
-          // const responses = data.filter(
-          //   (dialog) => dialog.response_to === data[0].id
-          // );
-
-          const responses = data.filter((dialog) => {
-            const jsArray = dialog.response_to;
-            if (!Array.isArray(jsArray)) {
-              return false;
-            }
-            return jsArray.includes(data[0].id);
-          });
-
-          setCurrentResponses(responses);
+          setCurrentResponses(getCurrentResponses(data[0].id, data));
         }
 
         setDialogData(data);
         setDialogArray(dialogArr);
         setCurrentId(1);
-
-        // playTypingAnimation(currentDialog);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
@@ -86,6 +73,17 @@ const DialogBox = ({
     cameraControllerInstance.currentTarget = npc;
     moveCameraToTarget(playerInstance, 3);
   }, [npc]);
+
+  const getCurrentResponses = (id, data = dialogData) => {
+    const responses = data.filter((dialog) => {
+      const jsArray = dialog.response_to;
+      if (!Array.isArray(jsArray)) {
+        return false;
+      }
+      return jsArray.includes(id);
+    });
+    return responses;
+  };
 
   const moveCameraToTarget = (target, offset) => {
     const targetPosition = {
@@ -119,28 +117,9 @@ const DialogBox = ({
   };
 
   const getAllResponse = ({ id }) => {
-    // const nextDialogObj = dialogData.find(
-    //   (dialog) => dialog.response_to === id
-    // );
-    const nextDialogObj = dialogData.filter((dialog) => {
-      const jsArray = dialog.response_to;
-      if (!Array.isArray(jsArray)) {
-        return false;
-      }
-      return jsArray.includes(id);
-    });
-    // const responses = dialogData.filter(
-    //   (dialog) => dialog.response_to === nextDialogObj.id
-    // );
-    const responses = dialogData.filter((dialog) => {
-      const jsArray = dialog.response_to;
-      if (!Array.isArray(jsArray)) {
-        return false;
-      }
-      return jsArray.includes(nextDialogObj[0].id);
-    });
+    const nextDialogObj = getCurrentResponses(id);
 
-    setCurrentResponses(responses);
+    setCurrentResponses(getCurrentResponses(nextDialogObj[0].id));
     return nextDialogObj[0];
   };
 
@@ -162,6 +141,10 @@ const DialogBox = ({
           setCurrentId(0);
         }
 
+        if (currentActiveDialog[0].quest_hint) {
+          onOpenQuestHint(currentActiveDialog[0].quest_hint);
+        }
+
         if (nextPage + 1 < dialogArray.length) {
           setCurrentDialog(dialogArray[nextPage]);
           setCurrentResponses([]);
@@ -174,18 +157,7 @@ const DialogBox = ({
             }
           }
           setCurrentDialog(dialogArray[nextPage]);
-          // const responses = dialogData.filter(
-          //   (dialog) => dialog.response_to === currentId
-          // );
-          const responses = dialogData.filter((dialog) => {
-            const jsArray = dialog.response_to;
-            if (!Array.isArray(jsArray)) {
-              return false;
-            }
-            return jsArray.includes(currentId);
-          });
-
-          setCurrentResponses(responses);
+          setCurrentResponses(getCurrentResponses(currentId));
           switchCameraTarget();
           if (dialogArray[nextPage] === undefined) {
             onClose();
