@@ -4,7 +4,6 @@ import Interactibles from "../lib/Interactibles";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
-import QuestManager from "../lib/QuestManager";
 import ManageQuest from "../db/ManageQuest";
 
 import {
@@ -23,8 +22,6 @@ export default class NPCLoader extends Interactibles {
     this.stateMachine = new StateMachine(new IdleState(this));
     // Set the default rotation angle (in radians)
     // this.defaultRotationAngle = Math.PI / 2; // Example: 90 degrees
-    this.questManager = new QuestManager();
-    // this.questManager.initialize();
     this.dialogContainer = document.getElementById("npc-dialog");
     this.rayLength = 0.02;
   }
@@ -373,13 +370,6 @@ export default class NPCLoader extends Interactibles {
       this.questTitle = questTitle;
       this.questCodeTemplate = codeTemplate;
       this.questAnswer = questAnswer;
-      // this.questManager.initialize();
-      //   this.questManager.addQuestItem(
-      //     this.quest,
-      //     questTitle,
-      //     this.npcName,
-      //     questType
-      //   );
     }
 
     // addNpc(this.npcName);
@@ -610,13 +600,6 @@ export default class NPCLoader extends Interactibles {
     clearInterval(this.typingAnimation);
     if (this.hasQuest) {
       this.player.questsList.push(this.questTitle);
-      this.questManager.moveQuestToOngoing(
-        this.questTitle,
-        this.quest,
-        this.npcName,
-        this.questCodeTemplate,
-        this.questAnswer
-      );
       console.log("Quest accepted.");
     }
   }

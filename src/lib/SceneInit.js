@@ -6,7 +6,6 @@ import CameraController from "./CameraControls";
 import { LoadWorld, updateWorldRender } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
-import QuestManager from "./QuestManager";
 import DynamicLabel from "./DynamicLabelDisplay";
 
 import keys from "./KeyControls";
@@ -28,8 +27,6 @@ export default class SceneInit {
     this.player = undefined;
     this.cameraControls = undefined;
     this.npcArray = [];
-    this.questManager = new QuestManager();
-    this.questManager.initialize();
   }
 
   initialize(player, npcs, camera, cameraControls) {
