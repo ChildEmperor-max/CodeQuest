@@ -1,5 +1,5 @@
 :root {
-  --main-dialog-color: rgba(61, 61, 61, 0.788);
+  --main-dialog-color: rgba(61, 61, 61, 0.836);
   --side-dialog-color: rgba(255, 255, 255, 0);
 }
 
@@ -12,7 +12,7 @@
     padding-right: 30px;
     background: linear-gradient(90deg, var(--side-dialog-color) 0%, var(--main-dialog-color) 20%, var(--main-dialog-color) 50%, var(--main-dialog-color) 80%, var(--side-dialog-color) 100%);
     box-sizing: border-box;
-    z-index: 3;
+    z-index: 4;
   }
   .npc-dialog-name {
     padding: 2px;

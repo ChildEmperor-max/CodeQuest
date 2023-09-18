@@ -1,6 +1,8 @@
 .alby-interface {
     height: 85%;
-    width: 85%;
+    /* width: 85%; */
+    width: 900px;
+    max-width: 1000px;
     position: fixed;
     overflow: hidden;
     z-index: 3;
@@ -15,6 +17,8 @@
 
     transform-origin: center;
     animation: pop-out 1s ease-in-out;
+
+    top: 3%;
 }
 
 .alby-interface-content {
