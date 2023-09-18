@@ -211,7 +211,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
           positiveStyle={popupPositiveStyle}
         />
       )}
-      <div className="alby-interface centered">
+      <div className="alby-interface">
         {isQuestModalOpen ? (
           <ActiveQuestsModal
             active_quests={activeQuests}
@@ -219,6 +219,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
             onClose={() => setIsQuestModalOpen(false)}
           />
         ) : null}
+        <p id="code-editor-label">Alby CodeEditor</p>
         <div id="ace-editor-panel">
           <>
             <div id="editor-panel-buttons">
@@ -300,7 +301,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
               style={{ width: `100%`, height: `100%` }}
             />
             <div className="java-output-message">
-              Terminal:
+              Output:
               <br />
               {loading ? "Executing..." : output}
             </div>
