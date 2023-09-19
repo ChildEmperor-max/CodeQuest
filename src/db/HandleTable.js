@@ -29,8 +29,6 @@ export function executeJavaCode(data) {
           console.error("Unknown error occurred during Java code execution");
           result.error = "Unknown error occurred during Java code execution";
         }
-      } else {
-        console.log("Java code output:", result.output);
       }
       return result;
     })
