@@ -58,6 +58,7 @@ export default function InterfaceHandler({
 
   const [currentEditorQuest, setCurrentEditorQuest] = useState(null);
   const [isQuestHint, setIsQuestHint] = useState(null);
+  const [nextHint, setNextHint] = useState(null);
 
   const toggleInterface = async (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
@@ -93,7 +94,12 @@ export default function InterfaceHandler({
   };
 
   const handleQuestHint = (quest_hint) => {
-    setIsQuestHint(quest_hint);
+    if (quest_hint) {
+      setIsQuestHint(quest_hint);
+    } else {
+      setNextHint(null);
+      setIsQuestHint(null);
+    }
   };
 
   useEffect(() => {
@@ -185,11 +191,15 @@ export default function InterfaceHandler({
           onOpenQuestHint={(quest_hint) => {
             handleQuestHint(quest_hint);
           }}
+          onHighlightQuestHint={(line) => {
+            setNextHint(line);
+          }}
         />
       ) : null}
       {isQuestHint ? (
         <QuestHint
           questHint={isQuestHint}
+          nextHint={nextHint}
           onClose={() => setIsQuestHint(null)}
         />
       ) : null}
