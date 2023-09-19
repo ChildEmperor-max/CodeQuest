@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
 
-const QuestHint = ({ questHint, onClose }) => {
-  useEffect(() => {
-    console.log(questHint);
-  }, []);
-
-  // Split the questHint into lines
+const QuestHint = ({ questHint, nextHint, onClose }) => {
   const questHintLines = questHint.split("\n");
+
+  useEffect(() => {
+    if (nextHint - 1 > questHintLines.length) {
+      onClose();
+    }
+  }, [nextHint]);
 
   return (
     <div className="alby-interface centered">
@@ -17,7 +18,12 @@ const QuestHint = ({ questHint, onClose }) => {
           <code>
             <div className="code-snippet">
               {questHintLines.map((line, index) => (
-                <div className="line" key={index}>
+                <div
+                  className={`line ${
+                    index === nextHint - 1 ? "highlight" : ""
+                  }`}
+                  key={index}
+                >
                   {line}
                 </div>
               ))}
