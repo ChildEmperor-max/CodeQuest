@@ -109,7 +109,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
     executeJavaCodeAndHandleOutput();
   };
 
-  const submitPlayerAnswer = (ans) => {
+  const submitPlayerAnswer = (quest_answer) => {
     executeJavaCodeAndHandleOutput()
       .then((response) => {
         if (!response.error) {
@@ -119,14 +119,15 @@ const CodeEditor = ({ quest_data, onClose }) => {
           //     console.log(variableName.trim());
           //   });
           // }
-          console.log(ans);
           let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
-          let correctAnswer = ans.replace(/\b\w+\b\s*(?==)/g, "");
+          let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
+          if (quest_data.id === 3) {
+            console.log("chosen username: ", response.output);
+          }
+
           if (
             playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
           ) {
-            console.log("CORRECT!");
-            console.log(quest_data.id);
             manageQuest.updateQuestStatus(
               quest_data.id,
               manageQuest.status.completed
