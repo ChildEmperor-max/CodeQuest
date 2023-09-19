@@ -15,6 +15,7 @@ const DialogBox = ({
   onQuestStarted,
   onOpenEditor,
   onOpenQuestHint,
+  onHighlightQuestHint,
 }) => {
   const manageQuest = new ManageQuest();
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
@@ -143,6 +144,9 @@ const DialogBox = ({
 
         if (currentActiveDialog[0].quest_hint) {
           onOpenQuestHint(currentActiveDialog[0].quest_hint);
+          onHighlightQuestHint(nextPage - 1);
+        } else {
+          onOpenQuestHint(null);
         }
 
         if (nextPage + 1 < dialogArray.length) {
