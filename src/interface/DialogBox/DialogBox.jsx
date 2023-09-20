@@ -63,7 +63,7 @@ const DialogBox = ({
 
         setDialogData(data);
         setDialogArray(dialogArr);
-        setCurrentId(1);
+        setCurrentId(data[0].id);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
@@ -170,9 +170,7 @@ const DialogBox = ({
         }
       } catch (error) {
         onClose();
-        console.log(
-          "Error[NOT SEVERE]: Tried to show a nonexistent dialog page. This is to hide the dialog box when there is no next dialog."
-        );
+        console.log(error);
         playerInstance.onNpcZone(null);
       }
     } else {
@@ -183,16 +181,21 @@ const DialogBox = ({
 
   const handleResponse = ({ id, quest_id }) => {
     setSkipTypingAnimation(false);
-    const nextNpcDialog = getAllResponse({ id: id });
-    if (nextNpcDialog.is_array) {
-      convertToArray({ dialog: nextNpcDialog.dialog, id: id });
-    } else {
-      setCurrentDialog(nextNpcDialog.dialog);
-    }
     if (quest_id) {
       acceptQuest(quest_id);
     }
-    setCurrentId(nextNpcDialog.id);
+    try {
+      const nextNpcDialog = getAllResponse({ id: id });
+
+      if (nextNpcDialog.is_array) {
+        convertToArray({ dialog: nextNpcDialog.dialog, id: id });
+      } else {
+        setCurrentDialog(nextNpcDialog.dialog);
+      }
+      setCurrentId(nextNpcDialog.id);
+    } catch (e) {
+      onClose();
+    }
   };
 
   const acceptQuest = async (quest_id) => {
