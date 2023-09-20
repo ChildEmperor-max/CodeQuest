@@ -16,18 +16,14 @@ const QuestHint = ({ questHint, nextHint, onClose }) => {
       <div className="alby-interface-content">
         <div className="code-snippet">
           <code>
-            <div className="code-snippet">
-              {questHintLines.map((line, index) => (
-                <div
-                  className={`line ${
-                    index === nextHint - 1 ? "highlight" : ""
-                  }`}
-                  key={index}
-                >
-                  {line}
-                </div>
-              ))}
-            </div>
+            {questHintLines.map((line, index) => (
+              <div
+                className={`line ${index === nextHint - 1 ? "highlight" : ""}`}
+                key={index}
+              >
+                {line}
+              </div>
+            ))}
           </code>
         </div>
       </div>
