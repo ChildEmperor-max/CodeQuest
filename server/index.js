@@ -14,10 +14,12 @@ import {
   handleFetchDialog,
   handleFetchDialogById,
   handleFetchDialogByNpcId,
+  handleFetchDialogByBranch,
 } from "./handlers/dialogHandler.js";
 import {
   handleInsertNpc,
   handleFetchNpc,
+  handleFetchNpcById,
   fetchNpcQuestDialog,
   fetchNpcQuestDialogById,
   handleFetchNpcDataByName,
@@ -32,6 +34,10 @@ import {
   handleFetchCompletedQuestCount,
 } from "./handlers/questHandler.js";
 import { handleFetchAchievements } from "./handlers/achievementsHandler.js";
+import {
+  handleFetchHelp,
+  handleFetchHelpById,
+} from "./handlers/helpHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -136,6 +142,25 @@ app.get("/dialog", (req, res) => {
 
 app.get("/achievements", (req, res) => {
   handleFetchAchievements(req, res, pool);
+});
+
+app.get("/help", (req, res) => {
+  handleFetchHelp(req, res, pool);
+});
+
+app.get("/help/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchHelpById(id, res, pool);
+});
+
+app.get("/dialog/get-dialog-branch/:branch", (req, res) => {
+  const branch = req.params.branch;
+  handleFetchDialogByBranch(branch, res, pool);
+});
+
+app.get("/npc/get-npc-by-id/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchNpcById(id, res, pool);
 });
 
 app.get("/", (req, res) => {
