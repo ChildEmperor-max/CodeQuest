@@ -26,18 +26,19 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: 100%;
 }
 
 .code-snippet {
+    width: 100%;
     background-color: #09034b;
-    padding: 20px;
     white-space: pre;
     position: relative;
     color: #bababa;
 }
 
 .code-snippet code {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .line {
@@ -52,13 +53,20 @@
     left: 0;
     width: 1.5em; /* Adjust as needed */
     text-align: right;
-    color: rgb(75, 75, 75);
+    color: rgb(102, 102, 102);
     text-align: center;
+}
+
+
+.line.highlight::before  {
+    color: white;
+    animation: line-number-highlight-effect 1s infinite;
 }
 
 .highlight {
     background-color: rgb(42, 72, 148); /* Highlight color */
     color: white; /* Text color for highlighted lines */
+    animation: border-highlight-effect 1s infinite;
 }
 
 @keyframes pop-out {
@@ -69,5 +77,28 @@
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@keyframes border-highlight-effect {
+    0% {
+        outline: 2px solid white;
+    }
+    70% {
+        outline: 2px solid rgba(255, 255, 255, 0.205);
+    }
+    100% {
+        outline: 2px solid white;
+    }
+}
+@keyframes line-number-highlight-effect {
+    0% {
+        color: white;
+    }
+    70% {
+        color: rgba(255, 255, 255, 0.205);
+    }
+    100% {
+        color: white;
     }
 }
