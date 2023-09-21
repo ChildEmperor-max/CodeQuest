@@ -4,6 +4,7 @@ const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 const achievementsAPI = host + "achievements";
+const helpAPI = host + "help";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -154,6 +155,20 @@ export function fetchNpcQuestDialogById(id) {
     });
 }
 
+export function fetchNpcDataById(id) {
+  return fetch(npcAPI + "/get-npc-by-id/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching NPC data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
 export function fetchNpcDataByName(name) {
   return fetch(npcAPI + "/get-npc/" + name)
     .then((response) => {
@@ -198,6 +213,20 @@ export function fetchQuestById(id) {
 
 export function fetchDialogById(id) {
   return fetch(dialogAPI + "/get-dialog/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Dialog data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchDialogByBranch(branch) {
+  return fetch(dialogAPI + "/get-dialog-branch/" + branch)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Error fetching Dialog data: " + response.statusText);
@@ -356,6 +385,34 @@ export function fetchDialogByNpcId(id) {
     .then((response) => {
       if (!response.ok) {
         throw new Error("Error fetching Dialog data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchAllHelp() {
+  return fetch(helpAPI)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Help data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchHelpById(id) {
+  return fetch(helpAPI + "/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Help data: " + response.statusText);
       }
       return response.json();
     })
