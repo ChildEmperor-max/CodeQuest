@@ -18,21 +18,23 @@ const TypingAnimation = ({ text, delay, onFinishedTyping, skipAnimation }) => {
 
   useEffect(() => {
     let timeout;
-    if (currentIndex < text.length && !skipAnimation) {
-      setIsTyping(true);
-      onFinishedTyping(false);
-      timeout = setTimeout(() => {
-        setCurrentText((prevText) => prevText + text[currentIndex]);
-        setCurrentIndex((prevIndex) => prevIndex + 1);
-      }, delay);
+    if (text !== undefined) {
+      if (currentIndex < text.length && !skipAnimation) {
+        setIsTyping(true);
+        onFinishedTyping(false);
+        timeout = setTimeout(() => {
+          setCurrentText((prevText) => prevText + text[currentIndex]);
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+        }, delay);
 
-      return () => clearTimeout(timeout);
-    } else {
-      if (isTyping) {
-        setIsTyping(false);
-        onFinishedTyping(true);
-        if (skipAnimation) {
-          handleSkipAnimation();
+        return () => clearTimeout(timeout);
+      } else {
+        if (isTyping) {
+          setIsTyping(false);
+          onFinishedTyping(true);
+          if (skipAnimation) {
+            handleSkipAnimation();
+          }
         }
       }
     }
