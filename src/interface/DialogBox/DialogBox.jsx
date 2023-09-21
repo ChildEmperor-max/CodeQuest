@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import DialogButton from "./DialogButton";
-import { viewDialogById, viewNpcData } from "../../db/HandleTable";
+import {
+  viewDialogById,
+  viewNpcData,
+  fetchHelpById,
+  fetchDialogByBranch,
+  fetchNpcDataById,
+} from "../../db/HandleTable";
 import TypingAnimation from "./TypingAnimation";
 import { animateCameraToTarget } from "../../lib/cameraAnimation";
 import ManageQuest from "../../db/ManageQuest";
@@ -16,9 +22,10 @@ const DialogBox = ({
   onOpenEditor,
   onOpenQuestHint,
   onHighlightQuestHint,
+  onSetInteractingNpc,
 }) => {
   const manageQuest = new ManageQuest();
-  const [currentTalkingNpc, setCurrentTalkingNpc] = useState(null);
+  const [currentTalkingNpc, setCurrentTalkingNpc] = useState(npc);
 
   const [dialogData, setDialogData] = useState([]);
   const [dialogArray, setDialogArray] = useState([]);
@@ -51,8 +58,10 @@ const DialogBox = ({
 
   useEffect(() => {
     getNpcDialog()
-      .then((data) => {
+      .then((allDialog) => {
         let dialogArr;
+        const data = allDialog.filter((dialog) => dialog.stage === "start");
+
         if (data[0].is_array) {
           dialogArr = data[0].dialog.split("---");
           setCurrentDialog(dialogArr[0]);
@@ -61,7 +70,7 @@ const DialogBox = ({
           setCurrentResponses(getCurrentResponses(data[0].id, data));
         }
 
-        setDialogData(data);
+        setDialogData(allDialog);
         setDialogArray(dialogArr);
         setCurrentId(data[0].id);
       })
@@ -74,17 +83,6 @@ const DialogBox = ({
     cameraControllerInstance.currentTarget = npc;
     moveCameraToTarget(playerInstance, 3);
   }, [npc]);
-
-  const getCurrentResponses = (id, data = dialogData) => {
-    const responses = data.filter((dialog) => {
-      const jsArray = dialog.response_to;
-      if (!Array.isArray(jsArray)) {
-        return false;
-      }
-      return jsArray.includes(id);
-    });
-    return responses;
-  };
 
   const moveCameraToTarget = (target, offset) => {
     const targetPosition = {
@@ -108,20 +106,9 @@ const DialogBox = ({
     }
   };
 
-  const convertToArray = ({ dialog, id }) => {
-    if (id !== currentId) {
-      const result = dialog.split("---");
-      setCurrentDialog(result[0]);
-      setDialogArray(result);
-      setCurrentResponses([]);
-    }
-  };
-
-  const getAllResponse = ({ id }) => {
-    const nextDialogObj = getCurrentResponses(id);
-
-    setCurrentResponses(getCurrentResponses(nextDialogObj[0].id));
-    return nextDialogObj[0];
+  const currentActiveDialog = () => {
+    const data = dialogData.filter((dialog) => dialog.id === currentId);
+    return data[0];
   };
 
   const handleNextDialog = () => {
@@ -129,21 +116,19 @@ const DialogBox = ({
       setSkipTypingAnimation(false);
       try {
         const nextPage = dialogArray.indexOf(currentDialog) + 1;
-
-        const currentActiveDialog = dialogData.filter(
-          (dialog) => dialog.id === currentId
-        );
+        checkSpeakingNpc(currentActiveDialog().npc_id);
         if (
-          currentActiveDialog[0].stage === "end" &&
-          nextPage + 1 < dialogArray.length
+          currentActiveDialog().stage === "end" &&
+          nextPage === dialogArray.length
         ) {
           onClose();
           playerInstance.onNpcZone(null);
           setCurrentId(0);
+          onOpenQuestHint(null);
         }
 
-        if (currentActiveDialog[0].quest_hint) {
-          onOpenQuestHint(currentActiveDialog[0].quest_hint);
+        if (currentActiveDialog().quest_hint) {
+          onOpenQuestHint(currentActiveDialog().quest_hint);
           onHighlightQuestHint(nextPage - 1);
         } else {
           onOpenQuestHint(null);
@@ -153,7 +138,7 @@ const DialogBox = ({
           setCurrentDialog(dialogArray[nextPage]);
           setCurrentResponses([]);
         } else {
-          if (currentActiveDialog[0].open_editor) {
+          if (currentActiveDialog().open_editor) {
             if (
               npc.currentQuest[0].quest_status === manageQuest.status.active
             ) {
@@ -166,17 +151,45 @@ const DialogBox = ({
           if (dialogArray[nextPage] === undefined) {
             onClose();
             playerInstance.onNpcZone(null);
+            onOpenQuestHint(null);
           }
         }
       } catch (error) {
-        onClose();
         console.log(error);
+        onClose();
         playerInstance.onNpcZone(null);
       }
     } else {
       setSkipTypingAnimation(true);
       setTypingFinished(true);
     }
+  };
+
+  const convertToArray = ({ dialog, id }) => {
+    if (id !== currentId) {
+      const result = dialog.split("---");
+      setCurrentDialog(result[0]);
+      setDialogArray(result);
+      setCurrentResponses([]);
+    }
+  };
+
+  const getCurrentResponses = (id, data = dialogData) => {
+    const responses = data.filter((dialog) => {
+      const jsArray = dialog.response_to;
+      if (!Array.isArray(jsArray)) {
+        return false;
+      }
+      return jsArray.includes(id);
+    });
+    return responses;
+  };
+
+  const getAllResponse = ({ id }) => {
+    const nextDialogObj = getCurrentResponses(id);
+
+    setCurrentResponses(getCurrentResponses(nextDialogObj[0].id));
+    return nextDialogObj[0];
   };
 
   const handleResponse = ({ id, quest_id }) => {
@@ -186,7 +199,7 @@ const DialogBox = ({
     }
     try {
       const nextNpcDialog = getAllResponse({ id: id });
-
+      checkSpeakingNpc(nextNpcDialog.npc_id);
       if (nextNpcDialog.is_array) {
         convertToArray({ dialog: nextNpcDialog.dialog, id: id });
       } else {
@@ -195,6 +208,46 @@ const DialogBox = ({
       setCurrentId(nextNpcDialog.id);
     } catch (e) {
       onClose();
+      onOpenQuestHint(null);
+    }
+  };
+
+  const openHelp = (id) => {
+    const res = dialogData.filter((dialog) => {
+      return dialog.id === id;
+    });
+    if (res[0].open_helper_id) {
+      getHelpById(res[0].open_helper_id)
+        .then((result) => {
+          const albyNPC = npcInstances.filter((item) => {
+            return item.npcName === "Alby";
+          });
+          setDialogData(result[0].description);
+          setCurrentTalkingNpc(albyNPC);
+          setCurrentResponses([]);
+          setDialogArray(result[0].description);
+          setCurrentDialog(result[0].description[0]);
+          // moveCameraToTarget(playerInstance, 3);
+          // cameraControllerInstance.currentTarget = playerInstance;
+          setIsPlayerInteractingNpc(albyNPC);
+
+          onOpenQuestHint(result[0].quest_hint);
+          onSetInteractingNpc(albyNPC);
+          playerInstance.onNpcZone(albyNPC);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const getHelpById = async (id) => {
+    try {
+      const help = await fetchHelpById(id);
+      return help;
+    } catch (error) {
+      console.error("[ERROR]:", error);
+      throw error;
     }
   };
 
@@ -211,9 +264,35 @@ const DialogBox = ({
 
   const getNpcDialog = async () => {
     try {
-      const npcData = await viewNpcData(npc.npcName);
+      const npcData = await viewNpcData(currentTalkingNpc.npcName);
       const dialog = await viewDialogById(npcData[0].id);
-      return dialog;
+      const data = await fetchDialogByBranch(dialog[0].dialog_branch);
+      return data;
+    } catch (error) {
+      console.error("[ERROR]:", error);
+      throw error;
+    }
+  };
+
+  const checkSpeakingNpc = (id) => {
+    getNpcData(id)
+      .then((result) => {
+        if (currentTalkingNpc.npcName !== result[0].npc_name) {
+          const talkingNpc = npcInstances.filter((item) => {
+            return item.npcName === result[0].npc_name;
+          });
+          setCurrentTalkingNpc(talkingNpc[0]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getNpcData = async (id) => {
+    try {
+      const data = await fetchNpcDataById(id);
+      return data;
     } catch (error) {
       console.error("[ERROR]:", error);
       throw error;
@@ -222,7 +301,9 @@ const DialogBox = ({
 
   return (
     <div className="npc-dialog-container">
-      <div className="npc-dialog-name">{npc ? <p>{npc.npcName}</p> : null}</div>
+      <div className="npc-dialog-name">
+        {currentTalkingNpc ? <p>{currentTalkingNpc.npcName}</p> : null}
+      </div>
       <div className="npc-dialog-text">
         <TypingAnimation
           text={currentDialog}
