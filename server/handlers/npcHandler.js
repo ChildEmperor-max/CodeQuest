@@ -27,6 +27,20 @@ export function handleFetchIdByName(name, res, pool) {
     });
 }
 
+export function handleFetchNpcById(id, res, pool) {
+  pool
+    .query("SELECT * FROM npc WHERE id = $1", [id])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export async function fetchNpcQuestDialogById(id, res, pool) {
   try {
     const query = fs.readFileSync(

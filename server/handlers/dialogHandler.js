@@ -28,6 +28,20 @@ export function handleFetchDialogById(id, res, pool) {
     });
 }
 
+export function handleFetchDialogByBranch(branch, res, pool) {
+  pool
+    .query("SELECT * FROM dialog WHERE dialog_branch = $1", [branch])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((err) => {
+      console.error("Error executing database query:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    });
+}
+
 export async function handleFetchDialogByNpcId(id, res, pool) {
   try {
     const query = fs.readFileSync("server/sql/getDialogByNpcId.sql", "utf8");
