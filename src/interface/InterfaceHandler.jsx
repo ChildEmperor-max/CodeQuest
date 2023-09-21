@@ -194,6 +194,7 @@ export default function InterfaceHandler({
           onHighlightQuestHint={(line) => {
             setNextHint(line);
           }}
+          onSetInteractingNpc={(npc) => setIsPlayerInteractingNpc(npc)}
         />
       ) : null}
       {isQuestHint ? (
