@@ -1,4 +1,4 @@
-SELECT dialog.id, npc.npc_name, dialog.dialog, dialog.response_to, dialog.open_helper_id, dialog.is_array, dialog.stage, dialog.quest_id, dialog.open_editor, dialog.quest_hint
+SELECT dialog.id, npc.npc_name, dialog.dialog, dialog.response_to, dialog.open_helper_id, dialog.dialog_branch, dialog.is_array, dialog.stage, dialog.quest_id, dialog.open_editor, dialog.quest_hint
 FROM npc
 LEFT JOIN dialog
 ON npc.id = $1
