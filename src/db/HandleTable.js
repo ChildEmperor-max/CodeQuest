@@ -421,3 +421,17 @@ export function fetchHelpById(id) {
       throw error;
     });
 }
+
+export function fetchHelpByDialogId(id) {
+  return fetch(helpAPI + "/get-help-dialog/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Help data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
