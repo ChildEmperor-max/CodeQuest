@@ -28,3 +28,15 @@ export function handleFetchHelpById(id, res, pool) {
       res.end("Internal Server Error");
     });
 }
+
+export async function handleFetchHelpByDialogId(id, res, pool) {
+  try {
+    const query = fs.readFileSync("server/sql/viewHelpDialogById.sql", "utf8");
+    const result = await pool.query(query, [id]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
+}
