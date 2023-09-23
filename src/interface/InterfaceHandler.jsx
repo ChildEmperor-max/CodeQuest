@@ -199,7 +199,7 @@ export default function InterfaceHandler({
       ) : null}
       {isQuestHint ? (
         <QuestHint
-          questHint={isQuestHint}
+          questHintId={isQuestHint}
           nextHint={nextHint}
           onClose={() => setIsQuestHint(null)}
         />
