@@ -111,15 +111,34 @@ const DialogBox = ({
     return data[0];
   };
 
+  const checkQuestHint = (text) => {
+    if (currentActiveDialog().quest_hint_id) {
+      onOpenQuestHint(currentActiveDialog().quest_hint_id);
+      const angleBracket = text.match(/<([^>]+)>/);
+
+      if (angleBracket) {
+        const highlightNum = angleBracket[1];
+        onHighlightQuestHint(highlightNum);
+      } else {
+        onHighlightQuestHint(null);
+      }
+    } else {
+      onOpenQuestHint(null);
+    }
+  };
+
   const handleNextDialog = () => {
     if (typingFinished) {
       setSkipTypingAnimation(false);
       try {
         const nextPage = dialogArray.indexOf(currentDialog) + 1;
+        let nextText = dialogArray[nextPage];
+
         checkSpeakingNpc(currentActiveDialog().npc_id);
         if (
           currentActiveDialog().stage === "end" &&
-          nextPage === dialogArray.length
+          (nextPage === dialogArray.length ||
+            currentActiveDialog().is_array === null)
         ) {
           onClose();
           playerInstance.onNpcZone(null);
@@ -127,15 +146,10 @@ const DialogBox = ({
           onOpenQuestHint(null);
         }
 
-        if (currentActiveDialog().quest_hint) {
-          onOpenQuestHint(currentActiveDialog().quest_hint);
-          onHighlightQuestHint(nextPage - 1);
-        } else {
-          onOpenQuestHint(null);
-        }
+        checkQuestHint(nextText);
 
         if (nextPage + 1 < dialogArray.length) {
-          setCurrentDialog(dialogArray[nextPage]);
+          setCurrentDialog(nextText);
           setCurrentResponses([]);
         } else {
           if (currentActiveDialog().open_editor) {
@@ -145,10 +159,10 @@ const DialogBox = ({
               onOpenEditor(npc.currentQuest[0]);
             }
           }
-          setCurrentDialog(dialogArray[nextPage]);
+          setCurrentDialog(nextText);
           setCurrentResponses(getCurrentResponses(currentId));
           switchCameraTarget();
-          if (dialogArray[nextPage] === undefined) {
+          if (nextText === undefined) {
             onClose();
             playerInstance.onNpcZone(null);
             onOpenQuestHint(null);
@@ -231,7 +245,7 @@ const DialogBox = ({
           // cameraControllerInstance.currentTarget = playerInstance;
           setIsPlayerInteractingNpc(albyNPC);
 
-          onOpenQuestHint(result[0].quest_hint);
+          onOpenQuestHint(result[0].quest_hint_id);
           onSetInteractingNpc(albyNPC);
           playerInstance.onNpcZone(albyNPC);
         })
