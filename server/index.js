@@ -39,6 +39,10 @@ import {
   handleFetchHelpById,
   handleFetchHelpByDialogId,
 } from "./handlers/helpHandler.js";
+import {
+  handleFetchCharacterById,
+  handleUpdateCharacterNameById,
+} from "./handlers/characterHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -167,6 +171,15 @@ app.get("/dialog/get-dialog-branch/:branch", (req, res) => {
 app.get("/npc/get-npc-by-id/:id", (req, res) => {
   const id = req.params.id;
   handleFetchNpcById(id, res, pool);
+});
+
+app.get("/character/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchCharacterById(id, res, pool);
+});
+
+app.get("/character/update/character-name", (req, res) => {
+  handleUpdateCharacterNameById(req, res, pool);
 });
 
 app.get("/", (req, res) => {

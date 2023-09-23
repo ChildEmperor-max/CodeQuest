@@ -5,6 +5,7 @@ const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
 const achievementsAPI = host + "achievements";
 const helpAPI = host + "help";
+const characterAPI = host + "character";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -434,4 +435,51 @@ export function fetchHelpByDialogId(id) {
       console.error("Error:", error);
       throw error;
     });
+}
+
+export function fetchCharacterById(player_id) {
+  return fetch(characterAPI + "/" + player_id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching Character data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function updateCharacterNameById(id, new_name) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/character-name/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        new_name: new_name,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character name: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character name updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }
