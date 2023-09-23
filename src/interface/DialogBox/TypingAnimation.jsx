@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CustomColorText from "./CustomColorText";
 
 const TypingAnimation = ({ text, delay, onFinishedTyping, skipAnimation }) => {
   const [currentText, setCurrentText] = useState("");
@@ -40,7 +41,11 @@ const TypingAnimation = ({ text, delay, onFinishedTyping, skipAnimation }) => {
     }
   }, [currentIndex, delay, text, isTyping, setIsTyping, skipAnimation]);
 
-  return <span>{currentText}</span>;
+  return (
+    <span>
+      <CustomColorText text={currentText} />
+    </span>
+  );
 };
 
 export default TypingAnimation;
