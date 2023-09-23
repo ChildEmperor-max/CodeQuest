@@ -37,6 +37,7 @@ import { handleFetchAchievements } from "./handlers/achievementsHandler.js";
 import {
   handleFetchHelp,
   handleFetchHelpById,
+  handleFetchHelpByDialogId,
 } from "./handlers/helpHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -151,6 +152,11 @@ app.get("/help", (req, res) => {
 app.get("/help/:id", (req, res) => {
   const id = req.params.id;
   handleFetchHelpById(id, res, pool);
+});
+
+app.get("/help/get-help-dialog/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchHelpByDialogId(id, res, pool);
 });
 
 app.get("/dialog/get-dialog-branch/:branch", (req, res) => {
