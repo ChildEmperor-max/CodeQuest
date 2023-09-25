@@ -3,6 +3,7 @@ import DialogButton from "./DialogButton";
 import {
   viewDialogById,
   viewNpcData,
+  viewQuestById,
   fetchHelpById,
   fetchDialogByBranch,
   fetchNpcDataById,
@@ -58,21 +59,26 @@ const DialogBox = ({
 
   useEffect(() => {
     getNpcDialog()
-      .then((allDialog) => {
+      .then(([data, questData]) => {
         let dialogArr;
-        const data = allDialog.filter((dialog) => dialog.stage === "start");
-
-        if (data[0].is_array) {
-          dialogArr = data[0].dialog.split("---");
+        const startingDialog = data.filter((dialog) => {
+          if (questData[0].quest_status === "inactive") {
+            return dialog.stage === "start" && dialog.quest_status_required === "inactive"
+          } else if (questData[0].quest_status === "active") {
+            return dialog.stage === "start" && dialog.quest_status_required === "active"
+          }
+        });
+        if (startingDialog[0].is_array) {
+          dialogArr = startingDialog[0].dialog.split("---");
           setCurrentDialog(dialogArr[0]);
         } else {
-          setCurrentDialog(data[0].dialog);
-          setCurrentResponses(getCurrentResponses(data[0].id, data));
+          setCurrentDialog(startingDialog[0].dialog);
+          setCurrentResponses(getCurrentResponses(startingDialog[0].id, data));
         }
 
-        setDialogData(allDialog);
+        setDialogData(data);
         setDialogArray(dialogArr);
-        setCurrentId(data[0].id);
+        setCurrentId(startingDialog[0].id);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
@@ -81,15 +87,27 @@ const DialogBox = ({
     setCurrentTalkingNpc(npc);
 
     cameraControllerInstance.currentTarget = npc;
-    moveCameraToTarget(playerInstance, 3);
+    moveCameraToTarget(playerInstance);
   }, [npc]);
 
-  const moveCameraToTarget = (target, offset) => {
+  const moveCameraToTarget = (target) => {
+    const distanceToRight = 1.0; // Adjust this distance as needed
+    // const combinedPosition = {
+    //   x: target.getPosition().x + npc.getPosition().x,
+    //   y: target.getPosition().y + 4,
+    //   z: target.getPosition().z + npc.getPosition().z,
+    // };
+    // const targetPosition = {
+    //   x: combinedPosition.x + distanceToRight,
+    //   y: combinedPosition.y,
+    //   z: combinedPosition.z,
+    // };
     const targetPosition = {
-      x: target.getPosition().x + offset,
-      y: target.getPosition().y + 5,
-      z: target.getPosition().z + offset,
+      x: target.getPosition().x + distanceToRight,
+      y: target.getPosition().y + 4,
+      z: target.getPosition().z,
     };
+
     const animationDuration = 5000;
 
     animateCameraToTarget(
@@ -102,7 +120,7 @@ const DialogBox = ({
   const switchCameraTarget = () => {
     if (currentId === 6) {
       cameraControllerInstance.currentTarget = currentTalkingNpc;
-      moveCameraToTarget(playerInstance, 2);
+      moveCameraToTarget(playerInstance);
     }
   };
 
@@ -153,11 +171,11 @@ const DialogBox = ({
           setCurrentResponses([]);
         } else {
           if (currentActiveDialog().open_editor) {
-            if (
-              npc.currentQuest[0].quest_status === manageQuest.status.active
-            ) {
+            // if (
+            //   npc.currentQuest[0].quest_status === manageQuest.status.active
+            // ) {
               onOpenEditor(npc.currentQuest[0]);
-            }
+            // }
           }
           setCurrentDialog(nextText);
           setCurrentResponses(getCurrentResponses(currentId));
@@ -241,7 +259,7 @@ const DialogBox = ({
           setCurrentResponses([]);
           setDialogArray(result[0].description);
           setCurrentDialog(result[0].description[0]);
-          // moveCameraToTarget(playerInstance, 3);
+          // moveCameraToTarget(playerInstance);
           // cameraControllerInstance.currentTarget = playerInstance;
           setIsPlayerInteractingNpc(albyNPC);
 
@@ -280,8 +298,9 @@ const DialogBox = ({
     try {
       const npcData = await viewNpcData(currentTalkingNpc.npcName);
       const dialog = await viewDialogById(npcData[0].id);
+      const questData = await viewQuestById(npc.currentQuest[0].id);
       const data = await fetchDialogByBranch(dialog[0].dialog_branch);
-      return data;
+      return [data, questData];
     } catch (error) {
       console.error("[ERROR]:", error);
       throw error;
