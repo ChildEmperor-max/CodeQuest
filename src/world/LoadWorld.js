@@ -7,11 +7,13 @@ const loader = new Loader("Loading world ...");
 const worldLoader = new GLTFLoader(loader.loadingManager);
 const visibilityThreshold = 100;
 let objectsToRender = [];
+let lodLevels = [];
+let renderDistance = 100;
 
 export function LoadWorld() {
   return new Promise((resolve, reject) => {
     worldLoader.load(
-      "/src/assets/world/SampleWorld.glb",
+      "/src/assets/world/codequest_map.glb",
       function (gltf) {
         const worldMesh = gltf.scene;
         const worldAnimationsMixer = new THREE.AnimationMixer(worldMesh);
@@ -24,6 +26,7 @@ export function LoadWorld() {
         let worldFloor;
         let albyHouseDoorActions = [];
         let doors = [];
+        const buildingLOD = new THREE.LOD();
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
@@ -40,7 +43,7 @@ export function LoadWorld() {
 
         if (gltf.animations !== undefined) {
           gltf.animations.forEach((clip) => {
-            if (clip.name.startsWith("obstacle_Mill_Blades")) {
+            if (clip.name.startsWith("Windmill_blades_rotation")) {
               worldAnimationsMixer.clipAction(clip).play();
             }
             if (clip.name.startsWith("AlbyHouseDoor")) {
@@ -56,7 +59,38 @@ export function LoadWorld() {
             if (child.name.startsWith("Sphere")) {
               child.frustumCulled = false;
             }
+            switch (true) {
+              case child.isMesh && child.name.startsWith("Collision_"):
+              case child.isMesh && child.name.startsWith("TransferArea_"):
+              case child.isMesh && child.name.startsWith("Walkable_"):
+              case child.isMesh && child.name.startsWith("Sphere"):
+                break; // Skip objects with these prefixes
+              default:
+                lodLevels.push({ distance: renderDistance, object: child });
+                break;
+            }
+            // if (child.name.startsWith("Inn_Cube393_1")) {
+            //   const material = new THREE.MeshStandardMaterial({
+            //     color: 0xffffff,
+            //     roughness: 0.5,
+            //     metalness: 0.5,
+            //   });
+            //   const geometry2 = new THREE.IcosahedronGeometry(2, 1);
+            //   const mesh2 = new THREE.Mesh(geometry2, material);
+            //   const mesh3 = new THREE.Mesh(
+            //     new THREE.BoxGeometry(3, 3, 3),
+            //     new THREE.MeshStandardMaterial({
+            //       color: 0x99ffff,
+            //     })
+            //   );
+            //   // buildingLOD.addLevel(mesh2, 50);
+            //   // buildingLOD.addLevel(mesh3, 30);
+
+            //   // buildingLOD.addLevel(child, 70);
+            //   // child.add(buildingLOD);
+            // }
           }
+
           // if (child.name.startsWith("Floor")) {
           //   child.castShadow = true;
           //   child.receiveShadow = true;
@@ -80,9 +114,9 @@ export function LoadWorld() {
           if (child.name === "House_Door") {
             doors.push(child);
           }
-          if (child.name.startsWith("Floor")) {
+          if (child.name.startsWith("Floor_")) {
+            walkables.push(child);
             worldFloor = child;
-            walkables.push(worldFloor);
           }
         });
 
@@ -97,6 +131,7 @@ export function LoadWorld() {
           worldAnimationsMixer,
           albyHouseDoorActions,
           doors,
+          buildingLOD,
         });
       },
       undefined,
@@ -106,6 +141,47 @@ export function LoadWorld() {
       }
     );
   });
+}
+
+let removedMeshes = false;
+export function removeMesh() {
+  lodLevels = lodLevels.filter((level) => {
+    const child = level.object;
+    if (child.name.includes("Floor")) {
+      console.log(child.name);
+      return false; // Exclude objects with these prefixes
+    }
+    return true; // Include all other objects
+  });
+}
+
+export function updateLOD(cameraPosition) {
+  // if (!removedMeshes) {
+  //   // removeMesh();
+  //   lodLevels = lodLevels.filter((level) => {
+  //     const child = level.object;
+  //     if (child.name.includes("Floor")) {
+  //       console.log(child.name);
+  //       return false; // Exclude objects with these prefixes
+  //     }
+  //     return true; // Include all other objects
+  //   });
+  //   removedMeshes = true;
+  // }
+  for (let level of lodLevels) {
+    if (
+      cameraPosition.distanceTo(
+        level.object.getWorldPosition(new THREE.Vector3())
+      ) < level.distance
+    ) {
+      level.object.visible = true;
+    } else {
+      level.object.visible = false;
+    }
+    if (level.object.name.startsWith("Plane002")) {
+      level.object.visible = true;
+    }
+  }
 }
 
 export function updateWorldRender(playerPosition) {

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraControls";
-import { LoadWorld, updateWorldRender } from "../world/LoadWorld";
+import { LoadWorld, updateLOD, removeMesh } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import DynamicLabel from "./DynamicLabelDisplay";
@@ -169,6 +169,7 @@ export default class SceneInit {
       if (this.worldAnimationsMixer) {
         this.worldAnimationsMixer.update(delta);
       }
+      updateLOD(this.camera.position);
 
       this.render();
       this.animationId = window.requestAnimationFrame(this.animate.bind(this));
@@ -193,8 +194,10 @@ export default class SceneInit {
           worldAnimationsMixer,
           albyHouseDoorActions,
           doors,
+          buildingLOD,
         }) => {
           this.mainWorldScene.add(worldMesh);
+          // this.mainWorldScene.add(buildingLOD);
           this.groundMesh = worldFloor;
           this.obstacles = obstacles;
           const collidables = obstacles;
@@ -267,6 +270,7 @@ export default class SceneInit {
           this.cameraControls.setTrackPosition(this.player);
           // this.cameraControls.currentTarget = this.npcs.albyNPC;
           this.isLoadingWorld = false;
+          // removeMesh();
         }
       )
       .catch((error) => {
