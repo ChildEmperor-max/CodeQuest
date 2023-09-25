@@ -40,7 +40,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [fontSize, setFontSize] = useState(14);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
   const [activeQuests, setActiveQuests] = useState([]);
   const [selectedQuest, setSelectedQuest] = useState("");
