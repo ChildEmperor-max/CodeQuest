@@ -1,19 +1,20 @@
+
 .interact-popup-text {
-    position: fixed;
-    z-index: 1;
-    width: 25px;
-    height: 25px;
-    color: white;
-    background-color: rgba(90, 182, 222, 0.576);
-    border: 2px solid rgba(0, 0, 0, 0.253);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    /* display: none; */
-    -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-    backdrop-filter: blur(5px); /* Apply the blur effect */
-  }
+  position: fixed;
+  z-index: 1;
+  width: 25px;
+  height: 25px;
+  color: white;
+  background-color: rgba(90, 182, 222, 0.576);
+  border: 2px solid rgba(0, 0, 0, 0.253);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* display: none; */
+  -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
+  backdrop-filter: blur(5px); /* Apply the blur effect */
+}
 
 #interact-text {
   position: fixed;
@@ -31,12 +32,12 @@
   display: flex;
   cursor: pointer;
 
-  -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
+  -webkit-text-stroke: 1px black;
   font-weight: bold;
   font-family: Arial, sans-serif;
 
-  -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-  backdrop-filter: blur(5px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 
   transform-origin: center;
   box-shadow: 0px 0px 1px 1px #a8a8a879;
@@ -47,83 +48,63 @@
   top: 50%;
   left: 50%;
 }
-  
-#story-quest-icon {
+
+.quest-icon {
   position: fixed;
   z-index: 1;
   width: 35px;
   height: 35px;
-  color: white;
-  background-color: rgb(232, 236, 10);
-  border: 2px solid rgba(0, 0, 0, 0.253);
+  color: rgb(232, 236, 10);
+  font-size: 50px;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
   text-align: center;
-  border-radius: 50%;
   display: flex;
-  cursor: pointer;
+  cursor: default;
 
-  -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
   font-weight: bold;
-  font-family: Arial, sans-serif;
-
-  -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-  backdrop-filter: blur(5px); /* Apply the blur effect */
+  font-family: cursive;
 
   transform-origin: center;
-  box-shadow: 0px 0px 1px 1px #a8a8a879;
 
   transform-origin: center;
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
+
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+#story-quest-icon {
+  color: rgb(232, 236, 10);
 }
 
 #side-quest-icon {
-  position: fixed;
-  z-index: 1;
-  width: 35px;
-  height: 35px;
-  color: white;
-  background-color: rgb(10, 236, 21);
-  border: 2px solid rgba(0, 0, 0, 0.253);
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  text-align: center;
-  border-radius: 50%;
-  display: flex;
-  cursor: pointer;
-
-  -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
-  font-weight: bold;
-  font-family: Arial, sans-serif;
-
-  -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-  backdrop-filter: blur(5px); /* Apply the blur effect */
-
-  transform-origin: center;
-  box-shadow: 0px 0px 1px 1px #a8a8a879;
-
-  transform-origin: center;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  color: rgb(10, 236, 21);
 }
 
-  @keyframes pulse-animation {
-    0% {
-      box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.678);
-    }
-    100% {
-      box-shadow: 0 0 0 20px rgba(110, 110, 110, 0);
-    }
-    0%, 100% {
-      transform: scale(1);
-    }
-    20% {
-      transform: scale(1.143);
-    }
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
   }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da661, 0 0 40px #ff4da661, 0 0 50px #ff4da661, 0 0 60px #ff4da661, 0 0 70px #ff4da661, 0 0 80px #ff4da661;
+  }
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.678);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(110, 110, 110, 0);
+  }
+  0%, 100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.143);
+  }
+}
   
