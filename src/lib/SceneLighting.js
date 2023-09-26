@@ -41,7 +41,7 @@ export default class SceneLighting {
 
     this.scene.add(this.directionalLight);
     const helper = new THREE.CameraHelper(this.directionalLight.shadow.camera);
-    this.scene.add(helper);
+    // this.scene.add(helper);
 
     // const helper = new THREE.CameraHelper(light.shadow.camera);
     // this.scene.add(helper);
