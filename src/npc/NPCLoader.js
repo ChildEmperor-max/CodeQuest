@@ -90,14 +90,7 @@ export default class NPCLoader extends Interactibles {
     async function fetchNpcQuest(id) {
       try {
         this.currentQuest = await viewQuestById(id);
-        const test = new ManageQuest().type;
-        if (this.currentQuest[0].quest_type === test.story) {
-          this.hasStoryQuest = true;
-          this.questIconIsSet = true;
-        } else if (this.currentQuest[0].quest_type === test.side) {
-          this.hasSideQuest = true;
-          this.questIconIsSet = true;
-        }
+        this.setQuestIcon(this.currentQuest[0].quest_type);
       } catch (error) {
         console.log("fetchNpcQuest, NPCLoader.js: ", error);
       }
@@ -155,16 +148,13 @@ export default class NPCLoader extends Interactibles {
   }
 
   updateFloatingName() {
-    if (
-      Math.abs(this.player.getPosition().distanceTo(this.getPosition())) >=
-      this.npcNameDisplayRange
-    ) {
-      this.dynamicLabel.hideNpcNameLabel();
-    } else {
+    if (this.npcNearPlayer(this.npcNameDisplayRange) && this.inCameraView()) {
       this.dynamicLabel.showNpcNameLabel(
         this.getNameLabelPosition(),
         this.camera
       );
+    } else {
+      this.dynamicLabel.hideNpcNameLabel();
     }
   }
 
