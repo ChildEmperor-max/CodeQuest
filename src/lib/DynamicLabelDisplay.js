@@ -64,13 +64,10 @@ export default class DynamicLabel {
   }
 
   // QUESTS ICON
-  setQuestIcon({ camera, position, storyQuest }) {
+  setQuestIcon({ camera, position, questType }) {
     this.questIcon = document.createElement("div");
     this.questIcon.setAttribute("class", "quest-icon");
-    this.questIcon.setAttribute(
-      "id",
-      storyQuest ? "story-quest-icon" : "side-quest-icon"
-    );
+    this.questIcon.setAttribute("id", questType + "-quest-icon");
     this.questIcon.innerHTML = "!";
 
     var coords = this.toXYCoords(position, camera);
