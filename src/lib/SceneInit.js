@@ -3,7 +3,7 @@ import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraControls";
-import { LoadWorld, updateLOD, removeMesh } from "../world/LoadWorld";
+import { LoadWorld, updateLOD } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
 import DynamicLabel from "./DynamicLabelDisplay";
@@ -40,6 +40,8 @@ export default class SceneInit {
     this.dynamicLabel = new DynamicLabel();
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    //Lower résolution
+    // this.renderer.setPixelRatio(window.devicePixelRatio * 0.5);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     // this.renderer.shadowMap.enabled = true;
@@ -55,9 +57,6 @@ export default class SceneInit {
     this.transferAreas = [];
     this.player = player;
     this.camera = camera;
-    // Modify the render distance
-    // this.camera.near = 1;
-    // this.camera.far = 100;
     this.camera.position.set(0, 10, -110);
 
     cameraControls.initialize(this.renderer, this.camera, player);
@@ -169,7 +168,7 @@ export default class SceneInit {
       if (this.worldAnimationsMixer) {
         this.worldAnimationsMixer.update(delta);
       }
-      updateLOD(this.camera.position);
+      updateLOD(this.camera);
 
       this.render();
       this.animationId = window.requestAnimationFrame(this.animate.bind(this));
