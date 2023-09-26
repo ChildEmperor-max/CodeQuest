@@ -26,35 +26,22 @@ export default class Interactibles extends THREE.Object3D {
     });
   }
 
-  setQuestIcon() {
-    if (this.questIconIsSet && (this.hasStoryQuest || this.hasSideQuest)) {
-      const storyQuest = this.hasStoryQuest;
+  setQuestIcon(questType) {
+    if (questType) {
       this.dynamicLabel.setQuestIcon({
         camera: this.camera,
         position: this.getQuestIconPosition(),
-        storyQuest,
+        questType,
       });
 
-      this.questIconIsSet = false;
       this.finishedQuestSetting = true;
     }
   }
 
   update(delta) {
-    if (this.hasQuest) {
-      this.setQuestIcon();
-      if (this.finishedQuestSetting) {
-        if (this.npcNearPlayer(this.questIconRange)) {
-          this.dynamicLabel.showQuestIcon(
-            this.getQuestIconPosition(),
-            this.camera
-          );
-        } else {
-          this.dynamicLabel.hideQuestIcon();
-        }
-      }
+    if (this.finishedQuestSetting) {
+      this.updateShowQuestIcon();
     }
-
     if (this.npcNearPlayer(this.interactRange)) {
       this.isInteractable();
     } else {
@@ -62,6 +49,22 @@ export default class Interactibles extends THREE.Object3D {
       if (this.interactingWithPlayer()) {
         this.player.onNpcZone(null);
       }
+    }
+  }
+
+  updateShowQuestIcon() {
+    // if (this.npcNearPlayer(this.questIconRange)) {
+    if (this.inCameraView()) {
+      this.dynamicLabel.showQuestIcon(this.getQuestIconPosition(), this.camera);
+    } else {
+      this.dynamicLabel.hideQuestIcon();
+    }
+  }
+
+  hideInteractLabel() {
+    this.dynamicLabel.hideInteractLabel();
+    if (this.interactingWithPlayer()) {
+      this.player.onNpcZone(null);
     }
   }
 
@@ -87,6 +90,19 @@ export default class Interactibles extends THREE.Object3D {
       Math.abs(this.player.getPosition().distanceTo(this.getPosition())) <=
       range
     );
+  }
+
+  inCameraView() {
+    this.camera.updateMatrix();
+    this.camera.updateMatrixWorld();
+    var frustum = new THREE.Frustum();
+    frustum.setFromProjectionMatrix(
+      new THREE.Matrix4().multiplyMatrices(
+        this.camera.projectionMatrix,
+        this.camera.matrixWorldInverse
+      )
+    );
+    return frustum.containsPoint(this.getPosition());
   }
 
   getPosition() {
