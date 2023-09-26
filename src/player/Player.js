@@ -92,49 +92,6 @@ export default class Player extends THREE.Object3D {
     });
   }
 
-  raycasterDebug(from_vec3) {
-    this.raycasterVisuals = [];
-    this.raycasterColors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff];
-
-    const raycaster = this.raycastCollidables;
-
-    // Create a line representing the raycaster
-    const raycasterGeometry = new THREE.BufferGeometry().setFromPoints([
-      raycaster.ray.origin.clone(), // Starting point of the ray
-      raycaster.ray.origin
-        .clone()
-        .add(raycaster.ray.direction.clone().multiplyScalar(10)), // Ending point of the ray
-    ]);
-
-    const raycasterMaterial = new THREE.LineBasicMaterial({
-      color: this.raycasterColors[0],
-    });
-    const raycasterLine = new THREE.Line(raycasterGeometry, raycasterMaterial);
-    this.raycasterVisuals.push(raycasterLine);
-
-    // Add the raycaster visual to the scene
-    this.scene.add(raycasterLine);
-  }
-
-  updateRaycasterVisuals() {
-    // for (let i = 0; i < raycasters.length; i++) {
-    const raycaster = this.raycastCollidables;
-    const raycasterLine = this.raycasterVisuals[0];
-
-    // Set the position and rotation of the raycaster visual to match this.mesh
-    raycasterLine.position.copy(this.mesh.position);
-    raycasterLine.rotation.copy(this.mesh.rotation);
-
-    // Apply the raycaster's local direction to the visual
-    const direction = raycaster.ray.direction.clone();
-    direction.applyQuaternion(this.mesh.quaternion);
-    raycasterLine.geometry.setFromPoints([
-      raycasterLine.position.clone(),
-      raycasterLine.position.clone().add(direction.multiplyScalar(10)),
-    ]);
-    // }
-  }
-
   update(delta, npcs) {
     this.npcs = npcs;
     if (this.mesh) {
@@ -143,6 +100,7 @@ export default class Player extends THREE.Object3D {
       }
       this.updateAnimation();
       this.motion(delta);
+      this.updatePlayerNpcCollisionMesh();
       this.mixer.update(delta);
       TWEEN.update();
       // Set the position of the collision box
@@ -151,9 +109,9 @@ export default class Player extends THREE.Object3D {
         this.position.y,
         this.position.z
       );
-      // if (this.raycasterVisuals > 0) {
-      //   this.updateRaycasterVisuals();
-      // }
+      if (this.raycasterVisuals > 0) {
+        this.updateRaycasterVisuals();
+      }
     }
     // this.updateQuestVisibility();
   }
@@ -336,17 +294,18 @@ export default class Player extends THREE.Object3D {
     this.directionTracker.copy(this.direction);
   }
 
+  npcInteractionDetection(npc, npcBox) {
+    if (this.npcDetectionBox.intersectsBox(npcBox)) {
+      // this.onNpcZone(npc);
+      npc.isInteractable();
+    } else {
+      npc.hideInteractLabel();
+    }
+  }
+
   motion(delta) {
     if (this.direction.x !== 0 || this.direction.z !== 0) {
       const currentPlayerY = this.position.y;
-
-      // const targetPosition = new THREE.Vector3(
-      //   0,
-      //   groundHeight,
-      //   0
-      // );
-      // const lerpFactor = 0.08;
-      // this.positionTracker.lerp(targetPosition, lerpFactor);
 
       // Compare with the previous frame's Y-coordinate to determine movement direction
       if (Math.trunc(currentPlayerY) == Math.trunc(this.previousPlayerY)) {
@@ -371,11 +330,15 @@ export default class Player extends THREE.Object3D {
       const newPosition = this.mesh.position.clone().add(movement);
 
       this.playerbox = new THREE.Box3().setFromObject(this.collisionBox);
+      this.npcDetectionBox = new THREE.Box3().setFromObject(
+        this.playerNpcInteractCollisionMesh
+      );
       if (this.playerbox) {
         if (this.npcs) {
           for (let i = 0; i < this.npcs.length; i++) {
             if (this.npcs[i].npcbox) {
               this.boxCollision(this.npcs[i].npcbox, newPosition);
+              // this.npcInteractionDetection(this.npcs[i], this.npcs[i].npcbox);
             }
           }
         }
@@ -554,6 +517,18 @@ export default class Player extends THREE.Object3D {
     );
   }
 
+  updatePlayerNpcCollisionMesh() {
+    if (this.mesh) {
+      this.playerNpcInteractCollisionMesh.position.copy(
+        new THREE.Vector3(
+          this.getPosition().x,
+          this.getPosition().y + 3,
+          this.getPosition().z
+        )
+      );
+    }
+  }
+
   loadModel(scene) {
     // this.modelScale = 0.01;
     // const loadingManager = new THREE.LoadingManager();
@@ -580,33 +555,38 @@ export default class Player extends THREE.Object3D {
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(this.modelScale, this.modelScale, this.modelScale);
+        const playerCollisionGeometry = new THREE.BoxBufferGeometry(6, 6, 6);
+        this.playerNpcInteractCollisionMesh = new THREE.Mesh(
+          playerCollisionGeometry,
+          new THREE.MeshBasicMaterial({ visible: false })
+        );
 
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.material.specular = new THREE.Color(0xffffff);
             child.castShadow = true;
             child.receiveShadow = true;
-            if (child.morphTargetInfluences !== undefined) {
-              var outlineMaterial1 = new THREE.MeshBasicMaterial({
-                color: 0xff0000,
-                side: THREE.BackSide,
-              });
-              var outlineMesh1 = new THREE.Mesh(
-                child.geometry,
-                outlineMaterial1
-              );
-              outlineMesh1.position = child.position;
-              outlineMesh1.scale.multiplyScalar(1.05);
-              scene.add(outlineMesh1);
-            }
+            // if (child.morphTargetInfluences !== undefined) {
+            //   var outlineMaterial1 = new THREE.MeshBasicMaterial({
+            //     color: 0xff0000,
+            //     side: THREE.BackSide,
+            //   });
+            //   var outlineMesh1 = new THREE.Mesh(
+            //     child.geometry,
+            //     outlineMaterial1
+            //   );
+            //   outlineMesh1.position = child.position;
+            //   outlineMesh1.scale.multiplyScalar(1.05);
+            //   scene.add(outlineMesh1);
+            // }
           }
         });
 
         // fbx.rotation.y = Math.PI / 2;
         fbx.name = "Player";
         scene.add(fbx);
+        scene.add(this.playerNpcInteractCollisionMesh);
         this.mesh = fbx;
-        // this.raycasterDebug(this.mesh.position);
 
         this.mixer = new THREE.AnimationMixer(this.mesh);
         // this.mixer.timeScale = 7.0;
