@@ -11,14 +11,18 @@ import CameraController from "./lib/CameraControls";
 function App() {
   const [antialiasValue, setAntialiasValue] = useState(false);
   const [shadowMap, setShadowMap] = useState(false);
+  const [renderDistance, setRenderDistance] = useState(300);
   const player = new Player();
 
-  const renderDistance = 1000;
+  const fov = 65;
+  const aspectRatio = window.innerWidth / window.innerHeight;
+  const cameraNear = 0.1;
+  const cameraFar = 1000;
   const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    renderDistance
+    fov,
+    aspectRatio,
+    cameraNear,
+    cameraFar
   );
   const cameraControls = new CameraController();
 
