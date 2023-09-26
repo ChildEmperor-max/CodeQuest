@@ -32,6 +32,9 @@ export default class CameraController {
 
     this.isDoneLoading = false;
     this.currentTarget = target;
+
+    this.cameraPosition = new Float32Array(3); // 3 elements for x, y, and z
+    this.cameraTarget = new Float32Array(3); // 3 elements for x, y, and z
   }
 
   addCollidables(collidables, floor) {
@@ -84,6 +87,14 @@ export default class CameraController {
         this.cameraControl.getPosition().z
       );
 
+      this.cameraPosition[0] = camPos.x;
+      this.cameraPosition[1] = camPos.y;
+      this.cameraPosition[2] = camPos.z;
+
+      this.cameraTarget[0] = this.lerpCamPos.x;
+      this.cameraTarget[1] = pos.y;
+      this.cameraTarget[2] = this.lerpCamPos.z;
+
       const cameraMovementDir = new THREE.Vector3()
         .copy(this.camera.position)
         .sub(this.prevCameraPosition);
@@ -104,7 +115,11 @@ export default class CameraController {
       //   this.lerpCamPos.z
       // );
       // this.cameraControl.setTarget(pos.x, pos.y, pos.z);
-      this.cameraControl.setTarget(this.lerpCamPos.x, pos.y, this.lerpCamPos.z);
+      this.cameraControl.setTarget(
+        this.cameraTarget[0],
+        this.cameraTarget[1],
+        this.cameraTarget[2]
+      );
       this.updateTracker(camPos, player, delta, cameraMovementDir);
       // } else {
       // this.cameraControl.setTarget(this.lerpCamPos.x, pos.y, this.lerpCamPos.z);
@@ -114,7 +129,9 @@ export default class CameraController {
   }
 
   updateTracker(camPos, player, delta, cameraMovementDir) {
-    const distanceToPlayer = player.getPositionTracker().distanceTo(camPos);
+    const distanceToPlayer = player
+      .getPositionTracker()
+      .distanceTo(this.cameraPosition);
     const defaultView = camPos.y - (distanceToPlayer - this.camLimiter);
     const movementView =
       camPos.y - player.currentSpeed * delta * cameraMovementDir.y;
@@ -123,18 +140,20 @@ export default class CameraController {
     this.lerpVector.lerp(targetPosition, 0.1);
 
     if (player.isMoving()) {
-      this.cameraTargetY = camPos.y + this.lerpVector.y;
+      this.cameraTargetY = this.cameraPosition[1] + this.lerpVector.y;
       // this.cameraTargetY = this.lerpVector.y;
       // this.cameraTargetY = defaultView;
     } else {
-      this.cameraTargetY = camPos.y;
+      this.cameraTargetY = this.cameraPosition[1];
     }
     // console.log(player.movingDirection);
 
     const targetX =
-      camPos.x + player.currentSpeed * delta * player.directionTracker.x;
+      this.cameraPosition[0] +
+      player.currentSpeed * delta * player.directionTracker.x;
     const targetZ =
-      camPos.z + player.currentSpeed * delta * player.directionTracker.z;
+      this.cameraPosition[2] +
+      player.currentSpeed * delta * player.directionTracker.z;
 
     const dynamicRangeX = 10;
     const dynamicRangeZ = 10;
@@ -169,7 +188,6 @@ export default class CameraController {
         this.cutsceneLerp.y,
         this.cutsceneLerp.z
       );
-      console.log("test");
     } else {
       this.cameraControl.setPosition(x, y, z);
     }
