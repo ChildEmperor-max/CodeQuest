@@ -118,6 +118,9 @@ export function LoadWorld() {
             walkables.push(child);
             worldFloor = child;
           }
+          if (child.name.startsWith("CityWall")) {
+            lodLevels.push({ distance: 1000, object: child });
+          }
         });
 
         resolve({
@@ -143,58 +146,43 @@ export function LoadWorld() {
   });
 }
 
-let removedMeshes = false;
-export function removeMesh() {
-  lodLevels = lodLevels.filter((level) => {
-    const child = level.object;
-    if (child.name.includes("Floor")) {
-      console.log(child.name);
-      return false; // Exclude objects with these prefixes
-    }
-    return true; // Include all other objects
-  });
-}
-
-export function updateLOD(cameraPosition) {
-  // if (!removedMeshes) {
-  //   // removeMesh();
-  //   lodLevels = lodLevels.filter((level) => {
-  //     const child = level.object;
-  //     if (child.name.includes("Floor")) {
-  //       console.log(child.name);
-  //       return false; // Exclude objects with these prefixes
-  //     }
-  //     return true; // Include all other objects
-  //   });
-  //   removedMeshes = true;
-  // }
+export function updateLOD(camera) {
   for (let level of lodLevels) {
-    if (
-      cameraPosition.distanceTo(
-        level.object.getWorldPosition(new THREE.Vector3())
-      ) < level.distance
-    ) {
-      level.object.visible = true;
+    if (isCameraNear(camera.position, level)) {
+      if (inCameraView(level.object, camera)) {
+        level.object.visible = true;
+      } else {
+        level.object.visible = false;
+      }
     } else {
       level.object.visible = false;
-    }
-    if (level.object.name.startsWith("Plane002")) {
-      level.object.visible = true;
+      if (level.object.name.startsWith("Plane002")) {
+        level.object.visible = true;
+      }
+      if (level.object.name.startsWith("CityWall")) {
+        level.object.visible = true;
+      }
     }
   }
 }
 
-export function updateWorldRender(playerPosition) {
-  for (var object of objectsToRender) {
-    // Calculate the distance between the player and the object
-    const objectPosition = object.position; // Replace with your object's position
-    const distanceToPlayer = playerPosition.distanceTo(objectPosition);
+function inCameraView(object, camera) {
+  camera.updateMatrix();
+  camera.updateMatrixWorld();
+  var frustum = new THREE.Frustum();
+  frustum.setFromProjectionMatrix(
+    new THREE.Matrix4().multiplyMatrices(
+      camera.projectionMatrix,
+      camera.matrixWorldInverse
+    )
+  );
+  return frustum.containsPoint(object);
+}
 
-    // Check if the distance is within the visibility threshold
-    if (distanceToPlayer <= visibilityThreshold) {
-      object.visible = true; // Make the object visible
-    } else {
-      object.visible = false; // Hide the object
-    }
-  }
+function isCameraNear(cameraPosition, level) {
+  return (
+    cameraPosition.distanceTo(
+      level.object.getWorldPosition(new THREE.Vector3())
+    ) < level.distance
+  );
 }
