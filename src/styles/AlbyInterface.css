@@ -1,23 +1,23 @@
 .alby-interface {
-    height: 85%;
-    width: 70%;
+    height: 100%;
+    width: 50%;
     max-width: 1000px;
     position: fixed;
     overflow: hidden;
     z-index: 3;
+    top: 0;
 
     background-color: rgba(255, 255, 255, 0.114);
-    /* color: black; */
+    color: white;
+    box-sizing: border-box;
     border-radius: 5px;
-    border: 30px solid rgb(25, 105, 216);
+    border: 20px solid rgb(25, 105, 216);
     
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
 
     transform-origin: center;
     animation: pop-out 1s ease-in-out;
-
-    top: 3%;
 }
 
 .alby-interface-content {
