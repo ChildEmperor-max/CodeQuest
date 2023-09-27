@@ -5,8 +5,6 @@ import Loader from "../lib/Loader";
 const loader = new Loader("Loading world ...");
 
 const worldLoader = new GLTFLoader(loader.loadingManager);
-const visibilityThreshold = 100;
-let objectsToRender = [];
 let lodLevels = [];
 let renderDistance = 100;
 
