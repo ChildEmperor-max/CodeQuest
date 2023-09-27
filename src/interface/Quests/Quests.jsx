@@ -4,6 +4,8 @@ import { fetchNpcQuestDialog } from "../../db/HandleTable";
 import ManageQuest from "../../db/ManageQuest";
 import AlertModal from "../../components/AlertModal";
 import CodeEditor from "../Editor/CodeEditor";
+import QuestDetails from "./QuestDetails";
+import QuestSideButton from "./QuestSideButton";
 
 const Quests = ({ onClose }) => {
   const manageQuest = new ManageQuest();
@@ -13,6 +15,8 @@ const Quests = ({ onClose }) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedQuest, setSelectedQuest] = useState(null);
+
+  const [questDetails, setQuestDetails] = useState(null);
 
   useEffect(() => {
     viewQuests()
@@ -52,43 +56,13 @@ const Quests = ({ onClose }) => {
     setCurrentQuestId(quest_id);
   };
 
-  const SideButton = ({ quest }) => {
-    return (
-      <>
-        {quest.quest_status === "active" ? (
-          <>
-            {quest.quest_type !== "story" ? (
-              <button
-                className="quest-side-button"
-                onClick={() =>
-                  handleAbandonQuestAlert(quest.id, quest.quest_title)
-                }
-              >
-                Abandon
-              </button>
-            ) : null}
-            <button
-              className="quest-side-button"
-              onClick={() => {
-                setSelectedQuest(quest);
-                setIsEditorOpen(true);
-              }}
-            >
-              Start
-            </button>
-          </>
-        ) : (
-          <button className="quest-side-button">Navigate</button>
-        )}
-      </>
-    );
+  const handleStartQuest = (quest) => {
+    setSelectedQuest(quest);
+    setIsEditorOpen(true);
   };
 
   return (
     <>
-      {isEditorOpen && (
-        <CodeEditor quest_data={selectedQuest} onClose={handleEditorOpen} />
-      )}
       {abandonQuestAlert && (
         <AlertModal
           message={alertMessage}
@@ -99,35 +73,69 @@ const Quests = ({ onClose }) => {
           }}
         />
       )}
-      <div id="questBox">
-        <div className="top-quest-bar">
-          <CloseButtonModal onClose={onClose} />
+      <div className="quest-container">
+        {isEditorOpen && (
+          <CodeEditor quest_data={selectedQuest} onClose={handleEditorOpen} />
+        )}
+        <div className="quest-box">
+          <div className="top-quest-bar">
+            <CloseButtonModal onClose={onClose} />
+          </div>
+          <div id="StoryQuest">
+            <h3>Story Quest</h3>
+            <ul id="StoryQuestList">
+              {questsData.map((quest, index) =>
+                quest.quest_type === "story" ? (
+                  <li key={index} onClick={() => setQuestDetails(quest)}>
+                    {quest.quest_title}{" "}
+                    <div className="quest-side-button-container">
+                      <QuestSideButton
+                        quest={quest}
+                        onStart={() => handleStartQuest(quest)}
+                        onAbandon={() =>
+                          handleAbandonQuestAlert(quest.id, quest.quest_title)
+                        }
+                      />
+                    </div>
+                  </li>
+                ) : null
+              )}
+            </ul>
+          </div>
+          <div id="SideQuests">
+            <h3>Side Quests</h3>
+            <ul id="Available">
+              {questsData.map((quest, index) =>
+                quest.quest_type === "side" &&
+                quest.quest_status !== "completed" ? (
+                  <li key={index} onClick={() => setQuestDetails(quest)}>
+                    {quest.quest_title}{" "}
+                    <div className="quest-side-button-container">
+                      <QuestSideButton
+                        quest={quest}
+                        onStart={() => handleStartQuest(quest)}
+                        onAbandon={() =>
+                          handleAbandonQuestAlert(quest.id, quest.quest_title)
+                        }
+                      />
+                    </div>
+                  </li>
+                ) : null
+              )}
+            </ul>
+          </div>
         </div>
-        <div id="StoryQuest">
-          <h3>Story Quest</h3>
-          <ul id="StoryQuestList">
-            {questsData.map((quest, index) =>
-              quest.quest_type === "story" ? (
-                <li key={index}>
-                  {quest.quest_title} <SideButton quest={quest} />
-                </li>
-              ) : null
-            )}
-          </ul>
-        </div>
-        <div id="SideQuests">
-          <h3>Side Quests</h3>
-          <ul id="Available">
-            {questsData.map((quest, index) =>
-              quest.quest_type === "side" &&
-              quest.quest_status !== "completed" ? (
-                <li key={index}>
-                  {quest.quest_title} <SideButton quest={quest} />
-                </li>
-              ) : null
-            )}
-          </ul>
-        </div>
+        {questDetails && (
+          <QuestDetails
+            quest={questDetails}
+            isEditorOpen={isEditorOpen}
+            onStart={() => handleStartQuest(questDetails)}
+            onAbandon={() =>
+              handleAbandonQuestAlert(questDetails.id, questDetails.quest_title)
+            }
+            onClose={() => setQuestDetails(null)}
+          />
+        )}
       </div>
     </>
   );
