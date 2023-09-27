@@ -2,19 +2,69 @@
     display: none;
   }
   
-  #questBox {
-    overflow: auto; /* Add scrollbars when the content exceeds the height */
+  .quest-container {
     position: fixed;
     top: 0;
-    left: 0;
+    /* left: 0; */
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    /* gap: 10px; */
+  }
+
+  .quest-box {
+    overflow: auto; /* Add scrollbars when the content exceeds the height */
     width: 40%;
     height: 100%;
-    background-color: #141f45b9;
     padding: 10px;
-    -webkit-backdrop-filter: blur(5px); /* Apply the blur effect */
-    backdrop-filter: blur(5px); /* Apply the blur effect */
-    z-index: 2;
+    background-color: #141f45b9;
+
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+
     animation: slideToBottom 0.3s ease-in-out;
+  }
+
+  .quest-details {
+    overflow: auto;
+    width: 60%;
+    height: 100%;
+    padding: 10px;
+    background-color: #141f45b9;
+
+    border-left: 2px solid #162d83b9;
+
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+
+    transition: width 0.8s;
+    transition-timing-function: ease;
+
+    animation: slideLeftToRight 0.3s ease-in-out;
+  }
+
+  .on-editor {
+    width: 48.4%;
+  }
+
+  .quest-details-header {
+    display: flex;
+    justify-content: end;
+  }
+
+  .quest-details-title {
+    background-color: #3459a971;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 20px;
+    color: white;
+  }
+
+  .quest-details-buttons {
+    height: 50px;
   }
 
   .top-quest-bar {
@@ -27,8 +77,16 @@
     right: 0;
   }
 
-  .quest-side-button {
+  .quest-side-button-container {
+    width: 100%;
     display: none;
+  }
+
+  .quest-button-container {
+    width: 100%;
+  }
+
+  .quest-side-button {
     float: right;
     font-size: 15px;
     padding: 7px;
@@ -92,17 +150,13 @@
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Text glow effect */
   }
 
-  #StoryQuestList li:hover button,
-  #Available li:hover button {
+  #StoryQuestList li:hover .quest-side-button-container,
+  #Available li:hover .quest-side-button-container {
     animation: buttonSlideToBottom 0.2s ease-in-out;
     display: inline-block !important;
   }
 
-  .quest-list-button {
-    /* float: right; */
-  }
-
-  #Ongoing li:hover .quest-list-button {
+  #Ongoing li:hover {
     animation: buttonSlideToBottom 0.2s ease-in-out;
     display: inline-block !important;
   }
@@ -142,6 +196,17 @@
       transform: translate(0, -100%);
     }
     100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes slideLeftToRight {
+    0% {
+      opacity: 0;
+      transform: translate(-100%, 0);
+    }
+    100% {
+      opacity: 1;
       transform: translate(0, 0);
     }
   }
