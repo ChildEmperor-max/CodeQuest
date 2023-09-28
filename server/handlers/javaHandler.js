@@ -5,10 +5,11 @@ import { join } from "path";
 export function handleSubmittedJavaAnswer(req, res, pool) {
   const code = req.body.code;
   const questTitle = req.body.quest;
+  const script_name = req.body.scriptName;
 
   // Define the file paths
-  const javaFilePath = join("server/scripts", "script.java");
-  const classFilePath = join("server/scripts", "script.class");
+  const javaFilePath = join("server/scripts", script_name + ".java");
+  const classFilePath = join("server/scripts", script_name + ".class");
 
   // Write the Java code to a file
   fs.writeFile(javaFilePath, code, (err) => {
@@ -32,7 +33,9 @@ export function handleSubmittedJavaAnswer(req, res, pool) {
 
     // Execute the Java code
     try {
-      const output = execSync(`java -cp server/scripts script`).toString();
+      const output = execSync(
+        `java -cp server/scripts ` + script_name
+      ).toString();
       res.json({ output: output });
     } catch (error) {
       const executionError = error.stderr.toString();
