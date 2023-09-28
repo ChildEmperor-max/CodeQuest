@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
   faPlus,
@@ -10,6 +9,7 @@ import {
   faCheck,
   faTasks,
   faQuestionCircle,
+  faCode,
 } from "@fortawesome/free-solid-svg-icons";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
@@ -34,6 +34,9 @@ import ManageQuest from "../../db/ManageQuest";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import Popup from "../Popups/Popup";
 import ActiveQuestsModal from "./ActiveQuestsModal";
+import PseudoCode from "./PseudoCode";
+import Hint from "./Hint";
+import Countdown from "./Countdown";
 
 const CodeEditor = ({ quest_data, onClose }) => {
   const [editorValue, setEditorValue] = useState("");
@@ -50,6 +53,11 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupDescription, setPopupDescription] = useState(null);
   const [popupPositiveStyle, setPopupPositiveStyle] = useState(true);
+
+  const [showPseudoCode, setShowPseudoCode] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [hintCountdown, setHintCountdown] = useState(10);
+  const [showHintCountdown, setShowHintCountdown] = useState(false);
 
   const manageQuest = new ManageQuest();
 
@@ -87,6 +95,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
     return executeJavaCode({
       code: editorValue,
       quest: quest_data ? quest_data.quest_title : null,
+      scriptName: quest_data ? quest_data.script_name : null,
     })
       .then((response) => {
         if (response.error) {
@@ -125,29 +134,29 @@ const CodeEditor = ({ quest_data, onClose }) => {
             console.log("chosen username: ", response.output);
           }
 
-          if (
-            playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
-          ) {
-            manageQuest.updateQuestStatus(
-              quest_data.id,
-              manageQuest.status.completed
-            );
-            fetchActiveQuests();
-            handlePopupContent(
-              "Quest Completed",
-              quest_data.quest_title,
-              quest_data.quest_description,
-              true
-            );
-          } else {
-            console.log("WRONG! ");
-            handlePopupContent(
-              "Wrong answer",
-              quest_data.quest_title,
-              "You can try again, don't worry!",
-              false
-            );
-          }
+          // if (
+          //   playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
+          // ) {
+          //   manageQuest.updateQuestStatus(
+          //     quest_data.id,
+          //     manageQuest.status.completed
+          //   );
+          //   fetchActiveQuests();
+          //   handlePopupContent(
+          //     "Quest Completed",
+          //     quest_data.quest_title,
+          //     quest_data.quest_description,
+          //     true
+          //   );
+          // } else {
+          //   console.log("WRONG! ");
+          //   handlePopupContent(
+          //     "Wrong answer",
+          //     quest_data.quest_title,
+          //     "You can try again, don't worry!",
+          //     false
+          //   );
+          // }
         }
       })
       .catch((error) => {
@@ -212,7 +221,23 @@ const CodeEditor = ({ quest_data, onClose }) => {
           positiveStyle={popupPositiveStyle}
         />
       )}
-      <div className="alby-interface">
+      <div className="alby-interface alby-editor">
+        {showPseudoCode && (
+          <PseudoCode
+            code={quest_data.pseudo_code}
+            onClose={() => setShowPseudoCode(false)}
+          />
+        )}
+        {showHint && (
+          <Hint
+            hint={quest_data.hint}
+            onClose={() => {
+              setShowHint(false);
+              setShowHintCountdown(true);
+            }}
+          />
+        )}
+
         {isQuestModalOpen ? (
           <ActiveQuestsModal
             active_quests={activeQuests}
@@ -259,11 +284,39 @@ const CodeEditor = ({ quest_data, onClose }) => {
                 <ButtonText
                   onClick={viewSelectedQuestModal}
                   title="Selected quest"
-                  icon={faQuestionCircle}
+                  icon={faTasks}
                   buttonText="Quest"
                 />
 
                 {quest_data ? <span>{selectedQuest}</span> : ""}
+              </div>
+              <div>
+                {showHintCountdown ? (
+                  <Countdown
+                    initialTime={hintCountdown}
+                    onCountdownEnd={() => setShowHintCountdown(false)}
+                  />
+                ) : (
+                  <ButtonText
+                    onClick={() => {
+                      quest_data.hint && setShowHint(true);
+                    }}
+                    disabled={quest_data.hint ? false : true}
+                    title="View hint"
+                    icon={faQuestionCircle}
+                    buttonText="Hint"
+                  />
+                )}
+
+                <ButtonText
+                  onClick={() => {
+                    quest_data.pseudo_code && setShowPseudoCode(true);
+                  }}
+                  disabled={quest_data.pseudo_code ? false : true}
+                  title="Pseudo Code"
+                  icon={faCode}
+                  buttonText="Pseudo Code"
+                />
               </div>
               <div>
                 <ButtonText
