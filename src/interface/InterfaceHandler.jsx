@@ -179,8 +179,8 @@ export default function InterfaceHandler({
           npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
-          onQuestStarted={(title, description) => {
-            handlePopupContent("Quest started", title, description);
+          onPopupContent={(header, title, description) => {
+            handlePopupContent(header, title, description);
           }}
           onOpenEditor={(quest) => {
             setCurrentEditorQuest(quest);

@@ -19,7 +19,7 @@ const DialogBox = ({
   npcInstances,
   cameraInstance,
   cameraControllerInstance,
-  onQuestStarted,
+  onPopupContent,
   onOpenEditor,
   onOpenQuestHint,
   onHighlightQuestHint,
@@ -63,9 +63,15 @@ const DialogBox = ({
         let dialogArr;
         const startingDialog = data.filter((dialog) => {
           if (questData[0].quest_status === "inactive") {
-            return dialog.stage === "start" && dialog.quest_status_required === "inactive"
+            return (
+              dialog.stage === "start" &&
+              dialog.quest_status_required === "inactive"
+            );
           } else if (questData[0].quest_status === "active") {
-            return dialog.stage === "start" && dialog.quest_status_required === "active"
+            return (
+              dialog.stage === "start" &&
+              dialog.quest_status_required === "active"
+            );
           }
         });
         if (startingDialog[0].is_array) {
@@ -91,7 +97,7 @@ const DialogBox = ({
   }, [npc]);
 
   const moveCameraToTarget = (target) => {
-    const distanceToRight = 1.0; // Adjust this distance as needed
+    const distanceToRight = 3.0; // Adjust this distance as needed
     // const combinedPosition = {
     //   x: target.getPosition().x + npc.getPosition().x,
     //   y: target.getPosition().y + 4,
@@ -105,7 +111,7 @@ const DialogBox = ({
     const targetPosition = {
       x: target.getPosition().x + distanceToRight,
       y: target.getPosition().y + 4,
-      z: target.getPosition().z,
+      z: target.getPosition().z + distanceToRight,
     };
 
     const animationDuration = 5000;
@@ -174,7 +180,7 @@ const DialogBox = ({
             // if (
             //   npc.currentQuest[0].quest_status === manageQuest.status.active
             // ) {
-              onOpenEditor(npc.currentQuest[0]);
+            onOpenEditor(npc.currentQuest[0]);
             // }
           }
           setCurrentDialog(nextText);
@@ -286,8 +292,22 @@ const DialogBox = ({
   const acceptQuest = async (quest_id) => {
     try {
       const quest = await manageQuest.getQuestDataById(quest_id);
-      manageQuest.updateQuestStatus(quest_id, manageQuest.status.active);
-      onQuestStarted(quest[0].quest_title, quest[0].quest_description);
+      const status = manageQuest.status;
+      let newStatus;
+      let headerText;
+      if (quest[0].quest_status === status.inactive) {
+        newStatus = status.active;
+        headerText = "Quest Started";
+      } else if (quest[0].quest_status === status.active) {
+        newStatus = status.completed;
+        headerText = "Quest Completed";
+      }
+      manageQuest.updateQuestStatus(quest_id, newStatus);
+      onPopupContent(
+        headerText,
+        quest[0].quest_title,
+        quest[0].quest_description
+      );
     } catch (error) {
       console.error("Error accepting the quest:", error);
       throw error;
