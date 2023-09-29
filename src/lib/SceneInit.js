@@ -27,6 +27,7 @@ export default class SceneInit {
     this.player = undefined;
     this.cameraControls = undefined;
     this.npcArray = [];
+    this.currentDelta = 0;
   }
 
   initialize(player, npcs, camera, cameraControls) {
@@ -145,6 +146,7 @@ export default class SceneInit {
 
   animate() {
     if (this.isPlay) {
+      this.animationId = window.requestAnimationFrame(this.animate.bind(this));
       const delta = this.clock.getDelta();
       this.stats.update();
 
@@ -157,7 +159,7 @@ export default class SceneInit {
         if (this.cameraControls) {
           this.cameraControls.update(this.player, delta);
         }
-        this.player.update(delta, this.npcArray);
+        this.player.update(delta, this.npcArray, this.currentDelta);
         updateGrassShader(this.clock);
 
         // updateWorldRender(this.player.getPosition());
@@ -171,7 +173,6 @@ export default class SceneInit {
       updateLOD(this.camera);
 
       this.render();
-      this.animationId = window.requestAnimationFrame(this.animate.bind(this));
     } else {
       this.clock.stop();
     }
