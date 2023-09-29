@@ -48,6 +48,7 @@ export default function InterfaceHandler({
   const [showButtons, setShowButtons] = useState(true);
 
   const [isPlayerRunning, setIsPlayerRunning] = useState(false);
+  const [isPlayerNearNpc, setIsPlayerNearNpc] = useState(false);
 
   const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
 
@@ -69,6 +70,17 @@ export default function InterfaceHandler({
       setShowButtons(false);
     }
   };
+
+  useEffect(() => {
+    const handlePlayerNearNpc = (event) => {
+      setIsPlayerNearNpc(event.detail);
+    };
+    document.addEventListener("playerNearNpc", handlePlayerNearNpc);
+
+    return () => {
+      document.removeEventListener("playerNearNpc", handlePlayerNearNpc);
+    };
+  }, [isPlayerNearNpc]);
 
   const closeDialogBox = () => {
     setIsPlayerInteractingNpc(null);
@@ -293,20 +305,28 @@ export default function InterfaceHandler({
                 shortcutKey="H"
               />
             </div>
-            <a>
+            <div className="player-actions-container">
+              {isPlayerNearNpc && (
+                <div className="interact-action-container">
+                  <div className="interact-button">E</div>
+                  <span>Interact</span>
+                </div>
+              )}
               <div
                 className={`sprint-image-container ${
                   isPlayerRunning ? "sprint-triggered" : "sprint-enabled"
                 }`}
                 id="sprint-icon"
               >
-                <img
-                  src="src/assets/icons/circle-running-icon-no-bg.svg"
-                  alt="Sprint"
-                  className="svg"
-                />
+                <a>
+                  <img
+                    src="src/assets/icons/circle-running-icon-no-bg.svg"
+                    alt="Sprint"
+                    className="svg"
+                  />
+                </a>
               </div>
-            </a>
+            </div>
           </div>
         )}
       </div>
