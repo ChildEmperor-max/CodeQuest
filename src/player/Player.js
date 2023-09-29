@@ -83,6 +83,8 @@ export default class Player extends THREE.Object3D {
     this.enableNpcDetection = true;
     this.isRunning = false;
     this.interactingWithNpc = null;
+    this.nearNpcs = [];
+    this.updatedNearNpc = false;
 
     this.previousPlayerY = this.position.y;
 
@@ -92,7 +94,7 @@ export default class Player extends THREE.Object3D {
     });
   }
 
-  update(delta, npcs) {
+  update(delta, npcs, currentDelta) {
     this.npcs = npcs;
     if (this.mesh) {
       if (this.walkables) {
@@ -112,6 +114,24 @@ export default class Player extends THREE.Object3D {
       if (this.raycasterVisuals > 0) {
         this.updateRaycasterVisuals();
       }
+      if (this.nearNpcs.length > 0) {
+        if (!this.updatedNearNpc) {
+          this.updatePlayerNearNpc(true);
+          this.updatedNearNpc = true;
+        }
+      } else {
+        if (this.updatedNearNpc) {
+          this.updatePlayerNearNpc(false);
+          this.updatedNearNpc = false;
+        }
+      }
+      // currentDelta += delta;
+      // if (currentDelta > 1 / 10) {
+      setTimeout(() => {
+        this.onNpcZone(this.nearNpcs[this.nearNpcs.length - 1]);
+      }, 1000);
+      //   currentDelta = (currentDelta % 1) / 10;
+      // }
     }
     // this.updateQuestVisibility();
   }
@@ -146,6 +166,13 @@ export default class Player extends THREE.Object3D {
 
   getNearNpcName() {
     return this.interactingWithNpc;
+  }
+
+  updatePlayerNearNpc(npc) {
+    const event = new CustomEvent("playerNearNpc", {
+      detail: npc,
+    });
+    document.dispatchEvent(event);
   }
 
   updatePlayerInteractNpc(npc) {
@@ -296,7 +323,6 @@ export default class Player extends THREE.Object3D {
 
   npcInteractionDetection(npc, npcBox) {
     if (this.npcDetectionBox.intersectsBox(npcBox)) {
-      // this.onNpcZone(npc);
       npc.isInteractable();
     } else {
       npc.hideInteractLabel();
