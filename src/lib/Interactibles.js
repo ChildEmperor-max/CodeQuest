@@ -18,6 +18,7 @@ export default class Interactibles extends THREE.Object3D {
     this.questIconIsSet = false;
     this.finishedQuestSetting = false;
     this.camera = camera;
+    this.currentNearNpc = [];
     this.position.set(position.x, position.y, position.z);
 
     this.dynamicLabel.setInteractLabel({
@@ -42,13 +43,21 @@ export default class Interactibles extends THREE.Object3D {
     if (this.finishedQuestSetting) {
       this.updateShowQuestIcon();
     }
-    if (this.npcNearPlayer(this.interactRange)) {
-      this.isInteractable();
-    } else {
-      this.dynamicLabel.hideInteractLabel();
-      if (this.interactingWithPlayer()) {
-        this.player.onNpcZone(null);
+    if (this.npcNearPlayer(this.interactRange) && this.hasDialog) {
+      // this.showInteractLabel();
+      if (!this.currentNearNpc.some((npc) => npc.npcName === this.npcName)) {
+        this.currentNearNpc.push(this);
+        this.player.nearNpcs.push(this);
       }
+    } else {
+      const index = this.currentNearNpc.findIndex(
+        (npc) => npc.npcName === this.npcName
+      );
+      if (index !== -1) {
+        this.currentNearNpc.splice(index, 1);
+        this.player.nearNpcs.splice(index, 1);
+      }
+      // this.hideInteractLabel();
     }
   }
 
@@ -68,16 +77,14 @@ export default class Interactibles extends THREE.Object3D {
     }
   }
 
-  isInteractable() {
-    if (this.hasDialog) {
-      this.dynamicLabel.showInteractLabel(
-        this.getInteractIconPosition(),
-        this.camera
-      );
-      this.player.onNpcZone(this);
-      if (this.interactingWithPlayer()) {
-        this.dynamicLabel.hideInteractLabel();
-      }
+  showInteractLabel() {
+    this.dynamicLabel.showInteractLabel(
+      this.getInteractIconPosition(),
+      this.camera
+    );
+    this.player.onNpcZone(this);
+    if (this.interactingWithPlayer()) {
+      this.dynamicLabel.hideInteractLabel();
     }
   }
 
