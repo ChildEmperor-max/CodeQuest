@@ -22,7 +22,7 @@
   color: white;
   font-size: 20px;
 
-  -webkit-text-stroke: 1px black; /* For WebKit (Safari, Chrome) */
+  -webkit-text-stroke: 1px black;
   font-weight: bold;
   
   transform-origin: center;
@@ -30,6 +30,67 @@
   top: 50%;
   left: 50%;
   cursor:default;
+}
+
+.player-actions-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 40px 40px 0;
+  gap: 15px;
+  -webkit-text-stroke: 1px black;
+  font-size: 23px;
+}
+
+.interact-action-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.interact-button {
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+
+  color: white;
+  border: 2px solid rgba(141, 135, 135, 0.253);
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 50%;
+  border: 2px solid black;
+  display: flex;
+  cursor: pointer;
+
+  -webkit-text-stroke: 1px black;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+
+  transform-origin: center;
+  animation: pulse-animation 2s infinite;
+
+  transform-origin: center;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.678);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(110, 110, 110, 0);
+  }
+  0%, 100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.143);
+  }
 }
 
 .icon-button {
@@ -60,15 +121,10 @@
 }
 
 .sprint-image-container {
-    border-radius: 50%;
-    position: fixed;
-    display: inline-block;
-    overflow: hidden;
-    width: 90px;
-    height: 90px;
-    margin: 50px;
-    bottom: 0;
-    right: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
 }
 
 .sprint-disabled {
