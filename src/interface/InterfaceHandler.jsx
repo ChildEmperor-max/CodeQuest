@@ -20,6 +20,7 @@ import {
   faTrophy,
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import QuestDetails from "./Quests/QuestDetails";
 
 export default function InterfaceHandler({
   settings: {
@@ -45,6 +46,7 @@ export default function InterfaceHandler({
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
   );
+  const [openQuestDetails, setOpenQuestDetails] = useState(false);
   const [showButtons, setShowButtons] = useState(true);
 
   const [isPlayerRunning, setIsPlayerRunning] = useState(false);
@@ -183,6 +185,9 @@ export default function InterfaceHandler({
           onClose={() => setShowPopup(false)}
         />
       )}
+      {openQuestDetails &&
+        <QuestDetails quest={currentEditorQuest} isEditorOpen={true} onClose={()=>setOpenQuestDetails(false)} />
+      }
       {isPlayerInteractingNpc !== null ? (
         <DialogBox
           npc={isPlayerInteractingNpc}
@@ -198,6 +203,7 @@ export default function InterfaceHandler({
             setCurrentEditorQuest(quest);
             if (currentOpenedInterface !== interfaces.editor) {
               setCurrentOpenedInterface(interfaces.editor);
+              setOpenQuestDetails(true);
             }
           }}
           onOpenQuestHint={(quest_hint) => {
@@ -222,7 +228,7 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.editor && (
         <CodeEditor
           quest_data={currentEditorQuest}
-          onClose={() => toggleInterface(interfaces.editor)}
+          onClose={() => { toggleInterface(interfaces.editor); setCurrentEditorQuest(null)}}
         />
       )}
       {currentOpenedInterface === interfaces.profile && (
