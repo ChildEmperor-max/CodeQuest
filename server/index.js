@@ -1,22 +1,28 @@
-import express from "express";
-import fs from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import bodyParser from "body-parser";
-import cors from "cors";
+const express = require("express");
+const fs = require("fs");
+const dotenv = require("dotenv").config();
+const { fileURLToPath } = require("url");
+const { dirname, join } = require("path");
+const cors = require("cors");
+const { Sequelize } = require("sequelize");
+const cookieParser = require("cookie-parser");
+const db = require("./Models");
+const userRoutes = require("./Routes/userRoutes");
+const bodyParser = require("body-parser");
 
-import pkg from "pg";
-const { Pool } = pkg;
+const { Pool } = require("pg");
 
-import { handleSubmittedJavaAnswer } from "./handlers/javaHandler.js";
-import {
+const { handleSubmittedJavaAnswer } = require("./handlers/javaHandler.js");
+
+const {
   handleInsertDialog,
   handleFetchDialog,
   handleFetchDialogById,
   handleFetchDialogByNpcId,
   handleFetchDialogByBranch,
-} from "./handlers/dialogHandler.js";
-import {
+} = require("./handlers/dialogHandler.js");
+
+const {
   handleInsertNpc,
   handleFetchNpc,
   handleFetchNpcById,
@@ -24,28 +30,36 @@ import {
   fetchNpcQuestDialogById,
   handleFetchNpcDataByName,
   handleFetchIdByName,
-} from "./handlers/npcHandler.js";
-import {
+} = require("./handlers/npcHandler.js");
+
+const {
   handleInsertQuest,
   handleFetchQuest,
   handleUpdateQuestStatus,
   handleFetchQuestById,
   handleFetchCompletedQuests,
   handleFetchCompletedQuestCount,
-} from "./handlers/questHandler.js";
-import { handleFetchAchievements } from "./handlers/achievementsHandler.js";
-import {
+} = require("./handlers/questHandler.js");
+
+const {
+  handleFetchAchievements,
+} = require("./handlers/achievementsHandler.js");
+
+const {
   handleFetchHelp,
   handleFetchHelpById,
   handleFetchHelpByDialogId,
-} from "./handlers/helpHandler.js";
-import {
+} = require("./handlers/helpHandler.js");
+
+const {
   handleFetchCharacterById,
   handleUpdateCharacterNameById,
-} from "./handlers/characterHandler.js";
+} = require("./handlers/characterHandler.js");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
+
+const PORT = process.env.PORT || 8000;
 
 const pool = new Pool({
   user: "postgres",
@@ -56,6 +70,13 @@ const pool = new Pool({
 });
 
 const app = express();
+//middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//routes for the user API
 
 // Set CORS headers
 app.use((req, res, next) => {
@@ -68,8 +89,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
 app.use(cors());
+app.use("/api/users", userRoutes);
 
 app.post("/npc", (req, res) => {
   handleInsertNpc(req, res, pool);
@@ -182,7 +203,7 @@ app.get("/character/update/character-name", (req, res) => {
   handleUpdateCharacterNameById(req, res, pool);
 });
 
-app.get("/", (req, res) => {
+app.get("/game", (req, res) => {
   const filePath = "index.html";
   fs.readFile(filePath, (err, content) => {
     if (err) {
@@ -201,6 +222,6 @@ app.use((req, res) => {
   res.end("Not Found");
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
