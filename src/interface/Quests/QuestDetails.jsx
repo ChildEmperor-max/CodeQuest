@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import QuestSideButton from "./QuestSideButton";
 
-const QuestDetails = ({ quest, isEditorOpen, onStart, onAbandon, onClose }) => {
+const QuestDetails = ({ quest, isEditorOpen, onStart = null, onAbandon = null, onClose }) => {
   const [playFlipAnimation, setPlayFlipAnimation] = useState(true);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -37,11 +37,12 @@ const QuestDetails = ({ quest, isEditorOpen, onStart, onAbandon, onClose }) => {
           <p>{quest.npc_name}</p>
         </div>
         <div className="quest-details-buttons">
+          {onStart && 
           <QuestSideButton
             quest={quest}
             onStart={onStart}
             onAbandon={onAbandon}
-          />
+          />}
         </div>
       </div>
     </div>
