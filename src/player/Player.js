@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
-import QuestManager from "../lib/QuestManager";
 import keys from "../lib/KeyControls";
-import Loader from "../lib/Loader";
+import ManageLoader from "../lib/Loader";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -33,7 +32,6 @@ export default class Player extends THREE.Object3D {
     this.running = false;
     this.groundMesh = undefined;
     this.collisionBox = undefined;
-    this.questManager = new QuestManager();
     this.isTalkingToNpc = false;
     this.onTransferArea = false;
     this.transferArea = null;
@@ -41,6 +39,8 @@ export default class Player extends THREE.Object3D {
     this.isDoneLoading = false;
     this.movingDirection = "flat";
     this.jumpDistance = 0;
+    this.loaderElement = null;
+    this.textLoaderElement = null;
   }
 
   initialize(
@@ -132,20 +132,6 @@ export default class Player extends THREE.Object3D {
       }, 1000);
       //   currentDelta = (currentDelta % 1) / 10;
       // }
-    }
-    // this.updateQuestVisibility();
-  }
-  updateQuestVisibility() {
-    if (keys.q.justPressed) {
-      if (!this.questListShown) {
-        this.questManager.toggleQuestBox();
-        this.questListShown = true;
-      }
-    } else {
-      if (this.questListShown) {
-        this.questManager.toggleQuestBox();
-        this.questListShown = false;
-      }
     }
   }
 
@@ -570,7 +556,11 @@ export default class Player extends THREE.Object3D {
     //   }
     //   return url;
     // });
-    const loader = new Loader("Loading Player ...");
+    const loader = new ManageLoader(
+      "Loading Player ...",
+      this.loaderElement,
+      this.textLoaderElement
+    );
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
 
