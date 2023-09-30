@@ -72,6 +72,11 @@ const DialogBox = ({
               dialog.stage === "start" &&
               dialog.quest_status_required === "active"
             );
+          } else if (questData[0].quest_status === "toComplete") {
+            return (
+              dialog.stage === "start" &&
+              dialog.quest_status_required === "toComplete"
+            );
           }
         });
         if (startingDialog[0].is_array) {
@@ -168,10 +173,14 @@ const DialogBox = ({
           playerInstance.onNpcZone(null);
           setCurrentId(0);
           onOpenQuestHint(null);
+          if (currentActiveDialog().open_editor) {
+            onOpenEditor(npc.currentQuest[0]);
+          }
         }
 
         checkQuestHint(nextText);
 
+        
         if (nextPage + 1 < dialogArray.length) {
           setCurrentDialog(nextText);
           setCurrentResponses([]);
@@ -194,6 +203,9 @@ const DialogBox = ({
         }
       } catch (error) {
         console.log(error);
+        if (currentActiveDialog().open_editor) {
+          onOpenEditor(npc.currentQuest[0]);
+        }
         onClose();
         playerInstance.onNpcZone(null);
       }
@@ -234,6 +246,9 @@ const DialogBox = ({
     setSkipTypingAnimation(false);
     if (quest_id) {
       acceptQuest(quest_id);
+    }
+    if (currentActiveDialog().open_editor) {
+      onOpenEditor(npc.currentQuest[0]);
     }
     try {
       const nextNpcDialog = getAllResponse({ id: id });
@@ -298,7 +313,7 @@ const DialogBox = ({
       if (quest[0].quest_status === status.inactive) {
         newStatus = status.active;
         headerText = "Quest Started";
-      } else if (quest[0].quest_status === status.active) {
+      } else if (quest[0].quest_status === status.toComplete) {
         newStatus = status.completed;
         headerText = "Quest Completed";
       }
