@@ -1,14 +1,19 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
-import Loader from "../lib/Loader";
+import ManageLoader from "../lib/Loader";
 
-const loader = new Loader("Loading world ...");
-
-const worldLoader = new GLTFLoader(loader.loadingManager);
+// const worldLoader = new GLTFLoader();
 let lodLevels = [];
 let renderDistance = 100;
 
-export function LoadWorld() {
+export function LoadWorld(loaderElement, textLoaderElement) {
+  const loader = new ManageLoader(
+    "Loading CodeQuest World ...",
+    loaderElement,
+    textLoaderElement
+  );
+  const worldLoader = new GLTFLoader(loader.loadingManager);
+
   return new Promise((resolve, reject) => {
     worldLoader.load(
       "/src/assets/world/codequest_map.glb",
@@ -28,7 +33,7 @@ export function LoadWorld() {
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
 
-        const npcSpawnPoint1 = new THREE.Vector3(0, 10, -140);
+        const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
         const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
         const npcSpawnPoint4 = new THREE.Vector3(3, 0, -145);
