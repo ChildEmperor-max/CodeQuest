@@ -80,7 +80,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
     } else {
       setEditorValue(`public class script {
     public static void main(String args[]) {
-          
+        
     }
 }`);
     }
@@ -95,7 +95,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
     return executeJavaCode({
       code: editorValue,
       quest: quest_data ? quest_data.quest_title : null,
-      scriptName: quest_data ? quest_data.script_name : null,
+      scriptName: quest_data ? quest_data.script_name : "script",
     })
       .then((response) => {
         if (response.error) {
@@ -132,23 +132,30 @@ const CodeEditor = ({ quest_data, onClose }) => {
           let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
           if (quest_data.id === 3) {
             console.log("chosen username: ", response.output);
+            manageQuest.toCompleteQuest(quest_data.id);
+            fetchActiveQuests();
+            handlePopupContent(
+              "Quest Progressed",
+              quest_data.quest_title,
+              "Talk to Alby to complete the quest",
+              true
+            );
+            return;
           }
 
-          // if (
-          //   playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
-          // ) {
-          //   manageQuest.updateQuestStatus(
-          //     quest_data.id,
-          //     manageQuest.status.completed
-          //   );
-          //   fetchActiveQuests();
-          //   handlePopupContent(
-          //     "Quest Completed",
-          //     quest_data.quest_title,
-          //     quest_data.quest_description,
-          //     true
-          //   );
-          // } else {
+          if (
+            playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
+          ) {
+            manageQuest.toCompleteQuest(quest_data.id);
+            fetchActiveQuests();
+            handlePopupContent(
+              "Quest Progressed",
+              quest_data.quest_title,
+              quest_data.quest_description,
+              true
+            );
+          }
+          // else {
           //   console.log("WRONG! ");
           //   handlePopupContent(
           //     "Wrong answer",
@@ -301,7 +308,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
                     onClick={() => {
                       quest_data.hint && setShowHint(true);
                     }}
-                    disabled={quest_data.hint ? false : true}
+                    disabled={quest_data && quest_data.hint ? false : true}
                     title="View hint"
                     icon={faQuestionCircle}
                     buttonText="Hint"
@@ -312,7 +319,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
                   onClick={() => {
                     quest_data.pseudo_code && setShowPseudoCode(true);
                   }}
-                  disabled={quest_data.pseudo_code ? false : true}
+                  disabled={quest_data && quest_data.pseudo_code ? false : true}
                   title="Pseudo Code"
                   icon={faCode}
                   buttonText="Pseudo Code"
