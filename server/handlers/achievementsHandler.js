@@ -1,4 +1,4 @@
-export function handleFetchAchievements(req, res, pool) {
+module.exports.handleFetchAchievements = function (req, res, pool) {
   pool.query("SELECT * FROM achievements ORDER BY id ASC", (err, result) => {
     if (err) {
       console.error("Error executing database query:", err);
@@ -9,4 +9,4 @@ export function handleFetchAchievements(req, res, pool) {
       res.end(JSON.stringify(result.rows));
     }
   });
-}
+};

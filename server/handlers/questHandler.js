@@ -1,4 +1,6 @@
-export function handleFetchQuest(req, res, pool) {
+const fs = require("fs");
+
+function handleFetchQuest(req, res, pool) {
   // Query the database and return quest data
   pool.query("SELECT * FROM quest ORDER BY id ASC", (err, result) => {
     if (err) {
@@ -12,7 +14,7 @@ export function handleFetchQuest(req, res, pool) {
   });
 }
 
-export function handleFetchQuestById(id, res, pool) {
+function handleFetchQuestById(id, res, pool) {
   // Query the database and return quest data
   pool
     .query("SELECT * FROM quest WHERE id = $1", [id])
@@ -27,7 +29,7 @@ export function handleFetchQuestById(id, res, pool) {
     });
 }
 
-export function handleFetchCompletedQuests(req, res, pool) {
+function handleFetchCompletedQuests(req, res, pool) {
   pool
     .query("SELECT * FROM quest WHERE quest_status = 'completed'")
     .then((result) => {
@@ -41,7 +43,7 @@ export function handleFetchCompletedQuests(req, res, pool) {
     });
 }
 
-export function handleFetchCompletedQuestCount(req, res, pool) {
+function handleFetchCompletedQuestCount(req, res, pool) {
   pool
     .query("SELECT COUNT(*) FROM quest WHERE quest_status = 'completed'")
     .then((result) => {
@@ -55,7 +57,7 @@ export function handleFetchCompletedQuestCount(req, res, pool) {
     });
 }
 
-export function handleUpdateQuestStatus(req, res, pool) {
+function handleUpdateQuestStatus(req, res, pool) {
   try {
     const questData = req.body;
     const questId = questData.quest_id;
@@ -87,7 +89,7 @@ export function handleUpdateQuestStatus(req, res, pool) {
   }
 }
 
-export function handleInsertQuest(req, res, pool) {
+function handleInsertQuest(req, res, pool) {
   try {
     const questData = req.body;
 
@@ -142,3 +144,12 @@ export function handleInsertQuest(req, res, pool) {
     res.end(JSON.stringify({ error: "Bad Request" }));
   }
 }
+
+module.exports = {
+  handleFetchQuest,
+  handleFetchQuestById,
+  handleFetchCompletedQuests,
+  handleFetchCompletedQuestCount,
+  handleUpdateQuestStatus,
+  handleInsertQuest,
+};

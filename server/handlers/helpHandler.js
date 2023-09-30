@@ -1,21 +1,21 @@
-import fs from "fs";
+const fs = require("fs");
 
-export function handleFetchHelp(req, res, pool) {
-  // Query the database to fetch all dialogs
+module.exports.handleFetchHelp = function (req, res, pool) {
+  // Query the database to fetch all help
   pool.query("SELECT * FROM help", (err, result) => {
     if (err) {
       console.error("Error fetching help table:", err);
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Internal Server Error" }));
     } else {
-      // Send the dialog data as the response
+      // Send the help data as the response
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(result.rows));
     }
   });
-}
+};
 
-export function handleFetchHelpById(id, res, pool) {
+module.exports.handleFetchHelpById = function (id, res, pool) {
   pool
     .query("SELECT * FROM help WHERE id = $1", [id])
     .then((result) => {
@@ -27,9 +27,9 @@ export function handleFetchHelpById(id, res, pool) {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     });
-}
+};
 
-export async function handleFetchHelpByDialogId(id, res, pool) {
+module.exports.handleFetchHelpByDialogId = async function (id, res, pool) {
   try {
     const query = fs.readFileSync("server/sql/viewHelpDialogById.sql", "utf8");
     const result = await pool.query(query, [id]);
@@ -39,4 +39,4 @@ export async function handleFetchHelpByDialogId(id, res, pool) {
   } catch (error) {
     console.error("Error executing query:", error);
   }
-}
+};

@@ -1,8 +1,8 @@
-import fs from "fs";
+const fs = require("fs");
 
 const path = "server/sql/character/";
 
-export async function handleFetchCharacterById(id, res, pool) {
+module.exports.handleFetchCharacterById = async function (id, res, pool) {
   try {
     const query = fs.readFileSync(path + "selectCharacterById.sql", "utf8");
     const result = await pool.query(query, [id]);
@@ -12,9 +12,9 @@ export async function handleFetchCharacterById(id, res, pool) {
   } catch (error) {
     console.error("Error executing query:", error);
   }
-}
+};
 
-export function handleUpdateCharacterNameById(req, res, pool) {
+module.exports.handleUpdateCharacterNameById = function (req, res, pool) {
   try {
     const data = req.body;
     const player_id = data.player_id;
@@ -43,4 +43,4 @@ export function handleUpdateCharacterNameById(req, res, pool) {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Bad Request" }));
   }
-}
+};

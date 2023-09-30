@@ -1,5 +1,6 @@
-import fs from "fs";
-export function handleFetchDialog(req, res, pool) {
+const fs = require("fs");
+
+module.exports.handleFetchDialog = function (req, res, pool) {
   // Query the database to fetch all dialogs
   pool.query("SELECT * FROM dialog", (err, result) => {
     if (err) {
@@ -12,9 +13,9 @@ export function handleFetchDialog(req, res, pool) {
       res.end(JSON.stringify(result.rows));
     }
   });
-}
+};
 
-export function handleFetchDialogById(id, res, pool) {
+module.exports.handleFetchDialogById = function (id, res, pool) {
   pool
     .query("SELECT * FROM dialog WHERE id = $1", [id])
     .then((result) => {
@@ -26,9 +27,9 @@ export function handleFetchDialogById(id, res, pool) {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     });
-}
+};
 
-export function handleFetchDialogByBranch(branch, res, pool) {
+module.exports.handleFetchDialogByBranch = function (branch, res, pool) {
   pool
     .query("SELECT * FROM dialog WHERE dialog_branch = $1", [branch])
     .then((result) => {
@@ -40,9 +41,9 @@ export function handleFetchDialogByBranch(branch, res, pool) {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     });
-}
+};
 
-export async function handleFetchDialogByNpcId(id, res, pool) {
+module.exports.handleFetchDialogByNpcId = async function (id, res, pool) {
   try {
     const query = fs.readFileSync("server/sql/getDialogByNpcId.sql", "utf8");
     const result = await pool.query(query, [id]);
@@ -52,9 +53,9 @@ export async function handleFetchDialogByNpcId(id, res, pool) {
   } catch (error) {
     console.error("Error executing query:", error);
   }
-}
+};
 
-export function handleInsertDialog(req, res, pool) {
+module.exports.handleInsertDialog = function (req, res, pool) {
   try {
     const dialogData = req.body;
     const dialog = dialogData.dialog;
@@ -104,4 +105,4 @@ export function handleInsertDialog(req, res, pool) {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Bad Request" }));
   }
-}
+};

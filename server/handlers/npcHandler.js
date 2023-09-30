@@ -1,6 +1,6 @@
-import fs from "fs";
+const fs = require("fs");
 
-export function fetchNpcQuestDialog(req, res, pool) {
+function fetchNpcQuestDialog(req, res, pool) {
   const sqlQuery = fs.readFileSync("server/sql/viewNpcQuestDialog.sql", "utf8");
   pool
     .query(sqlQuery)
@@ -13,7 +13,7 @@ export function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
-export function handleFetchIdByName(name, res, pool) {
+function handleFetchIdByName(name, res, pool) {
   pool
     .query("SELECT id FROM npc WHERE TRIM(npc_name) = $1", [name])
     .then((result) => {
@@ -27,7 +27,7 @@ export function handleFetchIdByName(name, res, pool) {
     });
 }
 
-export function handleFetchNpcById(id, res, pool) {
+function handleFetchNpcById(id, res, pool) {
   pool
     .query("SELECT * FROM npc WHERE id = $1", [id])
     .then((result) => {
@@ -41,7 +41,7 @@ export function handleFetchNpcById(id, res, pool) {
     });
 }
 
-export async function fetchNpcQuestDialogById(id, res, pool) {
+async function fetchNpcQuestDialogById(id, res, pool) {
   try {
     const query = fs.readFileSync(
       "server/sql/viewNpcQuestDialogById.sql",
@@ -56,8 +56,7 @@ export async function fetchNpcQuestDialogById(id, res, pool) {
   }
 }
 
-export function handleFetchNpcDataByName(name, res, pool) {
-  // Query the database and return quest data
+function handleFetchNpcDataByName(name, res, pool) {
   pool
     .query("SELECT * FROM npc WHERE TRIM(npc_name) = $1", [name])
     .then((result) => {
@@ -71,8 +70,7 @@ export function handleFetchNpcDataByName(name, res, pool) {
     });
 }
 
-export function handleFetchNpc(req, res, pool) {
-  // Query the database and return quest data
+function handleFetchNpc(req, res, pool) {
   pool.query("SELECT * FROM npc", (err, result) => {
     if (err) {
       console.error("Error executing database query:", err);
@@ -85,7 +83,7 @@ export function handleFetchNpc(req, res, pool) {
   });
 }
 
-export function handleInsertNpc(req, res, pool) {
+function handleInsertNpc(req, res, pool) {
   try {
     const npcData = req.body;
     checkAndGetAllData(
@@ -98,14 +96,13 @@ export function handleInsertNpc(req, res, pool) {
         if (err) {
           res.writeHead(500, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Internal Server Error" }));
-          return; // Return here to avoid sending multiple responses
+          return;
         }
 
         if (exists) {
-          // NPC with the same name already exists
           res.writeHead(409, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "NPC already exists" }));
-          return; // Return here to avoid inserting duplicate NPC
+          return;
         }
 
         pool.query(
@@ -116,13 +113,12 @@ export function handleInsertNpc(req, res, pool) {
               console.error("Error checking Quest ID:", err);
               res.writeHead(500, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Internal Server Error" }));
-              return; // Return here to avoid sending multiple responses
+              return;
             }
             if (result.rows.length === 0) {
-              // NPC does not exist
               res.writeHead(404, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Quest not found" }));
-              return; // Return here to avoid inserting invalid quest
+              return;
             }
             const questId = result.rows[0].id;
 
@@ -134,17 +130,15 @@ export function handleInsertNpc(req, res, pool) {
                   console.error("Error checking Dialog ID:", err);
                   res.writeHead(500, { "Content-Type": "application/json" });
                   res.end(JSON.stringify({ error: "Internal Server Error" }));
-                  return; // Return here to avoid sending multiple responses
+                  return;
                 }
                 if (result.rows.length === 0) {
-                  // NPC does not exist
                   res.writeHead(404, { "Content-Type": "application/json" });
                   res.end(JSON.stringify({ error: "Dialog not found" }));
-                  return; // Return here to avoid inserting invalid quest
+                  return;
                 }
                 const dialogId = result.rows[0].id;
 
-                // Insert the NPC data into the database table
                 pool.query(
                   "INSERT INTO npc (npc_name, quest_id, dialog_id) VALUES ($1, $2, $3)",
                   [npcData.npc_name, questId, dialogId],
@@ -157,7 +151,7 @@ export function handleInsertNpc(req, res, pool) {
                       res.end(
                         JSON.stringify({ error: "Internal Server Error" })
                       );
-                      return; // Return here to avoid sending multiple responses
+                      return;
                     }
 
                     res.writeHead(201, {
@@ -197,12 +191,20 @@ function checkAndGetAllData(
         console.error(`Error checking existing ${tableName}:`, err);
         callback(err, false);
       } else if (result.rows.length > 0) {
-        // Data already exists
         callback(null, true);
       } else {
-        // Data does not exist
         callback(null, false);
       }
     }
   );
 }
+
+module.exports = {
+  fetchNpcQuestDialog,
+  handleFetchIdByName,
+  handleFetchNpcById,
+  fetchNpcQuestDialogById,
+  handleFetchNpcDataByName,
+  handleFetchNpc,
+  handleInsertNpc,
+};

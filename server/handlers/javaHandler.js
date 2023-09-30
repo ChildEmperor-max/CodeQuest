@@ -1,8 +1,8 @@
-import fs from "fs";
-import { execSync } from "child_process";
-import { join } from "path";
+const fs = require("fs");
+const { execSync } = require("child_process");
+const { join } = require("path");
 
-export function handleSubmittedJavaAnswer(req, res, pool) {
+module.exports.handleSubmittedJavaAnswer = function (req, res, pool) {
   const code = req.body.code;
   const questTitle = req.body.quest;
   const script_name = req.body.scriptName;
@@ -52,4 +52,4 @@ export function handleSubmittedJavaAnswer(req, res, pool) {
       });
     }
   });
-}
+};
