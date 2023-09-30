@@ -28,6 +28,9 @@
   }
 
   .quest-details {
+    position: fixed;
+    top: 0;
+    right: 0;
     overflow: auto;
     width: 60%;
     height: 100%;
@@ -40,6 +43,7 @@
     backdrop-filter: blur(5px);
 
     transition: width 0.8s ease;
+    z-index: 2;
   }
 
   .play-fade-animation {

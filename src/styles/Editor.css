@@ -17,6 +17,7 @@
   font-size: 14px;
   padding: 5px;
   background-color: #090d1dd8;
+  white-space: pre-wrap;
 }
 
 #ace-editor {
