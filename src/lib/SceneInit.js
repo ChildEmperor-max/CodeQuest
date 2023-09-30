@@ -12,7 +12,7 @@ import keys from "./KeyControls";
 import { addGrassShader, updateGrassShader } from "../world/grassShader";
 
 export default class SceneInit {
-  constructor(canvasId, renderer) {
+  constructor(canvasId, renderer, loaderElement, textLoaderElement) {
     this.fov = 45;
     this.canvasId = canvasId;
 
@@ -28,6 +28,8 @@ export default class SceneInit {
     this.cameraControls = undefined;
     this.npcArray = [];
     this.currentDelta = 0;
+    this.loaderElement = loaderElement;
+    this.textLoaderElement = textLoaderElement;
   }
 
   initialize(player, npcs, camera, cameraControls) {
@@ -39,6 +41,8 @@ export default class SceneInit {
     this.clock = new THREE.Clock();
     this.npcs = npcs;
     this.dynamicLabel = new DynamicLabel();
+    player.loaderElement = this.loaderElement;
+    player.textLoaderElement = this.textLoaderElement;
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
     //Lower résolution
@@ -80,7 +84,8 @@ export default class SceneInit {
     this.isPlay = false;
     this.animationId = null;
 
-    this.isLoadingWorld = false;
+    this.isLoadingWorld = true;
+    this.isLoadingWorldSignal = true;
 
     this.hasMainWorldNPCLoaded = false;
 
@@ -150,6 +155,16 @@ export default class SceneInit {
       const delta = this.clock.getDelta();
       this.stats.update();
 
+      if (this.isLoadingWorldSignal) {
+        if (!this.isLoadingWorld) {
+          const event = new CustomEvent("finishedLoadingWorld", {
+            detail: true,
+          });
+          document.dispatchEvent(event);
+          this.isLoadingWorldSignal = false;
+        }
+      }
+
       if (this.player) {
         for (let i = 0; i < this.npcArray.length; i++) {
           if (this.npcArray[i]) {
@@ -181,7 +196,7 @@ export default class SceneInit {
 
   loadMainWorld() {
     this.scene = this.mainWorldScene;
-    LoadWorld()
+    LoadWorld(this.loaderElement, this.textLoaderElement)
       .then(
         ({
           worldMesh,
@@ -280,6 +295,10 @@ export default class SceneInit {
 
   loadAlbyHouseScene() {
     this.scene = this.albyHouseScene;
+    const event = new CustomEvent("loadingWorld", {
+      detail: true,
+    });
+    document.dispatchEvent(event);
     LoadSampleWorld()
       .then(
         ({
