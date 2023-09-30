@@ -12,10 +12,12 @@ class ManageQuest {
     this.status = {
       inactive: "inactive",
       active: "active",
+      toComplete: "toComplete",
       completed: "completed",
     };
     this.type = {
       side: "side",
+      sub: "sub",
       story: "story",
     };
   }
@@ -68,6 +70,10 @@ class ManageQuest {
 
   acceptQuest(quest_id) {
     updateQuestDataStatus(quest_id, this.status.active);
+  }
+
+  toCompleteQuest(quest_id) {
+    updateQuestDataStatus(quest_id, this.status.toComplete);
   }
 
   abandonQuest(quest_id) {
