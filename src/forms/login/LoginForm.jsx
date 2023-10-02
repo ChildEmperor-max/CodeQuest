@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LoginForm.css";
-
+import { usePlayerContext } from "../../components/PlayerContext";
+import { fetchPlayerByEmail } from "../../db/HandleTable";
 
 const LoginForm = () => {
+  const { login } = usePlayerContext();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,25 +22,46 @@ const LoginForm = () => {
     });
   };
 
+  const getPlayerByEmail = (email) => {
+    fetchPlayerByEmail(email)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const jsonData = {
         email: formData.email,
         password: formData.password,
       };
-      console.log(jsonData)
-  
-      const response = await axios.post("http://localhost:8000/api/users/login", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
+      console.log(jsonData);
+
+      const response = await axios.post(
+        "http://localhost:8000/api/users/login",
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
-  
+      );
+
       if (response.status === 201) {
-        console.log("Login successful");
-        navigate("/game")
+        fetchPlayerByEmail(jsonData.email)
+          .then((playerData) => {
+            console.log("Login successful: ", playerData);
+            navigate("/game");
+            login(playerData[0].id);
+          })
+          .catch((err) => {
+            console.log("Login failed: ", err);
+          });
       } else {
         console.log("Login failed");
       }
@@ -75,7 +98,9 @@ const LoginForm = () => {
         </div>
         <div className="form-group">
           <button type="submit">Login</button>
-          <Link to="/signup"><button>Signup</button></Link>
+          <Link to="/signup">
+            <button>Signup</button>
+          </Link>
         </div>
       </form>
     </div>
