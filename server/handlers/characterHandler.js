@@ -10,7 +10,7 @@ module.exports.handleFetchCharacterById = async function (id, res, pool) {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(result.rows));
   } catch (error) {
-    console.error("Error executing query:", error);
+    console.error("Error fetching character by id:", error);
   }
 };
 
@@ -26,11 +26,16 @@ module.exports.handleUpdateCharacterNameById = function (req, res, pool) {
       .then(() => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(
-          JSON.stringify({ message: "Character name updated successfully" })
+          JSON.stringify({
+            message: `Character name updated successfully. New Character name: ${new_name}`,
+          })
         );
       })
       .catch((error) => {
-        console.error("Error updating data:", error);
+        console.error(
+          "Error updating character name in characterHandler.js line 35:",
+          error
+        );
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Internal Server Error" }));
       });
@@ -39,7 +44,7 @@ module.exports.handleUpdateCharacterNameById = function (req, res, pool) {
     //   pool.end();
     // });
   } catch (error) {
-    console.error("Error parsing quest data:", error);
+    console.error("Error parsing character data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Bad Request" }));
   }

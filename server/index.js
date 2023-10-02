@@ -56,6 +56,8 @@ const {
   handleUpdateCharacterNameById,
 } = require("./handlers/characterHandler.js");
 
+const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
+
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
 
@@ -199,8 +201,14 @@ app.get("/character/:id", (req, res) => {
   handleFetchCharacterById(id, res, pool);
 });
 
-app.get("/character/update/character-name", (req, res) => {
+app.post("/character/update/name", (req, res) => {
+  console.log("SERVER: ", req.body);
   handleUpdateCharacterNameById(req, res, pool);
+});
+
+app.get("/player/get-by-email/:email", (req, res) => {
+  const email = req.params.email;
+  handleFetchPlayerByEmail(email, res, pool);
 });
 
 app.get("/game", (req, res) => {
