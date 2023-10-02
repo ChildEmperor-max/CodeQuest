@@ -27,7 +27,12 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/ext-language_tools";
 import ace from "ace-builds";
 
-import { executeJavaCode, fetchNpcQuestDialog } from "../../db/HandleTable";
+import {
+  executeJavaCode,
+  fetchCharacterById,
+  fetchNpcQuestDialog,
+  updateCharacterNameById,
+} from "../../db/HandleTable";
 import ButtonText from "./ButtonText";
 import PanelButton from "./PanelButton";
 import ManageQuest from "../../db/ManageQuest";
@@ -37,8 +42,11 @@ import ActiveQuestsModal from "./ActiveQuestsModal";
 import PseudoCode from "./PseudoCode";
 import Hint from "./Hint";
 import Countdown from "./Countdown";
+import { usePlayerContext } from "../../components/PlayerContext";
 
 const CodeEditor = ({ quest_data, onClose }) => {
+  const { playerId } = usePlayerContext();
+
   const [editorValue, setEditorValue] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -132,19 +140,28 @@ const CodeEditor = ({ quest_data, onClose }) => {
           let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
           if (quest_data.id === 3) {
             console.log("chosen username: ", response.output);
-            manageQuest.toCompleteQuest(quest_data.id);
-            fetchActiveQuests();
-            handlePopupContent(
-              "Quest Progressed",
-              quest_data.quest_title,
-              "Talk to Alby to complete the quest",
-              true
-            );
+            updateCharacterNameById(playerId, response.output)
+              .then(() => {
+                manageQuest.toCompleteQuest(quest_data.id);
+                fetchActiveQuests();
+                handlePopupContent(
+                  "Quest Progressed",
+                  quest_data.quest_title,
+                  "Talk to Alby to complete the quest",
+                  true
+                );
+              })
+              .catch((err) => {
+                console.log("Update username error: ", err);
+              });
             return;
           }
 
           if (
-            playerAnswer.toLowerCase().includes(correctAnswer.toLowerCase())
+            playerAnswer
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .includes(correctAnswer.toLowerCase().replace(/\s+/g, ""))
           ) {
             manageQuest.toCompleteQuest(quest_data.id);
             fetchActiveQuests();
