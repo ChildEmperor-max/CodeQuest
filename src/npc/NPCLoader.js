@@ -61,6 +61,7 @@ export default class NPCLoader extends Interactibles {
     this.height = 5;
     this.camera = camera;
     this.direction = new THREE.Vector3(0, 0, 0);
+    this.name = npcName;
 
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
@@ -104,6 +105,7 @@ export default class NPCLoader extends Interactibles {
           this.hasQuest = true;
           fetchNpcQuest.call(this, npcData[0].quest_id);
         }
+        // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
         if (npcData[0].dialog_id) {
           this.hasDialog = true;
           //   // dialogData = await viewDialogData(npcData[0].dialog_id);
