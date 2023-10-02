@@ -185,9 +185,13 @@ export default function InterfaceHandler({
           onClose={() => setShowPopup(false)}
         />
       )}
-      {openQuestDetails &&
-        <QuestDetails quest={currentEditorQuest} isEditorOpen={true} onClose={()=>setOpenQuestDetails(false)} />
-      }
+      {openQuestDetails && (
+        <QuestDetails
+          quest={currentEditorQuest}
+          isEditorOpen={true}
+          onClose={() => setOpenQuestDetails(false)}
+        />
+      )}
       {isPlayerInteractingNpc !== null ? (
         <DialogBox
           npc={isPlayerInteractingNpc}
@@ -228,7 +232,11 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.editor && (
         <CodeEditor
           quest_data={currentEditorQuest}
-          onClose={() => { toggleInterface(interfaces.editor); setCurrentEditorQuest(null)}}
+          onClose={() => {
+            toggleInterface(interfaces.editor);
+            setOpenQuestDetails(false);
+            setCurrentEditorQuest(null);
+          }}
         />
       )}
       {currentOpenedInterface === interfaces.profile && (
