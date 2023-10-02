@@ -6,6 +6,7 @@ const dialogAPI = host + "dialog";
 const achievementsAPI = host + "achievements";
 const helpAPI = host + "help";
 const characterAPI = host + "character";
+const playerAPI = host + "player";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -453,15 +454,15 @@ export function fetchCharacterById(player_id) {
     });
 }
 
-export function updateCharacterNameById(id, new_name) {
+export function updateCharacterNameById(player_id, new_name) {
   return new Promise((resolve, reject) => {
-    fetch(characterAPI + "/update/character-name/", {
+    fetch(characterAPI + "/update/name", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        player_id: player_id,
         new_name: new_name,
       }),
     })
@@ -482,4 +483,20 @@ export function updateCharacterNameById(id, new_name) {
         reject(error);
       });
   });
+}
+
+export function fetchPlayerByEmail(email) {
+  return fetch(playerAPI + "/get-by-email/" + email)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching Character data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
 }
