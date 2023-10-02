@@ -2,7 +2,6 @@ import * as THREE from "three";
 
 import Stats from "three/examples/jsm/libs/stats.module";
 import SceneLighting from "./SceneLighting";
-import CameraController from "./CameraControls";
 import { LoadWorld, updateLOD } from "../world/LoadWorld";
 import { LoadSampleWorld } from "../world/SampleWorld";
 import TextManager from "./TextManager";
@@ -64,7 +63,6 @@ export default class SceneInit {
     this.camera = camera;
     this.camera.position.set(0, 10, -110);
 
-    cameraControls.initialize(this.renderer, this.camera, player);
     this.cameraControls = cameraControls;
 
     this.loadMainWorld();
