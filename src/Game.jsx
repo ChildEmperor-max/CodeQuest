@@ -6,10 +6,12 @@ import Player from "./player/Player";
 import SampleNPC1 from "./npc/SampleNPC1";
 import SampleNPC2 from "./npc/SampleNPC2";
 import AlbyNPC from "./npc/AlbyNPC";
-import CameraController from "./lib/CameraControls";
+import CameraController from "./lib/camera/CameraControls";
+import { useWorldContext } from "./components/WorldContext";
 import Loader from "./components/loader/Loader";
 
 const Game = () => {
+  const { initializeNpcs } = useWorldContext();
   const [antialiasValue, setAntialiasValue] = useState(false);
   const [shadowMap, setShadowMap] = useState(false);
   const [renderDistance, setRenderDistance] = useState(300);
@@ -82,7 +84,9 @@ const Game = () => {
       loaderElement,
       textLoaderElement
     );
+    cameraControls.initialize(renderer, camera, player);
     world.initialize(player, npcs, camera, cameraControls);
+    initializeNpcs(npcs);
 
     const startAnimation = () => {
       world.startAnimation();
