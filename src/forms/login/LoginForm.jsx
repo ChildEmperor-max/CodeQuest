@@ -7,12 +7,12 @@ import { usePlayerContext } from "../../components/PlayerContext";
 import { fetchPlayerByEmail } from "../../db/HandleTable";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const { login } = usePlayerContext();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,16 +20,6 @@ const LoginForm = () => {
       ...formData,
       [name]: value,
     });
-  };
-
-  const getPlayerByEmail = (email) => {
-    fetchPlayerByEmail(email)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const handleSubmit = async (e) => {
@@ -40,7 +30,6 @@ const LoginForm = () => {
         email: formData.email,
         password: formData.password,
       };
-      console.log(jsonData);
 
       const response = await axios.post(
         "http://localhost:8000/api/users/login",
@@ -57,6 +46,9 @@ const LoginForm = () => {
           .then((playerData) => {
             console.log("Login successful: ", playerData);
             navigate("/game");
+
+            localStorage.setItem("playerId", playerData[0].id);
+
             login(playerData[0].id);
           })
           .catch((err) => {
