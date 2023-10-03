@@ -144,6 +144,7 @@ export default class Player extends THREE.Object3D {
           this.updatePlayerInteractNpc(npc);
         }
       }
+      this.isTalkingToNpc = false;
     } else {
       this.isTalkingToNpc = false;
       this.updatePlayerInteractNpc(null);
