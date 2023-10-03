@@ -86,8 +86,7 @@ const Game = () => {
     );
     cameraControls.initialize(renderer, camera, player);
     world.initialize(player, npcs, camera, cameraControls);
-    initializeNpcs(npcs);
-
+    initializeNpcs(npcArray);
     const startAnimation = () => {
       world.startAnimation();
     };
@@ -142,7 +141,6 @@ const Game = () => {
             },
           }}
           playerInstance={player}
-          npcInstances={npcArray}
           cameraInstance={camera}
           cameraControllerInstance={cameraControls}
         />
