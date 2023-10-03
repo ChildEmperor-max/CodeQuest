@@ -28,7 +28,6 @@ export default function InterfaceHandler({
     shadowMap: { shadowMapValue, setShadowMapValue },
   },
   playerInstance,
-  npcInstances,
   cameraInstance,
   cameraControllerInstance,
 }) {
@@ -197,7 +196,6 @@ export default function InterfaceHandler({
           npc={isPlayerInteractingNpc}
           onClose={() => closeDialogBox()}
           playerInstance={playerInstance}
-          npcInstances={npcInstances}
           cameraInstance={cameraInstance}
           cameraControllerInstance={cameraControllerInstance}
           onPopupContent={(header, title, description) => {
