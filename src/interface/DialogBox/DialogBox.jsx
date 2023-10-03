@@ -18,7 +18,6 @@ const DialogBox = ({
   npc,
   onClose,
   playerInstance,
-  npcInstances,
   cameraInstance,
   cameraControllerInstance,
   onPopupContent,
@@ -28,6 +27,7 @@ const DialogBox = ({
   onSetInteractingNpc,
 }) => {
   const manageQuest = new ManageQuest();
+  // const { playerInstance } = usePlayerContext();
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
 
@@ -105,12 +105,13 @@ const DialogBox = ({
             dialogArr = startingDialog[0].dialog.split("---");
             setCurrentDialog(dialogArr[0]);
           } else {
-            setCurrentDialog(startingDialog[0]);
+            setCurrentDialog(startingDialog[0].dialog);
             setCurrentResponses(
               getCurrentResponses(startingDialog[0].id, dialogWithCharName)
             );
           }
         }
+
         setDialogData(dialogWithCharName);
         setDialogArray(dialogArr);
         setCurrentId(startingDialog[0].id);
@@ -179,10 +180,6 @@ const DialogBox = ({
     }
   };
 
-  const characterNameDialog = (d) => {
-    return d.replace(/\[PlayerIGN\]/, characterData.character_name);
-  };
-
   const handleNextDialog = () => {
     if (typingFinished) {
       setSkipTypingAnimation(false);
@@ -198,6 +195,7 @@ const DialogBox = ({
         ) {
           onClose();
           playerInstance.onNpcZone(null);
+          playerInstance.finishedTalking = true;
           setCurrentId(0);
           onOpenQuestHint(null);
           if (currentActiveDialog().open_editor) {
@@ -224,6 +222,7 @@ const DialogBox = ({
           if (nextText === undefined) {
             onClose();
             playerInstance.onNpcZone(null);
+            playerInstance.finishedTalking = true;
             onOpenQuestHint(null);
           }
         }
@@ -234,6 +233,7 @@ const DialogBox = ({
         }
         onClose();
         playerInstance.onNpcZone(null);
+        playerInstance.finishedTalking = true;
       }
     } else {
       setSkipTypingAnimation(true);
@@ -282,7 +282,7 @@ const DialogBox = ({
       if (nextNpcDialog.is_array) {
         convertToArray({ dialog: nextNpcDialog.dialog, id: id });
       } else {
-        setCurrentDialog(characterNameDialog(nextNpcDialog.dialog));
+        setCurrentDialog(nextNpcDialog.dialog);
       }
       openHelp(nextNpcDialog.id);
       setCurrentId(nextNpcDialog.id);
@@ -300,7 +300,10 @@ const DialogBox = ({
       getHelpById(res[0].open_helper_id)
         .then((result) => {
           // setDialogData(result[0].dialog);
-          setCurrentTalkingNpc(npcs.albyNPC);
+          const talkingNpc = npcs.filter((item) => {
+            return item.npcName === result[0].npc_name;
+          });
+          setCurrentTalkingNpc(talkingNpc);
           // setCurrentId(result[0].id);
           // setCurrentResponses([]);
           // setDialogArray(result[0].dialog);
@@ -372,7 +375,7 @@ const DialogBox = ({
     getNpcData(id)
       .then((result) => {
         if (currentTalkingNpc.npcName !== result[0].npc_name) {
-          const talkingNpc = npcInstances.filter((item) => {
+          const talkingNpc = npcs.filter((item) => {
             return item.npcName === result[0].npc_name;
           });
           setCurrentTalkingNpc(talkingNpc[0]);
