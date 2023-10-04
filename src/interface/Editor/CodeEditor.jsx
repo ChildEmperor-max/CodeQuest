@@ -43,6 +43,7 @@ import PseudoCode from "./PseudoCode";
 import Hint from "./Hint";
 import Countdown from "./Countdown";
 import { usePlayerContext } from "../../components/PlayerContext";
+import AlertModal from "../../components/AlertModal";
 
 const CodeEditor = ({ quest_data, onClose }) => {
   const { playerId, updateCharacterData } = usePlayerContext();
@@ -66,6 +67,10 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const [showHint, setShowHint] = useState(false);
   const [hintCountdown, setHintCountdown] = useState(10);
   const [showHintCountdown, setShowHintCountdown] = useState(false);
+
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
 
   const manageQuest = new ManageQuest();
 
@@ -151,22 +156,11 @@ const CodeEditor = ({ quest_data, onClose }) => {
                   `${response.output} \nUsername cannot contain special characters.`
                 );
               } else {
-                updateCharacterNameById(playerId, response.output)
-                  .then(() => {
-                    manageQuest.toCompleteQuest(quest_data.id);
-                    fetchActiveQuests();
-                    handlePopupContent(
-                      "Quest Progressed",
-                      quest_data.quest_title,
-                      "Talk to Alby to complete the quest",
-                      true
-                    );
-                    setOutput(`${response.output} \nUsername has been set!`);
-                    updateCharacterData(playerId);
-                  })
-                  .catch((err) => {
-                    console.log("Update username error: ", err);
-                  });
+                setUpdatedUsername(response.output);
+                setAlertMessage(
+                  `Are sure about your username? ${response.output}`
+                );
+                setShowAlertModal(true);
               }
             }
             return;
@@ -249,8 +243,39 @@ const CodeEditor = ({ quest_data, onClose }) => {
     // }
   };
 
+  const handleConfirmUsername = () => {
+    updateCharacterNameById(playerId, updatedUsername)
+      .then(() => {
+        manageQuest.toCompleteQuest(quest_data.id);
+        fetchActiveQuests();
+        handlePopupContent(
+          "Quest Progressed",
+          quest_data.quest_title,
+          "Talk to Alby to complete the quest",
+          true
+        );
+        setOutput(`${updatedUsername} \nUsername has been set!`);
+        updateCharacterData(playerId);
+        setShowAlertModal(false);
+      })
+      .catch((err) => {
+        console.log("Update username error: ", err);
+        setOutput(
+          `${updatedUsername} \nAn error occured while trying to set the username.`
+        );
+        setShowAlertModal(false);
+      });
+  };
+
   return (
     <>
+      {showAlertModal && (
+        <AlertModal
+          message={alertMessage}
+          onConfirm={handleConfirmUsername}
+          onCancel={() => setShowAlertModal(false)}
+        />
+      )}
       {showPopup && (
         <Popup
           header={popupHeader}
