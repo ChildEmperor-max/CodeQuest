@@ -67,19 +67,18 @@ const login = async (req, res) => {
           expiresIn: 1 * 24 * 60 * 60 * 1000,
         });
 
-        //if password matches wit the one in the database
+        //if password matches with the one in the database
         //go ahead and generate a cookie for the user
         res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
         console.log("user", JSON.stringify(user, null, 2));
-        console.log(token);
         console.log("LOGIN SUCCESSFULLY!!!");
         //send user data
         return res.status(201).send(user);
       } else {
-        return res.status(401).send("Authentication failed");
+        return res.status(401).send("Wrong password");
       }
     } else {
-      return res.status(401).send("Authentication failed");
+      return res.status(401).send("Account does not exists");
     }
   } catch (error) {
     console.log(error);
