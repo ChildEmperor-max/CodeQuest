@@ -44,6 +44,10 @@ export const PlayerProvider = ({ children }) => {
 
   const login = (playerId) => {
     setPlayerId(playerId);
+    updateCharacterData(playerId);
+  };
+
+  const updateCharacterData = (playerId) => {
     fetchCharacterById(playerId)
       .then((result) => {
         setCharacterData(result[0]);
@@ -64,6 +68,7 @@ export const PlayerProvider = ({ children }) => {
         playerId,
         characterData,
         login,
+        updateCharacterData,
         logout,
       }}
     >
