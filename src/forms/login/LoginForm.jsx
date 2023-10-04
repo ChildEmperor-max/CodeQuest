@@ -13,6 +13,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState(""); // New state to store and display errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,12 +54,15 @@ const LoginForm = () => {
           })
           .catch((err) => {
             console.log("Login failed: ", err);
+            setError("An error occurred while logging in");
           });
       } else {
         console.log("Login failed");
+        setError("An error occurred while logging in");
       }
     } catch (error) {
       console.error("Error logging in:", error);
+      setError("Invalid email or password");
     }
   };
 
@@ -67,7 +71,7 @@ const LoginForm = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">email</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
             id="email"
@@ -88,10 +92,11 @@ const LoginForm = () => {
             required
           />
         </div>
+        {error && <div className="error">{error}</div>}{" "}
         <div className="form-group">
           <button type="submit">Login</button>
           <Link to="/signup">
-            <button>Signup</button>
+            <p>Don't have an account?</p>
           </Link>
         </div>
       </form>
