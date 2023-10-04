@@ -45,7 +45,7 @@ import Countdown from "./Countdown";
 import { usePlayerContext } from "../../components/PlayerContext";
 
 const CodeEditor = ({ quest_data, onClose }) => {
-  const { playerId } = usePlayerContext();
+  const { playerId, updateCharacterData } = usePlayerContext();
 
   const [editorValue, setEditorValue] = useState("");
   const [output, setOutput] = useState("");
@@ -140,20 +140,35 @@ const CodeEditor = ({ quest_data, onClose }) => {
           let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
           if (quest_data.id === 3) {
             console.log("chosen username: ", response.output);
-            updateCharacterNameById(playerId, response.output)
-              .then(() => {
-                manageQuest.toCompleteQuest(quest_data.id);
-                fetchActiveQuests();
-                handlePopupContent(
-                  "Quest Progressed",
-                  quest_data.quest_title,
-                  "Talk to Alby to complete the quest",
-                  true
+            if (response.output.length < 4) {
+              setOutput(
+                `${response.output} \nUsername must be at least 4 characters long.`
+              );
+            } else {
+              const regex = /^[a-zA-Z0-9]+$/;
+              if (!regex.test(response.output)) {
+                setOutput(
+                  `${response.output} \nUsername cannot contain special characters.`
                 );
-              })
-              .catch((err) => {
-                console.log("Update username error: ", err);
-              });
+              } else {
+                updateCharacterNameById(playerId, response.output)
+                  .then(() => {
+                    manageQuest.toCompleteQuest(quest_data.id);
+                    fetchActiveQuests();
+                    handlePopupContent(
+                      "Quest Progressed",
+                      quest_data.quest_title,
+                      "Talk to Alby to complete the quest",
+                      true
+                    );
+                    setOutput(`${response.output} \nUsername has been set!`);
+                    updateCharacterData(playerId);
+                  })
+                  .catch((err) => {
+                    console.log("Update username error: ", err);
+                  });
+              }
+            }
             return;
           }
 
