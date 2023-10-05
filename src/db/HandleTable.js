@@ -7,6 +7,7 @@ const achievementsAPI = host + "achievements";
 const helpAPI = host + "help";
 const characterAPI = host + "character";
 const playerAPI = host + "player";
+const playerQuestsAPI = host + "player-quest";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -498,5 +499,81 @@ export function fetchPlayerByEmail(email) {
     .catch((error) => {
       console.error("Error:", error);
       throw error;
+    });
+}
+
+export function fetchPlayerQuests(id) {
+  return fetch(playerQuestsAPI + "/select/quests/" + id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching player quests data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function updatePlayerQuestProgress(player_id, quest_id, quest_status) {
+  return new Promise((resolve, reject) => {
+    fetch(playerQuestsAPI + "/update/progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        quest_id: quest_id,
+        quest_status: quest_status,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating quest status: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Quest status updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function insertPlayerQuestProgress(player_id, quest_id) {
+  fetch(playerQuestsAPI + "/insert/progress", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      player_id: player_id,
+      quest_id: quest_id,
+      quest_status: "active",
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error inserting quest progress: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("New quest progress created successfully:", data);
+    })
+    .catch((error) => {
+      console.error("Error creating new quest:", error);
     });
 }
