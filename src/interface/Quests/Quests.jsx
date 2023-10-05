@@ -9,6 +9,7 @@ import QuestSideButton from "./QuestSideButton";
 
 const Quests = ({ onClose }) => {
   const manageQuest = new ManageQuest();
+  const playerId = localStorage.getItem("playerId");
   const [questsData, setQuestsData] = useState([]);
   const [abandonQuestAlert, setAbandonQuestAlert] = useState(false);
   const [currentQuestId, setCurrentQuestId] = useState(null);
@@ -30,7 +31,7 @@ const Quests = ({ onClose }) => {
 
   const viewQuests = async () => {
     try {
-      const quests = await fetchNpcQuestDialog();
+      const quests = await manageQuest.getPlayerQuests();
       return quests;
     } catch (error) {
       console.error("Quests.jsx error viewing the quests: ", error);
