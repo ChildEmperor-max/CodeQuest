@@ -57,6 +57,11 @@ const {
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
+const {
+  handleInsertQuestProgress,
+  handleUpdateQuestProgress,
+  handleFetchQuestsByPlayerId,
+} = require("./handlers/playerQuestHandler");
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
@@ -202,13 +207,25 @@ app.get("/character/:id", (req, res) => {
 });
 
 app.post("/character/update/name", (req, res) => {
-  console.log("SERVER: ", req.body);
   handleUpdateCharacterNameById(req, res, pool);
 });
 
 app.get("/player/get-by-email/:email", (req, res) => {
   const email = req.params.email;
   handleFetchPlayerByEmail(email, res, pool);
+});
+
+app.get("/player-quest/select/quests/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchQuestsByPlayerId(id, res, pool);
+});
+
+app.post("/player-quest/insert/progress/", (req, res) => {
+  handleInsertQuestProgress(req, res, pool);
+});
+
+app.post("/player-quest/update/progress/", (req, res) => {
+  handleUpdateQuestProgress(req, res, pool);
 });
 
 app.get("/game", (req, res) => {
