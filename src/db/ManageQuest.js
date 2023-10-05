@@ -3,9 +3,11 @@ import {
   updateQuestDataStatus,
   executeJavaCode,
   viewQuestById,
+  updatePlayerQuestProgress,
+  insertPlayerQuestProgress,
+  fetchPlayerQuests,
 } from "./HandleTable";
 
-// Separate script acting as a temporary placeholder for a database
 class ManageQuest {
   constructor() {
     this.quests = {};
@@ -30,24 +32,11 @@ class ManageQuest {
     return await viewQuestById(quest_id);
   }
 
-  createQuest(title, description, status, from, type) {
-    this.quests[title] = {
-      title: title,
-      description: description,
-      status: status,
-      from: from,
-      type: type,
-    };
-    // addQuestToTable(from, title, description, status, type);
-  }
-
   submitPlayerAnswer(quest_title, answer) {
     console.log("submitted player answer: ", answer);
     console.log(quest_title);
-    // viewQuestData(quest);
 
-    const code = answer; // Get the Java code from the Ace Editor
-    const data = { code: code, quest: quest_title };
+    const data = { code: answer, quest: quest_title };
     executeJavaCode(data);
   }
 
@@ -55,51 +44,52 @@ class ManageQuest {
     return this.quests[title];
   }
 
-  updateQuest(title, updatedData) {
-    if (this.quests.hasOwnProperty(title)) {
-      this.quests[title] = { ...this.quests[title], ...updatedData };
-    }
+  getPlayerQuests() {
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Fetching quests of Player id: ", player_id);
+    return fetchPlayerQuests(player_id);
+  }
+
+  insertQuestProgress(quest_id) {
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Inserting quest progress of Player id: ", player_id);
+    insertPlayerQuestProgress(player_id, quest_id);
   }
 
   updateQuestStatus(quest_id, newStatus) {
-    // if (this.quests.hasOwnProperty(title)) {
-    //   this.quests[title].status = newStatus;
-    // }
-    updateQuestDataStatus(quest_id, newStatus);
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Updating quest status of Player id: ", player_id);
+    // updateQuestDataStatus(quest_id, newStatus);
+    updatePlayerQuestProgress(player_id, quest_id, newStatus);
   }
 
   acceptQuest(quest_id) {
-    updateQuestDataStatus(quest_id, this.status.active);
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Updating quest status of Player id: ", player_id);
+    // updateQuestDataStatus(quest_id, this.status.active);
+    this.insertQuestProgress(quest_id);
   }
 
   toCompleteQuest(quest_id) {
-    updateQuestDataStatus(quest_id, this.status.toComplete);
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Updating quest status of Player id: ", player_id);
+    // updateQuestDataStatus(quest_id, this.status.toComplete);
+    updatePlayerQuestProgress(player_id, quest_id, this.status.toComplete);
+  }
+
+  completedQuest(quest_id) {
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Updating quest status of Player id: ", player_id);
+    // updateQuestDataStatus(quest_id, this.status.completed);
+    updatePlayerQuestProgress(player_id, quest_id, this.status.completed);
   }
 
   abandonQuest(quest_id) {
-    updateQuestDataStatus(quest_id, this.status.inactive);
-  }
-
-  deleteQuest(title) {
-    if (this.quests.hasOwnProperty(title)) {
-      delete this.quests[title];
-    }
+    const player_id = JSON.parse(localStorage.getItem("playerId"));
+    console.log("Updating quest status of Player id: ", player_id);
+    // updateQuestDataStatus(quest_id, this.status.inactive);
+    updatePlayerQuestProgress(player_id, quest_id, this.status.inactive);
   }
 }
 
 export default ManageQuest;
-
-// Usage example
-// const questManager = new QuestManager();
-
-//questManager.createQuest("Quest 1", "Description for Quest 1", questManager.status.inactive);
-// console.log(questManager.quests["Quest 1"].status); // Output: "inactive"
-
-// questManager.createQuest("Quest 1", "Description for Quest 1", "inactive");
-// console.log(questManager.readQuest("Quest 1")); // Output: { title: "Quest 1", description: "Description for Quest 1", status: "inactive" }
-
-// questManager.updateQuest("Quest 1", { status: "completed" });
-// console.log(questManager.readQuest("Quest 1")); // Output: { title: "Quest 1", description: "Description for Quest 1", status: "completed" }
-
-// questManager.deleteQuest("Quest 1");
-// console.log(questManager.readQuest("Quest 1")); // Output: undefined
