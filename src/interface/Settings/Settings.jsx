@@ -36,6 +36,9 @@ const Settings = ({
         <SideNavButton name="Graphics" onClickEvent={viewGraphicsSettings} />
         <SideNavButton name="Controls" onClickEvent={viewControlsSettings} />
         <SideNavButton name="Sounds" onClickEvent={viewSoundsSettings} />
+        <a href="/login">
+          <SideNavButton name="Logout" />
+        </a>
       </div>
       <div className="settings-content-container">
         <CloseButtonModal onClose={onClose} />
