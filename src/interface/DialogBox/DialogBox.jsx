@@ -341,11 +341,12 @@ const DialogBox = ({
       if (quest[0].quest_status === status.inactive) {
         newStatus = status.active;
         headerText = "Quest Started";
+        manageQuest.acceptQuest(quest_id);
       } else if (quest[0].quest_status === status.toComplete) {
         newStatus = status.completed;
         headerText = "Quest Completed";
+        manageQuest.updateQuestStatus(quest_id, newStatus);
       }
-      manageQuest.updateQuestStatus(quest_id, newStatus);
       onPopupContent(
         headerText,
         quest[0].quest_title,
