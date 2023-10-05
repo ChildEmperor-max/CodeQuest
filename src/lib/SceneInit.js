@@ -31,10 +31,10 @@ export default class SceneInit {
     this.textLoaderElement = textLoaderElement;
   }
 
-  initialize(player, npcs, camera, cameraControls) {
-    this.mainWorldScene = new THREE.Scene();
+  initialize(player, npcs, camera, cameraControls, mainWorldScene) {
+    this.mainWorldScene = mainWorldScene;
     this.albyHouseScene = new THREE.Scene();
-    this.scene = this.mainWorldScene;
+    this.scene = mainWorldScene;
     this.axesHelper = new THREE.AxesHelper(518);
     this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
