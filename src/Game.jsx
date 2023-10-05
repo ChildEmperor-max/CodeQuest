@@ -70,6 +70,8 @@ const Game = () => {
   useEffect(() => {
     const canvas = document.getElementById("myThreeJsCanvas");
     const loaderElement = document.getElementById("loading-game-screen");
+    const mainWorldScene = new THREE.Scene();
+
     const textLoaderElement = document.getElementById(
       "loading-game-screen-text"
     );
@@ -85,7 +87,7 @@ const Game = () => {
       textLoaderElement
     );
     cameraControls.initialize(renderer, camera, player);
-    world.initialize(player, npcs, camera, cameraControls);
+    world.initialize(player, npcs, camera, cameraControls, mainWorldScene);
     initializeNpcs(npcArray);
     const startAnimation = () => {
       world.startAnimation();
@@ -117,11 +119,41 @@ const Game = () => {
     // THREE.VSMShadowMap
 
     return () => {
-      renderer.dispose();
-      // Remove event listeners for cleanup
+      cleanUpScene(mainWorldScene, renderer);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [antialiasValue, shadowMap]);
+
+  const cleanUpScene = (scene, renderer) => {
+    const cleanMaterial = (material) => {
+      material.dispose();
+
+      // dispose textures
+      for (const key of Object.keys(material)) {
+        const value = material[key];
+        if (value && typeof value === "object" && "minFilter" in value) {
+          value.dispose();
+        }
+      }
+    };
+
+    scene.traverse((object) => {
+      if (!object.isMesh) return;
+
+      object.geometry.dispose();
+
+      if (object.material.isMaterial) {
+        cleanMaterial(object.material);
+      } else {
+        // an array of materials
+        for (const material of object.material) cleanMaterial(material);
+      }
+    });
+
+    renderer.domElement.remove();
+
+    renderer.dispose();
+  };
 
   return (
     <div>
