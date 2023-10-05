@@ -58,5 +58,8 @@
     background-color: #0056b3;
   }
   
-  /* Add more styles as needed */
-  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+  }

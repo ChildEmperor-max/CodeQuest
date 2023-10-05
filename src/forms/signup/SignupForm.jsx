@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./SignupForm.css";
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -11,6 +12,7 @@ const SignupForm = () => {
     password: "",
     gender: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,12 +38,14 @@ const SignupForm = () => {
 
       if (response.status === 201) {
         console.log("Signup successful:", response.data);
-        // Redirect to a success page or login page
+        navigate("/login");
       } else {
+        setError("Signup failed");
         console.log("Signup failed");
       }
     } catch (error) {
       console.error("Error signing up:", error);
+      setError("An error occured while signing up");
     }
   };
 
@@ -108,6 +112,7 @@ const SignupForm = () => {
             <option value="other">Other</option>
           </select>
         </div>
+        {error && <div className="error">{error}</div>}{" "}
         <div className="form-group">
           <button type="submit">Signup</button>
           <Link to="/login">
