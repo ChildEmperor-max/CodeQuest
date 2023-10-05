@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { fetchCharacterById } from "../db/HandleTable";
+import { useNavigate } from "react-router-dom";
 
 const PlayerContext = createContext();
 
@@ -8,6 +9,7 @@ export const usePlayerContext = () => {
 };
 
 export const PlayerProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(null);
   const [characterData, setCharacterData] = useState(null);
 
@@ -58,6 +60,7 @@ export const PlayerProvider = ({ children }) => {
   };
 
   const logout = () => {
+    navigate("/login");
     setPlayerId(null);
     setCharacterData(null);
   };
