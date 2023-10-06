@@ -99,20 +99,19 @@ export default class NPCLoader extends Interactibles {
 
     async function fetchData(npcName) {
       try {
-        const npcData = await viewNpcData(npcName);
-        let dialogData;
-        if (npcData[0].quest_id) {
+        this.npcData = await viewNpcData(npcName);
+        if (this.npcData[0].quest_id) {
           this.hasQuest = true;
-          fetchNpcQuest.call(this, npcData[0].quest_id);
+          fetchNpcQuest.call(this, this.npcData[0].quest_id);
         }
         // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
-        if (npcData[0].dialog_id) {
+        if (this.npcData[0].dialog_id) {
           this.hasDialog = true;
-          //   // dialogData = await viewDialogData(npcData[0].dialog_id);
+          //   // dialogData = await viewDialogData(this.npcData[0].dialog_id);
         } else {
           this.hasDialog = false;
         }
-        return npcData;
+        return this.npcData;
       } catch (error) {
         console.error("[ERROR]:", error);
       }

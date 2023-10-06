@@ -55,7 +55,8 @@ export default class Player extends THREE.Object3D {
     this.scene = scene;
     this.walkingSpeed = 10;
     this.movementSpeed = this.walkingSpeed;
-    this.runningSpeed = 20;
+    this.runningSpeed = 50;
+    // this.runningSpeed = 20;
     this.modelScale = 0.01;
     this.loadModel(scene);
     this.position.set(position.x, position.y, position.z);

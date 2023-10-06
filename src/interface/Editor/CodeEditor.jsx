@@ -149,12 +149,14 @@ const CodeEditor = ({ quest_data, onClose }) => {
               setOutput(
                 `${response.output} \nUsername must be at least 4 characters long.`
               );
+              console.log("Username must be at least 4 characters long.");
             } else {
               const regex = /^[a-zA-Z0-9]+$/;
               if (!regex.test(response.output)) {
                 setOutput(
                   `${response.output} \nUsername cannot contain special characters.`
                 );
+                console.log("Username cannot contain special characters.");
               } else {
                 setUpdatedUsername(response.output);
                 setAlertMessage(
@@ -247,6 +249,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
     updateCharacterNameById(playerId, updatedUsername)
       .then(() => {
         manageQuest.toCompleteQuest(quest_data.id);
+        console.log(updatedUsername);
         fetchActiveQuests();
         handlePopupContent(
           "Quest Progressed",

@@ -30,6 +30,7 @@ const {
   fetchNpcQuestDialogById,
   handleFetchNpcDataByName,
   handleFetchIdByName,
+  handleUpdateNpcQuestDialog,
 } = require("./handlers/npcHandler.js");
 
 const {
@@ -61,6 +62,7 @@ const {
   handleInsertQuestProgress,
   handleUpdateQuestProgress,
   handleFetchQuestsByPlayerId,
+  handleFetchQuestByQuestId,
 } = require("./handlers/playerQuestHandler");
 
 // const __filename = fileURLToPath(import.meta.url);
@@ -220,12 +222,22 @@ app.get("/player-quest/select/quests/:id", (req, res) => {
   handleFetchQuestsByPlayerId(id, res, pool);
 });
 
+app.get("/player-quest/select/quest/:playerId/:questId", (req, res) => {
+  const playerId = req.params.playerId;
+  const questId = req.params.questId;
+  handleFetchQuestByQuestId(playerId, questId, res, pool);
+});
+
 app.post("/player-quest/insert/progress/", (req, res) => {
   handleInsertQuestProgress(req, res, pool);
 });
 
 app.post("/player-quest/update/progress/", (req, res) => {
   handleUpdateQuestProgress(req, res, pool);
+});
+
+app.post("/npc/update/quest-dialog", (req, res) => {
+  handleUpdateNpcQuestDialog(req, res, pool);
 });
 
 app.get("/game", (req, res) => {

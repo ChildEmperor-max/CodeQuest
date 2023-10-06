@@ -17,6 +17,23 @@ module.exports.handleFetchQuestsByPlayerId = async function (
   }
 };
 
+module.exports.handleFetchQuestByQuestId = async function (
+  playerId,
+  questId,
+  res,
+  pool
+) {
+  try {
+    const query = fs.readFileSync(path + "selectQuestByQuestId.sql", "utf8");
+    const result = await pool.query(query, [playerId, questId]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
+};
+
 module.exports.handleInsertQuestProgress = function (req, res, pool) {
   try {
     const data = req.body;

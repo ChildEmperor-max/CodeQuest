@@ -91,7 +91,18 @@ export default class SceneInit {
     const grassBladeHeight = 1.8;
     const grassAreaSize = new THREE.Vector3(45.5, 0, 145);
     const grassBladeAngle = 0.195;
-    const grassAreaPosition1 = new THREE.Vector3(-30.9, -1.5, -37.5);
+    const grassAreaRotation = new THREE.Euler(0, Math.PI / 4, 0);
+
+    const grassAreaPosition1 = new THREE.Vector3(-31, -1.5, -37.5);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize,
+      grassBladeAngle,
+      grassAreaPosition1,
+      grassAreaRotation
+    );
     const grassAreaPosition2 = new THREE.Vector3(38.5, -1.5, -37.5);
     addGrassShader(
       this.scene,
@@ -99,15 +110,134 @@ export default class SceneInit {
       grassBladeHeight,
       grassAreaSize,
       grassBladeAngle,
-      grassAreaPosition1
+      grassAreaPosition2,
+      grassAreaRotation
     );
+
+    const grassAreaSize2 = new THREE.Vector3(75.5, 0, 145);
+    const grassAreaPosition3 = new THREE.Vector3(38, -1.5, -30);
+    const grassAreaRotation2 = new THREE.Euler(0, 0, 0);
+    const grassBladeAngle2 = 0.27;
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize2,
+      grassBladeAngle2,
+      grassAreaPosition3,
+      grassAreaRotation2
+    );
+
+    const grassAreaSize3 = new THREE.Vector3(45.5, 0, 45);
+    const grassAreaPosition5 = new THREE.Vector3(93, -1.5, -33);
+    const grassAreaRotation4 = new THREE.Euler(0, 5.5, 0);
+    const grassBladeAngle3 = 0.175;
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize3,
+      grassBladeAngle3,
+      grassAreaPosition5,
+      grassAreaRotation4
+    );
+    const grassAreaPosition6 = new THREE.Vector3(93, -1.5, 37);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize3,
+      grassBladeAngle3,
+      grassAreaPosition6,
+      grassAreaRotation4
+    );
+
+    const grassAreaSize4 = new THREE.Vector3(68, 0, 185);
+    const grassAreaPosition4 = new THREE.Vector3(20, -1.5, 22);
+    const grassAreaRotation3 = new THREE.Euler(0, 4.751, 0);
+    const grassBladeAngle4 = 0.25;
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize4,
+      grassBladeAngle4,
+      grassAreaPosition4,
+      grassAreaRotation3
+    );
+
+    const grassAreaRotation5 = new THREE.Euler(0, 3.93, 0);
+    const grassAreaPosition7 = new THREE.Vector3(-31, -1.5, 42.5);
+    const grassBladeAngle5 = 0.18;
     addGrassShader(
       this.scene,
       grassBladeCount,
       grassBladeHeight,
       grassAreaSize,
-      grassBladeAngle,
-      grassAreaPosition2
+      grassBladeAngle5,
+      grassAreaPosition7,
+      grassAreaRotation5
+    );
+    const grassAreaPosition8 = new THREE.Vector3(38.5, -1.5, 42.5);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize,
+      grassBladeAngle5,
+      grassAreaPosition8,
+      grassAreaRotation5
+    );
+
+    const grassAreaRotation6 = new THREE.Euler(0, 3.1, 0);
+    const grassAreaPosition9 = new THREE.Vector3(5.5, -1.5, 1);
+    const grassAreaSize5 = new THREE.Vector3(78, 0, 245);
+    const grassBladeAngle6 = 0.25;
+    const grassBladeCount2 = 55000;
+    addGrassShader(
+      this.scene,
+      grassBladeCount2,
+      grassBladeHeight,
+      grassAreaSize5,
+      grassBladeAngle6,
+      grassAreaPosition9,
+      grassAreaRotation6
+    );
+
+    // const grassAreaSize3 = new THREE.Vector3(45.5, 0, 45);
+    const grassAreaPosition10 = new THREE.Vector3(-87, -1.5, -33);
+    const grassAreaRotation7 = new THREE.Euler(0, 2.35, 0);
+    const grassBladeAngle7 = 0.185;
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize3,
+      grassBladeAngle7,
+      grassAreaPosition10,
+      grassAreaRotation7
+    );
+    const grassAreaPosition11 = new THREE.Vector3(-87, -1.5, 37);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize3,
+      grassBladeAngle7,
+      grassAreaPosition11,
+      grassAreaRotation7
+    );
+
+    const grassAreaPosition12 = new THREE.Vector3(-32, -1.5, -30);
+    const grassAreaRotation8 = new THREE.Euler(0, 1.535, 0);
+    addGrassShader(
+      this.scene,
+      grassBladeCount,
+      grassBladeHeight,
+      grassAreaSize2,
+      grassBladeAngle2,
+      grassAreaPosition12,
+      grassAreaRotation8
     );
 
     this.albyHouseDoorOpening = true;

@@ -1,6 +1,7 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import ManageLoader from "../lib/Loader";
+import { leavesMaterial } from "./grassShader";
 
 // const worldLoader = new GLTFLoader();
 let lodLevels = [];
@@ -31,7 +32,7 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         let doors = [];
         const buildingLOD = new THREE.LOD();
 
-        const spawnPoint = new THREE.Vector3(0, 0, -120);
+        const spawnPoint = new THREE.Vector3(-80, -5, -60);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
@@ -124,6 +125,12 @@ export function LoadWorld(loaderElement, textLoaderElement) {
           if (child.name.startsWith("CityWall")) {
             lodLevels.push({ distance: 1000, object: child });
           }
+          // if (child.isMesh && child.name.startsWith("Plane002")) {
+          //   if (child.material.name.startsWith("grass")) {
+          //     const geometry = child.geometry;
+          //     console.log(geometry);
+          //   }
+          // }
         });
 
         resolve({

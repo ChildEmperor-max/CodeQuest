@@ -7,6 +7,8 @@ import {
   fetchHelpById,
   fetchDialogByBranch,
   fetchNpcDataById,
+  fetchQuestById,
+  fetchQuestByQuestId,
 } from "../../db/HandleTable";
 import TypingAnimation from "./TypingAnimation";
 import { animateCameraToTarget } from "../../lib/camera/cameraAnimation";
@@ -63,6 +65,7 @@ const DialogBox = ({
   };
 
   useEffect(() => {
+    console.log(npc.npcData);
     getNpcDialog()
       .then(([data, questData]) => {
         const dialogWithCharName = data.map((dialogData) => {
@@ -334,7 +337,8 @@ const DialogBox = ({
 
   const acceptQuest = async (quest_id) => {
     try {
-      const quest = await manageQuest.getQuestDataById(quest_id);
+      // const quest = await manageQuest.getQuestDataById(quest_id);
+      const quest = await manageQuest.getQuestByQuestId(quest_id);
       const status = manageQuest.status;
       let newStatus;
       let headerText;
@@ -345,7 +349,13 @@ const DialogBox = ({
       } else if (quest[0].quest_status === status.toComplete) {
         newStatus = status.completed;
         headerText = "Quest Completed";
-        manageQuest.updateQuestStatus(quest_id, newStatus);
+        manageQuest.completedQuest(
+          npc.npcData[0].id,
+          quest_id,
+          npc.npcData[0].dialog_id
+        );
+        npc.hasDialog = false;
+        npc.hasQuest = false;
       }
       onPopupContent(
         headerText,
@@ -362,9 +372,10 @@ const DialogBox = ({
     try {
       const npcData = await viewNpcData(currentTalkingNpc.npcName);
       const dialog = await viewDialogById(npcData[0].id);
-      const questData = await viewQuestById(npc.currentQuest[0].id);
+      const questData = await manageQuest.getQuestByQuestId(
+        npc.currentQuest[0].id
+      );
       const data = await fetchDialogByBranch(dialog[0].dialog_branch);
-
       return [data, questData];
     } catch (error) {
       console.error("[ERROR]:", error);

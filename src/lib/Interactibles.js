@@ -41,7 +41,11 @@ export default class Interactibles extends THREE.Object3D {
 
   update(delta) {
     if (this.finishedQuestSetting) {
-      this.updateShowQuestIcon();
+      if (this.hasQuest) {
+        this.updateShowQuestIcon();
+      } else {
+        this.dynamicLabel.hideQuestIcon();
+      }
     }
     if (this.npcNearPlayer(this.interactRange) && this.hasDialog) {
       // this.showInteractLabel();

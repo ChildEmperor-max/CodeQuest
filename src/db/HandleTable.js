@@ -518,6 +518,22 @@ export function fetchPlayerQuests(id) {
     });
 }
 
+export function fetchQuestByQuestId(playerId, questId) {
+  return fetch(playerQuestsAPI + "/select/quest/" + playerId + "/" + questId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching player quest data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
 export function updatePlayerQuestProgress(player_id, quest_id, quest_status) {
   return new Promise((resolve, reject) => {
     fetch(playerQuestsAPI + "/update/progress", {
@@ -576,4 +592,36 @@ export function insertPlayerQuestProgress(player_id, quest_id) {
     .catch((error) => {
       console.error("Error creating new quest:", error);
     });
+}
+
+export function updateNpcQuestDialogById(npc_id, quest_id, dialog_id) {
+  return new Promise((resolve, reject) => {
+    fetch(npcAPI + "/update/quest-dialog", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        npc_id: npc_id,
+        quest_id: quest_id,
+        dialog_id: dialog_id,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating npc quest dialog: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("NPC quest dialog updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }

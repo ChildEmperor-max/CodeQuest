@@ -65,7 +65,7 @@ const uniforms = {
     value: 0,
   },
 };
-const leavesMaterial = new THREE.ShaderMaterial({
+export const leavesMaterial = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
   uniforms,
@@ -78,7 +78,8 @@ export function addGrassShader(
   grassBladeHeight,
   grassAreaSize,
   grassBladeAngle,
-  grassAreaPosition
+  grassAreaPosition,
+  grassAreaRotation
 ) {
   // const grassBladeCount = 25000;
   // const grassBladeHeight = 0.5;
@@ -112,20 +113,26 @@ export function addGrassShader(
   const grassAreaAngle = Math.PI / 4; // Example angle in radians
 
   // Define the vertical displacement for each column
-  const verticalDisplacement = 0.15; // Example vertical displacement
+  const verticalDisplacement = 0.15;
 
   // Calculate the number of rows and columns
   const rowCount = Math.floor(grassAreaSize.z / verticalDisplacement);
   const columnCount = Math.floor(grassAreaSize.x / verticalDisplacement);
 
+  const centerX = (maxX + minX) / 2;
+  const centerZ = (maxZ + minZ) / 2;
+  const centerY = 0; // Assuming the grass blades are at ground level
+
+  // Offset the grass blades to move the center to the origin
+  instancedMesh.position.set(centerX, centerY, centerZ);
+
   for (let col = 0; col < columnCount; col++) {
-    const colProgress = col / columnCount; // Progress from 0 to 1 along the column count
-    const currentX = THREE.MathUtils.lerp(minX, maxX, colProgress); // Interpolate X position
+    const colProgress = col / columnCount;
+    const currentX = THREE.MathUtils.lerp(minX, maxX, colProgress);
 
     for (let row = 0; row < rowCount; row++) {
-      const currentZ = THREE.MathUtils.lerp(minZ, maxZ, row / rowCount); // Interpolate Z position
+      const currentZ = THREE.MathUtils.lerp(minZ, maxZ, row / rowCount);
 
-      // Calculate rotated position
       const rotatedX =
         currentX * Math.cos(grassAreaAngle) -
         currentZ * Math.sin(grassAreaAngle);
@@ -133,11 +140,14 @@ export function addGrassShader(
         currentX * Math.sin(grassAreaAngle) +
         currentZ * Math.cos(grassAreaAngle);
 
-      // Calculate Y position for each grass instance
-      // increase Y position to make the grasses lower, decrease to make it higher
       const yPosition = -row * grassBladeAngle;
 
-      dummy.position.set(rotatedX, yPosition, rotatedZ);
+      // Offset the position by the center position
+      dummy.position.set(
+        rotatedX - centerX,
+        yPosition - centerY,
+        rotatedZ - centerZ
+      );
 
       dummy.scale.setScalar(0.5 + Math.random() * 0.5);
       dummy.rotation.y = Math.random() * Math.PI;
@@ -149,7 +159,6 @@ export function addGrassShader(
 
   // Move and rotate the entire grass area to a different position and angle in the scene
   // const grassAreaPosition = new THREE.Vector3(-30, -0.4, -85);
-  const grassAreaRotation = new THREE.Euler(0, grassAreaAngle, 0);
 
   instancedMesh.position.copy(grassAreaPosition);
   instancedMesh.rotation.copy(grassAreaRotation);
