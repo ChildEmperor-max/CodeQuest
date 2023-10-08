@@ -2,7 +2,7 @@ const fs = require("fs");
 
 function handleFetchQuest(req, res, pool) {
   // Query the database and return quest data
-  pool.query("SELECT * FROM quest ORDER BY id ASC", (err, result) => {
+  pool.query("SELECT * FROM quest ORDER BY quest_id ASC", (err, result) => {
     if (err) {
       console.error("Error executing database query:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });
@@ -17,7 +17,7 @@ function handleFetchQuest(req, res, pool) {
 function handleFetchQuestById(id, res, pool) {
   // Query the database and return quest data
   pool
-    .query("SELECT * FROM quest WHERE id = $1", [id])
+    .query("SELECT * FROM quest WHERE quest_id = $1", [id])
     .then((result) => {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(result.rows));
@@ -63,7 +63,7 @@ function handleUpdateQuestStatus(req, res, pool) {
     const questId = questData.quest_id;
     const newQuestStatus = questData.quest_status;
     pool
-      .query("UPDATE quest SET quest_status = $1 WHERE id = $2", [
+      .query("UPDATE quest SET quest_status = $1 WHERE quest_id = $2", [
         newQuestStatus,
         questId,
       ])
@@ -95,7 +95,7 @@ function handleInsertQuest(req, res, pool) {
 
     // Check if the quest with the same title already exists in the database
     pool.query(
-      "SELECT id FROM quest WHERE quest_title = $1",
+      "SELECT quest_id FROM quest WHERE quest_title = $1",
       [questData.quest_title],
       (err, result) => {
         if (err) {
