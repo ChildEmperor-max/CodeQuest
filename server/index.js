@@ -31,6 +31,7 @@ const {
   handleFetchNpcDataByName,
   handleFetchIdByName,
   handleUpdateNpcQuestDialog,
+  handleFetchNpcByQuestId,
 } = require("./handlers/npcHandler.js");
 
 const {
@@ -63,6 +64,7 @@ const {
   handleUpdateQuestProgress,
   handleFetchQuestsByPlayerId,
   handleFetchQuestByQuestId,
+  handleFetchNpcQuestStatus,
 } = require("./handlers/playerQuestHandler");
 
 // const __filename = fileURLToPath(import.meta.url);
@@ -238,6 +240,16 @@ app.post("/player-quest/update/progress/", (req, res) => {
 
 app.post("/npc/update/quest-dialog", (req, res) => {
   handleUpdateNpcQuestDialog(req, res, pool);
+});
+
+app.get("/player-quest/select/npc-quest/:npcId", (req, res) => {
+  const npcId = req.params.npcId;
+  handleFetchNpcQuestStatus(npcId, res, pool);
+});
+
+app.get("/quests/select/npc/:questId", (req, res) => {
+  const questId = req.params.questId;
+  handleFetchNpcByQuestId(questId, res, pool);
 });
 
 app.get("/game", (req, res) => {
