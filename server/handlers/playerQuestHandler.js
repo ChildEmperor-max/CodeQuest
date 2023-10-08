@@ -34,6 +34,18 @@ module.exports.handleFetchQuestByQuestId = async function (
   }
 };
 
+module.exports.handleFetchNpcQuestStatus = async function (npcId, res, pool) {
+  try {
+    const query = fs.readFileSync(path + "selectStatusByNpcId.sql", "utf8");
+    const result = await pool.query(query, [npcId]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
+};
+
 module.exports.handleInsertQuestProgress = function (req, res, pool) {
   try {
     const data = req.body;
