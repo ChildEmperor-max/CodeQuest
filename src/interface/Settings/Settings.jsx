@@ -10,7 +10,7 @@ const Settings = ({
   shadowMap: { shadowMapValue, setShadowMapValue },
 }) => {
   const [currentTab, setCurrentTab] = useState(1);
-  const [alertMessage, setAlertMessage] = useState(alertModalSetup);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const viewGraphicsSettings = () => {
     setCurrentTab(1);
