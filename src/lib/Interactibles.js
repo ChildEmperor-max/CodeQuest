@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import DynamicLabel from "./DynamicLabelDisplay";
+import { fetchNpcQuestStatus } from "../db/HandleTable";
 
 export default class Interactibles extends THREE.Object3D {
   constructor() {
@@ -27,12 +28,14 @@ export default class Interactibles extends THREE.Object3D {
     });
   }
 
-  setQuestIcon(questType) {
+  setQuestIcon(questType, questStatus) {
     if (questType) {
+      this.questStatus = questStatus;
       this.dynamicLabel.setQuestIcon({
         camera: this.camera,
         position: this.getQuestIconPosition(),
         questType,
+        questStatus: questStatus,
       });
 
       this.finishedQuestSetting = true;
@@ -68,7 +71,11 @@ export default class Interactibles extends THREE.Object3D {
   updateShowQuestIcon() {
     // if (this.npcNearPlayer(this.questIconRange)) {
     if (this.inCameraView()) {
-      this.dynamicLabel.showQuestIcon(this.getQuestIconPosition(), this.camera);
+      this.dynamicLabel.showQuestIcon(
+        this.getQuestIconPosition(),
+        this.camera,
+        this.currentQuestStatus.stats
+      );
     } else {
       this.dynamicLabel.hideQuestIcon();
     }

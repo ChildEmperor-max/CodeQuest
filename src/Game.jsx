@@ -173,6 +173,7 @@ const Game = () => {
             },
           }}
           playerInstance={player}
+          npcInstances={npcArray}
           cameraInstance={camera}
           cameraControllerInstance={cameraControls}
         />

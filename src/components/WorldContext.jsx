@@ -7,10 +7,10 @@ export const useWorldContext = () => {
 };
 
 export const WorldProvider = ({ children }) => {
-  const [npcs, setNpcs] = useState(null);
+  const [npcs, setNpcs] = useState([]);
 
-  const initializeNpcs = (npcs) => {
-    setNpcs(npcs);
+  const initializeNpcs = (npc) => {
+    setNpcs(npc);
   };
 
   return (

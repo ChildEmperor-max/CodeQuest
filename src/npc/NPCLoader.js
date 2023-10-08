@@ -4,7 +4,7 @@ import Interactibles from "../lib/Interactibles";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
-import ManageQuest from "../db/ManageQuest";
+import { setNpcs } from "./NPCGetterSetter";
 
 import {
   addNpcToTable,
@@ -12,6 +12,7 @@ import {
   viewNpcData,
   viewDialogData,
   viewQuestById,
+  fetchNpcQuestStatus,
 } from "../db/HandleTable";
 
 export default class NPCLoader extends Interactibles {
@@ -63,6 +64,15 @@ export default class NPCLoader extends Interactibles {
     this.direction = new THREE.Vector3(0, 0, 0);
     this.name = npcName;
 
+    this.currentQuestStatus = {
+      stats: "",
+      get questStatus() {
+        return this.stats;
+      },
+      set questStatus(val) {
+        this.stats = val;
+      },
+    };
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
       text: npcName,
@@ -91,7 +101,18 @@ export default class NPCLoader extends Interactibles {
     async function fetchNpcQuest(id) {
       try {
         this.currentQuest = await viewQuestById(id);
-        this.setQuestIcon(this.currentQuest[0].quest_type);
+
+        fetchNpcQuestStatus(this.npcData[0].id)
+          .then((result) => {
+            this.setQuestIcon(
+              this.currentQuest[0].quest_type,
+              result[0].quest_status
+            );
+            this.currentQuestStatus.stats = result[0].quest_status;
+          })
+          .catch((err) => {
+            console.log("Setting Quest Icon: ", err);
+          });
       } catch (error) {
         console.log("fetchNpcQuest, NPCLoader.js: ", error);
       }
@@ -118,6 +139,7 @@ export default class NPCLoader extends Interactibles {
     }
 
     fetchData.call(this, npcName);
+    setNpcs(this);
   }
 
   update(delta) {

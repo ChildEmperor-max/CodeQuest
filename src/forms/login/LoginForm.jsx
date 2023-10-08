@@ -13,7 +13,8 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(""); // New state to store and display errors
+  const [error, setError] = useState("");
+  const [loginLabel, setLoginLabel] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,6 +25,8 @@ const LoginForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    setError("");
+    setLoginLabel("Logging in...");
     e.preventDefault();
 
     try {
@@ -92,7 +95,13 @@ const LoginForm = () => {
             required
           />
         </div>
-        {error && <div className="error">{error}</div>}{" "}
+        {error ? (
+          <div className="error">{error}</div>
+        ) : loginLabel ? (
+          <div>
+            <p>{loginLabel}</p>
+          </div>
+        ) : null}
         <div className="form-group">
           <button type="submit">Login</button>
           <Link to="/signup">

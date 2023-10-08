@@ -8,6 +8,7 @@ import {
   fetchPlayerQuests,
   fetchQuestByQuestId,
   updateNpcQuestDialogById,
+  fetchNpcByQuestId,
 } from "./HandleTable";
 
 class ManageQuest {
@@ -48,55 +49,42 @@ class ManageQuest {
 
   getPlayerQuests() {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Fetching quests of Player id: ", player_id);
     return fetchPlayerQuests(player_id);
   }
 
   getQuestByQuestId(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Fetching quests of Player id: ", player_id);
     return fetchQuestByQuestId(player_id, quest_id);
   }
 
   insertQuestProgress(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Inserting quest progress of Player id: ", player_id);
     insertPlayerQuestProgress(player_id, quest_id);
   }
 
   updateQuestStatus(quest_id, newStatus) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Updating quest status of Player id: ", player_id);
-    // updateQuestDataStatus(quest_id, newStatus);
     updatePlayerQuestProgress(player_id, quest_id, newStatus);
   }
 
   acceptQuest(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Updating quest status of Player id: ", player_id);
-    // updateQuestDataStatus(quest_id, this.status.active);
     this.insertQuestProgress(quest_id);
   }
 
   toCompleteQuest(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Updating quest status of Player id: ", player_id);
-    // updateQuestDataStatus(quest_id, this.status.toComplete);
     updatePlayerQuestProgress(player_id, quest_id, this.status.toComplete);
   }
 
   completedQuest(npc_id, quest_id, dialog_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Updating quest status of Player id: ", player_id);
-    // updateQuestDataStatus(quest_id, this.status.completed);
     updatePlayerQuestProgress(player_id, quest_id, this.status.completed);
     updateNpcQuestDialogById(npc_id, null, null);
   }
 
   abandonQuest(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    console.log("Updating quest status of Player id: ", player_id);
-    // updateQuestDataStatus(quest_id, this.status.inactive);
     updatePlayerQuestProgress(player_id, quest_id, this.status.inactive);
   }
 }

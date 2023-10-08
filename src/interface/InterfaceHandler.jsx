@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CharacterProfile from "./CharacterProfile/CharacterProfile";
-import Settings from "./settings/Settings";
+import Settings from "./Settings/Settings";
 import Achievements from "./Achievements/Achievements";
 import Leaderboard from "./Leaderboard/Leaderboard";
 import Quests from "./Quests/Quests";
@@ -28,6 +28,7 @@ export default function InterfaceHandler({
     shadowMap: { shadowMapValue, setShadowMapValue },
   },
   playerInstance,
+  npcInstances,
   cameraInstance,
   cameraControllerInstance,
 }) {
@@ -229,6 +230,7 @@ export default function InterfaceHandler({
       )}
       {currentOpenedInterface === interfaces.editor && (
         <CodeEditor
+          npcInstances={npcInstances}
           quest_data={currentEditorQuest}
           onClose={() => {
             toggleInterface(interfaces.editor);

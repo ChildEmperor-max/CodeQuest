@@ -65,7 +65,7 @@ const uniforms = {
     value: 0,
   },
 };
-export const leavesMaterial = new THREE.ShaderMaterial({
+const leavesMaterial = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
   uniforms,

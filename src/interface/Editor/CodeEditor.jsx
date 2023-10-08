@@ -30,6 +30,7 @@ import ace from "ace-builds";
 import {
   executeJavaCode,
   fetchCharacterById,
+  fetchNpcByQuestId,
   fetchNpcQuestDialog,
   updateCharacterNameById,
 } from "../../db/HandleTable";
@@ -44,9 +45,13 @@ import Hint from "./Hint";
 import Countdown from "./Countdown";
 import { usePlayerContext } from "../../components/PlayerContext";
 import AlertModal from "../../components/AlertModal";
+import { useWorldContext } from "../../components/WorldContext";
+import { getNpcs } from "../../npc/NPCGetterSetter";
 
-const CodeEditor = ({ quest_data, onClose }) => {
+const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
   const { playerId, updateCharacterData } = usePlayerContext();
+  const { npcs } = useWorldContext();
+  const [npcArray, setNpcArray] = useState([]);
 
   const [editorValue, setEditorValue] = useState("");
   const [output, setOutput] = useState("");
@@ -87,6 +92,8 @@ const CodeEditor = ({ quest_data, onClose }) => {
   };
 
   useEffect(() => {
+    setNpcArray(getNpcs());
+    console.log(quest_data);
     ace.config.set("basePath", "/node_modules/ace-builds/src");
     if (quest_data) {
       setEditorValue(quest_data.code_template);
@@ -143,7 +150,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
           // }
           let playerAnswer = editorValue.replace(/\b\w+\b\s*(?==)/g, "");
           let correctAnswer = quest_answer.replace(/\b\w+\b\s*(?==)/g, "");
-          if (quest_data.id === 3) {
+          if (quest_data.quest_id === 3) {
             console.log("chosen username: ", response.output);
             if (response.output.length < 4) {
               setOutput(
@@ -174,7 +181,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
               .replace(/\s+/g, "")
               .includes(correctAnswer.toLowerCase().replace(/\s+/g, ""))
           ) {
-            manageQuest.toCompleteQuest(quest_data.id);
+            manageQuest.toCompleteQuest(quest_data.quest_id);
             fetchActiveQuests();
             handlePopupContent(
               "Quest Progressed",
@@ -182,6 +189,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
               quest_data.quest_description,
               true
             );
+            updateNpcQuestStatus("toComplete");
           }
           // else {
           //   console.log("WRONG! ");
@@ -248,7 +256,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
   const handleConfirmUsername = () => {
     updateCharacterNameById(playerId, updatedUsername)
       .then(() => {
-        manageQuest.toCompleteQuest(quest_data.id);
+        manageQuest.toCompleteQuest(quest_data.quest_id);
         console.log(updatedUsername);
         fetchActiveQuests();
         handlePopupContent(
@@ -260,6 +268,7 @@ const CodeEditor = ({ quest_data, onClose }) => {
         setOutput(`${updatedUsername} \nUsername has been set!`);
         updateCharacterData(playerId);
         setShowAlertModal(false);
+        updateNpcQuestStatus("toComplete");
       })
       .catch((err) => {
         console.log("Update username error: ", err);
@@ -267,6 +276,18 @@ const CodeEditor = ({ quest_data, onClose }) => {
           `${updatedUsername} \nAn error occured while trying to set the username.`
         );
         setShowAlertModal(false);
+      });
+  };
+  const updateNpcQuestStatus = (questStatus) => {
+    fetchNpcByQuestId(quest_data.quest_id)
+      .then((result) => {
+        const npc = npcArray.filter((item) => {
+          return item.npcName === result[0].npc_name;
+        });
+        npc[0].currentQuestStatus.stats = "toComplete";
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 

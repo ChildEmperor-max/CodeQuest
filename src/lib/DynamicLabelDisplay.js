@@ -64,11 +64,13 @@ export default class DynamicLabel {
   }
 
   // QUESTS ICON
-  setQuestIcon({ camera, position, questType }) {
+  setQuestIcon({ camera, position, questType, questStatus }) {
     this.questIcon = document.createElement("div");
     this.questIcon.setAttribute("class", "quest-icon");
     this.questIcon.setAttribute("id", questType + "-quest-icon");
-    this.questIcon.innerHTML = "!";
+    this.questIcon.innerHTML = `${
+      questStatus === "toComplete" ? "!" : questStatus === "inactive" ? "?" : ""
+    }`;
 
     var coords = this.toXYCoords(position, camera);
     this.questIcon.style.top = coords.y + "px";
@@ -84,8 +86,11 @@ export default class DynamicLabel {
     this.questIcon.style.left = coords.x + "px";
   }
 
-  showQuestIcon(position, camera) {
+  showQuestIcon(position, camera, questStatus) {
     this.questIcon.style.display = "flex";
+    this.questIcon.innerHTML = `${
+      questStatus === "toComplete" ? "!" : questStatus === "inactive" ? "?" : ""
+    }`;
     this.updateQuestIcon(position, camera, this.questIcon);
   }
 

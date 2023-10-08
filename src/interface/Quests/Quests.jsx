@@ -94,7 +94,10 @@ const Quests = ({ onClose }) => {
                         quest={quest}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
-                          handleAbandonQuestAlert(quest.id, quest.quest_title)
+                          handleAbandonQuestAlert(
+                            quest.quest_id,
+                            quest.quest_title
+                          )
                         }
                       />
                     </div>
@@ -116,7 +119,10 @@ const Quests = ({ onClose }) => {
                         quest={quest}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
-                          handleAbandonQuestAlert(quest.id, quest.quest_title)
+                          handleAbandonQuestAlert(
+                            quest.quest_id,
+                            quest.quest_title
+                          )
                         }
                       />
                     </div>

@@ -7,42 +7,68 @@
   color: rgb(92, 92, 92);
 }
 
-.npc-dialog-container {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding-bottom: 30px;
-    padding-right: 30px;
-    background: linear-gradient(90deg, var(--side-dialog-color) 0%, var(--main-dialog-color) 20%, var(--main-dialog-color) 50%, var(--main-dialog-color) 80%, var(--side-dialog-color) 100%);
-    box-sizing: border-box;
-    z-index: 4;
-  }
-  .npc-dialog-name {
-    padding: 2px;
-    border-bottom: 2px solid #7a7a7aab;
-    margin-bottom: 2px;
-    text-align: center;
-    margin-right: 215px;
-    margin-left: 215px;
-  }
-  .npc-dialog-text {
-    margin-bottom: 1px;
-    margin-right: 215px;
-    margin-left: 215px;
-  }
+.dialog-main-container {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
 
-  .npc-dialog-button-container {
-    margin-right: 215px;
-    margin-left: 215px;
-  }
-  
-  .npc-dialog-button {
-    float: right;
-    margin: 2px;
-    background-color: #1d273a;
-  }
-  
-  .npc-dialog-button:hover {
-    background-color: #334568;
-  }
+.dialog-responses-container {
+  width: 20%;
+  margin-right: 10%;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+}
+
+.dialog-responses-button {
+  margin: 5px;
+  border: 2px solid rgba(34, 34, 34, 0.384);
+  border-right: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, rgba(27, 27, 27, 0.671) 0%, rgba(0, 0, 0, 0.377) 100%);
+}
+
+.npc-dialog-container {
+  width: 100%;
+  height: 200px;
+  padding-bottom: 30px;
+  padding-right: 30px;
+  background: linear-gradient(90deg, var(--side-dialog-color) 0%, var(--main-dialog-color) 20%, var(--main-dialog-color) 50%, var(--main-dialog-color) 80%, var(--side-dialog-color) 100%);
+  box-sizing: border-box;
+}
+.npc-dialog-name {
+  padding: 2px;
+  border-bottom: 2px solid #7a7a7aab;
+  margin-bottom: 2px;
+  text-align: center;
+  margin-right: 215px;
+  margin-left: 215px;
+}
+.npc-dialog-text {
+  margin-bottom: 1px;
+  margin-right: 215px;
+  margin-left: 215px;
+}
+
+.npc-dialog-button-container {
+  position: absolute;
+  bottom: 10%;
+  right: 0;
+  margin-right: 215px;
+  margin-left: 215px;
+}
+
+.npc-dialog-button {
+  float: right;
+  margin: 2px;
+  background-color: #1d273a;
+}
+
+.npc-dialog-button:hover {
+  background-color: #334568;
+}

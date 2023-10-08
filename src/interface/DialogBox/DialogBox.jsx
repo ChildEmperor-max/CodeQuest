@@ -65,7 +65,6 @@ const DialogBox = ({
   };
 
   useEffect(() => {
-    console.log(npc.npcData);
     getNpcDialog()
       .then(([data, questData]) => {
         const dialogWithCharName = data.map((dialogData) => {
@@ -346,6 +345,7 @@ const DialogBox = ({
         newStatus = status.active;
         headerText = "Quest Started";
         manageQuest.acceptQuest(quest_id);
+        npc.currentQuestStatus.stats = "active";
       } else if (quest[0].quest_status === status.toComplete) {
         newStatus = status.completed;
         headerText = "Quest Completed";
@@ -356,6 +356,7 @@ const DialogBox = ({
         );
         npc.hasDialog = false;
         npc.hasQuest = false;
+        npc.currentQuestStatus.stats = "completed";
       }
       onPopupContent(
         headerText,
@@ -373,7 +374,7 @@ const DialogBox = ({
       const npcData = await viewNpcData(currentTalkingNpc.npcName);
       const dialog = await viewDialogById(npcData[0].id);
       const questData = await manageQuest.getQuestByQuestId(
-        npc.currentQuest[0].id
+        npc.currentQuest[0].quest_id
       );
       const data = await fetchDialogByBranch(dialog[0].dialog_branch);
       return [data, questData];
@@ -409,30 +410,35 @@ const DialogBox = ({
   };
 
   return (
-    <div className="npc-dialog-container">
-      <div className="npc-dialog-name">
-        {currentTalkingNpc ? <p>{currentTalkingNpc.npcName}</p> : null}
-      </div>
-      <div className="npc-dialog-text">
-        <TypingAnimation
-          text={currentDialog}
-          delay={30}
-          onFinishedTyping={handleTypingFinish}
-          skipAnimation={skipTypingAnimation}
-        />
-      </div>
-      <div className="npc-dialog-button-container">
-        {currentResponses.length > 0 && typingFinished ? (
+    <div className="dialog-main-container">
+      <div className="dialog-responses-container">
+        {typingFinished &&
+          currentResponses.length > 0 &&
           currentResponses.map((response, index) => (
             <DialogButton
               key={index}
               text={response.dialog}
               event={() => handleResponse(response, response.quest_id)}
             />
-          ))
-        ) : (
-          <DialogButton text={"Next"} event={handleNextDialog} />
-        )}
+          ))}
+      </div>
+      <div className="npc-dialog-container">
+        <div className="npc-dialog-name">
+          {currentTalkingNpc ? <p>{currentTalkingNpc.npcName}</p> : null}
+        </div>
+        <div className="npc-dialog-text">
+          <TypingAnimation
+            text={currentDialog}
+            delay={30}
+            onFinishedTyping={handleTypingFinish}
+            skipAnimation={skipTypingAnimation}
+          />
+        </div>
+        <div className="npc-dialog-button-container">
+          {typingFinished && currentResponses.length > 0 ? null : (
+            <DialogButton text={"Next"} event={handleNextDialog} />
+          )}
+        </div>
       </div>
     </div>
   );
