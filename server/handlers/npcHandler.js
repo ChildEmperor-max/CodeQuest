@@ -44,6 +44,22 @@ function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
+function handleFetchNpcByQuestId(questId, res, pool) {
+  const sqlQuery = fs.readFileSync(
+    "server/sql/npc/selectNpcByQuestId.sql",
+    "utf8"
+  );
+  pool
+    .query(sqlQuery, [questId])
+    .then((result) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(result.rows));
+    })
+    .catch((error) => {
+      console.error("Error executing query:", error);
+    });
+}
+
 function handleFetchIdByName(name, res, pool) {
   pool
     .query("SELECT id FROM npc WHERE TRIM(npc_name) = $1", [name])
@@ -239,4 +255,5 @@ module.exports = {
   handleFetchNpc,
   handleInsertNpc,
   handleUpdateNpcQuestDialog,
+  handleFetchNpcByQuestId,
 };
