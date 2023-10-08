@@ -625,3 +625,35 @@ export function updateNpcQuestDialogById(npc_id, quest_id, dialog_id) {
       });
   });
 }
+
+export function fetchNpcQuestStatus(npcId) {
+  return fetch(playerQuestsAPI + "/select/npc-quest/" + npcId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching npc quest data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchNpcByQuestId(questId) {
+  return fetch(questAPI + "/select/npc/" + questId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching npc quest data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
