@@ -29,7 +29,6 @@ const DialogBox = ({
   onSetInteractingNpc,
 }) => {
   const manageQuest = new ManageQuest();
-  // const { playerInstance } = usePlayerContext();
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
 
@@ -71,6 +70,8 @@ const DialogBox = ({
           dialogData.dialog = dialogData.dialog.replace(
             "[PlayerIGN]",
             characterData.character_name
+              ? characterData.character_name
+              : "Player"
           );
           return dialogData;
         });
