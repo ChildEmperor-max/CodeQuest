@@ -14,6 +14,37 @@ module.exports.handleFetchCharacterById = async function (id, res, pool) {
   }
 };
 
+module.exports.handleInsertCharacterByPlayerId = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const query = fs.readFileSync(
+      path + "insertCharacterByPlayerid.sql",
+      "utf8"
+    );
+
+    pool
+      .query(query, [player_id])
+      .then(() => {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: `Character inserted successfully.`,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error("Error inserting new Character: ", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+      });
+  } catch (error) {
+    console.error("Error parsing Character table:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
 module.exports.handleUpdateCharacterNameById = function (req, res, pool) {
   try {
     const data = req.body;
