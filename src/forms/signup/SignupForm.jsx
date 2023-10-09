@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./SignupForm.css";
+import {
+  fetchQuestTable,
+  insertCharacterByPlayerId,
+  insertPlayerQuestProgress,
+} from "../../db/HandleTable";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -36,9 +41,31 @@ const SignupForm = () => {
         }
       );
 
+      console.log(response.data.id);
       if (response.status === 201) {
         console.log("Signup successful:", response.data);
-        navigate("/login");
+        insertCharacterByPlayerId(response.data.id)
+          .then((result) => {
+            console.log(result);
+            navigate("/login");
+            fetchQuestTable()
+              .then((quests) => {
+                quests.find((quest) => {
+                  insertPlayerQuestProgress(
+                    response.data.id,
+                    quest.quest_id,
+                    "inactive"
+                  );
+                });
+              })
+              .catch((err) => {
+                console.log("Quest fetch error. ", err);
+              });
+          })
+          .catch((err) => {
+            setError("Signup failed");
+            console.log("Character creation error. ", err);
+          });
       } else {
         setError("Signup failed");
         console.log("Signup failed");
