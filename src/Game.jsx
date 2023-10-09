@@ -11,6 +11,7 @@ import { useWorldContext } from "./components/WorldContext";
 import Loader from "./components/loader/Loader";
 
 const Game = () => {
+  document.body.classList.add("overflow-hidden");
   const { initializeNpcs } = useWorldContext();
   const [antialiasValue, setAntialiasValue] = useState(false);
   const [shadowMap, setShadowMap] = useState(false);
