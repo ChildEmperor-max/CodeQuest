@@ -44,15 +44,16 @@ export const PlayerProvider = ({ children }) => {
     }
   }, [playerId, characterData]);
 
-  const login = (playerId) => {
-    setPlayerId(playerId);
-    updateCharacterData(playerId);
+  const login = (id) => {
+    setPlayerId(id);
+    updateCharacterData(id);
   };
 
-  const updateCharacterData = (playerId) => {
-    fetchCharacterById(playerId)
+  const updateCharacterData = (id) => {
+    fetchCharacterById(id)
       .then((result) => {
         setCharacterData(result[0]);
+        console.log(result);
       })
       .catch((err) => {
         console.log("PlayerContext.jsx: fetchCharacterById: ", err);
