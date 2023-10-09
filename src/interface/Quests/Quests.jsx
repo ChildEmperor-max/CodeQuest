@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
-import { fetchNpcQuestDialog } from "../../db/HandleTable";
 import ManageQuest from "../../db/ManageQuest";
 import AlertModal from "../../components/AlertModal";
 import CodeEditor from "../Editor/CodeEditor";
