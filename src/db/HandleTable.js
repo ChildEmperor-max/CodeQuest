@@ -296,15 +296,18 @@ export function addQuestToTable(from, title, description, status, type) {
     });
 }
 
-export async function fetchQuestTable() {
-  try {
-    const response = await fetch(questAPI);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+export function fetchQuestTable() {
+  return fetch(questAPI)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching quest table: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
 }
 
 export async function fetchAchievements() {
@@ -566,7 +569,7 @@ export function updatePlayerQuestProgress(player_id, quest_id, quest_status) {
   });
 }
 
-export function insertPlayerQuestProgress(player_id, quest_id) {
+export function insertPlayerQuestProgress(player_id, quest_id, quest_status) {
   fetch(playerQuestsAPI + "/insert/progress", {
     method: "POST",
     headers: {
@@ -575,7 +578,7 @@ export function insertPlayerQuestProgress(player_id, quest_id) {
     body: JSON.stringify({
       player_id: player_id,
       quest_id: quest_id,
-      quest_status: "active",
+      quest_status: quest_status,
     }),
   })
     .then((response) => {
@@ -656,4 +659,32 @@ export function fetchNpcByQuestId(questId) {
       console.error("Error:", error);
       throw error;
     });
+}
+
+export function insertCharacterByPlayerId(player_id) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/insert", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error inserting character: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("New character created successfully:", data);
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error("Error creating new character:", error);
+        reject(error);
+      });
+  });
 }
