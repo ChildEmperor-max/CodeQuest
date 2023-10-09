@@ -57,9 +57,9 @@ class ManageQuest {
     return fetchQuestByQuestId(player_id, quest_id);
   }
 
-  insertQuestProgress(quest_id) {
+  insertQuestProgress(quest_id, quest_status) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    insertPlayerQuestProgress(player_id, quest_id);
+    insertPlayerQuestProgress(player_id, quest_id, quest_status);
   }
 
   updateQuestStatus(quest_id, newStatus) {
@@ -69,7 +69,7 @@ class ManageQuest {
 
   acceptQuest(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    this.insertQuestProgress(quest_id);
+    this.insertQuestProgress(quest_id, "active");
   }
 
   toCompleteQuest(quest_id) {
