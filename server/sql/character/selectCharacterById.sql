@@ -1,1 +1,1 @@
-SELECT * FROM character WHERE id = $1
+SELECT * FROM character WHERE player_id = $1
