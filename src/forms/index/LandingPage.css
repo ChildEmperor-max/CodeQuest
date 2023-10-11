@@ -840,6 +840,10 @@ a {
   outline: 1px solid var(--clr-shadow__border);
 }
 
+.box button {
+  background: transparent;
+}
+
 /* Change .button to .play__now */
 .play__now {
   background: transparent;
@@ -932,7 +936,7 @@ a {
 
 /* HOME TITLE */
 
-.content {
+.content__main__container {
   display: block;
   position: sticky;
   overflow: hidden;
