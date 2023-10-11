@@ -29,7 +29,7 @@ function Home() {
         <div className="home__data">
           {/* <h3 className="home__subtitle"># Welcome CodeQuesters</h3> */}
           <h1 className="home__title">
-            <div className="content">
+            <div className="content__main__container">
               <div className="content__container">
                 <ul className="content__container__list">
                   <li className="content__container__list__item">GAMING </li>
@@ -48,11 +48,9 @@ function Home() {
             developer, there's an adventure waiting for you.
           </p>
           <div className="home__buttons">
-            <a href="#./pages/Login" className="play--now">
+            <a href="/login" className="play--now">
               <div className="box">
-                <a href="/login">
-                  <button className="play__now">PLAY NOW!</button>
-                </a>
+                <button className="play__now">PLAY NOW!</button>
                 <div className="music">
                   {soundwaveStyles.map((style, index) => (
                     <span
