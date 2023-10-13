@@ -45,7 +45,9 @@ function handleFetchCompletedQuests(req, res, pool) {
 
 function handleFetchCompletedQuestCount(req, res, pool) {
   pool
-    .query("SELECT COUNT(*) FROM quest WHERE quest_status = 'completed'")
+    .query(
+      "SELECT COUNT(*) FROM player_quests WHERE quest_status = 'completed'"
+    )
     .then((result) => {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(result.rows));
