@@ -7,17 +7,19 @@ const AlertModal = ({
   onOk = null,
 }) => {
   return (
-    <div className="alert-modal-container">
-      <div className="alert-modal-message">{message}</div>
-      <div className="alert-modal-buttons">
-        {!onOk ? (
-          <>
-            <button onClick={onConfirm}>Yes</button>
-            <button onClick={onCancel}>No</button>
-          </>
-        ) : (
-          <button onClick={onOk}>Ok</button>
-        )}
+    <div className="alert-modal-main-container">
+      <div className="alert-modal-container">
+        <div className="alert-modal-message">{message}</div>
+        <div className="alert-modal-buttons">
+          {!onOk ? (
+            <>
+              <button onClick={onConfirm}>Yes</button>
+              <button onClick={onCancel}>No</button>
+            </>
+          ) : (
+            <button onClick={onOk}>Ok</button>
+          )}
+        </div>
       </div>
     </div>
   );
