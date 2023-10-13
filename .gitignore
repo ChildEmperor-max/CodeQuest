@@ -138,10 +138,8 @@ dist
 .pnp.*
 
 # Large world files
-CodeQuest/src/assets/world/codequest_map.glb
-CodeQuest/src/assets/world/MainWorld.blend
-CodeQuest/src/assets/world/MainWorld.blend1
-CodeQuest/src/assets/world/AlbyHouse/AlbyHouse.blend
-CodeQuest/src/assets/world/AlbyHouse/AlbyHouse.blend1
-src/assets/world/codequest_map.glb
+src/assets/world/MainWorld.blend
+src/assets/world/MainWorld.blend1
+src/assets/world/AlbyHouse/AlbyHouse.blend
+src/assets/world/AlbyHouse/AlbyHouse.blend1
 src/assets/world/codequest_map.glb
