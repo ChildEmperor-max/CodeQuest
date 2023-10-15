@@ -12,9 +12,11 @@ const ActiveQuestsModal = ({ quest_data, active_quests, onClose }) => {
   const [currentQuest, setCurrentQuest] = useState(
     quest_data ? quest_data : null
   );
-  const [modalTitle, setModalTitle] = useState(quest_data.quest_title);
+  const [modalTitle, setModalTitle] = useState(
+    quest_data ? quest_data.quest_title : null
+  );
   const [modalDescription, setModalDescription] = useState(
-    quest_data.quest_description
+    quest_data ? quest_data.quest_description : null
   );
   const [questSelected, setQuestSelected] = useState(false);
   const [showQuestList, setShowQuestList] = useState(false);

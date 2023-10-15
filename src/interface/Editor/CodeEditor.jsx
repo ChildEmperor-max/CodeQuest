@@ -369,12 +369,14 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                   buttonText={darkMode ? "Dark" : "Light"}
                 />
 
-                <ButtonText
-                  onClick={viewSelectedQuestModal}
-                  title="Selected quest"
-                  icon={faTasks}
-                  buttonText="Quest"
-                />
+                {quest_data ? (
+                  <ButtonText
+                    onClick={viewSelectedQuestModal}
+                    title="Selected quest"
+                    icon={faTasks}
+                    buttonText="Quest"
+                  />
+                ) : null}
 
                 {quest_data ? <span>{selectedQuest}</span> : ""}
               </div>
@@ -384,7 +386,7 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                     initialTime={hintCountdown}
                     onCountdownEnd={() => setShowHintCountdown(false)}
                   />
-                ) : (
+                ) : quest_data ? (
                   <ButtonText
                     onClick={() => {
                       quest_data.hint && setShowHint(true);
@@ -394,28 +396,34 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                     icon={faQuestionCircle}
                     buttonText="Hint"
                   />
-                )}
+                ) : null}
 
-                <ButtonText
-                  onClick={() => {
-                    quest_data.pseudo_code && setShowPseudoCode(true);
-                  }}
-                  disabled={quest_data && quest_data.pseudo_code ? false : true}
-                  title="Pseudo Code"
-                  icon={faCode}
-                  buttonText="Pseudo Code"
-                />
+                {quest_data ? (
+                  <ButtonText
+                    onClick={() => {
+                      quest_data.pseudo_code && setShowPseudoCode(true);
+                    }}
+                    disabled={
+                      quest_data && quest_data.pseudo_code ? false : true
+                    }
+                    title="Pseudo Code"
+                    icon={faCode}
+                    buttonText="Pseudo Code"
+                  />
+                ) : null}
               </div>
               <div>
-                <ButtonText
-                  onClick={() => {
-                    quest_data && submitPlayerAnswer(quest_data.quest_answer);
-                  }}
-                  disabled={loading || !quest_data}
-                  title="Submit answer"
-                  icon={faCheck}
-                  buttonText="Submit"
-                />
+                {quest_data ? (
+                  <ButtonText
+                    onClick={() => {
+                      quest_data && submitPlayerAnswer(quest_data.quest_answer);
+                    }}
+                    disabled={loading || !quest_data}
+                    title="Submit answer"
+                    icon={faCheck}
+                    buttonText="Submit"
+                  />
+                ) : null}
                 <ButtonText
                   onClick={() => {
                     onClose();
