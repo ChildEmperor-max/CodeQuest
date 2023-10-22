@@ -1,4 +1,4 @@
-let keyListenersEnabled = true;
+export let keyListenersEnabled = true;
 
 var keys = {
   w: {
