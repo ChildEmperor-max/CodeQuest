@@ -17,6 +17,45 @@
     display: flex;
 }
 
+.profile-display-container {
+  margin: 5px;
+}
+
+#avatar-display {
+  border-radius: 50%;
+  background-color: rgb(3, 6, 56);
+  background: radial-gradient(circle, rgb(3, 6, 56), rgb(86, 91, 143));
+  box-sizing: border-box;
+  border: 5px solid rgb(204, 207, 72);
+  width: 150px;
+  height: auto;
+}
+
+#avatar-display:hover {
+  cursor: pointer;
+  border: 5px solid rgb(255, 255, 255);
+}
+
+.xp-bar {
+  width: 80px;
+  height: 20px;
+  background-color: rgb(255, 16, 203);
+  transition: width 1.8s ease-in-out;
+}
+
+.xp-bar-background {
+  width: 200px;
+  height: 20px;
+  position: absolute;
+  border: 1px solid white;
+  background-color: rgba(59, 59, 59, 0.521);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .npc-name-display {
   position: absolute;
   color: white;
