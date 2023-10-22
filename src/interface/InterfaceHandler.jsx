@@ -21,11 +21,7 @@ import {
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import QuestDetails from "./Quests/QuestDetails";
-import {
-  disableKeyListeners,
-  enableKeyListeners,
-  keyListenersEnabled,
-} from "../lib/KeyControls";
+import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
 import { fetchCharacterById } from "../db/HandleTable";
 
 export default function InterfaceHandler({
