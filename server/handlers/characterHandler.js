@@ -70,10 +70,38 @@ module.exports.handleUpdateCharacterNameById = function (req, res, pool) {
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Internal Server Error" }));
       });
-    // .finally(() => {
-    //   // Close the database pool
-    //   pool.end();
-    // });
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateCharacterBioById = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const new_bio = data.new_bio;
+    const query = fs.readFileSync(path + "updateCharacterBioById.sql", "utf8");
+
+    pool
+      .query(query, [new_bio, player_id])
+      .then(() => {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: `Character bio updated successfully. Bio: ${new_bio}`,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Error updating character bio in characterHandler.js:",
+          error
+        );
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+      });
   } catch (error) {
     console.error("Error parsing character data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });
