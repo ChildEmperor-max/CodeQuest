@@ -1,0 +1,1 @@
+UPDATE character SET character_bio = $1 WHERE player_id = $2
