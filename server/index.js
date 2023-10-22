@@ -57,6 +57,7 @@ const {
   handleFetchCharacterById,
   handleUpdateCharacterNameById,
   handleInsertCharacterByPlayerId,
+  handleUpdateCharacterBioById,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -213,6 +214,10 @@ app.get("/character/:id", (req, res) => {
 
 app.post("/character/update/name", (req, res) => {
   handleUpdateCharacterNameById(req, res, pool);
+});
+
+app.post("/character/update/bio", (req, res) => {
+  handleUpdateCharacterBioById(req, res, pool);
 });
 
 app.post("/character/insert", (req, res) => {
