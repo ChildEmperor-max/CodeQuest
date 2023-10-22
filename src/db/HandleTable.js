@@ -489,6 +489,37 @@ export function updateCharacterNameById(player_id, new_name) {
   });
 }
 
+export function updateCharacterBio(player_id, new_bio) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/bio", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        new_bio: new_bio,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character name: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character name updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
 export function fetchPlayerByEmail(email) {
   return fetch(playerAPI + "/get-by-email/" + email)
     .then((response) => {
