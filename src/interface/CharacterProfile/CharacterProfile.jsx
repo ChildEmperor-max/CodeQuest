@@ -8,20 +8,23 @@ import {
   faCheck,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { fetchCompletedQuestCount } from "../../db/HandleTable";
+import {
+  fetchCompletedQuestCount,
+  updateCharacterBio,
+} from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
-import { fetchAchievements } from "../../db/HandleTable";
+import { fetchAchievements, fetchCharacterById } from "../../db/HandleTable";
 import AchievementBadge from "../../components/AchievementBadge";
 import EditUsernameModal from "./EditUsernameModal";
+import AchievementProfile from "./AchievementProfile";
 
 const CharacterProfile = ({ onClose }) => {
+  const [characterData, setCharacterData] = useState(undefined);
   const [completedQuestCount, setCompletedQuestCount] = useState(0);
   const [currentTab, setCurrentTab] = useState(1);
-  const [userName, setUserName] = useState("Lorem Ipsum");
-  const [currentBio, setCurrentBio] = useState(
-    "Lorem ipsum dolor sit amet consectetu, adipisicing elit."
-  );
+  const [userName, setUserName] = useState("");
+  const [currentBio, setCurrentBio] = useState("");
   const [bioInputValue, setBioInputValue] = useState(currentBio);
   const [completedAchievementsData, setCompletedAchievementsData] = useState(
     []
@@ -45,6 +48,17 @@ const CharacterProfile = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
+    fetchCharacterById(playerId)
+      .then((result) => {
+        setCharacterData(result[0]);
+        setUserName(result[0].character_name);
+        setCurrentBio(result[0].character_bio);
+      })
+      .catch((err) => {
+        console.log("[FETCH CHARACTER ERROR]", err);
+      });
+
     viewCompletedAchievements()
       .then((data) => {
         setCompletedAchievementsData(data);
@@ -83,7 +97,7 @@ const CharacterProfile = ({ onClose }) => {
       return questData;
     } catch (error) {
       console.error("[ERROR]:", error);
-      throw error; // Re-throw the error to be caught in the outer catch block if necessary
+      throw error;
     }
   };
 
@@ -267,9 +281,16 @@ const CharacterProfile = ({ onClose }) => {
           <AlertModal
             message={`Are you sure about your new bio? ${bioInputValue}`}
             onConfirm={() => {
-              setEditingProfile("");
-              saveBioInput();
-              setIsSavingBio(false);
+              const playerId = JSON.parse(localStorage.getItem("playerId"));
+              updateCharacterBio(playerId, bioInputValue)
+                .then(() => {
+                  setEditingProfile("");
+                  saveBioInput();
+                  setIsSavingBio(false);
+                })
+                .catch((err) => {
+                  console.log("[ERROR SAVING BIO]", err);
+                });
             }}
             onCancel={() => {
               setEditingProfile("");
@@ -444,47 +465,10 @@ const CharacterProfile = ({ onClose }) => {
             </>
           ) : null}
           {currentTab === 2 ? (
-            <>
-              <div className="profile-header-container">
-                <CloseButtonModal onClose={onClose} />
-                <div className="profile-header">
-                  <p>Achievements</p>
-                </div>
-              </div>
-              <div id="achievements-tab">
-                <div className="text-container">
-                  <div className="content-header">
-                    <FontAwesomeIcon icon={faTrophy} color="gold" />
-                    Achievements{" "}
-                    <span>({completedAchievementsData.length})</span>
-                  </div>
-                  <div className="profile-achievements">
-                    {completedAchievementsData.map((achievement, index) => (
-                      <div
-                        className="profile-displayed-badge"
-                        key={achievement.id}
-                      >
-                        <AchievementBadge
-                          name={achievement.name}
-                          description={achievement.description}
-                          status={achievement.status}
-                          date_achieved={
-                            achievement.date_achieved
-                              ? new Date(
-                                  achievement.date_achieved
-                                ).toLocaleDateString("en-US")
-                              : null
-                          }
-                          index={index}
-                          large={false}
-                          flipOnHover={false}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </>
+            <AchievementProfile
+              completedAchievementsData={completedAchievementsData}
+              onClose={onClose}
+            />
           ) : null}
 
           {currentTab === 3 ? (
