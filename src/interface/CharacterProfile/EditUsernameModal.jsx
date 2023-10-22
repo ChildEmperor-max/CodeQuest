@@ -7,21 +7,13 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import CloseButtonModal from "../../components/CloseButtonModal";
+import { updateCharacterNameById } from "../../db/HandleTable";
 
 const EditUsernameModal = ({ currentUsername, setUserName, closeModal }) => {
   const [usernameInputValue, setUsernameInputValue] = useState(currentUsername);
   const [savedNewUsername, setSavedNewUsername] = useState(false);
   const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (savedNewUsername) {
-      console.log("Username saved:", usernameInputValue);
-      setLoading(false);
-      //   setTimeout(() => {
-      //     closeModal();
-      //   }, 3000);
-    }
-  }, [savedNewUsername]);
+  const [usernameError, setUsernameError] = useState("");
 
   const handleInputChange = (event) => {
     setUsernameInputValue(event.target.value);
@@ -29,9 +21,30 @@ const EditUsernameModal = ({ currentUsername, setUserName, closeModal }) => {
   };
 
   const handleSaveUsername = () => {
-    setLoading(true); // Start loading
-    setUserName(usernameInputValue);
-    setSavedNewUsername(true);
+    setLoading(true);
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
+    if (usernameInputValue.length < 4) {
+      setUsernameError("Username must be at least 4 characters long.");
+      setLoading(false);
+    } else {
+      const regex = /^[a-zA-Z0-9]+$/;
+      if (!regex.test(usernameInputValue)) {
+        setUsernameError("Username cannot contain special characters.");
+        setLoading(false);
+      } else {
+        updateCharacterNameById(playerId, usernameInputValue)
+          .then(() => {
+            setUserName(usernameInputValue);
+            setSavedNewUsername(true);
+            setLoading(false);
+            setUsernameError("");
+          })
+          .catch((err) => {
+            console.log("[SAVE USERNAME ERROR]", err);
+            setLoading(false);
+          });
+      }
+    }
   };
 
   return (
@@ -53,6 +66,7 @@ const EditUsernameModal = ({ currentUsername, setUserName, closeModal }) => {
             onChange={handleInputChange}
           />
         )}
+        <p>{usernameError}</p>
       </div>
       <div className="edit-profile-modal-button-container">
         {savedNewUsername ? (
