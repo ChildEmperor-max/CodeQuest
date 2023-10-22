@@ -21,6 +21,12 @@ import {
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import QuestDetails from "./Quests/QuestDetails";
+import {
+  disableKeyListeners,
+  enableKeyListeners,
+  keyListenersEnabled,
+} from "../lib/KeyControls";
+import { fetchCharacterById } from "../db/HandleTable";
 
 export default function InterfaceHandler({
   settings: {
@@ -43,6 +49,7 @@ export default function InterfaceHandler({
     questhint: "questhint",
     editor: "editor",
   };
+  const [characterData, setCharacterData] = useState(undefined);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
   );
@@ -63,14 +70,32 @@ export default function InterfaceHandler({
   const [isQuestHint, setIsQuestHint] = useState(null);
   const [nextHint, setNextHint] = useState(null);
 
+  useEffect(() => {
+    displayUsername();
+  }, []);
+
+  const displayUsername = () => {
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
+    fetchCharacterById(playerId)
+      .then((result) => {
+        setCharacterData(result[0]);
+      })
+      .catch((err) => {
+        console.log("[FETCH CHARACTER ERROR]", err);
+      });
+  };
+
   const toggleInterface = async (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
       setShowButtons(true);
-      setCurrentOpenedInterface(interfaces.none); // Close the current interface
+      setCurrentOpenedInterface(interfaces.none);
+      enableKeyListeners();
     } else {
-      setCurrentOpenedInterface(interfaceName); // Open the selected interface
+      setCurrentOpenedInterface(interfaceName);
       setShowButtons(false);
+      disableKeyListeners();
     }
+    displayUsername();
   };
 
   useEffect(() => {
@@ -150,6 +175,9 @@ export default function InterfaceHandler({
 
   useEffect(() => {
     const handleKeyToggle = (event) => {
+      if (event.code === "Escape") {
+        toggleInterface(currentOpenedInterface);
+      }
       if (event.code === "KeyP" && keys.p.pressed) {
         toggleInterface(interfaces.profile);
       }
@@ -304,20 +332,34 @@ export default function InterfaceHandler({
               />
             </div>
             <div className="left-container">
-              <InterfaceButton
+              {/* <InterfaceButton
                 name="Profile"
                 icon={faUser}
                 id="profile-button"
                 onClickEvent={() => toggleInterface(interfaces.profile)}
                 shortcutKey="P"
-              />
-              <InterfaceButton
+              /> */}
+              <div onClick={() => toggleInterface(interfaces.profile)}>
+                <img
+                  src="/src/assets/icons/default-avatar.png"
+                  id="avatar-display"
+                  alt="Avatar"
+                />
+              </div>
+              <div className="profile-display-container">
+                <p>{characterData && characterData.character_name}</p>
+                <p>Level: 1</p>
+                <span>XP:</span>
+                <div className="xp-bar-background">8/20</div>
+                <div className="xp-bar"></div>
+              </div>
+              {/* <InterfaceButton
                 name="Help"
                 icon={faQuestionCircle}
                 id="help-button"
                 onClickEvent={() => toggleInterface(interfaces.helper)}
                 shortcutKey="H"
-              />
+              /> */}
             </div>
             <div className="player-actions-container">
               {isPlayerNearNpc && (
