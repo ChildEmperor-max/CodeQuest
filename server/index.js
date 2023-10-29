@@ -58,6 +58,10 @@ const {
   handleUpdateCharacterNameById,
   handleInsertCharacterByPlayerId,
   handleUpdateCharacterBioById,
+  handleUpdateCurrentXp,
+  handleUpdateMaxXp,
+  handleUpdateXp,
+  handleUpdateLevel,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -218,6 +222,22 @@ app.post("/character/update/name", (req, res) => {
 
 app.post("/character/update/bio", (req, res) => {
   handleUpdateCharacterBioById(req, res, pool);
+});
+
+app.post("/character/update/level", (req, res) => {
+  handleUpdateLevel(req, res, pool);
+});
+
+app.post("/character/update/xp", (req, res) => {
+  handleUpdateXp(req, res, pool);
+});
+
+app.post("/character/update/current_xp", (req, res) => {
+  handleUpdateCurrentXp(req, res, pool);
+});
+
+app.post("/character/update/max_xp", (req, res) => {
+  handleUpdateMaxXp(req, res, pool);
 });
 
 app.post("/character/insert", (req, res) => {

@@ -520,6 +520,131 @@ export function updateCharacterBio(player_id, new_bio) {
   });
 }
 
+export function updateCharacterLevel(player_id, new_level) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/level", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        new_level: new_level,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character level: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character level updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterXp(player_id, new_current_xp, new_max_xp) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/xp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        new_current_xp: new_current_xp,
+        new_max_xp: new_max_xp,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character xp: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character xp updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterCurrentXp(player_id, new_current_xp) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/current_xp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        new_current_xp: new_current_xp,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character xp: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character xp updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterMaxXp(player_id, new_max_xp) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/max_xp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        new_max_xp: new_max_xp,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character xp: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character xp updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
 export function fetchPlayerByEmail(email) {
   return fetch(playerAPI + "/get-by-email/" + email)
     .then((response) => {

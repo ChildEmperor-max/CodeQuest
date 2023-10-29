@@ -108,3 +108,202 @@ module.exports.handleUpdateCharacterBioById = function (req, res, pool) {
     res.end(JSON.stringify({ error: "Bad Request" }));
   }
 };
+
+module.exports.handleUpdateCurrentXp = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const new_current_xp = data.new_current_xp;
+
+    pool.query(
+      "SELECT xp->'current_xp' as current_xp from character WHERE player_id = $1",
+      [player_id],
+      (err, result) => {
+        if (err) {
+          returnError(err);
+        }
+        const updatedXp = result.rows[0].current_xp + new_current_xp;
+        pool.query(
+          `UPDATE character SET xp = jsonb_set(xp, '{current_xp}', '${updatedXp}') WHERE player_id = $1`,
+          [player_id],
+          (err) => {
+            if (err) {
+              returnError(err);
+            }
+
+            pool.query(
+              "SELECT xp->'max_xp' as max_xp from character WHERE player_id = $1",
+              [player_id],
+              (err, result) => {
+                if (err) {
+                  returnError(err);
+                }
+                const max_xp = result.rows[0].max_xp;
+                if (updatedXp >= max_xp) {
+                  console.log("LEVEL UP!");
+                  pool.query(
+                    "SELECT level from character WHERE player_id = $1",
+                    [player_id],
+                    (err, result) => {
+                      if (err) {
+                        returnError(err);
+                      }
+                      let currentLevel = result.rows[0].level;
+                      const updatedLevel = currentLevel + 1;
+
+                      const updateLevel = fs.readFileSync(
+                        path + "updateLevel.sql",
+                        "utf8"
+                      );
+                      pool.query(
+                        updateLevel,
+                        [player_id, updatedLevel],
+                        (err, result) => {
+                          if (err) {
+                            returnError(err);
+                          }
+                          res.writeHead(201, {
+                            "Content-Type": "application/json",
+                          });
+                          res.end(
+                            JSON.stringify({
+                              message: "level updated successfully",
+                            })
+                          );
+                        }
+                      );
+                    }
+                  );
+                }
+                // res.writeHead(201, { "Content-Type": "application/json" });
+                // res.end(JSON.stringify({ message: "Xp updated successfully" }));
+              }
+            );
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateMaxXp = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const new_max_xp = data.new_max_xp;
+    const query = fs.readFileSync(path + "updateMaxXp.sql", "utf8");
+
+    pool
+      .query(query, [player_id, new_max_xp])
+      .then(() => {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: `Character data updated successfully`,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Error updating character data in characterHandler.js:",
+          error
+        );
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+      });
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateXp = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const new_current_xp = data.new_current_xp;
+    const new_max_xp = data.new_max_xp;
+
+    const update_current_xp = fs.readFileSync(
+      path + "updateCurrentXp.sql",
+      "utf8"
+    );
+    const update_max_xp = fs.readFileSync(path + "updateMaxXp.sql", "utf8");
+
+    pool.query(
+      update_current_xp,
+      [player_id, new_current_xp],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating current xp:", err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Internal Server Error" }));
+          return; // Return here to avoid sending multiple responses
+        }
+        pool.query(update_max_xp, [player_id, new_max_xp], (err, result) => {
+          if (err) {
+            console.error("Error updating max xp:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Internal Server Error" }));
+            return; // Return here to avoid sending multiple responses
+          }
+        });
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateLevel = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const new_level = data.new_level;
+
+    pool.query(
+      "SELECT level from character WHERE player_id = $1",
+      [player_id],
+      (err, result) => {
+        if (err) {
+          returnError(err);
+        }
+        let currentLevel = result.rows[0].level;
+        const updatedLevel = currentLevel + 1;
+
+        const updateLevel = fs.readFileSync(path + "updateLevel.sql", "utf8");
+        pool.query(updateLevel, [player_id, updatedLevel], (err, result) => {
+          if (err) {
+            returnError(err);
+          }
+          res.writeHead(201, {
+            "Content-Type": "application/json",
+          });
+          res.end(
+            JSON.stringify({
+              message: "level updated successfully",
+            })
+          );
+        });
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+function returnError(err) {
+  console.error(err);
+  res.writeHead(500, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ error: "Internal Server Error" }));
+  return;
+}
