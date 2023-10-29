@@ -46,6 +46,12 @@
     z-index: 2;
   }
 
+  .quest-reward-section {
+    background-color: rgba(0, 0, 0, 0.37);
+    padding: 10px;
+    margin: 5px;
+  }
+
   .play-fade-animation {
     animation: text-fade 0.5s ease-in-out;
   }

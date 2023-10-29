@@ -37,10 +37,10 @@
 }
 
 .xp-bar {
-  width: 80px;
+  width: 100px;
   height: 20px;
   background-color: rgb(255, 16, 203);
-  transition: width 1.8s ease-in-out;
+  transition: width 2.8s ease-in-out;
 }
 
 .xp-bar-background {
