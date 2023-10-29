@@ -35,9 +35,7 @@ const QuestDetails = ({
             isFirstRender && "play-initial-animation"
           }`}
         >
-          <div
-            className={`${playFlipAnimation ? "flip-from-bottom-to-top" : ""}`}
-          >
+          <div className={`${playFlipAnimation ? "play-fade-animation" : ""}`}>
             <div className="quest-details-header">
               <CloseButtonModal onClose={onClose} />
             </div>
@@ -45,6 +43,11 @@ const QuestDetails = ({
               <p className="quest-details-title">{quest.quest_title}</p>
               <p>{quest.quest_description}</p>
               <p>{quest.npc_name}</p>
+              <div className="quest-reward-section">
+                <p>Quest completion reward</p>
+                {quest.reward.xp && <p>Xp: {quest.reward.xp}</p>}
+                {quest.reward.gold && <p>Gold: {quest.reward.gold}</p>}
+              </div>
             </div>
             <div className="quest-details-buttons">
               {onStart && (
