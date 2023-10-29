@@ -1,3 +1,4 @@
+import { receiveXp } from "../lib/XpManager";
 import {
   fetchNpcQuestDialog,
   updateQuestDataStatus,
@@ -67,7 +68,7 @@ class ManageQuest {
     updatePlayerQuestProgress(player_id, quest_id, newStatus);
   }
 
-  acceptQuest(quest_id) {
+  acceptQuest(quest_id, questData) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
     this.insertQuestProgress(quest_id, "active");
   }
@@ -77,10 +78,11 @@ class ManageQuest {
     updatePlayerQuestProgress(player_id, quest_id, this.status.toComplete);
   }
 
-  completedQuest(npc_id, quest_id, dialog_id) {
+  completedQuest(npc_id, questData, quest_id, dialog_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
     updatePlayerQuestProgress(player_id, quest_id, this.status.completed);
     updateNpcQuestDialogById(npc_id, null, null);
+    receiveXp(questData.reward.xp);
   }
 
   abandonQuest(quest_id) {
