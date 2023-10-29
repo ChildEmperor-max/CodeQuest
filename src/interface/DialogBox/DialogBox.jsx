@@ -345,13 +345,14 @@ const DialogBox = ({
       if (quest[0].quest_status === status.inactive) {
         newStatus = status.active;
         headerText = "Quest Started";
-        manageQuest.acceptQuest(quest_id);
+        manageQuest.acceptQuest(quest_id, quest[0]);
         npc.currentQuestStatus.stats = "active";
       } else if (quest[0].quest_status === status.toComplete) {
         newStatus = status.completed;
         headerText = "Quest Completed";
         manageQuest.completedQuest(
           npc.npcData[0].id,
+          quest[0],
           quest_id,
           npc.npcData[0].dialog_id
         );
