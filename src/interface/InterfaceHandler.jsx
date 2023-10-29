@@ -23,6 +23,7 @@ import {
 import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
 import { fetchCharacterById } from "../db/HandleTable";
+import { Navigate } from "react-router-dom";
 
 export default function InterfaceHandler({
   settings: {
@@ -45,7 +46,7 @@ export default function InterfaceHandler({
     questhint: "questhint",
     editor: "editor",
   };
-  const [characterData, setCharacterData] = useState(undefined);
+  const [characterData, setCharacterData] = useState(null);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
   );
@@ -66,14 +67,20 @@ export default function InterfaceHandler({
   const [isQuestHint, setIsQuestHint] = useState(null);
   const [nextHint, setNextHint] = useState(null);
 
+  const [currentXpBar, setCurrentXpBar] = useState(0);
+
   useEffect(() => {
     displayUsername();
   }, []);
 
   const displayUsername = () => {
     const playerId = JSON.parse(localStorage.getItem("playerId"));
+    if (!playerId) {
+      Navigate("/login");
+    }
     fetchCharacterById(playerId)
       .then((result) => {
+        setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);
         setCharacterData(result[0]);
       })
       .catch((err) => {
@@ -335,20 +342,35 @@ export default function InterfaceHandler({
                 onClickEvent={() => toggleInterface(interfaces.profile)}
                 shortcutKey="P"
               /> */}
-              <div onClick={() => toggleInterface(interfaces.profile)}>
-                <img
-                  src="/src/assets/icons/default-avatar.png"
-                  id="avatar-display"
-                  alt="Avatar"
-                />
-              </div>
-              <div className="profile-display-container">
-                <p>{characterData && characterData.character_name}</p>
-                <p>Level: 1</p>
-                <span>XP:</span>
-                <div className="xp-bar-background">8/20</div>
-                <div className="xp-bar"></div>
-              </div>
+              {characterData && (
+                <>
+                  <div onClick={() => toggleInterface(interfaces.profile)}>
+                    <img
+                      src="/src/assets/icons/default-avatar.png"
+                      id="avatar-display"
+                      alt="Avatar"
+                    />
+                  </div>
+                  <div className="profile-display-container">
+                    <p>{characterData.character_name}</p>
+                    <p>Level: {characterData.level}</p>
+                    <span>XP:</span>
+                    <div className="xp-bar-background">
+                      {characterData.xp.current_xp}/{characterData.xp.max_xp}
+                    </div>
+                    <div
+                      className="xp-bar"
+                      style={{
+                        width: `${
+                          (characterData.xp.current_xp /
+                            characterData.xp.max_xp) *
+                          200
+                        }px`,
+                      }}
+                    ></div>
+                  </div>
+                </>
+              )}
               {/* <InterfaceButton
                 name="Help"
                 icon={faQuestionCircle}
