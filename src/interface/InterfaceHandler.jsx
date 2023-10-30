@@ -356,18 +356,20 @@ export default function InterfaceHandler({
                     <p>Level: {characterData.level}</p>
                     <span>XP:</span>
                     <div className="xp-bar-background">
-                      {characterData.xp.current_xp}/{characterData.xp.max_xp}
+                      <div
+                        className="xp-bar"
+                        style={{
+                          width: `${
+                            (characterData.xp.current_xp /
+                              characterData.xp.max_xp) *
+                            200
+                          }px`,
+                        }}
+                      ></div>
+                      <p>
+                        {characterData.xp.current_xp}/{characterData.xp.max_xp}
+                      </p>
                     </div>
-                    <div
-                      className="xp-bar"
-                      style={{
-                        width: `${
-                          (characterData.xp.current_xp /
-                            characterData.xp.max_xp) *
-                          200
-                        }px`,
-                      }}
-                    ></div>
                   </div>
                 </>
               )}

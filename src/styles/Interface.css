@@ -36,24 +36,32 @@
   border: 5px solid rgb(255, 255, 255);
 }
 
-.xp-bar {
-  width: 100px;
-  height: 20px;
-  background-color: rgb(255, 16, 203);
-  transition: width 2.8s ease-in-out;
-}
-
 .xp-bar-background {
   width: 200px;
   height: 20px;
-  position: absolute;
   border: 1px solid white;
-  background-color: rgba(59, 59, 59, 0.521);
+  background-color: rgba(59, 59, 59, 0.123);
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   text-align: center;
+  z-index: 1;
+}
+
+.xp-bar-background p {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.xp-bar {
+  position: absolute;
+  width: 100px;
+  z-index: -1;
+  height: 20px;
+  background-color: rgb(255, 16, 203);
+  transition: width 2.3s ease-in-out;
 }
 
 .npc-name-display {

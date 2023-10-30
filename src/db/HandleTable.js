@@ -583,7 +583,7 @@ export function updateCharacterXp(player_id, new_current_xp, new_max_xp) {
   });
 }
 
-export function updateCharacterCurrentXp(player_id, new_current_xp) {
+export function updateCharacterCurrentXp(player_id, gained_xp) {
   return new Promise((resolve, reject) => {
     fetch(characterAPI + "/update/current_xp", {
       method: "POST",
@@ -592,7 +592,7 @@ export function updateCharacterCurrentXp(player_id, new_current_xp) {
       },
       body: JSON.stringify({
         player_id: player_id,
-        new_current_xp: new_current_xp,
+        gained_xp: gained_xp,
       }),
     })
       .then((response) => {

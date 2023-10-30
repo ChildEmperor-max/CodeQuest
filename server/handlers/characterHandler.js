@@ -109,82 +109,72 @@ module.exports.handleUpdateCharacterBioById = function (req, res, pool) {
   }
 };
 
-module.exports.handleUpdateCurrentXp = function (req, res, pool) {
+const updateXp = async (pool, player_id, gained_xp) => {
+  try {
+    const resultCurrentXp = await pool.query(
+      "SELECT xp->'current_xp' as current_xp from character WHERE player_id = $1",
+      [player_id]
+    );
+    const resultMaxXp = await pool.query(
+      "SELECT xp->'max_xp' as max_xp from character WHERE player_id = $1",
+      [player_id]
+    );
+
+    let totalGainedXp = resultCurrentXp.rows[0].current_xp + gained_xp;
+    let max_xp = resultMaxXp.rows[0].max_xp;
+
+    await pool.query(
+      `UPDATE character SET xp = jsonb_set(xp, '{current_xp}', '${totalGainedXp}') WHERE player_id = $1`,
+      [player_id]
+    );
+
+    while (totalGainedXp >= max_xp) {
+      console.log("LEVEL UP!");
+      totalGainedXp = totalGainedXp - max_xp;
+      const resultLevel = await pool.query(
+        "SELECT level from character WHERE player_id = $1",
+        [player_id]
+      );
+      let currentLevel = resultLevel.rows[0].level;
+      const updatedLevel = currentLevel + 1;
+
+      const updateLevelQuery = fs.readFileSync(
+        path + "updateLevel.sql",
+        "utf8"
+      );
+      await pool.query(updateLevelQuery, [player_id, updatedLevel]);
+
+      await pool.query(
+        `UPDATE character SET xp = jsonb_set(xp, '{current_xp}', '${totalGainedXp}') WHERE player_id = $1`,
+        [player_id]
+      );
+
+      await pool.query(
+        `UPDATE character SET xp = jsonb_set(xp, '{max_xp}', '${Math.ceil(
+          max_xp * 1.5
+        )}') WHERE player_id = $1`,
+        [player_id]
+      );
+    }
+
+    return { message: "success" };
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    return { message: "error" };
+  }
+};
+
+module.exports.handleUpdateCurrentXp = async function (req, res, pool) {
   try {
     const data = req.body;
     const player_id = data.player_id;
-    const new_current_xp = data.new_current_xp;
+    const gained_xp = data.gained_xp;
 
-    pool.query(
-      "SELECT xp->'current_xp' as current_xp from character WHERE player_id = $1",
-      [player_id],
-      (err, result) => {
-        if (err) {
-          returnError(err);
-        }
-        const updatedXp = result.rows[0].current_xp + new_current_xp;
-        pool.query(
-          `UPDATE character SET xp = jsonb_set(xp, '{current_xp}', '${updatedXp}') WHERE player_id = $1`,
-          [player_id],
-          (err) => {
-            if (err) {
-              returnError(err);
-            }
+    const response = await updateXp(pool, player_id, gained_xp);
 
-            pool.query(
-              "SELECT xp->'max_xp' as max_xp from character WHERE player_id = $1",
-              [player_id],
-              (err, result) => {
-                if (err) {
-                  returnError(err);
-                }
-                const max_xp = result.rows[0].max_xp;
-                if (updatedXp >= max_xp) {
-                  console.log("LEVEL UP!");
-                  pool.query(
-                    "SELECT level from character WHERE player_id = $1",
-                    [player_id],
-                    (err, result) => {
-                      if (err) {
-                        returnError(err);
-                      }
-                      let currentLevel = result.rows[0].level;
-                      const updatedLevel = currentLevel + 1;
-
-                      const updateLevel = fs.readFileSync(
-                        path + "updateLevel.sql",
-                        "utf8"
-                      );
-                      pool.query(
-                        updateLevel,
-                        [player_id, updatedLevel],
-                        (err, result) => {
-                          if (err) {
-                            returnError(err);
-                          }
-                          res.writeHead(201, {
-                            "Content-Type": "application/json",
-                          });
-                          res.end(
-                            JSON.stringify({
-                              message: "level updated successfully",
-                            })
-                          );
-                        }
-                      );
-                    }
-                  );
-                }
-                // res.writeHead(201, { "Content-Type": "application/json" });
-                // res.end(JSON.stringify({ message: "Xp updated successfully" }));
-              }
-            );
-          }
-        );
-      }
-    );
+    res.writeHead(201, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(response));
   } catch (error) {
-    console.error("Error parsing character data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Bad Request" }));
   }
@@ -243,14 +233,14 @@ module.exports.handleUpdateXp = function (req, res, pool) {
           console.error("Error updating current xp:", err);
           res.writeHead(500, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Internal Server Error" }));
-          return; // Return here to avoid sending multiple responses
+          return;
         }
         pool.query(update_max_xp, [player_id, new_max_xp], (err, result) => {
           if (err) {
             console.error("Error updating max xp:", err);
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Internal Server Error" }));
-            return; // Return here to avoid sending multiple responses
+            return;
           }
         });
       }
