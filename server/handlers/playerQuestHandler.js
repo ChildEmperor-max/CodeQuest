@@ -46,32 +46,31 @@ module.exports.handleFetchNpcQuestStatus = async function (npcId, res, pool) {
   }
 };
 
-module.exports.handleInsertQuestProgress = function (req, res, pool) {
+module.exports.handleInsertQuestProgress = async function (req, res, pool) {
   try {
     const data = req.body;
     const player_id = data.player_id;
     const quest_status = data.quest_status;
     const quest_id = data.quest_id;
-    const query = fs.readFileSync(path + "insertQuestProgress.sql", "utf8");
+    const insertQuestProgress = fs.readFileSync(
+      path + "insertQuestProgress.sql",
+      "utf8"
+    );
 
-    pool
-      .query(query, [quest_id, quest_status, player_id])
-      .then(() => {
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            message: `Quest inserted successfully.`,
-          })
-        );
-      })
-      .catch((error) => {
-        console.error(
-          "Error inserting new Quest in player_quests table: ",
-          error
-        );
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Internal Server Error" }));
-      });
+    const resultNpcDialog = await pool.query(
+      "SELECT npc_id, dialog_id from quest WHERE quest_id = $1",
+      [quest_id]
+    );
+    const npc_id = resultNpcDialog.rows[0].npc_id;
+    const dialog_id = resultNpcDialog.rows[0].dialog_id;
+
+    await pool.query(insertQuestProgress, [
+      quest_id,
+      quest_status,
+      player_id,
+      npc_id,
+      dialog_id,
+    ]);
   } catch (error) {
     console.error("Error parsing player_quests data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });
@@ -79,29 +78,18 @@ module.exports.handleInsertQuestProgress = function (req, res, pool) {
   }
 };
 
-module.exports.handleUpdateQuestProgress = function (req, res, pool) {
+module.exports.handleUpdateQuestProgress = async function (req, res, pool) {
   try {
     const data = req.body;
     const player_id = data.player_id;
     const quest_status = data.quest_status;
     const quest_id = data.quest_id;
-    const query = fs.readFileSync(path + "updateQuestProgress.sql", "utf8");
+    const updateQuestProgress = fs.readFileSync(
+      path + "updateQuestProgress.sql",
+      "utf8"
+    );
 
-    pool
-      .query(query, [quest_status, player_id, quest_id])
-      .then(() => {
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            message: `Quest updated successfully.`,
-          })
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating Quest in player_quests table: ", error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Internal Server Error" }));
-      });
+    await pool.query(updateQuestProgress, [quest_status, player_id, quest_id]);
   } catch (error) {
     console.error("Error parsing player_quests data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });

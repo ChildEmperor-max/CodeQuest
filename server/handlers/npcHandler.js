@@ -103,18 +103,30 @@ async function fetchNpcQuestDialogById(id, res, pool) {
   }
 }
 
-function handleFetchNpcDataByName(name, res, pool) {
-  pool
-    .query("SELECT * FROM npc WHERE TRIM(npc_name) = $1", [name])
-    .then((result) => {
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify(result.rows));
-    })
-    .catch((err) => {
-      console.error("Error executing database query:", err);
-      res.writeHead(500, { "Content-Type": "text/plain" });
-      res.end("Internal Server Error");
-    });
+async function handleFetchNpcDataByName(req, res, pool) {
+  try {
+    const name = req.params.name;
+    const playerId = parseInt(req.params.playerId, 10);
+
+    if (isNaN(playerId)) {
+      res.writeHead(400, { "Content-Type": "text/plain" });
+      res.end("Invalid playerId");
+      return;
+    }
+
+    const selectNpcByName = fs.readFileSync(
+      "server/sql/npc/selectNpcByName.sql",
+      "utf8"
+    );
+
+    const result = await pool.query(selectNpcByName, [playerId, name]);
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (err) {
+    console.error("Error handling NPC data request:", err);
+    res.writeHead(500, { "Content-Type": "text/plain" });
+    res.end("Internal Server Error");
+  }
 }
 
 function handleFetchNpc(req, res, pool) {

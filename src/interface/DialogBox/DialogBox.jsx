@@ -15,6 +15,7 @@ import { animateCameraToTarget } from "../../lib/camera/cameraAnimation";
 import ManageQuest from "../../db/ManageQuest";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { useWorldContext } from "../../components/WorldContext";
+import { receiveXp } from "../../lib/XpManager";
 
 const DialogBox = ({
   npc,
@@ -27,8 +28,11 @@ const DialogBox = ({
   onOpenQuestHint,
   onHighlightQuestHint,
   onSetInteractingNpc,
+  setCurrentXpBar,
+  fetchCharacter,
 }) => {
   const manageQuest = new ManageQuest();
+  const playerId = localStorage.getItem("playerId");
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
 
@@ -359,6 +363,17 @@ const DialogBox = ({
         npc.hasDialog = false;
         npc.hasQuest = false;
         npc.currentQuestStatus.stats = "completed";
+        receiveXp(quest[0].reward.xp)
+          .then(() => {
+            console.log("xp gained: ", quest[0].reward.xp);
+            setCurrentXpBar(
+              (characterData.xp.current_xp / characterData.xp.max_xp) * 200
+            );
+            fetchCharacter();
+          })
+          .catch((error) => {
+            console.log("Error in receiving xp: ", error);
+          });
       }
       onPopupContent(
         headerText,
@@ -373,8 +388,8 @@ const DialogBox = ({
 
   const getNpcDialog = async () => {
     try {
-      const npcData = await viewNpcData(currentTalkingNpc.npcName);
-      const dialog = await viewDialogById(npcData[0].id);
+      const npcData = await viewNpcData(currentTalkingNpc.npcName, playerId);
+      const dialog = await viewDialogById(npcData[0].npc_id);
       const questData = await manageQuest.getQuestByQuestId(
         npc.currentQuest[0].quest_id
       );

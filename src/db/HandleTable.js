@@ -42,9 +42,9 @@ export function executeJavaCode(data) {
     });
 }
 
-export const viewNpcData = async (name) => {
+export const viewNpcData = async (name, playerId) => {
   try {
-    const npcData = await fetchNpcDataByName(name);
+    const npcData = await fetchNpcDataByName(name, playerId);
     return npcData;
   } catch (error) {
     console.error("[ERROR]:", error);
@@ -172,8 +172,8 @@ export function fetchNpcDataById(id) {
     });
 }
 
-export function fetchNpcDataByName(name) {
-  return fetch(npcAPI + "/get-npc/" + name)
+export function fetchNpcDataByName(name, playerId) {
+  return fetch(npcAPI + "/get-npc/" + name + "/" + playerId)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Error fetching NPC data: " + response.statusText);

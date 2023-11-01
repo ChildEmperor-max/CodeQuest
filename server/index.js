@@ -142,9 +142,8 @@ app.get("/npc-get-quest-dialog/:id", (req, res) => {
   fetchNpcQuestDialogById(id, res, pool);
 });
 
-app.get("/npc/get-npc/:name", (req, res) => {
-  const name = req.params.name;
-  handleFetchNpcDataByName(name, res, pool);
+app.get("/npc/get-npc/:name/:playerId", (req, res) => {
+  handleFetchNpcDataByName(req, res, pool);
 });
 
 app.get("/npc/get-npc-id/:id", (req, res) => {

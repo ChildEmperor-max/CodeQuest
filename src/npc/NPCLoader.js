@@ -102,7 +102,7 @@ export default class NPCLoader extends Interactibles {
       try {
         this.currentQuest = await viewQuestById(id);
 
-        fetchNpcQuestStatus(this.npcData[0].id)
+        fetchNpcQuestStatus(this.npcData[0].npc_id)
           .then((result) => {
             this.setQuestIcon(
               this.currentQuest[0].quest_type,
@@ -120,19 +120,20 @@ export default class NPCLoader extends Interactibles {
 
     async function fetchData(npcName) {
       try {
-        this.npcData = await viewNpcData(npcName);
-        if (this.npcData[0].quest_id) {
-          this.hasQuest = true;
-          fetchNpcQuest.call(this, this.npcData[0].quest_id);
+        const playerId = localStorage.getItem("playerId");
+        this.npcData = await viewNpcData(npcName, playerId);
+        if (this.npcData[0]) {
+          if (this.npcData[0].quest_id) {
+            this.hasQuest = true;
+            fetchNpcQuest.call(this, this.npcData[0].quest_id);
+          }
+          // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
+          if (this.npcData[0].dialog_id) {
+            this.hasDialog = true;
+          } else {
+            this.hasDialog = false;
+          }
         }
-        // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
-        if (this.npcData[0].dialog_id) {
-          this.hasDialog = true;
-          //   // dialogData = await viewDialogData(this.npcData[0].dialog_id);
-        } else {
-          this.hasDialog = false;
-        }
-        return this.npcData;
       } catch (error) {
         console.error("[ERROR]:", error);
       }

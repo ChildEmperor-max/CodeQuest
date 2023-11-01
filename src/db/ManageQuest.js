@@ -82,7 +82,7 @@ class ManageQuest {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
     updatePlayerQuestProgress(player_id, quest_id, this.status.completed);
     updateNpcQuestDialogById(npc_id, null, null);
-    receiveXp(questData.reward.xp);
+    // receiveXp(questData.reward.xp);
   }
 
   abandonQuest(quest_id) {

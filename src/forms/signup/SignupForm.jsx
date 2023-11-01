@@ -136,8 +136,34 @@ const SignupForm = () => {
             <option value="">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-            <option value="other">Other</option>
           </select>
+        </div>
+        <div className="form-group">
+          <label>Gender</label>
+          <div>
+            <input
+              type="radio"
+              id="male"
+              name="gender"
+              value="male"
+              checked={formData.gender === "male"}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="male">Male</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="female"
+              name="gender"
+              value="female"
+              checked={formData.gender === "female"}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="female">Female</label>
+          </div>
         </div>
         {error && <div className="error">{error}</div>}{" "}
         <div className="form-group">

@@ -23,7 +23,8 @@ import {
 import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
 import { fetchCharacterById } from "../db/HandleTable";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { receiveXp } from "../lib/XpManager";
 
 export default function InterfaceHandler({
   settings: {
@@ -46,6 +47,7 @@ export default function InterfaceHandler({
     questhint: "questhint",
     editor: "editor",
   };
+  const navigate = useNavigate();
   const [characterData, setCharacterData] = useState(null);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -76,8 +78,13 @@ export default function InterfaceHandler({
   const displayUsername = () => {
     const playerId = JSON.parse(localStorage.getItem("playerId"));
     if (!playerId) {
-      Navigate("/login");
+      navigate("/login");
     }
+    fetchCharacter();
+  };
+
+  const fetchCharacter = () => {
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
     fetchCharacterById(playerId)
       .then((result) => {
         setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);
@@ -247,6 +254,8 @@ export default function InterfaceHandler({
             setNextHint(line);
           }}
           onSetInteractingNpc={(npc) => setIsPlayerInteractingNpc(npc)}
+          setCurrentXpBar={setCurrentXpBar}
+          fetchCharacter={fetchCharacter}
         />
       ) : null}
       {isQuestHint ? (
@@ -359,11 +368,7 @@ export default function InterfaceHandler({
                       <div
                         className="xp-bar"
                         style={{
-                          width: `${
-                            (characterData.xp.current_xp /
-                              characterData.xp.max_xp) *
-                            200
-                          }px`,
+                          width: `${currentXpBar}px`,
                         }}
                       ></div>
                       <p>
