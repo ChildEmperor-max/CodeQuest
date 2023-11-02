@@ -43,20 +43,20 @@ const SignupForm = () => {
 
       console.log(response.data.id);
       if (response.status === 201) {
-        console.log("Signup successful:", response.data);
         insertCharacterByPlayerId(response.data.id)
           .then((result) => {
             console.log(result);
-            navigate("/login");
             fetchQuestTable()
               .then((quests) => {
                 quests.find((quest) => {
                   insertPlayerQuestProgress(
                     response.data.id,
                     quest.quest_id,
-                    "inactive"
+                    quest.required_quest_id === null ? "inactive" : "locked"
                   );
                 });
+                console.log("Signup successful:", response.data);
+                navigate("/login");
               })
               .catch((err) => {
                 console.log("Quest fetch error. ", err);
@@ -139,30 +139,29 @@ const SignupForm = () => {
           </select>
         </div>
         <div className="form-group">
-          <label>Gender</label>
           <div>
             <input
               type="radio"
-              id="male"
-              name="gender"
-              value="male"
-              checked={formData.gender === "male"}
+              id="student"
+              name="role"
+              value="student"
+              checked={formData.role === "student"}
               onChange={handleChange}
               required
             />
-            <label htmlFor="male">Male</label>
+            <label htmlFor="student">Student</label>
           </div>
           <div>
             <input
               type="radio"
-              id="female"
-              name="gender"
-              value="female"
-              checked={formData.gender === "female"}
+              id="educator"
+              name="role"
+              value="educator"
+              checked={formData.role === "educator"}
               onChange={handleChange}
               required
             />
-            <label htmlFor="female">Female</label>
+            <label htmlFor="educator">Educator</label>
           </div>
         </div>
         {error && <div className="error">{error}</div>}{" "}
