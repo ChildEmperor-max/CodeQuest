@@ -1,4 +1,4 @@
-SELECT p.npc_id, p.dialog_id, p.quest_id, n.npc_name
+SELECT p.npc_id, p.dialog_id, p.quest_id, n.npc_name, p.quest_status
 FROM player_quests as p
 LEFT JOIN quest as q
 ON q.quest_id = p.quest_id
