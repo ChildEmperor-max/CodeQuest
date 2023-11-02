@@ -34,10 +34,12 @@ module.exports.handleFetchQuestByQuestId = async function (
   }
 };
 
-module.exports.handleFetchNpcQuestStatus = async function (npcId, res, pool) {
+module.exports.handleFetchNpcQuestStatus = async function (req, res, pool) {
   try {
+    const npcId = req.params.npcId;
+    const playerId = req.params.playerId;
     const query = fs.readFileSync(path + "selectStatusByNpcId.sql", "utf8");
-    const result = await pool.query(query, [npcId]);
+    const result = await pool.query(query, [npcId, playerId]);
 
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(result.rows));
@@ -84,12 +86,24 @@ module.exports.handleUpdateQuestProgress = async function (req, res, pool) {
     const player_id = data.player_id;
     const quest_status = data.quest_status;
     const quest_id = data.quest_id;
+
     const updateQuestProgress = fs.readFileSync(
       path + "updateQuestProgress.sql",
       "utf8"
     );
+    const updateLockedStatus = fs.readFileSync(
+      path + "updateLockedStatus.sql",
+      "utf8"
+    );
 
     await pool.query(updateQuestProgress, [quest_status, player_id, quest_id]);
+
+    if (quest_status === "completed") {
+      await pool.query(updateLockedStatus, [player_id, quest_id]);
+    }
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ message: "success" }));
   } catch (error) {
     console.error("Error parsing player_quests data:", error);
     res.writeHead(400, { "Content-Type": "application/json" });
