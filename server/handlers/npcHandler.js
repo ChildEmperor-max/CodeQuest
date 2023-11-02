@@ -7,6 +7,7 @@ function handleUpdateNpcQuestDialog(req, res, pool) {
     const npc_id = data.npc_id;
     const quest_id = data.quest_id;
     const dialog_id = data.dialog_id;
+    const playerId = data.player_id;
     const query = fs.readFileSync(path + "updateNpcQuestDialog.sql", "utf8");
 
     pool
