@@ -206,7 +206,7 @@ const DialogBox = ({
           setCurrentId(0);
           onOpenQuestHint(null);
           if (currentActiveDialog().open_editor) {
-            onOpenEditor(npc.currentQuest[0]);
+            onOpenEditor(npc.currentQuest.data);
           }
         }
 
@@ -218,9 +218,9 @@ const DialogBox = ({
         } else {
           if (currentActiveDialog().open_editor) {
             // if (
-            //   npc.currentQuest[0].quest_status === manageQuest.status.active
+            //   npc.currentQuest.data.quest_status === manageQuest.status.active
             // ) {
-            onOpenEditor(npc.currentQuest[0]);
+            onOpenEditor(npc.currentQuest.data);
             // }
           }
           setCurrentDialog(nextText);
@@ -236,7 +236,7 @@ const DialogBox = ({
       } catch (error) {
         console.log(error);
         if (currentActiveDialog().open_editor) {
-          onOpenEditor(npc.currentQuest[0]);
+          onOpenEditor(npc.currentQuest.data);
         }
         onClose();
         playerInstance.onNpcZone(null);
@@ -281,7 +281,7 @@ const DialogBox = ({
       acceptQuest(quest_id);
     }
     if (currentActiveDialog().open_editor) {
-      onOpenEditor(npc.currentQuest[0]);
+      onOpenEditor(npc.currentQuest.data);
     }
     try {
       const nextNpcDialog = getAllResponse({ id: id });
@@ -352,28 +352,35 @@ const DialogBox = ({
         manageQuest.acceptQuest(quest_id, quest[0]);
         npc.currentQuestStatus.stats = "active";
       } else if (quest[0].quest_status === status.toComplete) {
-        newStatus = status.completed;
-        headerText = "Quest Completed";
-        manageQuest.completedQuest(
-          npc.npcData[0].id,
-          quest[0],
-          quest_id,
-          npc.npcData[0].dialog_id
-        );
-        npc.hasDialog = false;
-        npc.hasQuest = false;
-        npc.currentQuestStatus.stats = "completed";
-        receiveXp(quest[0].reward.xp)
-          .then(() => {
-            console.log("xp gained: ", quest[0].reward.xp);
-            setCurrentXpBar(
-              (characterData.xp.current_xp / characterData.xp.max_xp) * 200
-            );
-            fetchCharacter();
-          })
-          .catch((error) => {
-            console.log("Error in receiving xp: ", error);
-          });
+        try {
+          newStatus = status.completed;
+          headerText = "Quest Completed";
+          manageQuest.completedQuest(
+            npc.npcData[0].id,
+            quest[0],
+            quest_id,
+            npc.npcData[0].dialog_id
+          );
+          npc.hasDialog = false;
+          npc.hasQuest = false;
+          npc.currentQuestStatus.stats = "completed";
+          npc.currentQuest.data = await viewQuestById(
+            npc.currentQuest.data.npc_id
+          );
+          receiveXp(quest[0].reward.xp)
+            .then(() => {
+              console.log("xp gained: ", quest[0].reward.xp);
+              setCurrentXpBar(
+                (characterData.xp.current_xp / characterData.xp.max_xp) * 200
+              );
+              fetchCharacter();
+            })
+            .catch((error) => {
+              console.log("Error in receiving xp: ", error);
+            });
+        } catch (err) {
+          console.log(err);
+        }
       }
       onPopupContent(
         headerText,
@@ -391,7 +398,7 @@ const DialogBox = ({
       const npcData = await viewNpcData(currentTalkingNpc.npcName, playerId);
       const dialog = await viewDialogById(npcData[0].npc_id);
       const questData = await manageQuest.getQuestByQuestId(
-        npc.currentQuest[0].quest_id
+        npc.currentQuest.data.quest_id
       );
       const data = await fetchDialogByBranch(dialog[0].dialog_branch);
       return [data, questData];
