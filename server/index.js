@@ -271,9 +271,8 @@ app.post("/npc/update/quest-dialog", (req, res) => {
   handleUpdateNpcQuestDialog(req, res, pool);
 });
 
-app.get("/player-quest/select/npc-quest/:npcId", (req, res) => {
-  const npcId = req.params.npcId;
-  handleFetchNpcQuestStatus(npcId, res, pool);
+app.get("/player-quest/select/npc-quest/:npcId/:playerId", (req, res) => {
+  handleFetchNpcQuestStatus(req, res, pool);
 });
 
 app.get("/quests/select/npc/:questId", (req, res) => {
