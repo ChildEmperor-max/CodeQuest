@@ -85,7 +85,9 @@ const Quests = ({ onClose }) => {
             <h3>Story Quest</h3>
             <ul id="StoryQuestList">
               {questsData.map((quest, index) =>
-                quest.quest_type === "story" ? (
+                quest.quest_type === "story" &&
+                quest.quest_status !== "completed" &&
+                quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
                     {quest.quest_title}{" "}
                     <div className="quest-side-button-container">
@@ -110,7 +112,8 @@ const Quests = ({ onClose }) => {
             <ul id="Available">
               {questsData.map((quest, index) =>
                 quest.quest_type === "side" &&
-                quest.quest_status !== "completed" ? (
+                quest.quest_status !== "completed" &&
+                quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
                     {quest.quest_title}{" "}
                     <div className="quest-side-button-container">
