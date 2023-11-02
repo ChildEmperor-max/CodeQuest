@@ -73,6 +73,16 @@ export default class NPCLoader extends Interactibles {
         this.stats = val;
       },
     };
+
+    this.currentQuest = {
+      data: null,
+      get npcData() {
+        return this.data;
+      },
+      set npcData(val) {
+        this.data = val;
+      },
+    };
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
       text: npcName,
@@ -90,22 +100,22 @@ export default class NPCLoader extends Interactibles {
     this.goingForward = true;
     this.isGrounded = true;
 
-    this.currentQuest = null;
-
     this.collisionBox = new THREE.Mesh(
       new THREE.BoxGeometry(1.5, 5, 1.5),
       new THREE.MeshBasicMaterial({ visible: false }) // Make the collision box invisible
     );
     this.scene.add(this.collisionBox);
+    this.playerId = localStorage.getItem("playerId");
 
     async function fetchNpcQuest(id) {
       try {
-        this.currentQuest = await viewQuestById(id);
+        const questData = await viewQuestById(id);
+        this.currentQuest.data = questData[0];
 
-        fetchNpcQuestStatus(this.npcData[0].npc_id)
+        fetchNpcQuestStatus(this.npcData[0].npc_id, this.playerId)
           .then((result) => {
             this.setQuestIcon(
-              this.currentQuest[0].quest_type,
+              this.currentQuest.data.quest_type,
               result[0].quest_status
             );
             this.currentQuestStatus.stats = result[0].quest_status;
@@ -120,18 +130,21 @@ export default class NPCLoader extends Interactibles {
 
     async function fetchData(npcName) {
       try {
-        const playerId = localStorage.getItem("playerId");
-        this.npcData = await viewNpcData(npcName, playerId);
+        this.npcData = await viewNpcData(npcName, this.playerId);
         if (this.npcData[0]) {
-          if (this.npcData[0].quest_id) {
-            this.hasQuest = true;
-            fetchNpcQuest.call(this, this.npcData[0].quest_id);
-          }
-          // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
-          if (this.npcData[0].dialog_id) {
-            this.hasDialog = true;
-          } else {
-            this.hasDialog = false;
+          if (this.npcData[0].quest_status !== "locked") {
+            if (this.npcData[0].quest_status !== "completed") {
+              if (this.npcData[0].quest_id) {
+                this.hasQuest = true;
+                fetchNpcQuest.call(this, this.npcData[0].quest_id);
+              }
+              // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
+              if (this.npcData[0].dialog_id) {
+                this.hasDialog = true;
+              } else {
+                this.hasDialog = false;
+              }
+            }
           }
         }
       } catch (error) {

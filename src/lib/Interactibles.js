@@ -50,12 +50,18 @@ export default class Interactibles extends THREE.Object3D {
         this.dynamicLabel.hideQuestIcon();
       }
     }
-    if (this.npcNearPlayer(this.interactRange) && this.hasDialog) {
+    if (
+      this.npcNearPlayer(this.interactRange) &&
+      this.currentQuestStatus.stats !== "locked" &&
+      this.currentQuestStatus.stats !== "completed"
+    ) {
+      // if (this.hasDialog) {
       // this.showInteractLabel();
       if (!this.currentNearNpc.some((npc) => npc.npcName === this.npcName)) {
         this.currentNearNpc.push(this);
         this.player.nearNpcs.push(this);
       }
+      // }
     } else {
       const index = this.currentNearNpc.findIndex(
         (npc) => npc.npcName === this.npcName
