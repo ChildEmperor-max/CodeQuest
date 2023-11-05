@@ -352,35 +352,43 @@ const DialogBox = ({
         manageQuest.acceptQuest(quest_id, quest[0]);
         npc.currentQuestStatus.stats = "active";
       } else if (quest[0].quest_status === status.toComplete) {
-        try {
-          newStatus = status.completed;
-          headerText = "Quest Completed";
-          manageQuest.completedQuest(
-            npc.npcData[0].id,
-            quest[0],
-            quest_id,
-            npc.npcData[0].dialog_id
+        newStatus = status.completed;
+        headerText = "Quest Completed";
+        manageQuest.completedQuest(
+          npc.npcData[0].id,
+          quest[0],
+          quest_id,
+          npc.npcData[0].dialog_id
+        );
+        npc.currentQuestStatus.stats = "completed";
+        if (quest[0].next_quest_id) {
+          const nextQuest = await manageQuest.getQuestByQuestId(
+            quest[0].next_quest_id
           );
-          npc.hasDialog = false;
-          npc.hasQuest = false;
-          npc.currentQuestStatus.stats = "completed";
-          npc.currentQuest.data = await viewQuestById(
-            npc.currentQuest.data.npc_id
+          const nextNpc = npcs.filter((item) => {
+            if (item.npcData[0]) {
+              return item.npcData[0].npc_id === nextQuest[0].npc_id;
+            }
+          });
+          const questData = await viewQuestById(nextQuest[0].quest_id);
+          nextNpc[0].currentQuest.data = questData[0];
+          nextNpc[0].currentQuestStatus.stats = "inactive";
+          nextNpc[0].setQuestIcon(
+            questData[0].quest_type,
+            questData[0].quest_status
           );
-          receiveXp(quest[0].reward.xp)
-            .then(() => {
-              console.log("xp gained: ", quest[0].reward.xp);
-              setCurrentXpBar(
-                (characterData.xp.current_xp / characterData.xp.max_xp) * 200
-              );
-              fetchCharacter();
-            })
-            .catch((error) => {
-              console.log("Error in receiving xp: ", error);
-            });
-        } catch (err) {
-          console.log(err);
         }
+        receiveXp(quest[0].reward.xp)
+          .then(() => {
+            console.log("xp gained: ", quest[0].reward.xp);
+            setCurrentXpBar(
+              (characterData.xp.current_xp / characterData.xp.max_xp) * 200
+            );
+            fetchCharacter();
+          })
+          .catch((error) => {
+            console.log("Error in receiving xp: ", error);
+          });
       }
       onPopupContent(
         headerText,
