@@ -83,6 +83,7 @@ export default class NPCLoader extends Interactibles {
         this.data = val;
       },
     };
+
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
       text: npcName,
@@ -107,12 +108,12 @@ export default class NPCLoader extends Interactibles {
     this.scene.add(this.collisionBox);
     this.playerId = localStorage.getItem("playerId");
 
-    async function fetchNpcQuest(id) {
+    async function fetchNpcQuest(quest_id, npc_id) {
       try {
-        const questData = await viewQuestById(id);
+        const questData = await viewQuestById(quest_id);
         this.currentQuest.data = questData[0];
 
-        fetchNpcQuestStatus(this.npcData[0].npc_id, this.playerId)
+        fetchNpcQuestStatus(npc_id, this.playerId)
           .then((result) => {
             this.setQuestIcon(
               this.currentQuest.data.quest_type,
@@ -136,7 +137,11 @@ export default class NPCLoader extends Interactibles {
             if (this.npcData[0].quest_status !== "completed") {
               if (this.npcData[0].quest_id) {
                 this.hasQuest = true;
-                fetchNpcQuest.call(this, this.npcData[0].quest_id);
+                fetchNpcQuest.call(
+                  this,
+                  this.npcData[0].quest_id,
+                  this.npcData[0].npc_id
+                );
               }
               // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
               if (this.npcData[0].dialog_id) {
