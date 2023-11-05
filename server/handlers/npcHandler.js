@@ -4,14 +4,22 @@ const path = "server/sql/npc/";
 function handleUpdateNpcQuestDialog(req, res, pool) {
   try {
     const data = req.body;
-    const npc_id = data.npc_id;
+    const player_id = data.player_id;
     const quest_id = data.quest_id;
-    const dialog_id = data.dialog_id;
-    const playerId = data.player_id;
-    const query = fs.readFileSync(path + "updateNpcQuestDialog.sql", "utf8");
+    const new_quest_id = data.new_quest_id;
+    const new_dialog_id = data.new_dialog_id;
+    const updateNpcQuestDialog = fs.readFileSync(
+      path + "updateNpcQuestDialog.sql",
+      "utf8"
+    );
 
     pool
-      .query(query, [npc_id, quest_id, dialog_id])
+      .query(updateNpcQuestDialog, [
+        player_id,
+        quest_id,
+        new_quest_id,
+        new_dialog_id,
+      ])
       .then(() => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(
@@ -45,13 +53,15 @@ function fetchNpcQuestDialog(req, res, pool) {
     });
 }
 
-function handleFetchNpcByQuestId(questId, res, pool) {
-  const sqlQuery = fs.readFileSync(
+function handleFetchNpcByQuestId(req, res, pool) {
+  const questId = req.params.questId;
+  const playerId = req.params.playerId;
+  const selectNpcByQuestId = fs.readFileSync(
     "server/sql/npc/selectNpcByQuestId.sql",
     "utf8"
   );
   pool
-    .query(sqlQuery, [questId])
+    .query(selectNpcByQuestId, [questId, playerId])
     .then((result) => {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(result.rows));
