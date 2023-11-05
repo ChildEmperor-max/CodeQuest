@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import GraphicsSettings from "./GraphicsSettings";
-import AlertModal from "../../components/AlertModal";
 
 const Settings = ({
   onClose,
@@ -10,7 +8,7 @@ const Settings = ({
   shadowMap: { shadowMapValue, setShadowMapValue },
 }) => {
   const [currentTab, setCurrentTab] = useState(1);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [isLogout, setIsLogout] = useState(false);
 
   const viewGraphicsSettings = () => {
     setCurrentTab(1);
@@ -32,25 +30,33 @@ const Settings = ({
     );
   };
 
+  const LogoutAlertModal = () => {
+    return (
+      <div className="alert-modal-main-container">
+        <div className="alert-modal-container">
+          <div className="alert-modal-message">
+            Are you sure you want to logout?
+          </div>
+          <div className="alert-modal-buttons">
+            <a href="/login">
+              <button>Yes</button>
+            </a>
+            <button onClick={() => setIsLogout(false)}>No</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      {alertMessage ? (
-        <AlertModal
-          message={alertMessage}
-          onConfirm={() => {
-            setAlertMessage("");
-          }}
-          onCancel={() => setAlertMessage("")}
-        />
-      ) : null}
+      {isLogout ? <LogoutAlertModal /> : null}
       <div className="settings-main-container">
         <div className="settings-navbar">
           <SideNavButton name="Graphics" onClickEvent={viewGraphicsSettings} />
           <SideNavButton name="Controls" onClickEvent={viewControlsSettings} />
           <SideNavButton name="Sounds" onClickEvent={viewSoundsSettings} />
-          <a href="/login">
-            <SideNavButton name="Logout" />
-          </a>
+          <SideNavButton name="Logout" onClickEvent={() => setIsLogout(true)} />
         </div>
         <div className="settings-content-container">
           <CloseButtonModal onClose={onClose} />
