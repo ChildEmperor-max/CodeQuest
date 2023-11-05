@@ -279,7 +279,7 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
       });
   };
   const updateNpcQuestStatus = (questStatus) => {
-    fetchNpcByQuestId(quest_data.quest_id)
+    fetchNpcByQuestId(quest_data.quest_id, playerId)
       .then((result) => {
         const npc = npcArray.filter((item) => {
           return item.npcName === result[0].npc_name;
