@@ -275,9 +275,8 @@ app.get("/player-quest/select/npc-quest/:npcId/:playerId", (req, res) => {
   handleFetchNpcQuestStatus(req, res, pool);
 });
 
-app.get("/quests/select/npc/:questId", (req, res) => {
-  const questId = req.params.questId;
-  handleFetchNpcByQuestId(questId, res, pool);
+app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
+  handleFetchNpcByQuestId(req, res, pool);
 });
 
 app.get("/game", (req, res) => {
