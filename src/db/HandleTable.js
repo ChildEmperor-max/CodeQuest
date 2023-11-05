@@ -755,9 +755,9 @@ export function insertPlayerQuestProgress(player_id, quest_id, quest_status) {
 
 export function updateNpcQuestDialogById(
   player_id,
-  npc_id,
   quest_id,
-  dialog_id
+  new_quest_id,
+  new_dialog_id
 ) {
   return new Promise((resolve, reject) => {
     fetch(npcAPI + "/update/quest-dialog", {
@@ -767,9 +767,9 @@ export function updateNpcQuestDialogById(
       },
       body: JSON.stringify({
         player_id: player_id,
-        npc_id: npc_id,
         quest_id: quest_id,
-        dialog_id: dialog_id,
+        new_quest_id: new_quest_id,
+        new_dialog_id: new_dialog_id,
       }),
     })
       .then((response) => {
@@ -807,8 +807,8 @@ export function fetchNpcQuestStatus(npcId, playerId) {
     });
 }
 
-export function fetchNpcByQuestId(questId) {
-  return fetch(questAPI + "/select/npc/" + questId)
+export function fetchNpcByQuestId(questId, playerId) {
+  return fetch(questAPI + "/select/npc/" + questId + "/" + playerId)
     .then((response) => {
       if (!response.ok) {
         throw new Error(
