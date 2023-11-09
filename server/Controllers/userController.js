@@ -9,8 +9,9 @@ const Player = db.players;
 //hashing users password before its saved to the database with bcrypt
 const signup = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, gender } = req.body;
+    const { role, firstName, lastName, email, password, gender } = req.body;
     const data = {
+      role,
       firstName,
       lastName,
       email,
