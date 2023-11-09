@@ -174,7 +174,7 @@ app.get("/quests/completed", (req, res) => {
   handleFetchCompletedQuests(req, res, pool);
 });
 
-app.get("/quests/completed/count", (req, res) => {
+app.get("/quests/completed/count/:playerId", (req, res) => {
   handleFetchCompletedQuestCount(req, res, pool);
 });
 
