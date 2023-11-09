@@ -21,7 +21,7 @@ import AchievementProfile from "./AchievementProfile";
 
 const CharacterProfile = ({ onClose }) => {
   const [characterData, setCharacterData] = useState(undefined);
-  const [completedQuestCount, setCompletedQuestCount] = useState(0);
+  const [completedQuests, setCompletedQuests] = useState([]);
   const [currentTab, setCurrentTab] = useState(1);
   const [userName, setUserName] = useState("");
   const [currentBio, setCurrentBio] = useState("");
@@ -40,7 +40,8 @@ const CharacterProfile = ({ onClose }) => {
   useEffect(() => {
     viewCompletedQuests()
       .then((questData) => {
-        setCompletedQuestCount(questData[0].count);
+        console.log(questData);
+        setCompletedQuests(questData);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
@@ -93,7 +94,8 @@ const CharacterProfile = ({ onClose }) => {
 
   const viewCompletedQuests = async () => {
     try {
-      const questData = await fetchCompletedQuestCount();
+      const playerId = JSON.parse(localStorage.getItem("playerId"));
+      const questData = await fetchCompletedQuestCount(playerId);
       return questData;
     } catch (error) {
       console.error("[ERROR]:", error);
@@ -482,8 +484,15 @@ const CharacterProfile = ({ onClose }) => {
               <div id="completed-quests-tab">
                 <div className="text-container">
                   <div className="content-header">
-                    Completed quests: {completedQuestCount}
+                    Completed quests: {completedQuests[0].total_count}
                   </div>
+                  {completedQuests.map((quest, index) => (
+                    <div key={index}>
+                      <p className="horizontal-long-rectangle">
+                        {quest.quest_title}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </>
