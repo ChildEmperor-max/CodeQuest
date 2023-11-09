@@ -44,10 +44,13 @@ function handleFetchCompletedQuests(req, res, pool) {
 }
 
 function handleFetchCompletedQuestCount(req, res, pool) {
+  const playerId = req.params.playerId;
+  const selectQuestCompleted = fs.readFileSync(
+    "server/sql/playerQuests/selectQuestCompleted.sql",
+    "utf8"
+  );
   pool
-    .query(
-      "SELECT COUNT(*) FROM player_quests WHERE quest_status = 'completed'"
-    )
+    .query(selectQuestCompleted, [playerId])
     .then((result) => {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(result.rows));
