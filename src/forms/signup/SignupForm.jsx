@@ -11,6 +11,7 @@ import {
 const SignupForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    role: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -18,6 +19,7 @@ const SignupForm = () => {
     gender: "",
   });
   const [error, setError] = useState("");
+  const [currentTab, setCurrentTab] = useState(1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +54,7 @@ const SignupForm = () => {
                   insertPlayerQuestProgress(
                     response.data.id,
                     quest.quest_id,
-                    quest.required_quest_id === null ? "inactive" : "locked"
+                    quest.next_quest_id === null ? "inactive" : "locked"
                   );
                 });
                 console.log("Signup successful:", response.data);
@@ -78,100 +80,113 @@ const SignupForm = () => {
 
   return (
     <div className="signup-form-container">
-      <h2>Signup</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="gender">Gender</label>
-          <select
-            id="gender"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <div>
-            <input
-              type="radio"
-              id="student"
-              name="role"
-              value="student"
-              checked={formData.role === "student"}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="student">Student</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="educator"
-              name="role"
-              value="educator"
-              checked={formData.role === "educator"}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="educator">Educator</label>
-          </div>
-        </div>
-        {error && <div className="error">{error}</div>}{" "}
-        <div className="form-group">
-          <button type="submit">Signup</button>
+      <div className="signup-sub-container">
+        <h2>Signup</h2>
+        <form onSubmit={handleSubmit}>
+          {currentTab === 1 && (
+            <>
+              <div className="form-group">
+                <button
+                  name="role"
+                  onClick={() => {
+                    setFormData({ ...formData, role: "Student" });
+                    setCurrentTab(2);
+                  }}
+                >
+                  Student
+                </button>
+                <button
+                  name="role"
+                  onClick={() => {
+                    setFormData({ ...formData, role: "Educator" });
+                    setCurrentTab(2);
+                  }}
+                >
+                  Educator
+                </button>
+              </div>
+            </>
+          )}
+          {currentTab === 2 && (
+            <>
+              <div className="form-group">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="gender">Gender</label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <button onClick={() => setCurrentTab(1)}>Back</button>
+                <button onClick={() => setCurrentTab(3)}>Next</button>
+              </div>
+            </>
+          )}
+          {currentTab === 3 && (
+            <>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <button onClick={() => setCurrentTab(2)}>Back</button>
+                <button type="submit">Signup</button>
+              </div>
+            </>
+          )}
+          {error && <div className="error">{error}</div>}
           <Link to="/login">
             <p>Already have an account?</p>
           </Link>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
