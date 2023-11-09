@@ -97,6 +97,9 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
+
+  position: absolute;
+  transform: translate(620%, 550%);
 }
 
 .interact-button {

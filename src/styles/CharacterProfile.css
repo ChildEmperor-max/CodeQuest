@@ -290,6 +290,17 @@ textarea {
     overflow-x: hidden;
 }
 
+.horizontal-long-rectangle {
+    background-color: rgba(128, 128, 128, 0.575);
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.horizontal-long-rectangle:hover {
+    background-color: grey;
+}
+
 .glitch {
     text-shadow: 0 0 10px rgb(9, 10, 71);
     animation: glitchy 0.5s step-end;
