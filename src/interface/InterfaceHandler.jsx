@@ -307,9 +307,9 @@ export default function InterfaceHandler({
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       )}
 
-      <div>
+      <div className="ui-container" id="interface-container">
         {showButtons && (
-          <div className="ui-container" id="interface-container">
+          <>
             <div className="right-container">
               <InterfaceButton
                 name="Quests"
@@ -386,13 +386,13 @@ export default function InterfaceHandler({
                 shortcutKey="H"
               /> */}
             </div>
+            {isPlayerNearNpc && (
+              <div className="interact-action-container">
+                <div className="interact-button">E</div>
+                <span>Interact</span>
+              </div>
+            )}
             <div className="player-actions-container">
-              {isPlayerNearNpc && (
-                <div className="interact-action-container">
-                  <div className="interact-button">E</div>
-                  <span>Interact</span>
-                </div>
-              )}
               <div
                 className={`sprint-image-container ${
                   isPlayerRunning ? "sprint-triggered" : "sprint-enabled"
@@ -408,7 +408,7 @@ export default function InterfaceHandler({
                 </a>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </>
