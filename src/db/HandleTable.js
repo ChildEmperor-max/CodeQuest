@@ -332,9 +332,9 @@ export async function fetchCompletedQuests() {
   }
 }
 
-export async function fetchCompletedQuestCount() {
+export async function fetchCompletedQuestCount(playerId) {
   try {
-    const response = await fetch(questAPI + "/completed/count");
+    const response = await fetch(questAPI + "/completed/count/" + playerId);
     const data = await response.json();
     return data;
   } catch (error) {
