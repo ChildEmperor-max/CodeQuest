@@ -10,6 +10,7 @@ import CodeEditor from "./Editor/CodeEditor";
 import Popup from "./Popups/Popup";
 import keys from "../lib/KeyControls";
 import QuestHint from "./Quests/QuestHint";
+import ManageQuest from "../db/ManageQuest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTasks,
@@ -25,6 +26,7 @@ import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
 import { fetchCharacterById } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
 import { receiveXp } from "../lib/XpManager";
+import { useQuestsData } from "../components/QuestContext";
 
 export default function InterfaceHandler({
   settings: {
@@ -48,6 +50,8 @@ export default function InterfaceHandler({
     editor: "editor",
   };
   const navigate = useNavigate();
+  const { availableQuests, updateAvailableQuests } = useQuestsData();
+  const manageQuest = new ManageQuest();
   const [characterData, setCharacterData] = useState(null);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -70,10 +74,28 @@ export default function InterfaceHandler({
   const [nextHint, setNextHint] = useState(null);
 
   const [currentXpBar, setCurrentXpBar] = useState(0);
+  const [showMiniQuestDisplay, setShowMiniQuestDisplay] = useState(true);
 
   useEffect(() => {
     displayUsername();
-  }, []);
+    viewQuests()
+      .then((data) => {
+        updateAvailableQuests(data);
+      })
+      .catch((error) => {
+        console.error("[ERROR]:", error);
+      });
+  }, [availableQuests, updateAvailableQuests]);
+
+  const viewQuests = async () => {
+    try {
+      const quests = await manageQuest.getPlayerQuests();
+      return quests;
+    } catch (error) {
+      console.error("InterfaceHandler.jsx error viewing the quests: ", error);
+      throw error;
+    }
+  };
 
   const displayUsername = () => {
     const playerId = JSON.parse(localStorage.getItem("playerId"));
@@ -97,13 +119,21 @@ export default function InterfaceHandler({
 
   const toggleInterface = async (interfaceName) => {
     if (currentOpenedInterface === interfaceName) {
-      setShowButtons(true);
       setCurrentOpenedInterface(interfaces.none);
-      enableKeyListeners();
+      setShowButtons(true);
+      // enableKeyListeners();
+
+      // viewQuests()
+      //   .then((data) => {
+      //     updateAvailableQuests(data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("[ERROR]:", error);
+      //   });
     } else {
       setCurrentOpenedInterface(interfaceName);
       setShowButtons(false);
-      disableKeyListeners();
+      // disableKeyListeners();
     }
     displayUsername();
   };
@@ -352,31 +382,59 @@ export default function InterfaceHandler({
                 shortcutKey="P"
               /> */}
               {characterData && (
-                <>
-                  <div onClick={() => toggleInterface(interfaces.profile)}>
-                    <img
-                      src="/src/assets/icons/default-avatar.png"
-                      id="avatar-display"
-                      alt="Avatar"
-                    />
-                  </div>
-                  <div className="profile-display-container">
-                    <p>{characterData.character_name}</p>
-                    <p>Level: {characterData.level}</p>
-                    <span>XP:</span>
-                    <div className="xp-bar-background">
-                      <div
-                        className="xp-bar"
-                        style={{
-                          width: `${currentXpBar}px`,
-                        }}
-                      ></div>
-                      <p>
-                        {characterData.xp.current_xp}/{characterData.xp.max_xp}
-                      </p>
+                <div className="left-ui-container">
+                  <div className="horizontal-container">
+                    <div onClick={() => toggleInterface(interfaces.profile)}>
+                      <img
+                        src="/src/assets/icons/default-avatar.png"
+                        id="avatar-display"
+                        alt="Avatar"
+                      />
+                    </div>
+                    <div className="profile-display-container">
+                      <p>{characterData.character_name}</p>
+                      <p>Level: {characterData.level}</p>
+                      <span>XP:</span>
+                      <div className="xp-bar-background">
+                        <div
+                          className="xp-bar"
+                          style={{
+                            width: `${currentXpBar}px`,
+                          }}
+                        ></div>
+                        <p>
+                          {characterData.xp.current_xp}/
+                          {characterData.xp.max_xp}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </>
+                  <div className="quest-display-container">
+                    <h4
+                      onClick={() => setShowMiniQuestDisplay((prev) => !prev)}
+                    >
+                      Quests
+                      <span>{showMiniQuestDisplay ? "-" : "+"}</span>
+                    </h4>
+                    {showMiniQuestDisplay
+                      ? availableQuests.map((quest, index) => (
+                          <div className="quest-display-content" key={index}>
+                            <p
+                              className="quest-display-title"
+                              onClick={() => toggleInterface(interfaces.quests)}
+                            >
+                              {quest.quest_title}
+                            </p>
+                            <p className="quest-display-action">
+                              {quest.quest_status === "active"
+                                ? "Start"
+                                : "Navigate"}
+                            </p>
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                </div>
               )}
               {/* <InterfaceButton
                 name="Help"
