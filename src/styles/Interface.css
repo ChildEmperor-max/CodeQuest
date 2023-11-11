@@ -21,6 +21,50 @@
   margin: 5px;
 }
 
+.left-ui-container {
+  user-select: none;
+}
+
+.horizontal-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.quest-display-container {
+  max-width: 200px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.quest-display-content:hover {
+  background: linear-gradient(90deg, #141729 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.quest-display-container h4 {
+  background: linear-gradient(90deg, rgba(134, 158, 0, 0.671) 0%, rgba(0, 0, 0, 0) 100%);
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.quest-display-container h4:hover {
+  background-color: rgba(134, 158, 0, 0.671);
+}
+
+.quest-display-content {
+  background: linear-gradient(90deg, rgba(27, 27, 27, 0.671) 0%, rgba(0, 0, 0, 0) 100%);
+  padding: 2px;
+}
+
+.quest-display-title {
+  font-size: 18px;
+}
+
+.quest-display-action {
+  font-size: 15px;
+}
+
 #avatar-display {
   border-radius: 50%;
   background-color: rgb(3, 6, 56);
@@ -77,6 +121,7 @@
   top: 50%;
   left: 50%;
   cursor:default;
+  user-select: none;
 }
 
 .player-actions-container {
@@ -90,6 +135,10 @@
   gap: 15px;
   -webkit-text-stroke: 1px black;
   font-size: 23px;
+}
+
+#distance-label {
+  background-color: red;
 }
 
 .interact-action-container {
