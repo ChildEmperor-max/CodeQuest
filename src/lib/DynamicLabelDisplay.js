@@ -56,7 +56,7 @@ export default class DynamicLabel {
 
   showInteractLabel(position, camera) {
     this.interactLabel.style.display = "flex";
-    this.updateInteractLabel(position, camera, this.interact);
+    // this.updateInteractLabel(position, camera, this.interactLabel);
   }
 
   hideInteractLabel() {
@@ -96,6 +96,35 @@ export default class DynamicLabel {
 
   hideQuestIcon() {
     this.questIcon.style.display = "none";
+  }
+
+  // DISTANCE LABEL
+  setDistanceLabel({ camera, position }) {
+    this.distanceLabel = document.createElement("div");
+    this.distanceLabel.setAttribute("id", "distance-label");
+    this.distanceLabel.innerHTML = "123";
+
+    var coords = this.toXYCoords(position, camera);
+    this.distanceLabel.style.top = coords.y + "px";
+    this.distanceLabel.style.left = coords.x + "px";
+
+    this.hideDistanceLabel();
+    document.body.appendChild(this.distanceLabel);
+  }
+
+  updateDistanceLabel(position, camera) {
+    var coords = this.toXYCoords(position, camera);
+    this.distanceLabel.style.top = coords.y + "px";
+    this.distanceLabel.style.left = coords.x + "px";
+  }
+
+  showDistanceLabel(position, camera) {
+    this.distanceLabel.style.display = "flex";
+    this.updateDistanceLabel(position, camera, this.distanceLabel);
+  }
+
+  hideDistanceLabel() {
+    this.distanceLabel.style.display = "none";
   }
 
   toXYCoords(position, camera) {
