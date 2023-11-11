@@ -6,18 +6,21 @@ import LandingPage from "./forms/index/LandingPage";
 import Game from "./Game";
 import { PlayerProvider } from "./components/PlayerContext";
 import { WorldProvider } from "./components/WorldContext";
+import { QuestsDataProvider } from "./components/QuestContext";
 
 function App() {
   return (
     <>
       <WorldProvider>
         <PlayerProvider>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/game" element={<Game />} />
-          </Routes>
+          <QuestsDataProvider>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/signup" element={<SignupForm />} />
+              <Route path="/game" element={<Game />} />
+            </Routes>
+          </QuestsDataProvider>
         </PlayerProvider>
       </WorldProvider>
     </>
