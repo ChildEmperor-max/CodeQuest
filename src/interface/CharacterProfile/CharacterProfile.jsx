@@ -40,7 +40,6 @@ const CharacterProfile = ({ onClose }) => {
   useEffect(() => {
     viewCompletedQuests()
       .then((questData) => {
-        console.log(questData);
         setCompletedQuests(questData);
       })
       .catch((error) => {
@@ -484,15 +483,18 @@ const CharacterProfile = ({ onClose }) => {
               <div id="completed-quests-tab">
                 <div className="text-container">
                   <div className="content-header">
-                    Completed quests: {completedQuests[0].total_count}
+                    Completed quests:{" "}
+                    {completedQuests[0] ? completedQuests[0].total_count : 0}
                   </div>
-                  {completedQuests.map((quest, index) => (
-                    <div key={index}>
-                      <p className="horizontal-long-rectangle">
-                        {quest.quest_title}
-                      </p>
-                    </div>
-                  ))}
+                  {completedQuests[0]
+                    ? completedQuests.map((quest, index) => (
+                        <div key={index}>
+                          <p className="horizontal-long-rectangle">
+                            {quest.quest_title}
+                          </p>
+                        </div>
+                      ))
+                    : null}
                 </div>
               </div>
             </>
