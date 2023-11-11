@@ -26,6 +26,11 @@ export default class Interactibles extends THREE.Object3D {
       camera: camera,
       position: this.getInteractIconPosition(),
     });
+
+    this.dynamicLabel.setDistanceLabel({
+      camera: camera,
+      position: this.getPositionTracker(),
+    });
   }
 
   setQuestIcon(questType, questStatus) {
@@ -56,18 +61,19 @@ export default class Interactibles extends THREE.Object3D {
         this.dynamicLabel.hideQuestIcon();
       }
     }
-    if (
-      (this.npcNearPlayer(this.interactRange) &&
-        this.currentQuestStatus.stats === "inactive") ||
-      this.currentQuestStatus.stats === "toComplete"
-    ) {
-      // if (this.hasDialog) {
-      // this.showInteractLabel();
-      if (!this.currentNearNpc.some((npc) => npc.npcName === this.npcName)) {
-        this.currentNearNpc.push(this);
-        this.player.nearNpcs.push(this);
+    if (this.npcNearPlayer(this.interactRange)) {
+      if (
+        this.currentQuestStatus.stats === "inactive" ||
+        this.currentQuestStatus.stats === "toComplete"
+      ) {
+        // if (this.hasDialog) {
+        // this.showInteractLabel();
+        if (!this.currentNearNpc.some((npc) => npc.npcName === this.npcName)) {
+          this.currentNearNpc.push(this);
+          this.player.nearNpcs.push(this);
+        }
+        // }
       }
-      // }
     } else {
       const index = this.currentNearNpc.findIndex(
         (npc) => npc.npcName === this.npcName
@@ -109,6 +115,14 @@ export default class Interactibles extends THREE.Object3D {
     if (this.interactingWithPlayer()) {
       this.dynamicLabel.hideInteractLabel();
     }
+  }
+
+  showDistanceToPlayer() {
+    this.dynamicLabel.showDistanceLabel(this.getPositionTracker(), this.camera);
+  }
+
+  hideDistanceToPlayer() {
+    this.dynamicLabel.hideDistanceLabel();
   }
 
   interactingWithPlayer() {
