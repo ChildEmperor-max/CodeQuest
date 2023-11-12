@@ -112,15 +112,16 @@ export default class DynamicLabel {
     document.body.appendChild(this.distanceLabel);
   }
 
-  updateDistanceLabel(position, camera) {
+  updateDistanceLabel(position, camera, distance) {
     var coords = this.toXYCoords(position, camera);
+    this.distanceLabel.innerHTML = distance + "m";
     this.distanceLabel.style.top = coords.y + "px";
     this.distanceLabel.style.left = coords.x + "px";
   }
 
-  showDistanceLabel(position, camera) {
+  showDistanceLabel(position, camera, distance) {
     this.distanceLabel.style.display = "flex";
-    this.updateDistanceLabel(position, camera, this.distanceLabel);
+    this.updateDistanceLabel(position, camera, distance);
   }
 
   hideDistanceLabel() {
