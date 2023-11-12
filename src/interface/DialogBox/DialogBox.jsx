@@ -16,6 +16,7 @@ import ManageQuest from "../../db/ManageQuest";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { useWorldContext } from "../../components/WorldContext";
 import { receiveXp } from "../../lib/XpManager";
+import { useQuestsData } from "../../components/QuestContext";
 
 const DialogBox = ({
   npc,
@@ -35,6 +36,7 @@ const DialogBox = ({
   const playerId = localStorage.getItem("playerId");
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
+  const { updateAvailableQuests } = useQuestsData();
 
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(npc);
 
@@ -361,6 +363,13 @@ const DialogBox = ({
           npc.npcData[0].dialog_id
         );
         npc.currentQuestStatus.stats = "completed";
+        viewQuests()
+          .then((data) => {
+            updateAvailableQuests(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         if (quest[0].next_quest_id) {
           const nextQuest = await manageQuest.getQuestByQuestId(
             quest[0].next_quest_id
@@ -437,6 +446,16 @@ const DialogBox = ({
       return data;
     } catch (error) {
       console.error("[ERROR]:", error);
+      throw error;
+    }
+  };
+
+  const viewQuests = async () => {
+    try {
+      const quests = await manageQuest.getPlayerQuests();
+      return quests;
+    } catch (error) {
+      console.error("InterfaceHandler.jsx error viewing the quests: ", error);
       throw error;
     }
   };
