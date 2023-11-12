@@ -1,16 +1,15 @@
-
-  /* GOOGLE FONTS */
-  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap");
+/* GOOGLE FONTS */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap");
 
 .landing-page-container {
-    display: block;
-    overflow: auto;
-  }
+  display: block;
+  overflow: auto;
+}
 
-  .buttons-container {
-    display: block;
-  }
-  
+.buttons-container {
+  display: block;
+}
+
 /* VARIABLES CSS */
 :root {
   --header-height: 3.5rem;
@@ -1057,6 +1056,7 @@ summary {
   color: #ffffff;
   display: flex;
   text-align: justify;
+  cursor: help;
 }
 
 summary {
@@ -1065,6 +1065,7 @@ summary {
   color: #263238;
   font-weight: 900;
   text-align: left;
+  cursor: pointer;
 }
 
 /* Support */
