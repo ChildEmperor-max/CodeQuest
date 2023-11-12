@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useMemo } from "react";
 
 const QuestsDataContext = createContext();
 
@@ -10,24 +10,30 @@ export const QuestsDataProvider = ({ children }) => {
     setQuestsData(newData);
   };
 
-  const updateAvailableQuests = (newData) => {
-    const unlockedQuests = newData.filter((item) => {
-      return (
-        item.quest_status !== "locked" && item.quest_status !== "completed"
-      );
-    });
-    setAvailableQuests(unlockedQuests);
-  };
+  const updateAvailableQuests = useMemo(
+    () => (newData) => {
+      const unlockedQuests = newData.filter((item) => {
+        return (
+          item.quest_status !== "locked" && item.quest_status !== "completed"
+        );
+      });
+      setAvailableQuests(unlockedQuests);
+    },
+    [setAvailableQuests]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      questsData,
+      availableQuests,
+      updateQuestsData,
+      updateAvailableQuests,
+    }),
+    [questsData, availableQuests, updateQuestsData, updateAvailableQuests]
+  );
 
   return (
-    <QuestsDataContext.Provider
-      value={{
-        questsData,
-        availableQuests,
-        updateQuestsData,
-        updateAvailableQuests,
-      }}
-    >
+    <QuestsDataContext.Provider value={contextValue}>
       {children}
     </QuestsDataContext.Provider>
   );

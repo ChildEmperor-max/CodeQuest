@@ -84,6 +84,13 @@ export default class NPCLoader extends Interactibles {
       },
     };
 
+    this.distanceDisplay = {
+      shown: false,
+      set shownDistance(val) {
+        this.shown = val;
+      },
+    };
+
     // Set Dynamic Npc name label
     this.dynamicLabel.setNpcNameLabel({
       text: npcName,

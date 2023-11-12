@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-.quest-display-content:hover {
+.quest-display-title:hover {
   background: linear-gradient(90deg, #141729 0%, rgba(0, 0, 0, 0) 100%);
 }
 
@@ -59,10 +59,15 @@
 
 .quest-display-title {
   font-size: 18px;
+  border-top: 1px solid white;
 }
 
 .quest-display-action {
   font-size: 15px;
+}
+
+.quest-display-action:hover {
+  background: linear-gradient(90deg, #141729 0%, rgba(0, 0, 0, 0) 100%);
 }
 
 #avatar-display {
@@ -139,6 +144,9 @@
 
 #distance-label {
   background-color: red;
+  padding: 0 10px;
+  font-size: 22px;
+  position: absolute;
 }
 
 .interact-action-container {

@@ -27,6 +27,7 @@ import { fetchCharacterById } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
 import { receiveXp } from "../lib/XpManager";
 import { useQuestsData } from "../components/QuestContext";
+import { useWorldContext } from "../components/WorldContext";
 
 export default function InterfaceHandler({
   settings: {
@@ -50,8 +51,10 @@ export default function InterfaceHandler({
     editor: "editor",
   };
   const navigate = useNavigate();
-  const { availableQuests, updateAvailableQuests } = useQuestsData();
   const manageQuest = new ManageQuest();
+  const { npcs } = useWorldContext();
+  const { availableQuests, updateAvailableQuests } = useQuestsData();
+
   const [characterData, setCharacterData] = useState(null);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
@@ -75,6 +78,7 @@ export default function InterfaceHandler({
 
   const [currentXpBar, setCurrentXpBar] = useState(0);
   const [showMiniQuestDisplay, setShowMiniQuestDisplay] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     displayUsername();
@@ -85,7 +89,7 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-  }, [availableQuests, updateAvailableQuests]);
+  }, [updateAvailableQuests]);
 
   const viewQuests = async () => {
     try {
@@ -243,6 +247,28 @@ export default function InterfaceHandler({
     setShowPopup(true);
   };
 
+  const startQuestAction = (quest) => {
+    if (quest.quest_status === "active") {
+      toggleInterface(interfaces.quests);
+      setOpenQuestDetails(true);
+    } else {
+      const questNpc = npcs.filter((item) => {
+        let npc;
+        if (item.npcData[0]) {
+          npc = item.npcData[0].npc_id === quest.npc_id;
+        }
+        return npc;
+      });
+      if (isNavigating) {
+        setIsNavigating(false);
+        questNpc[0].hideDistanceToPlayer();
+      } else {
+        setIsNavigating(true);
+        questNpc[0].showDistanceToPlayer();
+      }
+    }
+  };
+
   return (
     <>
       {showPopup && (
@@ -374,13 +400,6 @@ export default function InterfaceHandler({
               />
             </div>
             <div className="left-container">
-              {/* <InterfaceButton
-                name="Profile"
-                icon={faUser}
-                id="profile-button"
-                onClickEvent={() => toggleInterface(interfaces.profile)}
-                shortcutKey="P"
-              /> */}
               {characterData && (
                 <div className="left-ui-container">
                   <div className="horizontal-container">
@@ -425,9 +444,14 @@ export default function InterfaceHandler({
                             >
                               {quest.quest_title}
                             </p>
-                            <p className="quest-display-action">
+                            <p
+                              className="quest-display-action"
+                              onClick={() => startQuestAction(quest)}
+                            >
                               {quest.quest_status === "active"
                                 ? "Start"
+                                : isNavigating
+                                ? "Cancel"
                                 : "Navigate"}
                             </p>
                           </div>
@@ -436,13 +460,6 @@ export default function InterfaceHandler({
                   </div>
                 </div>
               )}
-              {/* <InterfaceButton
-                name="Help"
-                icon={faQuestionCircle}
-                id="help-button"
-                onClickEvent={() => toggleInterface(interfaces.helper)}
-                shortcutKey="H"
-              /> */}
             </div>
             {isPlayerNearNpc && (
               <div className="interact-action-container">

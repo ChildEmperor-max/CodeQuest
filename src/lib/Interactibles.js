@@ -84,6 +84,19 @@ export default class Interactibles extends THREE.Object3D {
       }
       // this.hideInteractLabel();
     }
+    if (this.distanceDisplay.shown) {
+      if (this.inCameraView()) {
+        this.dynamicLabel.showDistanceLabel(
+          this.getPositionTracker(),
+          this.camera,
+          this.distanceToPlayer()
+        );
+      } else {
+        this.dynamicLabel.hideDistanceLabel();
+      }
+    } else {
+      this.dynamicLabel.hideDistanceLabel();
+    }
   }
 
   updateShowQuestIcon() {
@@ -118,15 +131,24 @@ export default class Interactibles extends THREE.Object3D {
   }
 
   showDistanceToPlayer() {
-    this.dynamicLabel.showDistanceLabel(this.getPositionTracker(), this.camera);
+    this.distanceDisplay.shown = true;
+    this.dynamicLabel.showDistanceLabel(
+      this.getPositionTracker(),
+      this.camera,
+      this.distanceToPlayer()
+    );
   }
 
   hideDistanceToPlayer() {
-    this.dynamicLabel.hideDistanceLabel();
+    this.distanceDisplay.shown = false;
   }
 
   interactingWithPlayer() {
     return this.npcName === this.player.interactingWithNpc;
+  }
+
+  distanceToPlayer() {
+    return Math.floor(this.player.getPosition().distanceTo(this.getPosition()));
   }
 
   npcNearPlayer(range) {
