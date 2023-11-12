@@ -346,7 +346,7 @@ export default function InterfaceHandler({
                 icon={faTasks}
                 id="quest-button"
                 onClickEvent={() => toggleInterface(interfaces.quests)}
-                shortcutKey="Q"
+                // shortcutKey="Q"
               />
               <InterfaceButton
                 name="Editor"
