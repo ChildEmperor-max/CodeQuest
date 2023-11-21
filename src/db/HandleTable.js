@@ -850,3 +850,35 @@ export function insertCharacterByPlayerId(player_id) {
       });
   });
 }
+
+export function fetchCharactersByLevel() {
+  return fetch(characterAPI + "/select/level")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching characters data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function fetchCharacterByLevelRank(playerId) {
+  return fetch(characterAPI + "/select/level/" + playerId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching characters data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
