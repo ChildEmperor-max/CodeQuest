@@ -1,22 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import CloseButtonModal from "../../components/CloseButtonModal";
+import {
+  fetchCharacterByLevelRank,
+  fetchCharactersByLevel,
+} from "../../db/HandleTable";
 
 const Leaderboard = ({ onClose }) => {
-  const data = [
-    { rank: 1, name: "Player_1", level: 43 },
-    { rank: 2, name: "Player_2", level: 40 },
-    { rank: 3, name: "Player_3", level: 30 },
-    { rank: 4, name: "Player_4", level: 28 },
-    { rank: 5, name: "Player_5", level: 26 },
-    { rank: 6, name: "Player_6", level: 25 },
-    { rank: 7, name: "Player_7", level: 23 },
-    { rank: 8, name: "Player_8", level: 20 },
-    { rank: 9, name: "Player_8", level: 15 },
-    { rank: 10, name: "Player_10", level: 8 },
-    { rank: 25, name: "Player_50", level: 3 },
-  ];
+  const [levelRank, setLevelRank] = useState([]);
+  const [currentPlayerRank, setCurrentPlayerRank] = useState(null);
+  useEffect(() => {
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
+    fetchCharactersByLevel()
+      .then((result) => {
+        setLevelRank(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    fetchCharacterByLevelRank(playerId)
+      .then((result) => {
+        setCurrentPlayerRank(result[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div className="leaderboard-main-container">
       <div className="leaderboard-header">
@@ -31,11 +41,11 @@ const Leaderboard = ({ onClose }) => {
         <p>3</p> */}
         <br />
         <ul className="toplist">
-          {data.map((item) => (
-            <li key={item.rank} data-rank={item.rank}>
+          {levelRank.map((item, index) => (
+            <li key={index} data-rank={index + 1}>
               <div className="thumb">
-                <span className="img" data-name={item.name}></span>
-                <span className="name">{item.name}</span>
+                <span className="img" data-name={item.character_name}></span>
+                <span className="name">{item.character_name}</span>
                 <span className="stat">
                   <b>{item.level}</b>Level
                 </span>
@@ -43,6 +53,23 @@ const Leaderboard = ({ onClose }) => {
               <div className="more">{/* To be designed & implemented */}</div>
             </li>
           ))}
+          {currentPlayerRank ? (
+            <li
+              key={currentPlayerRank.player_id}
+              data-rank={parseInt(currentPlayerRank.rank)}
+            >
+              <div className="thumb">
+                <span
+                  className="img"
+                  data-name={currentPlayerRank.character_name}
+                ></span>
+                <span className="name">{currentPlayerRank.character_name}</span>
+                <span className="stat">
+                  <b>{currentPlayerRank.level}</b>Level
+                </span>
+              </div>
+            </li>
+          ) : null}
         </ul>
       </div>
     </div>
