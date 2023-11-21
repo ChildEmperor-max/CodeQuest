@@ -62,6 +62,8 @@ const {
   handleUpdateMaxXp,
   handleUpdateXp,
   handleUpdateLevel,
+  handleFetchCharactersByLevel,
+  handleFetchCharacterByLevelRank,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -248,9 +250,8 @@ app.get("/player/get-by-email/:email", (req, res) => {
   handleFetchPlayerByEmail(email, res, pool);
 });
 
-app.get("/player-quest/select/quests/:id", (req, res) => {
-  const id = req.params.id;
-  handleFetchQuestsByPlayerId(id, res, pool);
+app.get("/character/select/level", (req, res) => {
+  handleFetchCharactersByLevel(req, res, pool);
 });
 
 app.get("/player-quest/select/quest/:playerId/:questId", (req, res) => {
@@ -273,6 +274,19 @@ app.post("/npc/update/quest-dialog", (req, res) => {
 
 app.get("/player-quest/select/npc-quest/:npcId/:playerId", (req, res) => {
   handleFetchNpcQuestStatus(req, res, pool);
+});
+
+app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
+  handleFetchNpcByQuestId(req, res, pool);
+});
+
+app.get("/player-quest/select/quests/:id", (req, res) => {
+  const id = req.params.id;
+  handleFetchQuestsByPlayerId(id, res, pool);
+});
+
+app.get("/character/select/level/:playerId", (req, res) => {
+  handleFetchCharacterByLevelRank(req, res, pool);
 });
 
 app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
