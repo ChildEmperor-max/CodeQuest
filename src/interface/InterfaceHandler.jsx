@@ -225,9 +225,9 @@ export default function InterfaceHandler({
       if (event.code === "KeyP" && keys.p.pressed) {
         toggleInterface(interfaces.profile);
       }
-      if (event.code === "KeyH" && keys.h.pressed) {
-        toggleInterface(interfaces.helper);
-      }
+      // if (event.code === "KeyH" && keys.h.pressed) {
+      //   toggleInterface(interfaces.helper);
+      // }
       if (event.code === "KeyQ" && keys.q.pressed) {
         toggleInterface(interfaces.quests);
       }
