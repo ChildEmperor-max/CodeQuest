@@ -14,6 +14,38 @@ module.exports.handleFetchCharacterById = async function (id, res, pool) {
   }
 };
 
+module.exports.handleFetchCharacterByLevelRank = async function (
+  req,
+  res,
+  pool
+) {
+  try {
+    const playerId = req.params.playerId;
+    const query = fs.readFileSync(
+      path + "selectCharacterByLevelRank.sql",
+      "utf8"
+    );
+    const result = await pool.query(query, [playerId]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error fetching character by id:", error);
+  }
+};
+
+module.exports.handleFetchCharactersByLevel = async function (req, res, pool) {
+  try {
+    const query = "SELECT * FROM character ORDER BY level DESC LIMIT 10";
+    const result = await pool.query(query);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error fetching characters by level:", error);
+  }
+};
+
 module.exports.handleInsertCharacterByPlayerId = function (req, res, pool) {
   try {
     const data = req.body;
