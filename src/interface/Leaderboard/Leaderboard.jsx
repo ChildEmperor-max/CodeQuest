@@ -27,6 +27,23 @@ const Leaderboard = ({ onClose }) => {
         console.log(err);
       });
   }, []);
+
+  const RankList = ({key, name, level, rank}) => {
+    <li key={key}
+        data-rank={rank}
+      >
+      <div className="thumb">
+        <span className="img"
+              data-name={name}
+        ></span>
+        <span className="name">{name}</span>
+        <span className="stat">
+          <b>{level}</b>Level
+        </span>
+      </div>
+    </li>
+  }
+
   return (
     <div className="leaderboard-main-container">
       <div className="leaderboard-header">
