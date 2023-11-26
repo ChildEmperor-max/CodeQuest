@@ -30,6 +30,7 @@ import ace from "ace-builds";
 import {
   executeJavaCode,
   fetchCharacterById,
+  fetchPlayerQuests,
   fetchNpcByQuestId,
   fetchNpcQuestDialog,
   updateCharacterNameById,
@@ -224,8 +225,8 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
 
   const fetchActiveQuests = async () => {
     try {
-      const npcData = await fetchNpcQuestDialog();
-      const filteredQuests = npcData.filter(
+      const activeQuests = await fetchPlayerQuests(playerId);
+      const filteredQuests = activeQuests.filter(
         (element) => element.quest_status === "active"
       );
       setActiveQuests(filteredQuests);

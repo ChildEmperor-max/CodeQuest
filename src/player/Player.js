@@ -544,9 +544,15 @@ export default class Player extends THREE.Object3D {
   }
 
   loadModel(scene) {
-    // this.modelScale = 0.01;
+    // this.modelScale = 0.03;
     // const loadingManager = new THREE.LoadingManager();
-    // loadingManager.setURLModifier(function (url) {
+    const loader = new ManageLoader(
+      "Loading Player ...",
+      this.loaderElement,
+      this.textLoaderElement
+    );
+    // loader.loadingManager.setURLModifier(function (url) {
+    //   console.log(url);
     //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/发.png") {
     //     url = "/src/assets/models/hutao/tex/发.png";
     //   }
@@ -558,18 +564,12 @@ export default class Player extends THREE.Object3D {
     //   }
     //   return url;
     // });
-    const loader = new ManageLoader(
-      "Loading Player ...",
-      this.loaderElement,
-      this.textLoaderElement
-    );
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
-
     const animationsPath = "/src/assets/models/animations/";
-    const playerModelPath = "/src/assets/player/";
+    const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
-      playerModelPath + "model.fbx",
+      playerModelPath + "Idle.fbx",
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(this.modelScale, this.modelScale, this.modelScale);
@@ -581,9 +581,16 @@ export default class Player extends THREE.Object3D {
 
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            child.material.specular = new THREE.Color(0xffffff);
+            // child.material.specular = new THREE.Color(0xffffff);
             child.castShadow = true;
             child.receiveShadow = true;
+            child.material.visible = true;
+            child.material.side = THREE.DoubleSide;
+            child.material.opacity = 1.0;
+            child.material.transparent = false;
+            child.material.blending = THREE.NoBlending;
+            child.material.alphaMap = null;
+
             // if (child.morphTargetInfluences !== undefined) {
             //   var outlineMaterial1 = new THREE.MeshBasicMaterial({
             //     color: 0xff0000,

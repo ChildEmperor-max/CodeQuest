@@ -431,6 +431,7 @@ export default class NPCLoader extends Interactibles {
     // this.fbxLoader = new FBXLoader(loadingManager);
     this.fbxLoader = new FBXLoader();
 
+    this.animationsPath = "/src/assets/models/animations/";
     this.fbxLoader.load(
       modelPath + "Idle.fbx",
       (fbx) => {
@@ -438,6 +439,12 @@ export default class NPCLoader extends Interactibles {
         fbx.scale.set(scale, scale, scale);
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
+            child.material.visible = true;
+            child.material.side = THREE.DoubleSide;
+            child.material.opacity = 1.0;
+            child.material.transparent = false;
+            child.material.blending = THREE.NoBlending;
+            child.material.alphaMap = null;
             // if (modelTexturePath !== undefined) {
             //   if (modelTexturePath.length > 1) {
             //     const material = child.material;
@@ -482,7 +489,7 @@ export default class NPCLoader extends Interactibles {
         this.initAction.paused = false;
         this.initAction.play();
 
-        this.loadAnimation(modelPath);
+        this.loadAnimation(this.animationsPath);
       },
       undefined,
       (error) => {

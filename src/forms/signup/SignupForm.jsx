@@ -54,7 +54,7 @@ const SignupForm = () => {
                   insertPlayerQuestProgress(
                     response.data.id,
                     quest.quest_id,
-                    quest.next_quest_id === null ? "inactive" : "locked"
+                    quest.next_quest_id === null ? "locked" : "inactive"
                   );
                 });
                 console.log("Signup successful:", response.data);
