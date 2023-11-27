@@ -64,6 +64,7 @@ export const PlayerProvider = ({ children }) => {
     navigate("/login");
     setPlayerId(null);
     setCharacterData(null);
+    localStorage.removeItem("characterData");
   };
 
   return (
@@ -73,6 +74,7 @@ export const PlayerProvider = ({ children }) => {
         characterData,
         login,
         updateCharacterData,
+        setCharacterData,
         logout,
       }}
     >
