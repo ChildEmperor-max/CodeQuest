@@ -11,6 +11,7 @@ import Popup from "./Popups/Popup";
 import keys from "../lib/KeyControls";
 import QuestHint from "./Quests/QuestHint";
 import ManageQuest from "../db/ManageQuest";
+import Shop from "./Shop/Shop";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTasks,
@@ -20,6 +21,7 @@ import {
   faEdit,
   faTrophy,
   faQuestionCircle,
+  faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
@@ -49,6 +51,7 @@ export default function InterfaceHandler({
     helper: "helper",
     questhint: "questhint",
     editor: "editor",
+    shop: "shop",
   };
   const navigate = useNavigate();
   const manageQuest = new ManageQuest();
@@ -338,6 +341,9 @@ export default function InterfaceHandler({
       {currentOpenedInterface === interfaces.profile && (
         <CharacterProfile onClose={() => toggleInterface(interfaces.profile)} />
       )}
+      {currentOpenedInterface === interfaces.shop && (
+        <Shop onClose={() => toggleInterface(interfaces.shop)} />
+      )}
       {currentOpenedInterface === interfaces.achievements ? (
         <Achievements
           onClose={() => toggleInterface(interfaces.achievements)}
@@ -391,6 +397,12 @@ export default function InterfaceHandler({
                 icon={faTrophy}
                 id="achivements-button"
                 onClickEvent={() => toggleInterface(interfaces.achievements)}
+              />
+              <InterfaceButton
+                name="Shop"
+                icon={faShoppingCart}
+                id="shop-button"
+                onClickEvent={() => toggleInterface(interfaces.shop)}
               />
               <InterfaceButton
                 name="Settings"
