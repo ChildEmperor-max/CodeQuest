@@ -64,6 +64,7 @@ const {
   handleUpdateLevel,
   handleFetchCharactersByLevel,
   handleFetchCharacterByLevelRank,
+  handleUpdateInventory,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -291,6 +292,10 @@ app.get("/character/select/level/:playerId", (req, res) => {
 
 app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
   handleFetchNpcByQuestId(req, res, pool);
+});
+
+app.post("/character/update/item/:itemId/:playerId", (req, res) => {
+  handleUpdateInventory(req, res, pool);
 });
 
 app.get("/game", (req, res) => {

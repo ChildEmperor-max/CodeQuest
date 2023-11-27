@@ -323,6 +323,39 @@ module.exports.handleUpdateLevel = function (req, res, pool) {
   }
 };
 
+module.exports.handleUpdateInventory = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const playerId = data.playerId;
+    const itemId = data.itemId;
+    const itemCount = data.itemCount;
+    const query = fs.readFileSync(path + "updateInventory.sql", "utf8");
+
+    pool
+      .query(query, [playerId, itemId, itemCount])
+      .then(() => {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: `Character data updated successfully`,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Error updating character data in characterHandler.js:",
+          error
+        );
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+      });
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
 function returnError(err) {
   console.error(err);
   res.writeHead(500, { "Content-Type": "application/json" });
