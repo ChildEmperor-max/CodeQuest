@@ -50,7 +50,8 @@ import { useWorldContext } from "../../components/WorldContext";
 import { getNpcs } from "../../npc/NPCGetterSetter";
 
 const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
-  const { playerId, updateCharacterData } = usePlayerContext();
+  const { playerId, characterData, updateCharacterData, setCharacterData } =
+    usePlayerContext();
   const { npcs } = useWorldContext();
   const [npcArray, setNpcArray] = useState([]);
 
@@ -76,6 +77,8 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
 
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [useItemAlert, setUseItemAlert] = useState(null);
+  const [isWarningAlert, setIsWarningAlert] = useState(null);
   const [updatedUsername, setUpdatedUsername] = useState("");
 
   const manageQuest = new ManageQuest();
@@ -94,7 +97,6 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
 
   useEffect(() => {
     setNpcArray(getNpcs());
-    console.log(quest_data);
     ace.config.set("basePath", "/node_modules/ace-builds/src");
     if (quest_data) {
       setEditorValue(quest_data.code_template);
@@ -292,6 +294,35 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
       });
   };
 
+  const confirmUseItem = (item) => {
+    console.log(characterData.inventory);
+    switch (item) {
+      case characterData.inventory && characterData.inventory[1].itemName:
+        setShowHint(true);
+        setIsWarningAlert({ message: `${item} is now used` });
+        // setCharacterData({
+        //   ...characterData,
+        //   inventory: {
+        //     ...characterData.inventory,
+        //     [1]: {
+        //       ...characterData.inventory[1],
+        //       itemCount: (characterData.inventory[1]?.itemCount || 0) - 1,
+        //     },
+        //   },
+        // });
+
+        break;
+      case characterData.inventory && characterData.inventory[3].itemName:
+        setShowPseudoCode(true);
+        setIsWarningAlert({ message: `${item} is now used` });
+        break;
+      default:
+        setIsWarningAlert({ message: ` You don't have the item '${item}'` });
+        break;
+    }
+    setUseItemAlert(null);
+  };
+
   return (
     <>
       {showAlertModal && (
@@ -299,6 +330,19 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
           message={alertMessage}
           onConfirm={handleConfirmUsername}
           onCancel={() => setShowAlertModal(false)}
+        />
+      )}
+      {useItemAlert && (
+        <AlertModal
+          message={useItemAlert.message}
+          onConfirm={() => confirmUseItem(useItemAlert.item)}
+          onCancel={() => setUseItemAlert(null)}
+        />
+      )}
+      {isWarningAlert && (
+        <AlertModal
+          message={isWarningAlert.message}
+          onOk={() => setIsWarningAlert(null)}
         />
       )}
       {showPopup && (
@@ -387,10 +431,13 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                     initialTime={hintCountdown}
                     onCountdownEnd={() => setShowHintCountdown(false)}
                   />
-                ) : quest_data ? (
+                ) : quest_data && quest_data.hint ? (
                   <ButtonText
                     onClick={() => {
-                      quest_data.hint && setShowHint(true);
+                      setUseItemAlert({
+                        message: "Are you sure you want to use 'Hints'?",
+                        item: "Hints",
+                      });
                     }}
                     disabled={quest_data && quest_data.hint ? false : true}
                     title="View hint"
@@ -399,10 +446,13 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                   />
                 ) : null}
 
-                {quest_data ? (
+                {quest_data && quest_data.pseudo_code ? (
                   <ButtonText
                     onClick={() => {
-                      quest_data.pseudo_code && setShowPseudoCode(true);
+                      setUseItemAlert({
+                        message: "Are you sure you want to use 'Pseudo Code'?",
+                        item: "Pseudo Code",
+                      });
                     }}
                     disabled={
                       quest_data && quest_data.pseudo_code ? false : true
