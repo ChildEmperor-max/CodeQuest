@@ -404,12 +404,12 @@ export default function InterfaceHandler({
                 id="shop-button"
                 onClickEvent={() => toggleInterface(interfaces.shop)}
               />
-              <InterfaceButton
+              {/* <InterfaceButton
                 name="Settings"
                 icon={faCog}
                 id="settings-button"
                 onClickEvent={() => toggleInterface(interfaces.settings)}
-              />
+              /> */}
             </div>
             <div className="left-container">
               {characterData && (

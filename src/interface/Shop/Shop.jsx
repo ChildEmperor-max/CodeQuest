@@ -20,21 +20,29 @@ const Shop = ({ onClose }) => {
   const confirmBuyItem = (item) => {
     if (currentGold >= item.itemPrice) {
       setCurrentGold((prev) => prev - item.itemPrice);
-      setCharacterData({
-        ...characterData,
-        inventory: {
-          ...characterData.inventory,
-          [item.itemId]: {
-            ...characterData.inventory[item.itemId],
-            itemId: item.itemId,
-            itemName: item.itemName,
-            itemPrice: item.itemPrice,
-            // itemCount:
-            //   (characterData.inventory[item.itemId]?.itemCount || 0) + 1,
+      setCharacterData((prevData) => {
+        console.log(prevData);
+        const newInventoryItem = {
+          itemId: item.itemId,
+          itemName: item.itemName,
+          itemPrice: item.itemPrice,
+          itemCount: (prevData.inventory[item.itemId]?.itemCount || 0) + 1,
+        };
+
+        return {
+          ...prevData,
+          inventory: {
+            ...prevData.inventory,
+            [item.itemId]: {
+              ...prevData.inventory?.[item.itemId],
+              ...newInventoryItem,
+            },
           },
-        },
+        };
       });
+
       setItemToBuy(null);
+      console.log(characterData.inventory);
     } else {
       setItemToBuy(null);
       setBuyError({ message: "Not enough gold" });

@@ -4,7 +4,7 @@ import ManageLoader from "../lib/Loader";
 
 // const worldLoader = new GLTFLoader();
 let lodLevels = [];
-let renderDistance = 100;
+let renderDistance = 500;
 
 export function LoadWorld(loaderElement, textLoaderElement) {
   const loader = new ManageLoader(
@@ -31,17 +31,53 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         let doors = [];
         const buildingLOD = new THREE.LOD();
 
-        const spawnPoint = new THREE.Vector3(0, 0, -120);
+        // const spawnPoint = new THREE.Vector3(0, 0, -120);
+        const spawnPoint = new THREE.Vector3(-180, 0, -20);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
         const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
-        const npcSpawnPoint4 = new THREE.Vector3(3, 0, -145);
+        const npcSpawnPoint4 = new THREE.Vector3(-22, 0, -248);
+        const npcSpawnPoint5 = new THREE.Vector3(2.5, 0, -36);
+        const npcSpawnPoint6 = new THREE.Vector3(170, 0, -56);
+        const npcSpawnPoint7 = new THREE.Vector3(61, 0, -50);
+        const npcSpawnPoint8 = new THREE.Vector3(-200, 0, -100);
+        const npcSpawnPoint9 = new THREE.Vector3(-175, 0, 51);
+        const npcSpawnPoint10 = new THREE.Vector3(223, 0, 59);
+        const npcSpawnPoint11 = new THREE.Vector3(55, 0, 83);
+        const npcSpawnPoint12 = new THREE.Vector3(259, 0, -22);
+        const npcSpawnPoint13 = new THREE.Vector3(-75, 0, -15);
+        const npcSpawnPoint14 = new THREE.Vector3(-104, 0, -195);
+        const npcSpawnPoint15 = new THREE.Vector3(218, 0, -97);
+        const npcSpawnPoint16 = new THREE.Vector3(-145, 0, -78);
+        const npcSpawnPoint17 = new THREE.Vector3(-60, 0, 65);
+        const npcSpawnPoint18 = new THREE.Vector3(44, 0, -162);
+        const npcSpawnPoint19 = new THREE.Vector3(178, 0, 51);
+        const npcSpawnPoint20 = new THREE.Vector3(-220, 0, -18);
+        const npcSpawnPoint21 = new THREE.Vector3(-220, 0, -15);
+
         const npcSpawnPoints = [
           npcSpawnPoint1,
           npcSpawnPoint2,
           npcSpawnPoint3,
           npcSpawnPoint4,
+          npcSpawnPoint5,
+          npcSpawnPoint6,
+          npcSpawnPoint7,
+          npcSpawnPoint8,
+          npcSpawnPoint9,
+          npcSpawnPoint10,
+          npcSpawnPoint11,
+          npcSpawnPoint12,
+          npcSpawnPoint13,
+          npcSpawnPoint14,
+          npcSpawnPoint15,
+          npcSpawnPoint16,
+          npcSpawnPoint17,
+          npcSpawnPoint18,
+          npcSpawnPoint19,
+          npcSpawnPoint20,
+          npcSpawnPoint21,
         ];
 
         if (gltf.animations !== undefined) {

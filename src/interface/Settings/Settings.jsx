@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import GraphicsSettings from "./GraphicsSettings";
+import LogoutAlertModal from "../../components/LougoutAlertModal";
 
 const Settings = ({
   onClose,
@@ -30,27 +31,9 @@ const Settings = ({
     );
   };
 
-  const LogoutAlertModal = () => {
-    return (
-      <div className="alert-modal-main-container">
-        <div className="alert-modal-container">
-          <div className="alert-modal-message">
-            Are you sure you want to logout?
-          </div>
-          <div className="alert-modal-buttons">
-            <a href="/login">
-              <button>Yes</button>
-            </a>
-            <button onClick={() => setIsLogout(false)}>No</button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
-      {isLogout ? <LogoutAlertModal /> : null}
+      {isLogout ? <LogoutAlertModal setIsLogout={setIsLogout} /> : null}
       <div className="settings-main-container">
         <div className="settings-navbar">
           <SideNavButton name="Graphics" onClickEvent={viewGraphicsSettings} />

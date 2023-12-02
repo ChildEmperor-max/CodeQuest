@@ -5,6 +5,26 @@ import * as THREE from "three";
 import Player from "./player/Player";
 import SampleNPC1 from "./npc/SampleNPC1";
 import SampleNPC2 from "./npc/SampleNPC2";
+import SampleNPC3 from "./npc/SampleNPC3";
+import SampleNPC4 from "./npc/SampleNPC4";
+import SampleNPC5 from "./npc/SampleNPC5";
+import SampleNPC6 from "./npc/SampleNPC6";
+import SampleNPC7 from "./npc/SampleNPC7";
+import SampleNPC8 from "./npc/SampleNPC8";
+import SampleNPC9 from "./npc/SampleNPC9";
+import SampleNPC10 from "./npc/SampleNPC10";
+import SampleNPC11 from "./npc/SampleNPC11";
+import SampleNPC12 from "./npc/SampleNPC12";
+import SampleNPC13 from "./npc/SampleNPC13";
+import SampleNPC14 from "./npc/SampleNPC14";
+import SampleNPC15 from "./npc/SampleNPC15";
+import SampleNPC16 from "./npc/SampleNPC16";
+import SampleNPC17 from "./npc/SampleNPC17";
+import SampleNPC18 from "./npc/SampleNPC18";
+import SampleNPC19 from "./npc/SampleNPC19";
+import SampleNPC20 from "./npc/SampleNPC20";
+import SampleNPC21 from "./npc/SampleNPC21";
+
 import AlbyNPC from "./npc/AlbyNPC";
 import CameraController from "./lib/camera/CameraControls";
 import { useWorldContext } from "./components/WorldContext";
@@ -33,15 +53,76 @@ const Game = () => {
 
   const sampleNPC1 = new SampleNPC1();
   const sampleNPC2 = new SampleNPC2();
+  const sampleNPC3 = new SampleNPC3();
+  const sampleNPC4 = new SampleNPC4();
+  const sampleNPC5 = new SampleNPC5();
+  const sampleNPC6 = new SampleNPC6();
+  const sampleNPC7 = new SampleNPC7();
+  const sampleNPC8 = new SampleNPC8();
+  const sampleNPC9 = new SampleNPC9();
+  const sampleNPC10 = new SampleNPC10();
+  const sampleNPC11 = new SampleNPC11();
+  const sampleNPC12 = new SampleNPC12();
+  const sampleNPC13 = new SampleNPC13();
+  const sampleNPC14 = new SampleNPC14();
+  const sampleNPC15 = new SampleNPC15();
+  const sampleNPC16 = new SampleNPC16();
+  const sampleNPC17 = new SampleNPC17();
+  const sampleNPC18 = new SampleNPC18();
+  const sampleNPC19 = new SampleNPC19();
+  const sampleNPC20 = new SampleNPC20();
+
   const albyNPC = new AlbyNPC();
 
   const npcs = {
     sampleNPC1: sampleNPC1,
     sampleNPC2: sampleNPC2,
+    sampleNPC3: sampleNPC3,
+    sampleNPC4: sampleNPC4,
+    sampleNPC5: sampleNPC5,
+    sampleNPC6: sampleNPC6,
+    sampleNPC7: sampleNPC7,
+    sampleNPC8: sampleNPC8,
+    sampleNPC9: sampleNPC9,
+    sampleNPC10: sampleNPC10,
+    sampleNPC11: sampleNPC11,
+    sampleNPC12: sampleNPC12,
+    sampleNPC13: sampleNPC13,
+    sampleNPC14: sampleNPC14,
+    sampleNPC15: sampleNPC15,
+    sampleNPC16: sampleNPC16,
+    sampleNPC17: sampleNPC17,
+    sampleNPC18: sampleNPC18,
+    sampleNPC19: sampleNPC19,
+    sampleNPC20: sampleNPC20,
+
     albyNPC: albyNPC,
   };
 
-  const npcArray = [sampleNPC1, sampleNPC2, albyNPC];
+  const npcArray = [
+    sampleNPC1,
+    sampleNPC2,
+    sampleNPC3,
+    sampleNPC4,
+    sampleNPC5,
+    sampleNPC6,
+    sampleNPC7,
+    sampleNPC8,
+    sampleNPC9,
+    sampleNPC10,
+    sampleNPC11,
+    sampleNPC12,
+    sampleNPC13,
+    sampleNPC14,
+    sampleNPC15,
+    sampleNPC16,
+    sampleNPC17,
+    sampleNPC18,
+    sampleNPC19,
+    sampleNPC20,
+
+    albyNPC,
+  ];
 
   useEffect(() => {
     const handleStartLoader = (event) => {

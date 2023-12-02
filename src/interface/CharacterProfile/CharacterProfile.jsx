@@ -7,6 +7,7 @@ import {
   faPen,
   faCheck,
   faTimes,
+  faDoorOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   fetchCompletedQuestCount,
@@ -18,6 +19,8 @@ import { fetchAchievements, fetchCharacterById } from "../../db/HandleTable";
 import AchievementBadge from "../../components/AchievementBadge";
 import EditUsernameModal from "./EditUsernameModal";
 import AchievementProfile from "./AchievementProfile";
+import LogoutAlertModal from "../../components/LougoutAlertModal";
+import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 
 const CharacterProfile = ({ onClose }) => {
   const [characterData, setCharacterData] = useState(undefined);
@@ -36,6 +39,7 @@ const CharacterProfile = ({ onClose }) => {
   const [isSavingBio, setIsSavingBio] = useState(false);
   const [bioLetterCount, setBioLetterCount] = useState(currentBio.length);
   const [maxBioLetterCount, setMaxBioLetterCount] = useState(60);
+  const [isLogout, setIsLogout] = useState(false);
 
   useEffect(() => {
     viewCompletedQuests()
@@ -73,7 +77,12 @@ const CharacterProfile = ({ onClose }) => {
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-  }, []);
+    if (isEditing) {
+      disableKeyListeners();
+    } else {
+      enableKeyListeners();
+    }
+  }, [isEditing]);
 
   const viewCompletedAchievements = async () => {
     try {
@@ -337,7 +346,15 @@ const CharacterProfile = ({ onClose }) => {
             icon={faTasks}
             onClickEvent={viewCompletedQuestsTab}
           />
+          <SideNavButton
+            name="Logout"
+            icon={faDoorOpen}
+            onClickEvent={() => {
+              setIsLogout(true);
+            }}
+          />
         </div>
+        {isLogout ? <LogoutAlertModal setIsLogout={setIsLogout} /> : null}
         <div className="right-side">
           {currentTab === 1 ? (
             <>
