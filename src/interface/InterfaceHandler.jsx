@@ -106,9 +106,9 @@ export default function InterfaceHandler({
 
   const displayUsername = () => {
     const playerId = JSON.parse(localStorage.getItem("playerId"));
-    if (!playerId) {
-      navigate("/login");
-    }
+    // if (!playerId) {
+    //   navigate("/login");
+    // }
     fetchCharacter();
   };
 
