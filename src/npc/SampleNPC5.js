@@ -13,7 +13,7 @@ export default class SampleNPC5 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 0,
     modelPath = this.path,
     npcName = "SampleNPC5: Forging Excellence",
     scale = 0.01

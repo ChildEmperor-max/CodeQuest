@@ -13,7 +13,7 @@ export default class SampleNPC10 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 0,
     modelPath = this.path,
     npcName = "SampleNPC10: The Longing Age of the Earth",
     scale = 0.01

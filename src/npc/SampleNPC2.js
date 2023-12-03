@@ -13,7 +13,7 @@ export default class SampleNPC2 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(200, 0, 0),
+    rotation = 0,
     modelPath = this.path,
     npcName = "SampleNPC2",
     scale = 0.01,

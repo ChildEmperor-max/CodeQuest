@@ -13,7 +13,7 @@ export default class SampleNPC9 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 0,
     modelPath = this.path,
     npcName = "SampleNPC9: The Chronicles of Short",
     scale = 0.01
