@@ -140,24 +140,24 @@ export default class NPCLoader extends Interactibles {
       try {
         this.npcData = await viewNpcData(npcName, this.playerId);
         if (this.npcData[0]) {
-          if (this.npcData[0].quest_status !== "locked") {
-            if (this.npcData[0].quest_status !== "completed") {
-              if (this.npcData[0].quest_id) {
-                this.hasQuest = true;
-                fetchNpcQuest.call(
-                  this,
-                  this.npcData[0].quest_id,
-                  this.npcData[0].npc_id
-                );
-              }
-              // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
-              if (this.npcData[0].dialog_id) {
-                this.hasDialog = true;
-              } else {
-                this.hasDialog = false;
-              }
-            }
+          // if (this.npcData[0].quest_status !== "locked") {
+          //   if (this.npcData[0].quest_status !== "completed") {
+          if (this.npcData[0].quest_id) {
+            this.hasQuest = true;
+            fetchNpcQuest.call(
+              this,
+              this.npcData[0].quest_id,
+              this.npcData[0].npc_id
+            );
           }
+          // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
+          if (this.npcData[0].dialog_id) {
+            this.hasDialog = true;
+          } else {
+            this.hasDialog = false;
+          }
+          //   }
+          // }
         }
       } catch (error) {
         console.error("[ERROR]:", error);
@@ -484,6 +484,7 @@ export default class NPCLoader extends Interactibles {
 
         this.mixer = new THREE.AnimationMixer(this.mesh);
         this.initAction = this.actionClipAnimation(fbx, scale);
+        this.mesh.rotation.y = this.defaultRotation;
         this.initAction.name = "init";
         // this.actions.push(this.initAction);
         this.initAction.paused = false;
