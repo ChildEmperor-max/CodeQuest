@@ -43,7 +43,6 @@ const SignupForm = () => {
         }
       );
 
-      console.log(response.data.id);
       if (response.status === 201) {
         insertCharacterByPlayerId(response.data.id)
           .then((result) => {
@@ -54,7 +53,7 @@ const SignupForm = () => {
                   insertPlayerQuestProgress(
                     response.data.id,
                     quest.quest_id,
-                    quest.next_quest_id === null ? "locked" : "inactive"
+                    quest.quest_id === 3 ? "inactive" : "locked"
                   );
                 });
                 console.log("Signup successful:", response.data);
@@ -73,15 +72,18 @@ const SignupForm = () => {
         console.log("Signup failed");
       }
     } catch (error) {
-      console.error("Error signing up:", error);
+      console.error("Error signing up:", error.response.statusText);
       setError("An error occured while signing up");
+      if (error.response.statusText === "Conflict") {
+        setError("Email already exists");
+      }
     }
   };
 
   return (
     <div className="signup-form-container">
       <div className="signup-sub-container">
-        <h2>Signup</h2>
+        <h2>Signup as a:</h2>
         <form onSubmit={handleSubmit}>
           {currentTab === 1 && (
             <>
@@ -89,20 +91,20 @@ const SignupForm = () => {
                 <button
                   name="role"
                   onClick={() => {
-                    setFormData({ ...formData, role: "Student" });
+                    setFormData({ ...formData, role: "Self Learner" });
                     setCurrentTab(2);
                   }}
                 >
-                  Student
+                  Self Learner
                 </button>
                 <button
                   name="role"
                   onClick={() => {
-                    setFormData({ ...formData, role: "Educator" });
+                    setFormData({ ...formData, role: "Code Enthusiast" });
                     setCurrentTab(2);
                   }}
                 >
-                  Educator
+                  Code Enthusiast
                 </button>
               </div>
             </>
@@ -146,8 +148,8 @@ const SignupForm = () => {
                 </select>
               </div>
               <div className="form-group">
-                <button onClick={() => setCurrentTab(1)}>Back</button>
                 <button onClick={() => setCurrentTab(3)}>Next</button>
+                <button onClick={() => setCurrentTab(1)}>Back</button>
               </div>
             </>
           )}
@@ -176,8 +178,8 @@ const SignupForm = () => {
                 />
               </div>
               <div className="form-group">
-                <button onClick={() => setCurrentTab(2)}>Back</button>
                 <button type="submit">Signup</button>
+                <button onClick={() => setCurrentTab(2)}>Back</button>
               </div>
             </>
           )}
