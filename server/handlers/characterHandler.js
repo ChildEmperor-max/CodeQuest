@@ -50,13 +50,14 @@ module.exports.handleInsertCharacterByPlayerId = function (req, res, pool) {
   try {
     const data = req.body;
     const player_id = data.player_id;
+    const default_char_name = "Player_" + data.player_id;
     const query = fs.readFileSync(
       path + "insertCharacterByPlayerid.sql",
       "utf8"
     );
 
     pool
-      .query(query, [player_id])
+      .query(query, [player_id, default_char_name])
       .then(() => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(
