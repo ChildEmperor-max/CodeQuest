@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC20 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/Maiden2/";
   }
   initialize(
     scene,
@@ -13,7 +13,8 @@ export default class SampleNPC20 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    // rotation = new THREE.Vector3(0, Math.PI, 0),
+    rotation = new THREE.Vector3(0, Math.PI, 0),
     modelPath = this.path,
     npcName = "SampleNPC20: Whispers of the Silent Code",
     scale = 0.01

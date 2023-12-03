@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC19 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/Maiden1/";
   }
   initialize(
     scene,
