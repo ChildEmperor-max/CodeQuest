@@ -83,21 +83,21 @@ const PORT = process.env.PORT || 8000;
 const SUPABASE_PUBLIC_API = process.env.SUPABASE_PUBLIC_API;
 const SUPABASE_SECRET_API = process.env.SUPABASE_SECRET_API;
 
-// const pool = new Pool({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "CodeQuest",
-//   password: "admin",
-//   port: 5432, // default PostgreSQL port
-// });
-
 const pool = new Pool({
   user: "postgres",
-  host: "db.lijmzdfdpsabhpwqlfnh.supabase.co",
-  database: "postgres",
-  password: "zGTyOIYJDL3vVUu6",
+  host: "localhost",
+  database: "CodeQuest",
+  password: "admin",
   port: 5432, // default PostgreSQL port
 });
+
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "db.lijmzdfdpsabhpwqlfnh.supabase.co",
+//   database: "postgres",
+//   password: "zGTyOIYJDL3vVUu6",
+//   port: 5432, // default PostgreSQL port
+// });
 
 const app = express();
 //middleware
