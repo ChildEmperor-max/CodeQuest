@@ -13,7 +13,7 @@ export default class SampleNPC7 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 0,
+    rotation = 1,
     modelPath = this.path,
     npcName = "SampleNPC7: Crop Harvest Assessment",
     scale = 0.01

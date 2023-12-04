@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC10 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/ElderMan2/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC10 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 0,
+    rotation = 4,
     modelPath = this.path,
     npcName = "SampleNPC10: The Longing Age of the Earth",
     scale = 0.01

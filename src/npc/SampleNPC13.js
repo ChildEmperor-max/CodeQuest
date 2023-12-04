@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC13 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/ElderWoman2/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC13 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 0.5,
     modelPath = this.path,
     npcName = "SampleNPC13: The Narrowing Realm",
     scale = 0.01

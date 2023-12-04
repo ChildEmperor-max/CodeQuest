@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC18 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/Boy1/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC18 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 1.5,
     modelPath = this.path,
     npcName = "SampleNPC18: The Length Enigma",
     scale = 0.01

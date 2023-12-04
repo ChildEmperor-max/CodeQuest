@@ -13,7 +13,7 @@ export default class SampleNPC19 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 0,
     modelPath = this.path,
     npcName = "SampleNPC19: The Symphony of Transformation",
     scale = 0.01

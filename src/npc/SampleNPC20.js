@@ -14,7 +14,7 @@ export default class SampleNPC20 extends NPCLoader {
     canvas,
     groundMesh,
     // rotation = new THREE.Vector3(0, Math.PI, 0),
-    rotation = new THREE.Vector3(0, Math.PI, 0),
+    rotation = 3,
     modelPath = this.path,
     npcName = "SampleNPC20: Whispers of the Silent Code",
     scale = 0.01

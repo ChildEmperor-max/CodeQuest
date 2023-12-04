@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC5 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/worker2/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC5 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 0,
+    rotation = 2.5,
     modelPath = this.path,
     npcName = "SampleNPC5: Forging Excellence",
     scale = 0.01

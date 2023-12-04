@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC9 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/ElderWoman1/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC9 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 0,
+    rotation = 4.5,
     modelPath = this.path,
     npcName = "SampleNPC9: The Chronicles of Short",
     scale = 0.01

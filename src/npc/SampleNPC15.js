@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC15 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan2/";
+    this.path = "/src/assets/npc/Nurse2/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC15 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 3.5,
     modelPath = this.path,
     npcName = "SampleNPC15: The Assignment Artisan",
     scale = 0.01

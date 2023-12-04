@@ -574,6 +574,46 @@ export default class SceneInit {
             );
             this.npcArray.push(this.npcs.sampleNPC20);
 
+            this.npcs.sampleNPC21.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[21],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC21);
+
+            this.npcs.sampleNPC22.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[22],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC22);
+
+            this.npcs.sampleNPC23.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[23],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC23);
+
+            this.npcs.sampleNPC24.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[24],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC24);
+
             this.npcs.albyNPC.initialize(
               this.mainWorldScene,
               npcSpawnPoints[2],

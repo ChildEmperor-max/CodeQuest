@@ -24,6 +24,9 @@ import SampleNPC18 from "./npc/SampleNPC18";
 import SampleNPC19 from "./npc/SampleNPC19";
 import SampleNPC20 from "./npc/SampleNPC20";
 import SampleNPC21 from "./npc/SampleNPC21";
+import SampleNPC22 from "./npc/SampleNPC22";
+import SampleNPC23 from "./npc/SampleNPC23";
+import SampleNPC24 from "./npc/SampleNPC24";
 
 import AlbyNPC from "./npc/AlbyNPC";
 import CameraController from "./lib/camera/CameraControls";
@@ -71,6 +74,10 @@ const Game = () => {
   const sampleNPC18 = new SampleNPC18();
   const sampleNPC19 = new SampleNPC19();
   const sampleNPC20 = new SampleNPC20();
+  const sampleNPC21 = new SampleNPC21();
+  const sampleNPC22 = new SampleNPC22();
+  const sampleNPC23 = new SampleNPC23();
+  const sampleNPC24 = new SampleNPC24();
 
   const albyNPC = new AlbyNPC();
 
@@ -95,6 +102,10 @@ const Game = () => {
     sampleNPC18: sampleNPC18,
     sampleNPC19: sampleNPC19,
     sampleNPC20: sampleNPC20,
+    sampleNPC21: sampleNPC21,
+    sampleNPC22: sampleNPC22,
+    sampleNPC23: sampleNPC23,
+    sampleNPC24: sampleNPC24,
 
     albyNPC: albyNPC,
   };
@@ -120,6 +131,10 @@ const Game = () => {
     sampleNPC18,
     sampleNPC19,
     sampleNPC20,
+    sampleNPC21,
+    sampleNPC22,
+    sampleNPC23,
+    sampleNPC24,
 
     albyNPC,
   ];

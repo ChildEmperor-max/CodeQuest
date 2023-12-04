@@ -31,8 +31,8 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         let doors = [];
         const buildingLOD = new THREE.LOD();
 
-        const spawnPoint = new THREE.Vector3(0, 0, -120);
-        // const spawnPoint = new THREE.Vector3(61, 0, -50);
+        // const spawnPoint = new THREE.Vector3(0, 0, -120);
+        const spawnPoint = new THREE.Vector3(-220, 0, 120);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
@@ -55,6 +55,10 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         const npcSpawnPoint19 = new THREE.Vector3(178, 0, 51);
         const npcSpawnPoint20 = new THREE.Vector3(-220, 0, -18);
         const npcSpawnPoint21 = new THREE.Vector3(-220, 0, -15);
+        const npcSpawnPoint22 = new THREE.Vector3(-80, 0, 240);
+        const npcSpawnPoint23 = new THREE.Vector3(3, 0, 232);
+        const npcSpawnPoint24 = new THREE.Vector3(-222.5, 0, 114);
+        const npcSpawnPoint25 = new THREE.Vector3(-223, 0, 111);
 
         const npcSpawnPoints = [
           npcSpawnPoint1,
@@ -78,6 +82,10 @@ export function LoadWorld(loaderElement, textLoaderElement) {
           npcSpawnPoint19,
           npcSpawnPoint20,
           npcSpawnPoint21,
+          npcSpawnPoint22,
+          npcSpawnPoint23,
+          npcSpawnPoint24,
+          npcSpawnPoint25,
         ];
 
         if (gltf.animations !== undefined) {

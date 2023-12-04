@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC17 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/Strawhat1/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC17 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 3,
     modelPath = this.path,
     npcName = "SampleNPC17: The Logician's Challenge",
     scale = 0.01

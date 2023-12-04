@@ -4,7 +4,7 @@ import NPCLoader from "./NPCLoader";
 export default class SampleNPC14 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = "/src/assets/npc/Nurse1/";
   }
   initialize(
     scene,
@@ -13,7 +13,7 @@ export default class SampleNPC14 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = new THREE.Vector3(0, 0, 0),
+    rotation = 2,
     modelPath = this.path,
     npcName = "SampleNPC14: The Arithmetic Artistry",
     scale = 0.01
