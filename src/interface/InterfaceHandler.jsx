@@ -27,7 +27,6 @@ import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
 import { fetchCharacterById } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
-import { receiveXp } from "../lib/XpManager";
 import { useQuestsData } from "../components/QuestContext";
 import { useWorldContext } from "../components/WorldContext";
 
