@@ -65,6 +65,7 @@ const {
   handleFetchCharactersByLevel,
   handleFetchCharacterByLevelRank,
   handleUpdateInventory,
+  handleUpdateGold,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -246,6 +247,10 @@ app.post("/character/update/xp", (req, res) => {
 
 app.post("/character/update/current_xp", (req, res) => {
   handleUpdateCurrentXp(req, res, pool);
+});
+
+app.post("/character/update/gold", (req, res) => {
+  handleUpdateGold(req, res, pool);
 });
 
 app.post("/character/update/max_xp", (req, res) => {

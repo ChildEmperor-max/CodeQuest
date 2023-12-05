@@ -2,6 +2,13 @@ const fs = require("fs");
 
 const path = "server/sql/character/";
 
+const OPERATION = {
+  ADD: "add",
+  MINUS: "minus",
+  TIMES: "times",
+  DIVIDE: "divide",
+};
+
 module.exports.handleFetchCharacterById = async function (id, res, pool) {
   try {
     const query = fs.readFileSync(path + "selectCharacterById.sql", "utf8");
@@ -204,6 +211,61 @@ module.exports.handleUpdateCurrentXp = async function (req, res, pool) {
     const gained_xp = data.gained_xp;
 
     const response = await updateXp(pool, player_id, gained_xp);
+
+    res.writeHead(201, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(response));
+  } catch (error) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+const updateGold = async (pool, player_id, gained_gold, operation) => {
+  try {
+    const resultCurrentGold = await pool.query(
+      "SELECT gold from character WHERE player_id = $1",
+      [player_id]
+    );
+
+    let totalGainedGold;
+    switch (operation) {
+      case OPERATION.ADD:
+        totalGainedGold = resultCurrentGold.rows[0].gold + gained_gold;
+        break;
+      case OPERATION.MINUS:
+        totalGainedGold = resultCurrentGold.rows[0].gold - gained_gold;
+        break;
+      case OPERATION.TIMES:
+        totalGainedGold = resultCurrentGold.rows[0].gold * gained_gold;
+        break;
+      case OPERATION.DIVIDE:
+        totalGainedGold = resultCurrentGold.rows[0].gold / gained_gold;
+        break;
+      default:
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+        break;
+    }
+
+    await pool.query(
+      `UPDATE character SET gold = '${totalGainedGold}' WHERE player_id = $1`,
+      [player_id]
+    );
+    return { message: "success" };
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    return { message: "error" };
+  }
+};
+
+module.exports.handleUpdateGold = async function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const gained_gold = data.gained_gold;
+    const operation = data.operation;
+
+    const response = await updateGold(pool, player_id, gained_gold, operation);
 
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify(response));

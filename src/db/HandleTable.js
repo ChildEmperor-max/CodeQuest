@@ -614,6 +614,38 @@ export function updateCharacterCurrentXp(player_id, gained_xp) {
   });
 }
 
+export function updateCharacterGold(player_id, gained_gold, operation) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/gold", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        gained_gold: gained_gold,
+        operation: operation,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error updating character gold: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Character gold updated successfully:", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
 export function updateCharacterMaxXp(player_id, new_max_xp) {
   return new Promise((resolve, reject) => {
     fetch(characterAPI + "/update/max_xp", {
