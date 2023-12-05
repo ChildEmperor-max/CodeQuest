@@ -15,7 +15,7 @@ import { animateCameraToTarget } from "../../lib/camera/cameraAnimation";
 import ManageQuest from "../../db/ManageQuest";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { useWorldContext } from "../../components/WorldContext";
-import { receiveXp } from "../../lib/XpManager";
+import { receiveReward } from "../../lib/ItemsManager";
 import { useQuestsData } from "../../components/QuestContext";
 
 const DialogBox = ({
@@ -387,16 +387,16 @@ const DialogBox = ({
             questData[0].quest_status
           );
         }
-        receiveXp(quest[0].reward.xp)
+        receiveReward(quest[0].reward)
           .then(() => {
-            console.log("xp gained: ", quest[0].reward.xp);
+            console.log("Rewards gained: ", quest[0].reward);
             setCurrentXpBar(
               (characterData.xp.current_xp / characterData.xp.max_xp) * 200
             );
             fetchCharacter();
           })
           .catch((error) => {
-            console.log("Error in receiving xp: ", error);
+            console.log("Error in receiving rewards: ", error);
           });
       }
       onPopupContent(
