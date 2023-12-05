@@ -13,9 +13,9 @@ export default class SampleNPC6 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 5.5,
+    rotation = 1,
     modelPath = this.path,
-    npcName = "SampleNPC6: The Name of a Miracle Herb",
+    npcName = "Elara",
     scale = 0.01
   ) {
     super.initialize(

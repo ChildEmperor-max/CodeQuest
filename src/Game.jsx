@@ -27,6 +27,7 @@ import SampleNPC21 from "./npc/SampleNPC21";
 import SampleNPC22 from "./npc/SampleNPC22";
 import SampleNPC23 from "./npc/SampleNPC23";
 import SampleNPC24 from "./npc/SampleNPC24";
+import SampleNPC25 from "./npc/SampleNPC25";
 
 import AlbyNPC from "./npc/AlbyNPC";
 import CameraController from "./lib/camera/CameraControls";
@@ -78,6 +79,7 @@ const Game = () => {
   const sampleNPC22 = new SampleNPC22();
   const sampleNPC23 = new SampleNPC23();
   const sampleNPC24 = new SampleNPC24();
+  const sampleNPC25 = new SampleNPC25();
 
   const albyNPC = new AlbyNPC();
 
@@ -106,6 +108,7 @@ const Game = () => {
     sampleNPC22: sampleNPC22,
     sampleNPC23: sampleNPC23,
     sampleNPC24: sampleNPC24,
+    sampleNPC25: sampleNPC25,
 
     albyNPC: albyNPC,
   };
@@ -135,6 +138,7 @@ const Game = () => {
     sampleNPC22,
     sampleNPC23,
     sampleNPC24,
+    sampleNPC25,
 
     albyNPC,
   ];

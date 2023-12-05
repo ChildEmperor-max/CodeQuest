@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
 
-export default class SampleNPC5 extends NPCLoader {
+export default class SampleNPC25 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/worker2/";
+    this.path = "/src/assets/npc/ElderMan4/";
   }
   initialize(
     scene,
@@ -13,9 +13,9 @@ export default class SampleNPC5 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 2.5,
+    rotation = 5.5,
     modelPath = this.path,
-    npcName = "Kael the Aspiring Blacksmith",
+    npcName = "Guardian of Secrets",
     scale = 0.01
   ) {
     super.initialize(
