@@ -12,6 +12,7 @@ import {
 import {
   fetchCompletedQuestCount,
   updateCharacterBio,
+  fetchCharacterByLevelRank,
 } from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
@@ -40,14 +41,23 @@ const CharacterProfile = ({ onClose }) => {
   const [bioLetterCount, setBioLetterCount] = useState(currentBio.length);
   const [maxBioLetterCount, setMaxBioLetterCount] = useState(60);
   const [isLogout, setIsLogout] = useState(false);
+  const [currentPlayerRank, setCurrentPlayerRank] = useState(null);
 
   useEffect(() => {
+    const playerId = JSON.parse(localStorage.getItem("playerId"));
     viewCompletedQuests()
       .then((questData) => {
         setCompletedQuests(questData);
       })
       .catch((error) => {
         console.error("[ERROR]:", error);
+      });
+    fetchCharacterByLevelRank(playerId)
+      .then((result) => {
+        setCurrentPlayerRank(result[0]);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 
@@ -440,17 +450,26 @@ const CharacterProfile = ({ onClose }) => {
                     <div>
                       <span>Level: </span>
                       {/* <RandomTextAnimation text="1" elementType="span" /> */}
-                      <span>1</span>
+                      <span>{characterData ? characterData.level : "..."}</span>
                     </div>
                     <div>
                       <span>Rank: </span>
                       {/* <RandomTextAnimation text="unranked" elementType="span" /> */}
-                      <span>unranked</span>
+                      <span>
+                        {currentPlayerRank ? currentPlayerRank.rank : "..."}
+                      </span>
                     </div>
                     <div>
                       <span>Exp: </span>
                       {/* <RandomTextAnimation text="0/20" elementType="span" /> */}
-                      <span>0/20</span>
+                      {characterData ? (
+                        <span>
+                          {characterData.xp.current_xp}/
+                          {characterData.xp.max_xp}
+                        </span>
+                      ) : (
+                        "..."
+                      )}
                     </div>
                   </div>
 
