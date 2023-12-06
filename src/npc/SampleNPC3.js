@@ -15,7 +15,7 @@ export default class SampleNPC3 extends NPCLoader {
     groundMesh,
     rotation = 1.5,
     modelPath = this.path,
-    npcName = "SampleNPC3: High-Grade Weaponry Display",
+    npcName = "Shopkeeper",
     scale = 0.01
   ) {
     super.initialize(

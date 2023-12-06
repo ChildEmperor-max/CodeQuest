@@ -15,7 +15,7 @@ export default class SampleNPC21 extends NPCLoader {
     groundMesh,
     rotation = 3,
     modelPath = this.path,
-    npcName = "SampleNPC21: The Fundamentals of Data Types",
+    npcName = "Wise Elder",
     scale = 0.01
   ) {
     super.initialize(

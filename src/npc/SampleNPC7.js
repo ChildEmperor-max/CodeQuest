@@ -15,7 +15,7 @@ export default class SampleNPC7 extends NPCLoader {
     groundMesh,
     rotation = 1,
     modelPath = this.path,
-    npcName = "SampleNPC7: Crop Harvest Assessment",
+    npcName = "Village Farmer",
     scale = 0.01
   ) {
     super.initialize(

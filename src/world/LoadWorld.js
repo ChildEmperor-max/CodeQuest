@@ -31,8 +31,8 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         let doors = [];
         const buildingLOD = new THREE.LOD();
 
-        // const spawnPoint = new THREE.Vector3(0, 0, -120);
-        const spawnPoint = new THREE.Vector3(170, 0, -56);
+        const spawnPoint = new THREE.Vector3(0, 0, -120);
+        // const spawnPoint = new THREE.Vector3(170, 0, -56);
 
         const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
