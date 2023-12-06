@@ -5,8 +5,6 @@ public class HerbalistQuest {
 
 System.out.println(plantName);
 
-
-        // Display the name of the magical herb.
         
 
     }
