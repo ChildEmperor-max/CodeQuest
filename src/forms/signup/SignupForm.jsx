@@ -92,6 +92,15 @@ const SignupForm = () => {
                 <button
                   name="role"
                   onClick={() => {
+                    setFormData({ ...formData, role: "Student" });
+                    setCurrentTab(2);
+                  }}
+                >
+                  Student
+                </button>
+                <button
+                  name="role"
+                  onClick={() => {
                     setFormData({ ...formData, role: "Self Learner" });
                     setCurrentTab(2);
                   }}
