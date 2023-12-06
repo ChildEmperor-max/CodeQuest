@@ -50,6 +50,7 @@ const SignupForm = () => {
             fetchQuestTable()
               .then((quests) => {
                 quests.find((quest) => {
+                  console.log("QUEST ADDED: ", quest);
                   insertPlayerQuestProgress(
                     response.data.id,
                     quest.quest_id,
