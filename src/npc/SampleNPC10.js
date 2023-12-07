@@ -15,7 +15,7 @@ export default class SampleNPC10 extends NPCLoader {
     groundMesh,
     rotation = 4,
     modelPath = this.path,
-    npcName = "SampleNPC10: The Longing Age of the Earth",
+    npcName = "Village Scholar",
     scale = 0.01
   ) {
     super.initialize(

@@ -15,7 +15,7 @@ export default class SampleNPC14 extends NPCLoader {
     groundMesh,
     rotation = 2,
     modelPath = this.path,
-    npcName = "SampleNPC14: The Arithmetic Artistry",
+    npcName = "Lyanna",
     scale = 0.01
   ) {
     super.initialize(

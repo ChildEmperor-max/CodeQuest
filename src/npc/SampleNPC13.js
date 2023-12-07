@@ -15,7 +15,7 @@ export default class SampleNPC13 extends NPCLoader {
     groundMesh,
     rotation = 0.5,
     modelPath = this.path,
-    npcName = "SampleNPC13: The Narrowing Realm",
+    npcName = "Sorin the Wise",
     scale = 0.01
   ) {
     super.initialize(

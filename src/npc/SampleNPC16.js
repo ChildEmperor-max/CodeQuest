@@ -15,7 +15,7 @@ export default class SampleNPC16 extends NPCLoader {
     groundMesh,
     rotation = 2.5,
     modelPath = this.path,
-    npcName = "SampleNPC16: The Comparator's Confluences",
+    npcName = "Amara",
     scale = 0.01
   ) {
     super.initialize(

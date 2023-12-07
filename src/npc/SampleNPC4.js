@@ -15,7 +15,7 @@ export default class SampleNPC4 extends NPCLoader {
     groundMesh,
     rotation = 0,
     modelPath = this.path,
-    npcName = "SampleNPC4: Land Adventurer's Map",
+    npcName = "Village Explorer",
     scale = 0.01
   ) {
     super.initialize(

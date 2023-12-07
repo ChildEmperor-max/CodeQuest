@@ -15,7 +15,7 @@ export default class SampleNPC12 extends NPCLoader {
     groundMesh,
     rotation = 1.5,
     modelPath = this.path,
-    npcName = "SampleNPC12: The Widening Horizon",
+    npcName = "Elysia Stormborn",
     scale = 0.01
   ) {
     super.initialize(

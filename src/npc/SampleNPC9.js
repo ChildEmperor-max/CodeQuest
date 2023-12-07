@@ -15,7 +15,7 @@ export default class SampleNPC9 extends NPCLoader {
     groundMesh,
     rotation = 4.5,
     modelPath = this.path,
-    npcName = "SampleNPC9: The Chronicles of Short",
+    npcName = "Village Historian",
     scale = 0.01
   ) {
     super.initialize(

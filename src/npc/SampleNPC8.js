@@ -15,7 +15,7 @@ export default class SampleNPC8 extends NPCLoader {
     groundMesh,
     rotation = 4.5,
     modelPath = this.path,
-    npcName = "SampleNPC8: Byte into the Unknown",
+    npcName = "Lord Reynard Blackthorn",
     scale = 0.01
   ) {
     super.initialize(

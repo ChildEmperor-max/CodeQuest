@@ -15,7 +15,7 @@ export default class SampleNPC22 extends NPCLoader {
     groundMesh,
     rotation = 3,
     modelPath = this.path,
-    npcName = "SampleNPC22: Runes Revealed: The Code of Ancients",
+    npcName = "Sir Cedric Ironheart",
     scale = 0.01
   ) {
     super.initialize(

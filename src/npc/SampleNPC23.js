@@ -15,7 +15,7 @@ export default class SampleNPC23 extends NPCLoader {
     groundMesh,
     rotation = 4.5,
     modelPath = this.path,
-    npcName = "SampleNPC23",
+    npcName = "Gideon",
     scale = 0.01
   ) {
     super.initialize(
