@@ -9,7 +9,7 @@ import RunningAnim from "src/assets/models/animations/Running.fbx";
 import VictoryAnim from "src/assets/models/animations/Victory.fbx";
 import DefeatAnim from "src/assets/models/animations/Defeat.fbx";
 import FallingAnim from "src/assets/models/animations/Falling.fbx";
-import PlayerModel from "src/assets/player/m/ascii/Idle.fbx";
+import PlayerModel from "src/assets/player/m/7.4/Idle.fbx";
 
 export default class Player extends THREE.Object3D {
   constructor() {
