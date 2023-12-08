@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
-import OldMan1 from "/src/assets/npc/OldMan1/Idle.fbx";
-import BrownTexture from "/src/assets/npc/OldMan1/Peasant Orin Brown.png";
+import OldMan1 from "src/assets/npc/OldMan1/Idle.fbx";
+import BrownTexture from "src/assets/npc/OldMan1/Peasant Orin Brown.png";
 
 export default class SampleNPC1 extends NPCLoader {
   constructor() {
@@ -20,6 +20,7 @@ export default class SampleNPC1 extends NPCLoader {
     modelPath = this.path,
     npcName = "SampleNPC1",
     scale = 0.01,
+    destination = null,
     modelTexturePath = this.texture
   ) {
     super.initialize(
@@ -33,6 +34,7 @@ export default class SampleNPC1 extends NPCLoader {
       modelPath,
       npcName,
       scale,
+      destination,
       modelTexturePath
     );
   }
