@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { TextureLoader } from "three/src/loaders/TextureLoader.js";
 import * as TWEEN from "@tweenjs/tween.js";
 import keys from "../lib/KeyControls";
 import ManageLoader from "../lib/Loader";
@@ -561,6 +562,7 @@ export default class Player extends THREE.Object3D {
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
     const animationsPath = "/src/assets/models/animations/";
+    this.fbxLoader.setResourcePath("/src/assets/player/m/");
     // const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
       PlayerModel,
