@@ -1,6 +1,7 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import ManageLoader from "../lib/Loader";
+import CodeQuestMap from "src/assets/world/codequest_map.glb";
 
 // const worldLoader = new GLTFLoader();
 let lodLevels = [];
@@ -16,7 +17,7 @@ export function LoadWorld(loaderElement, textLoaderElement) {
 
   return new Promise((resolve, reject) => {
     worldLoader.load(
-      "/src/assets/world/codequest_map.glb",
+      CodeQuestMap,
       // "/src/assets/world/SamplWorld.glb",
       function (gltf) {
         const worldMesh = gltf.scene;
