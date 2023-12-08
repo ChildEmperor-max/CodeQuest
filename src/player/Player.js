@@ -562,7 +562,6 @@ export default class Player extends THREE.Object3D {
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
     const animationsPath = "/src/assets/models/animations/";
-    this.fbxLoader.setResourcePath("/src/assets/player/m/");
     // const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
       PlayerModel,
