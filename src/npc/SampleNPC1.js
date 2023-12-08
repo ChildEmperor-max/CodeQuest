@@ -1,10 +1,11 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import OldMan1 from "/src/assets/npc/OldMan1/Idle.fbx";
 
 export default class SampleNPC1 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/OldMan1/";
+    this.path = OldMan1;
   }
   initialize(
     scene,

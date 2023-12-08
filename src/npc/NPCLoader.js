@@ -5,6 +5,9 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "three";
 import { StateMachine, IdleState, InteractingState } from "./NPCStates";
 import { setNpcs } from "./NPCGetterSetter";
+import IdleAnim from "src/assets/models/animations/Idle.fbx";
+import WalkingAnim from "src/assets/models/animations/Walking.fbx";
+import TalkingAnim from "src/assets/models/animations/Talking.fbx";
 
 import {
   addNpcToTable,
@@ -433,7 +436,7 @@ export default class NPCLoader extends Interactibles {
 
     this.animationsPath = "/src/assets/models/animations/";
     this.fbxLoader.load(
-      modelPath + "Idle.fbx",
+      modelPath,
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(scale, scale, scale);
@@ -499,17 +502,17 @@ export default class NPCLoader extends Interactibles {
     );
   }
   loadAnimation(animationPath) {
-    this.fbxLoader.load(animationPath + "Idle.fbx", (fbx) => {
+    this.fbxLoader.load(IdleAnim, (fbx) => {
       this.idleAction = this.actionClipAnimation(fbx, this.mixer);
       this.idleAction.name = "Idle";
       this.actions.push(this.idleAction);
     });
-    this.fbxLoader.load(animationPath + "Talking.fbx", (fbx) => {
+    this.fbxLoader.load(TalkingAnim, (fbx) => {
       this.talkingAction = this.actionClipAnimation(fbx, this.mixer);
       this.talkingAction.name = "Talking";
       this.actions.push(this.talkingAction);
     });
-    this.fbxLoader.load(animationPath + "Walking.fbx", (fbx) => {
+    this.fbxLoader.load(WalkingAnim, (fbx) => {
       this.walkingAction = this.actionClipAnimation(fbx, this.mixer);
       this.walkingAction.name = "Walking";
       this.actions.push(this.walkingAction);
