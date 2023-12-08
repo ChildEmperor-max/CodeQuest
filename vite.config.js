@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import pluginSvgVue from "@vuetter/vite-plugin-vue-svg";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), pluginSvgVue()],
   server: {
     port: 3000,
     // port: 8000, // Specify the port for the Vite development server
@@ -14,6 +15,7 @@ export default defineConfig({
       },
     },
   },
+  assetsInclude: "**/*.glb",
   resolve: {
     alias: {
       src: "/src",
