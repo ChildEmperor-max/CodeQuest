@@ -4,7 +4,7 @@ import * as TWEEN from "@tweenjs/tween.js";
 import keys from "../lib/KeyControls";
 import ManageLoader from "../lib/Loader";
 import AnimationsPath from "src/assets/models/animations/";
-import PlayerModelPath from "/src/assets/player/m/";
+import PlayerModelPath from "src/assets/player/m/";
 
 export default class Player extends THREE.Object3D {
   constructor() {
