@@ -20,8 +20,8 @@ export default class SampleNPC2 extends NPCLoader {
     modelPath = this.path,
     npcName = "SampleNPC2",
     scale = 0.01,
-    destination = new THREE.Vector3(-8, 0, -120),
-    modelTexturePath = this.texture
+    modelTexturePath = this.texture,
+    destination = new THREE.Vector3(-8, 0, -120)
   ) {
     super.initialize(
       scene,

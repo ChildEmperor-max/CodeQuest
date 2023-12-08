@@ -41,8 +41,8 @@ export default class NPCLoader extends Interactibles {
     modelPath,
     npcName,
     scale,
-    destination = null,
-    modelTexturePath = undefined
+    modelTexturePath = undefined,
+    destination = null
   ) {
     super.initialize(position, camera, player);
     this.scene = scene;
