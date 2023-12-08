@@ -14,10 +14,10 @@ export default defineConfig({
       },
     },
   },
-  resolve: {
-    alias: {
-      src: "/src",
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     src: "/src",
+  //   },
+  // },
   build: { chunkSizeWarningLimit: 1900 },
 });
