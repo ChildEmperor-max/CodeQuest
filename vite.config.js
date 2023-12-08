@@ -19,4 +19,5 @@ export default defineConfig({
       src: "/src",
     },
   },
+  build: { chunkSizeWarningLimit: 1900 },
 });
