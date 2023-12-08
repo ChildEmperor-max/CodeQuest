@@ -15,7 +15,7 @@ export default defineConfig({
       },
     },
   },
-  assetsInclude: "**/*.glb",
+  assetsInclude: ["**/*.glb", "**/*.fbx"],
   resolve: {
     alias: {
       src: "/src",
