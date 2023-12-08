@@ -30,6 +30,7 @@ import { fetchCharacterById } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
 import { useQuestsData } from "../components/QuestContext";
 import { useWorldContext } from "../components/WorldContext";
+import AvatarImage from "src/assets/icons/default-avatar.png";
 
 export default function InterfaceHandler({
   settings: {
@@ -416,11 +417,7 @@ export default function InterfaceHandler({
                 <div className="left-ui-container">
                   <div className="horizontal-container">
                     <div onClick={() => toggleInterface(interfaces.profile)}>
-                      <img
-                        src="/src/assets/icons/default-avatar.png"
-                        id="avatar-display"
-                        alt="Avatar"
-                      />
+                      <img src={AvatarImage} id="avatar-display" alt="Avatar" />
                     </div>
                     <div className="profile-display-container">
                       <p>{characterData.character_name}</p>
