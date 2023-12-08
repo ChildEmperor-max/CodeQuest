@@ -8,7 +8,7 @@ import {
   insertPlayerQuestProgress,
 } from "../../db/HandleTable";
 
-const SignupForm = () => {
+const SignupForm = ({ darkMode }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     role: "",
@@ -82,7 +82,7 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="signup-form-container">
+    <div className={`signup-form-container ${darkMode ? "dark" : "light"}`}>
       <div className="signup-sub-container">
         <h2>Signup as a:</h2>
         <form onSubmit={handleSubmit}>

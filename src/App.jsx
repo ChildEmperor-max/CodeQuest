@@ -9,6 +9,7 @@ import { WorldProvider } from "./components/WorldContext";
 import { QuestsDataProvider } from "./components/QuestContext";
 
 function App() {
+  const [darkMode, setDarkMode] = useState(true);
   return (
     <>
       <WorldProvider>
@@ -16,9 +17,15 @@ function App() {
           <QuestsDataProvider>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/signup" element={<SignupForm />} />
-              <Route path="/game" element={<Game />} />
+              <Route
+                path="/login"
+                element={<LoginForm darkMode={darkMode} />}
+              />
+              <Route
+                path="/signup"
+                element={<SignupForm darkMode={darkMode} />}
+              />
+              <Route path="/game" element={<Game darkMode={darkMode} />} />
             </Routes>
           </QuestsDataProvider>
         </PlayerProvider>

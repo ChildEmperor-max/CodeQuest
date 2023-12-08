@@ -6,7 +6,7 @@ import "./LoginForm.css";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { fetchPlayerByEmail } from "../../db/HandleTable";
 
-const LoginForm = () => {
+const LoginForm = ({ darkMode }) => {
   const navigate = useNavigate();
   const { login } = usePlayerContext();
   const [formData, setFormData] = useState({
@@ -70,7 +70,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className={`login-container ${darkMode ? "dark" : "light"}`}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">

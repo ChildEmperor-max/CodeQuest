@@ -1,76 +1,88 @@
 .signup-form-container {
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-    box-sizing: border-box;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-    color: black;
-  }
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+  color: black;
+}
 
-  .signup-sub-container {
-    border: 2px solid rgb(49, 49, 49);
-    border-radius: 30px;
-    padding: 50px;
-  }
-  
-  .signup-form-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
+.signup-form-container.light {
+  background-color: #fff;
+  color: black;
+}
 
-  .form-group button, select {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: #f4f4f4;
-    color: black;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-  }
+/* Dark Mode Styles */
+.signup-form-container.dark {
+  background-color: #333;
+  color: white;
+}
+
+.signup-sub-container {
+  border: 2px solid rgb(49, 49, 49);
+  border-radius: 30px;
+  padding: 50px;
+}
+
+.signup-form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group button,
+select {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #f4f4f4;
+  color: black;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}

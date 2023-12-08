@@ -8,7 +8,16 @@
   background-color: #f4f4f4;
   color: black;
 }
+.login-container.light {
+  background-color: #fff;
+  color: black;
+}
 
+/* Dark Mode Styles */
+.login-container.dark {
+  background-color: #333;
+  color: white;
+}
 .login-container h2 {
   font-size: 24px;
   margin-bottom: 20px;

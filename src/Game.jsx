@@ -34,7 +34,7 @@ import CameraController from "./lib/camera/CameraControls";
 import { useWorldContext } from "./components/WorldContext";
 import Loader from "./components/loader/Loader";
 
-const Game = () => {
+const Game = ({ darkMode }) => {
   document.body.classList.add("overflow-hidden");
   const { initializeNpcs } = useWorldContext();
   const [antialiasValue, setAntialiasValue] = useState(false);
