@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { TextureLoader } from "three/src/loaders/TextureLoader.js";
 import * as TWEEN from "@tweenjs/tween.js";
 import keys from "../lib/KeyControls";
 import ManageLoader from "../lib/Loader";
@@ -10,7 +9,7 @@ import RunningAnim from "src/assets/models/animations/Running.fbx";
 import VictoryAnim from "src/assets/models/animations/Victory.fbx";
 import DefeatAnim from "src/assets/models/animations/Defeat.fbx";
 import FallingAnim from "src/assets/models/animations/Falling.fbx";
-import PlayerModel from "src/assets/player/m/Idle.fbx";
+import PlayerModel from "src/assets/player/m/ascii/Idle.fbx";
 
 export default class Player extends THREE.Object3D {
   constructor() {
