@@ -9,7 +9,8 @@ import RunningAnim from "src/assets/models/animations/Running.fbx";
 import VictoryAnim from "src/assets/models/animations/Victory.fbx";
 import DefeatAnim from "src/assets/models/animations/Defeat.fbx";
 import FallingAnim from "src/assets/models/animations/Falling.fbx";
-import PlayerModel from "src/assets/player/m/7.4/Idle.fbx";
+import PlayerModel from "src/assets/player/m/Idle.fbx";
+import BlueTexture from "src/assets/player/m/Peasant Nolant Blue.png";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -572,10 +573,14 @@ export default class Player extends THREE.Object3D {
           playerCollisionGeometry,
           new THREE.MeshBasicMaterial({ visible: false })
         );
+        const textureTest = new THREE.TextureLoader().load(BlueTexture);
+        const materialTest = new THREE.MeshBasicMaterial({ map: textureTest });
 
+        // children[1].material.map.image.currentSrc
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             // child.material.specular = new THREE.Color(0xffffff);
+            child.material = materialTest;
             child.castShadow = true;
             child.receiveShadow = true;
             child.material.visible = true;
