@@ -3,6 +3,8 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
 import keys from "../lib/KeyControls";
 import ManageLoader from "../lib/Loader";
+import AnimationsPath from "src/assets/models/animations/";
+import PlayerModelPath from "/src/assets/player/m/";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -551,25 +553,12 @@ export default class Player extends THREE.Object3D {
       this.loaderElement,
       this.textLoaderElement
     );
-    // loader.loadingManager.setURLModifier(function (url) {
-    //   console.log(url);
-    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/发.png") {
-    //     url = "/src/assets/models/hutao/tex/发.png";
-    //   }
-    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/服.png") {
-    //     url = "/src/assets/models/hutao/tex/服.png";
-    //   }
-    //   if (url === "/src/assets/models/hutao/E:/Downloads/hutao/tex/面.png") {
-    //     url = "/src/assets/models/hutao/tex/面.png";
-    //   }
-    //   return url;
-    // });
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
-    const animationsPath = "/src/assets/models/animations/";
-    const playerModelPath = "/src/assets/player/m/";
+    // const animationsPath = "/src/assets/models/animations/";
+    // const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
-      playerModelPath + "Idle.fbx",
+      PlayerModelPath + "Idle.fbx",
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(this.modelScale, this.modelScale, this.modelScale);
@@ -616,7 +605,7 @@ export default class Player extends THREE.Object3D {
         this.mixer = new THREE.AnimationMixer(this.mesh);
         // this.mixer.timeScale = 7.0;
 
-        this.loadAnimation(this.mixer, animationsPath);
+        this.loadAnimation(this.mixer, AnimationsPath);
       },
       undefined,
       (error) => {
