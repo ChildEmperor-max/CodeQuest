@@ -3,7 +3,12 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as TWEEN from "@tweenjs/tween.js";
 import keys from "../lib/KeyControls";
 import ManageLoader from "../lib/Loader";
-import AnimationsPath from "src/assets/models/animations/";
+import IdleAnim from "src/assets/models/animations/Idle.fbx";
+import WalkingAnim from "src/assets/models/animations/Walking.fbx";
+import RunningAnim from "src/assets/models/animations/Running.fbx";
+import VictoryAnim from "src/assets/models/animations/Victory.fbx";
+import DefeatAnim from "src/assets/models/animations/Defeat.fbx";
+import FallingAnim from "src/assets/models/animations/Falling.fbx";
 import PlayerModelPath from "src/assets/player/m/";
 
 export default class Player extends THREE.Object3D {
@@ -555,7 +560,7 @@ export default class Player extends THREE.Object3D {
     );
 
     this.fbxLoader = new FBXLoader(loader.loadingManager);
-    // const animationsPath = "/src/assets/models/animations/";
+    const animationsPath = "/src/assets/models/animations/";
     // const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
       PlayerModelPath + "Idle.fbx",
@@ -605,7 +610,7 @@ export default class Player extends THREE.Object3D {
         this.mixer = new THREE.AnimationMixer(this.mesh);
         // this.mixer.timeScale = 7.0;
 
-        this.loadAnimation(this.mixer, AnimationsPath);
+        this.loadAnimation(this.mixer, animationsPath);
       },
       undefined,
       (error) => {
@@ -615,37 +620,37 @@ export default class Player extends THREE.Object3D {
   }
 
   loadAnimation(mixer, playerAnimationPath) {
-    this.fbxLoader.load(playerAnimationPath + "Idle.fbx", (idleFbx) => {
+    this.fbxLoader.load(IdleAnim, (idleFbx) => {
       this.idleAction = this.actionClipAnimation(idleFbx, mixer);
       this.idleAction.name = "idle";
       this.actions.push(this.idleAction);
     });
 
-    this.fbxLoader.load(playerAnimationPath + "Walking.fbx", (walkingFbx) => {
+    this.fbxLoader.load(WalkingAnim, (walkingFbx) => {
       this.walkingAction = this.actionClipAnimation(walkingFbx, mixer);
       this.walkingAction.name = "walking";
       this.actions.push(this.walkingAction);
     });
 
-    this.fbxLoader.load(playerAnimationPath + "Running.fbx", (runningFbx) => {
+    this.fbxLoader.load(RunningAnim, (runningFbx) => {
       this.runningAction = this.actionClipAnimation(runningFbx, mixer);
       this.runningAction.name = "running";
       this.actions.push(this.runningAction);
     });
 
-    this.fbxLoader.load(playerAnimationPath + "Falling.fbx", (fallingFbx) => {
+    this.fbxLoader.load(FallingAnim, (fallingFbx) => {
       this.fallingAction = this.actionClipAnimation(fallingFbx, mixer);
       this.fallingAction.name = "falling";
       this.actions.push(this.fallingAction);
     });
 
-    this.fbxLoader.load(playerAnimationPath + "Defeat.fbx", (defeatFbx) => {
+    this.fbxLoader.load(DefeatAnim, (defeatFbx) => {
       this.defeatAction = this.actionClipAnimation(defeatFbx, mixer);
       this.defeatAction.name = "defeat";
       this.actions.push(this.defeatAction);
     });
 
-    this.fbxLoader.load(playerAnimationPath + "Victory.fbx", (victoryFbx) => {
+    this.fbxLoader.load(VictoryAnim, (victoryFbx) => {
       this.victoryAction = this.actionClipAnimation(victoryFbx, mixer);
       this.victoryAction.name = "victory";
       this.actions.push(this.victoryAction);
