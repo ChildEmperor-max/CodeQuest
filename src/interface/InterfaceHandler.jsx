@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SprintImageNoBG from "src/assets/icons/circle-running-icon-no-bg.svg";
 import CharacterProfile from "./CharacterProfile/CharacterProfile";
 import Settings from "./Settings/Settings";
 import Achievements from "./Achievements/Achievements";
@@ -486,11 +487,7 @@ export default function InterfaceHandler({
                 id="sprint-icon"
               >
                 <a>
-                  <img
-                    src="src/assets/icons/circle-running-icon-no-bg.svg"
-                    alt="Sprint"
-                    className="svg"
-                  />
+                  <img src={SprintImageNoBG} alt="Sprint" className="svg" />
                 </a>
               </div>
             </div>
