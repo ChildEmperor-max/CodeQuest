@@ -1,6 +1,6 @@
 import React from "react";
 import "animate.css";
-import TestBadgeIcon from "src/assets/icons/test-icon1";
+import TestBadgeIcon from "src/assets/icons/test-icon1.png";
 
 const AchievementBadge = ({
   name,
