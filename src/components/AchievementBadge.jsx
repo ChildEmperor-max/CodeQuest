@@ -1,5 +1,6 @@
 import React from "react";
 import "animate.css";
+import TestBadgeIcon from "src/assets/icons/test-icon1";
 
 const AchievementBadge = ({
   name,
@@ -19,7 +20,7 @@ const AchievementBadge = ({
             className={`badge-img-front animate__animated animate__flipInX ${
               large ? "" : "small"
             }  ${status === "locked" ? "locked" : "unlocked"}`}
-            src="src/assets/icons/test-icon1.png"
+            src={TestBadgeIcon}
           />
         </div>
         <div className="date-achieved-tooltip-container">
