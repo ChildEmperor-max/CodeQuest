@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
-import AdultFemale1 from "/src/assets/npc/AdultFemale1/Idle.fbx";
+import AdultFemale1 from "src/assets/npc/AdultFemale1/Idle.fbx";
 import RedTexture from "src/assets/npc/AdultFemale1/Peasant Anne Red.png";
 
 export default class SampleNPC2 extends NPCLoader {
