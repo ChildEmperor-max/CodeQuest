@@ -9,7 +9,7 @@ import RunningAnim from "src/assets/models/animations/Running.fbx";
 import VictoryAnim from "src/assets/models/animations/Victory.fbx";
 import DefeatAnim from "src/assets/models/animations/Defeat.fbx";
 import FallingAnim from "src/assets/models/animations/Falling.fbx";
-import PlayerModelPath from "src/assets/player/m/";
+import PlayerModel from "src/assets/player/m/Idle.fbx";
 
 export default class Player extends THREE.Object3D {
   constructor() {
@@ -563,7 +563,7 @@ export default class Player extends THREE.Object3D {
     const animationsPath = "/src/assets/models/animations/";
     // const playerModelPath = "/src/assets/player/m/";
     this.fbxLoader.load(
-      PlayerModelPath + "Idle.fbx",
+      PlayerModel,
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(this.modelScale, this.modelScale, this.modelScale);
