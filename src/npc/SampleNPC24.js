@@ -15,7 +15,7 @@ export default class SampleNPC24 extends NPCLoader {
     groundMesh,
     rotation = 5,
     modelPath = this.path,
-    npcName = "SampleNPC24:Roman Numeral Display",
+    npcName = "Aria",
     scale = 0.01
   ) {
     super.initialize(

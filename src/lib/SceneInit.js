@@ -35,8 +35,8 @@ export default class SceneInit {
     this.mainWorldScene = mainWorldScene;
     this.albyHouseScene = new THREE.Scene();
     this.scene = mainWorldScene;
-    this.axesHelper = new THREE.AxesHelper(518);
-    this.scene.add(this.axesHelper);
+    //this.axesHelper = new THREE.AxesHelper(518);
+    // this.scene.add(this.axesHelper);
     this.clock = new THREE.Clock();
     this.npcs = npcs;
     this.dynamicLabel = new DynamicLabel();

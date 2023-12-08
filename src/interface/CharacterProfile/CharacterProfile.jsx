@@ -22,6 +22,7 @@ import EditUsernameModal from "./EditUsernameModal";
 import AchievementProfile from "./AchievementProfile";
 import LogoutAlertModal from "../../components/LougoutAlertModal";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
+import AvatarImage from "src/assets/icons/default-avatar.png";
 
 const CharacterProfile = ({ onClose }) => {
   const [characterData, setCharacterData] = useState(undefined);
@@ -380,11 +381,7 @@ const CharacterProfile = ({ onClose }) => {
                   onMouseEnter={() => setIsHovered("avatar-hover")}
                   onMouseLeave={() => setIsHovered("")}
                 >
-                  <img
-                    src="/src/assets/icons/default-avatar.png"
-                    id="avatar"
-                    alt="Avatar"
-                  />
+                  <img src={AvatarImage} id="avatar" alt="Avatar" />
                   {isHovered === "avatar-hover" && (
                     <EditProfileButton
                       onClickEvent={() => editProfile({ profile: "avatar" })}
