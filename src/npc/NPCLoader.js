@@ -440,28 +440,19 @@ export default class NPCLoader extends Interactibles {
       (fbx) => {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(scale, scale, scale);
+
+        const baseTexture = new THREE.TextureLoader().load(modelTexturePath);
+        const baseMaterial = new THREE.MeshBasicMaterial({ map: baseTexture });
+
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
+            child.material = baseMaterial;
             child.material.visible = true;
             child.material.side = THREE.DoubleSide;
             child.material.opacity = 1.0;
             child.material.transparent = false;
             child.material.blending = THREE.NoBlending;
             child.material.alphaMap = null;
-            // if (modelTexturePath !== undefined) {
-            //   if (modelTexturePath.length > 1) {
-            //     const material = child.material;
-
-            //     material.map = this.textureLoader.load(modelTexturePath[0]);
-            //     material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
-
-            //     material.roughnessMap = this.textureLoader.load(
-            //       modelTexturePath[1]
-            //     );
-            //     material.roughnessMap.wrapS = material.roughnessMap.wrapT =
-            //       THREE.RepeatWrapping;
-            //   }
-            // }
             child.castShadow = true;
             child.receiveShadow = true;
             if (Array.isArray(child.material)) {

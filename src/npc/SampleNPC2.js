@@ -1,11 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
 import AdultFemale1 from "/src/assets/npc/AdultFemale1/Idle.fbx";
+import RedTexture from "src/assets/player/m/Peasant Anne Red.png";
 
 export default class SampleNPC2 extends NPCLoader {
   constructor() {
     super();
     this.path = AdultFemale1;
+    this.texture = RedTexture;
   }
   initialize(
     scene,
@@ -18,7 +20,8 @@ export default class SampleNPC2 extends NPCLoader {
     modelPath = this.path,
     npcName = "SampleNPC2",
     scale = 0.01,
-    destination = new THREE.Vector3(-8, 0, -120)
+    destination = new THREE.Vector3(-8, 0, -120),
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -31,7 +34,8 @@ export default class SampleNPC2 extends NPCLoader {
       modelPath,
       npcName,
       scale,
-      destination
+      destination,
+      modelTexturePath
     );
   }
 }

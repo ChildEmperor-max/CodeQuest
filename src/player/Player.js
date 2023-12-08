@@ -573,14 +573,14 @@ export default class Player extends THREE.Object3D {
           playerCollisionGeometry,
           new THREE.MeshBasicMaterial({ visible: false })
         );
-        const textureTest = new THREE.TextureLoader().load(BlueTexture);
-        const materialTest = new THREE.MeshBasicMaterial({ map: textureTest });
+        const baseTexture = new THREE.TextureLoader().load(BlueTexture);
+        const baseMaterial = new THREE.MeshBasicMaterial({ map: baseTexture });
 
         // children[1].material.map.image.currentSrc
         fbx.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             // child.material.specular = new THREE.Color(0xffffff);
-            child.material = materialTest;
+            child.material = baseMaterial;
             child.castShadow = true;
             child.receiveShadow = true;
             child.material.visible = true;
