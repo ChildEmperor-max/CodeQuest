@@ -1,4 +1,0 @@
-*.glb filter=lfs diff=lfs merge=lfs -text
-*.gltf filter=lfs diff=lfs merge=lfs -text
-src/assets/world/codequest_map.glb filter=lfs diff=lfs merge=lfs -text
-src/assets/world/SampleWorld.glb filter=lfs diff=lfs merge=lfs -text
