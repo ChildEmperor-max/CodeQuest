@@ -80,6 +80,52 @@ module.exports.handleInsertQuestProgress = async function (req, res, pool) {
   }
 };
 
+module.exports.handleInsertAllQuestProgress = async function (req, res, pool) {
+  try {
+    const dataArray = req.body.all_quest;
+    const player_id = req.body.player_id;
+
+    const insertQuestProgress = fs.readFileSync(
+      path + "insertQuestProgress.sql",
+      "utf8"
+    );
+
+    const queryPromises = [];
+
+    dataArray.forEach(async (data) => {
+      const quest_id = data.quest_id;
+      const quest_status = quest_id === 3 ? "inactive" : "locked";
+
+      const resultNpcDialog = await pool.query(
+        "SELECT npc_id, dialog_id from quest WHERE quest_id = $1",
+        [quest_id]
+      );
+      const npc_id = resultNpcDialog.rows[0].npc_id;
+      const dialog_id = resultNpcDialog.rows[0].dialog_id;
+
+      // Push the query promise into the array
+      queryPromises.push(
+        pool.query(insertQuestProgress, [
+          quest_id,
+          quest_status,
+          player_id,
+          npc_id,
+          dialog_id,
+        ])
+      );
+    });
+
+    await Promise.all(queryPromises);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ success: true }));
+  } catch (error) {
+    console.error("Error parsing player_quests data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
 module.exports.handleUpdateQuestProgress = async function (req, res, pool) {
   try {
     const data = req.body;

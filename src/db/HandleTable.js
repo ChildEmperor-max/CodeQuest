@@ -757,32 +757,67 @@ export function updatePlayerQuestProgress(player_id, quest_id, quest_status) {
   });
 }
 
+export function insertAllPlayerQuest(player_id, all_quest) {
+  return new Promise((resolve, reject) => {
+    fetch(playerQuestsAPI + "/insert/all/progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        all_quest: all_quest,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error inserting quest progress: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("New quest progress created successfully:", data);
+        resolve(data); // Resolve the Promise with the response data
+      })
+      .catch((error) => {
+        console.error("Error creating new quest:", error);
+        reject(error); // Reject the Promise with the error
+      });
+  });
+}
+
 export function insertPlayerQuestProgress(player_id, quest_id, quest_status) {
-  fetch(playerQuestsAPI + "/insert/progress", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      player_id: player_id,
-      quest_id: quest_id,
-      quest_status: quest_status,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          "Error inserting quest progress: " + response.statusText
-        );
-      }
-      return response.json();
+  return new Promise((resolve, reject) => {
+    fetch(playerQuestsAPI + "/insert/progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        quest_id: quest_id,
+        quest_status: quest_status,
+      }),
     })
-    .then((data) => {
-      console.log("New quest progress created successfully:", data);
-    })
-    .catch((error) => {
-      console.error("Error creating new quest:", error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Error inserting quest progress: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("New quest progress created successfully:", data);
+        resolve(data); // Resolve the Promise with the response data
+      })
+      .catch((error) => {
+        console.error("Error creating new quest:", error);
+        reject(error); // Reject the Promise with the error
+      });
+  });
 }
 
 export function updateNpcQuestDialogById(

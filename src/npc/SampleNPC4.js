@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import OldMan1 from "src/assets/npc/OldMan1/Idle.fbx";
+import BrownTexture from "src/assets/npc/OldMan1/Peasant Orin Brown.png";
 
 export default class SampleNPC4 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Traveler1/";
+    this.path = OldMan1;
+    this.texture = BrownTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC4 extends NPCLoader {
     rotation = 0,
     modelPath = this.path,
     npcName = "Village Explorer",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC4 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

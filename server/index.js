@@ -75,6 +75,7 @@ const {
   handleFetchQuestsByPlayerId,
   handleFetchQuestByQuestId,
   handleFetchNpcQuestStatus,
+  handleInsertAllQuestProgress,
 } = require("./handlers/playerQuestHandler");
 
 // const __filename = fileURLToPath(import.meta.url);
@@ -278,6 +279,10 @@ app.get("/player-quest/select/quest/:playerId/:questId", (req, res) => {
 
 app.post("/player-quest/insert/progress/", (req, res) => {
   handleInsertQuestProgress(req, res, pool);
+});
+
+app.post("/player-quest/insert/all/progress/", (req, res) => {
+  handleInsertAllQuestProgress(req, res, pool);
 });
 
 app.post("/player-quest/update/progress/", (req, res) => {

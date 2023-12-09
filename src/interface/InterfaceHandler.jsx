@@ -26,7 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
-import { fetchCharacterById } from "../db/HandleTable";
+import { fetchCharacterById, fetchQuestTable } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
 import { useQuestsData } from "../components/QuestContext";
 import { useWorldContext } from "../components/WorldContext";
@@ -85,6 +85,13 @@ export default function InterfaceHandler({
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
+    fetchQuestTable()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     displayUsername();
     viewQuests()
       .then((data) => {

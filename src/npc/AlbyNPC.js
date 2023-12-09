@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import AlbyModel from "src/assets/models/alby/Idle.fbx";
+import LaptopTexture from "src/assets/models/alby/laptop-test-texture.png";
 
 export default class AlbyNPC extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/models/alby/";
+    this.path = AlbyModel;
+    this.texture = LaptopTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class AlbyNPC extends NPCLoader {
     rotation = new THREE.Vector3(0, 0, 0),
     modelPath = this.path,
     npcName = "Alby",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class AlbyNPC extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

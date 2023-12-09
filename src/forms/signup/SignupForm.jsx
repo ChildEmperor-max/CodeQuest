@@ -5,6 +5,7 @@ import "./SignupForm.css";
 import {
   fetchQuestTable,
   insertCharacterByPlayerId,
+  insertAllPlayerQuest,
   insertPlayerQuestProgress,
 } from "../../db/HandleTable";
 
@@ -44,30 +45,16 @@ const SignupForm = ({ darkMode }) => {
       );
 
       if (response.status === 201) {
-        insertCharacterByPlayerId(response.data.id)
-          .then((result) => {
-            console.log(result);
-            fetchQuestTable()
-              .then((quests) => {
-                quests.find((quest) => {
-                  console.log("QUEST ADDED: ", quest);
-                  insertPlayerQuestProgress(
-                    response.data.id,
-                    quest.quest_id,
-                    quest.quest_id === 3 ? "inactive" : "locked"
-                  );
-                });
-                console.log("Signup successful:", response.data);
-                navigate("/login");
-              })
-              .catch((err) => {
-                console.log("Quest fetch error. ", err);
-              });
-          })
-          .catch((err) => {
-            setError("Signup failed");
-            console.log("Character creation error. ", err);
+        const quests = await fetchQuestTable();
+
+        insertAllPlayerQuest(response.data.id, quests).then((result) => {
+          console.log("QUEST ADDED: ", result);
+          insertCharacterByPlayerId(response.data.id).then((result) => {
+            navigate("/login");
+            console.log("Character inserted successfully: ", result);
           });
+        });
+        console.log("Signup successful:", response.data);
       } else {
         setError("Signup failed");
         console.log("Signup failed");
