@@ -31,8 +31,20 @@ const handler = async (event) => {
         }
       );
 
+    if (data) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+        headers: HEADERS,
+      };
+    }
+
     if (error) {
-      throw error;
+      return {
+        statusCode: 401,
+        body: JSON.stringify("Signup failed"),
+        headers: HEADERS,
+      };
     }
 
     return {
