@@ -28,8 +28,8 @@ const handler = async (event) => {
 
     // Insert a row
     const { testdata, testerror } = await supabase
-      .from("notes")
-      .insert([{ note: "I need to not forget this" }]);
+      .from("players")
+      .insert([{ firstName: "I need to not forget this" }]);
 
     // Did it work?
     console.log("testdata: " + testdata, "testerror: " + testerror);
