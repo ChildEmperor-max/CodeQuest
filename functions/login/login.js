@@ -1,6 +1,4 @@
 const { createClient } = require("@supabase/supabase-js");
-const db = require("../Models");
-const Player = db.players;
 
 const supabase = createClient(
   "https://lijmzdfdpsabhpwqlfnh.supabase.co",
