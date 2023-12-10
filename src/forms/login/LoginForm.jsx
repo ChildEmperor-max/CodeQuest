@@ -50,6 +50,9 @@ const LoginForm = ({ darkMode }) => {
       );
 
       console.log("response: ", response);
+      if (response.status === 200) {
+        test();
+      }
       // if (response.status === 201) {
       //   test();
       //   fetchPlayerByEmail(jsonData.email)
