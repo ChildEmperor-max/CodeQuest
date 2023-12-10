@@ -196,7 +196,7 @@ const Quests = ({ onClose }) => {
             </ul>
           </div>
         </div>
-        {questData && (
+        {questDetails.questData && (
           <QuestDetails
             questData={questData}
             questDetails={questDetails}
