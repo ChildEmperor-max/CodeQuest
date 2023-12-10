@@ -9,7 +9,7 @@ export default defineConfig({
     // port: 8000, // Specify the port for the Vite development server
     proxy: {
       "/api": {
-        target: "db.lijmzdfdpsabhpwqlfnh.supabase.co", // Proxy API requests to your server (change the URL to match your server setup)
+        target: "http://localhost:8000", // Proxy API requests to your server (change the URL to match your server setup)
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
