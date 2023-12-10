@@ -56,7 +56,7 @@ const LoginForm = ({ darkMode }) => {
         const { data, error } = await supabase
           .from("character")
           .select()
-          .eq("email", formData.email);
+          .eq("email", response.data.user.email);
         console.log(data);
         if (error) {
           console.log("Login failed");
