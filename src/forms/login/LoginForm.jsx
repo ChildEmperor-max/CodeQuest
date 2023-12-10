@@ -49,25 +49,26 @@ const LoginForm = ({ darkMode }) => {
         jsonData
       );
 
-      if (response.status === 201) {
-        test();
-        fetchPlayerByEmail(jsonData.email)
-          .then((playerData) => {
-            console.log("Login successful: ", playerData);
-            navigate("/game");
+      console.log("response: ", response);
+      // if (response.status === 201) {
+      //   test();
+      //   fetchPlayerByEmail(jsonData.email)
+      //     .then((playerData) => {
+      //       console.log("Login successful: ", playerData);
+      //       navigate("/game");
 
-            localStorage.setItem("playerId", playerData[0].id);
+      //       localStorage.setItem("playerId", playerData[0].id);
 
-            login(playerData[0].id);
-          })
-          .catch((err) => {
-            console.log("Login failed: ", err);
-            setError("An error occurred while logging in");
-          });
-      } else {
-        console.log("Login failed");
-        setError("An error occurred while logging in");
-      }
+      //       login(playerData[0].id);
+      //     })
+      //     .catch((err) => {
+      //       console.log("Login failed: ", err);
+      //       setError("An error occurred while logging in");
+      //     });
+      // } else {
+      //   console.log("Login failed");
+      //   setError("An error occurred while logging in");
+      // }
     } catch (error) {
       console.error("Error logging in:", error);
       setError("Invalid email or password");
