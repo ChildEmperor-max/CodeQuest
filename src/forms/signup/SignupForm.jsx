@@ -99,7 +99,7 @@ const SignupForm = ({ darkMode }) => {
       //   console.log("Signup failed");
       // }
     } catch (error) {
-      console.error("Error signing up:", error.response.statusText);
+      console.error("Error signing up:", error);
       setError("An error occured while signing up");
       if (error.response.statusText === "Conflict") {
         setError("Email already exists");
