@@ -706,20 +706,30 @@ export function fetchPlayerByEmail(email) {
     });
 }
 
-export function fetchPlayerQuests(id) {
-  return fetch(playerQuestsAPI + "/select/quests/" + id)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          "Error fetching player quests data: " + response.statusText
-        );
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchPlayerQuests(id) {
+  const { data, error } = await supabase
+    .from("character")
+    .select()
+    .eq("player_id", id);
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
+  // return fetch(playerQuestsAPI + "/select/quests/" + id)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         "Error fetching player quests data: " + response.statusText
+  //       );
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export function fetchQuestByQuestId(playerId, questId) {
