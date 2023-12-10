@@ -202,12 +202,15 @@ const Quests = ({ onClose }) => {
         </div>
         {questDetails.questData && (
           <QuestDetails
-            questData={questData}
-            questDetails={questDetails}
+            questData={questDetails.questData}
+            questDetails={questDetails.questDetails}
             isEditorOpen={isEditorOpen}
-            onStart={() => handleStartQuest(questDetails)}
+            onStart={() => handleStartQuest(questDetails.questDetails)}
             onAbandon={() =>
-              handleAbandonQuestAlert(questDetails.id, questDetails.quest_title)
+              handleAbandonQuestAlert(
+                questDetails.questDetails.id,
+                questDetails.questDetails.quest_title
+              )
             }
             onClose={() => setQuestDetails(null)}
           />
