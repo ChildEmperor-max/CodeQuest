@@ -715,9 +715,9 @@ export function fetchPlayerByEmail(email) {
 
 export async function fetchPlayerQuests(id) {
   const { data, error } = await supabase
-    .from("player_quests,")
+    .from("player_quests")
     .select("*, quest (*)")
-    .eq("player_id", id);
+    .eq("player_quests.player_id", id);
   if (data) {
     return data;
   }
