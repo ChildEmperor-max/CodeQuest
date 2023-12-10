@@ -52,12 +52,18 @@ const LoginForm = ({ darkMode }) => {
       );
 
       console.log("response: ", response);
+      const user_id = response.data.user.id;
       if (response.status === 200) {
         const { data, error } = await supabase
           .from("character")
           .select()
-          .eq("email", response.data.user.email);
+          .eq("player_id", user_id);
         console.log(data);
+        if (data) {
+          navigate("/game");
+          localStorage.setItem("playerId", user_id);
+          login(user_id);
+        }
         if (error) {
           console.log("Login failed");
           setError("An error occurred while logging in");
