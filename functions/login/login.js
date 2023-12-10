@@ -21,9 +21,9 @@ const handler = async (event) => {
     const { testdata, testerror } = await supabase.auth.refreshSession({
       refresh_token,
     });
-    const { testsession, testuser } = testdata;
-    console.log("testsession: " + testsession);
-    console.log("testuser: " + testuser);
+    const { session, user } = testdata;
+    console.log("session: " + session);
+    console.log("user: " + user);
     if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,
@@ -47,29 +47,29 @@ const handler = async (event) => {
       };
     }
 
-    const user = data ? data[0] : null;
+    const userExists = data ? data[0] : null;
 
-    if (user) {
-      const isSame = await bcrypt.compare(password, user.password);
+    if (userExists) {
+      const isSame = await bcrypt.compare(password, userExists.password);
 
       //if password is the same
       //generate token with the user's id and the secretKey in the env file
 
       if (isSame) {
-        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
+        let token = jwt.sign({ id: userExists.id }, process.env.secretKey, {
           expiresIn: 1 * 24 * 60 * 60 * 1000,
         });
 
         //if password matches with the one in the database
         //go ahead and generate a cookie for the user
         res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-        console.log("user", JSON.stringify(user, null, 2));
+        console.log("user", JSON.stringify(userExists, null, 2));
         console.log("LOGIN SUCCESSFULLY!!!");
         //send user data
 
         return {
           statusCode: 200,
-          body: JSON.stringify(user),
+          body: JSON.stringify(userExists),
           headers: HEADERS,
         };
       } else {
