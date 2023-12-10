@@ -716,8 +716,15 @@ export function fetchPlayerByEmail(email) {
 export async function fetchPlayerQuests(id) {
   const { data, error } = await supabase
     .from("player_quests")
-    .select("quest.*, player_quests(*)")
-    .eq("player_id", id);
+    .select(
+      `
+    player_quests.*,
+    quest.*
+  `
+    )
+    .eq("player_id", id)
+    .leftJoin("quest", "player_quests.quest_id", "quest.quest_id");
+
   if (data) {
     return data;
   }
