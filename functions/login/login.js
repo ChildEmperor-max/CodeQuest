@@ -4,6 +4,10 @@ const supabase = createClient(
   "https://lijmzdfdpsabhpwqlfnh.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpam16ZGZkcHNhYmhwd3FsZm5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE1MDQzNzcsImV4cCI6MjAxNzA4MDM3N30.YJPUGL7jXFlf6SG_mE_k4cR9aVtnlUFNGqfVjnVb8ZM"
 );
+const HEADERS = {
+  "content-type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+};
 
 const handler = async (event) => {
   try {
@@ -13,11 +17,12 @@ const handler = async (event) => {
       .from("players")
       .select()
       .eq("email", email);
-    console.log(data);
+    console.log("DATA: ", data);
     if (error) {
       return {
         statusCode: 500,
         body: JSON.stringify({ message: error.message }),
+        headers: HEADERS,
       };
     }
 
@@ -44,17 +49,20 @@ const handler = async (event) => {
         return {
           statusCode: 201,
           body: JSON.stringify(user),
+          headers: HEADERS,
         };
       } else {
         return {
           statusCode: 401,
           body: JSON.stringify("Wrong password"),
+          headers: HEADERS,
         };
       }
     } else {
       return {
         statusCode: 401,
         body: JSON.stringify("Account does not exists"),
+        headers: HEADERS,
       };
     }
   } catch (error) {
@@ -62,6 +70,7 @@ const handler = async (event) => {
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Internal Server Error" }),
+      headers: HEADERS,
     };
   }
 };
