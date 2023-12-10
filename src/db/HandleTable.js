@@ -299,18 +299,25 @@ export function addQuestToTable(from, title, description, status, type) {
     });
 }
 
-export function fetchQuestTable() {
-  return fetch(questAPI)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error fetching quest table: " + response.statusText);
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchQuestTable() {
+  const { data, error } = await supabase.from("quest").select();
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
+  // return fetch(questAPI)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error("Error fetching quest table: " + response.statusText);
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export async function fetchAchievements() {
@@ -708,7 +715,7 @@ export function fetchPlayerByEmail(email) {
 
 export async function fetchPlayerQuests(id) {
   const { data, error } = await supabase
-    .from("character")
+    .from("player_quests")
     .select()
     .eq("player_id", id);
   if (data) {
