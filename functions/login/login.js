@@ -26,6 +26,16 @@ const handler = async (event) => {
     }
     const { email, password } = JSON.parse(event.body);
 
+    const { testData, testError } = await supabase.from("players").select();
+    console.log("testData: ", testData);
+    if (testError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "testError: " + error.message }),
+        headers: HEADERS,
+      };
+    }
+
     const { data, error } = await supabase
       .from("players")
       .select()
@@ -34,7 +44,7 @@ const handler = async (event) => {
     if (error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: error.message }),
+        body: JSON.stringify({ message: "Fetch error: " + error.message }),
         headers: HEADERS,
       };
     }
