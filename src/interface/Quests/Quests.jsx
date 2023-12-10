@@ -111,8 +111,8 @@ const Quests = ({ onClose }) => {
               )} */}
               {questsData.map((quest, index) =>
                 quest.quest.quest_type === "story" &&
-                quest.quest_status !== "completed" &&
-                quest.quest_status !== "locked" ? (
+                quest.quest.quest_status !== "completed" &&
+                quest.quest.quest_status !== "locked" ? (
                   <li
                     key={index}
                     onClick={() => {
@@ -167,8 +167,8 @@ const Quests = ({ onClose }) => {
               )} */}
               {questsData.map((quest, index) =>
                 quest.quest.quest_type === "side" &&
-                quest.quest_status !== "completed" &&
-                quest.quest_status !== "locked" ? (
+                quest.quest.quest_status !== "completed" &&
+                quest.quest.quest_status !== "locked" ? (
                   <li
                     key={index}
                     onClick={() => {
