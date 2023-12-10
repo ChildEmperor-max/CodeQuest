@@ -20,7 +20,7 @@ const LoginForm = ({ darkMode }) => {
   const test = async () => {
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.getSession().session.user;
     console.log(user);
     return user;
   };
