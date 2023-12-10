@@ -22,8 +22,10 @@ const LoginForm = ({ darkMode }) => {
   }, []);
 
   const test = async () => {
-    const { data, error } = await supabase.from("users").select();
-    console.log(data);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log(data + user);
     return data;
   };
 
