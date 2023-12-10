@@ -126,8 +126,8 @@ const Quests = ({ onClose }) => {
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
-                        questData={questData}
-                        questDetails={questDetails}
+                        questData={quest}
+                        questDetails={quest.quest}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
                           handleAbandonQuestAlert(
@@ -183,8 +183,8 @@ const Quests = ({ onClose }) => {
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
-                        questData={questData}
-                        questDetails={questDetails}
+                        questData={quest}
+                        questDetails={quest.quest}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
                           handleAbandonQuestAlert(
