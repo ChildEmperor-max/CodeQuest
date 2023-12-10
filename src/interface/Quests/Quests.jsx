@@ -90,7 +90,7 @@ const Quests = ({ onClose }) => {
                 quest.quest.quest_status !== "completed" &&
                 quest.quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
-                    {quest.quest_title}{" "}
+                    {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
                         quest={quest}
@@ -116,7 +116,7 @@ const Quests = ({ onClose }) => {
                 quest.quest.quest_status !== "completed" &&
                 quest.quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
-                    {quest.quest_title}{" "}
+                    {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
                         quest={quest}
