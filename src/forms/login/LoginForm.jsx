@@ -36,7 +36,7 @@ const LoginForm = ({ darkMode }) => {
       };
 
       const response = await axios.post(
-        "db.lijmzdfdpsabhpwqlfnh.supabase.co/api/users/login",
+        "main--playcodequest.netlify.app/api/users/login",
         jsonData,
         {
           headers: {
