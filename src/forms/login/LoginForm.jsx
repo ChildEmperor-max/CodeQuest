@@ -28,18 +28,6 @@ const LoginForm = ({ darkMode }) => {
     setError("");
     setLoginLabel("Logging in...");
     e.preventDefault();
-
-    let HEADERS = {
-      "Access-Control-Allow-Headers":
-        "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin",
-      "Content-Type": "application/json", //optional
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      // "Access-Control-Max-Age": "86400", // Adjust the value as needed
-      // Vary: "Origin", // Add the Vary header
-    };
-    HEADERS["Access-Control-Allow-Origin"] = "*";
-    // HEADERS["Vary"] = "Origin";
-
     try {
       const jsonData = {
         email: formData.email,
@@ -50,9 +38,6 @@ const LoginForm = ({ darkMode }) => {
         // "http://localhost:8000/api/users/login",
         "https://playcodequest.netlify.app/.netlify/functions/login",
         jsonData
-        // {
-        //   headers: HEADERS,
-        // }
       );
 
       if (response.status === 201) {
