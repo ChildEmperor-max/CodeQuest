@@ -82,7 +82,7 @@ const Quests = ({ onClose }) => {
             <CloseButtonModal onClose={onClose} />
           </div>
           <div id="StoryQuest">
-            <h3>Story Quest</h3>
+            <h3 className="StoryQuest-text">Main Quest</h3>
             <ul id="StoryQuestList">
               {questsData.map((quest, index) =>
                 quest.quest_type === "story" &&
@@ -108,7 +108,7 @@ const Quests = ({ onClose }) => {
             </ul>
           </div>
           <div id="SideQuests">
-            <h3>Side Quests</h3>
+            <h3 className="SideQuests-text">Side Quests</h3>
             <ul id="Available">
               {questsData.map((quest, index) =>
                 quest.quest_type === "side" &&

@@ -418,6 +418,12 @@ export default function InterfaceHandler({
                 id="settings-button"
                 onClickEvent={() => toggleInterface(interfaces.settings)}
               /> */}
+              <InterfaceButton
+                name="Help"
+                icon={faQuestionCircle}
+                id="help-button"
+                onClickEvent={() => toggleInterface(interfaces.helper)}
+              />
             </div>
             <div className="left-container">
               {characterData && (
@@ -427,7 +433,9 @@ export default function InterfaceHandler({
                       <img src={AvatarImage} id="avatar-display" alt="Avatar" />
                     </div>
                     <div className="profile-display-container">
-                      <p>{characterData.character_name}</p>
+                      <p className="profile-name">
+                        {characterData.character_name}
+                      </p>
                       <p>Level: {characterData.level}</p>
                       <span>XP:</span>
                       <div className="xp-bar-background">

@@ -342,21 +342,27 @@ const CharacterProfile = ({ onClose }) => {
       ) : null}
       <div className="character-profile-container">
         <div className="left-side">
+          <br />
+          <br />
+          <br />
           <SideNavButton
             name="Profile"
             icon={faUser}
             onClickEvent={viewProfileTab}
           />
+          <br />
           <SideNavButton
             name="Achievements"
             icon={faTrophy}
             onClickEvent={viewAchievementsTab}
           />
+          <br />
           <SideNavButton
             name="Completed Quests"
             icon={faTasks}
             onClickEvent={viewCompletedQuestsTab}
           />
+          <br />
           <SideNavButton
             name="Logout"
             icon={faDoorOpen}

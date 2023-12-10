@@ -51,6 +51,14 @@
   position: relative;
   cursor: pointer;
 }
+.toplist li current-rank {
+  background: rgb(86, 86, 86);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px #c2c2c2;
+  position: relative;
+  cursor: pointer;
+}
 .toplist li .thumb {
   padding: 20px 20px 19px;
   font-weight: bold;

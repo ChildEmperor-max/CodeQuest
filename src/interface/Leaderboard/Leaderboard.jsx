@@ -68,6 +68,7 @@ const Leaderboard = ({ onClose }) => {
           ))}
           {currentPlayerRank ? (
             <li
+              className="current-rank"
               key={currentPlayerRank.player_id}
               data-rank={parseInt(currentPlayerRank.rank)}
             >
