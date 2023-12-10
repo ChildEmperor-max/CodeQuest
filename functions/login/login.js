@@ -19,7 +19,7 @@ const handler = async (event) => {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS, POST",
           "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Max-Age": "8640",
+          "Access-Control-Max-Age": "86400",
         },
       };
     }
