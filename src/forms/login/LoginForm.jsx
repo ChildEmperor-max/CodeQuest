@@ -22,7 +22,7 @@ const LoginForm = ({ darkMode }) => {
   }, []);
 
   const test = async () => {
-    const { data, error } = await supabase.from("character").select();
+    const { data, error } = await supabase.from("users").select();
     console.log(data);
     return data;
   };
