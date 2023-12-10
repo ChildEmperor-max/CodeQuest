@@ -9,8 +9,8 @@ const HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "OPTIONS, POST",
   "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Max-Age": "86400", // Adjust the value as needed
-  Vary: "Origin", // Add the Vary header
+  // "Access-Control-Max-Age": "86400", // Adjust the value as needed
+  // Vary: "Origin", // Add the Vary header
 };
 
 const handler = async (event) => {
