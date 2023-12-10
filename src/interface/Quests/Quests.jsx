@@ -115,12 +115,13 @@ const Quests = ({ onClose }) => {
                 quest.quest_status !== "locked" ? (
                   <li
                     key={index}
-                    onClick={() =>
+                    onClick={() => {
                       setQuestDetails({
                         questData: quest,
                         questDetails: quest.quest,
-                      })
-                    }
+                      });
+                      console.log(quest);
+                    }}
                   >
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
@@ -170,12 +171,13 @@ const Quests = ({ onClose }) => {
                 quest.quest_status !== "locked" ? (
                   <li
                     key={index}
-                    onClick={() =>
+                    onClick={() => {
                       setQuestDetails({
                         questData: quest,
                         questDetails: quest.quest,
-                      })
-                    }
+                      });
+                      console.log(quest);
+                    }}
                   >
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
