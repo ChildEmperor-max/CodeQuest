@@ -5,7 +5,7 @@ import axios from "axios";
 import "./LoginForm.css";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { fetchPlayerByEmail } from "../../db/HandleTable";
-import supabase from "config/supabaseConfig";
+import supabase from "../../config/supabaseConfig";
 
 const LoginForm = ({ darkMode }) => {
   console.log(supabase);
@@ -37,7 +37,6 @@ const LoginForm = ({ darkMode }) => {
       };
 
       const response = await axios.post(
-        // "https://lijmzdfdpsabhpwqlfnh.supabase.co/api/users/login",
         // "http://localhost:8000/api/users/login",
         "https://playcodequest.netlify.app/.netlify/functions/login",
         jsonData
