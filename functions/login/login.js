@@ -13,7 +13,7 @@ const handler = async (event) => {
       .from("players")
       .select()
       .eq("email", email);
-
+    console.log(data);
     if (error) {
       return {
         statusCode: 500,
