@@ -17,16 +17,12 @@ const LoginForm = ({ darkMode }) => {
   const [error, setError] = useState("");
   const [loginLabel, setLoginLabel] = useState("");
 
-  useEffect(() => {
-    test();
-  }, []);
-
   const test = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(data + user);
-    return data;
+    console.log(user);
+    return user;
   };
 
   const handleChange = (e) => {
@@ -54,6 +50,7 @@ const LoginForm = ({ darkMode }) => {
       );
 
       if (response.status === 201) {
+        test();
         fetchPlayerByEmail(jsonData.email)
           .then((playerData) => {
             console.log("Login successful: ", playerData);
