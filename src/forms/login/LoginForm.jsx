@@ -17,12 +17,14 @@ const LoginForm = ({ darkMode }) => {
   const [error, setError] = useState("");
   const [loginLabel, setLoginLabel] = useState("");
 
+  useEffect(() => {
+    test();
+  }, []);
+
   const test = async () => {
-    const {
-      data: { user },
-    } = await supabase.getSession().session.user;
-    console.log(user);
-    return user;
+    const { data, error } = await supabase.from("character").select();
+    console.log(data);
+    return data;
   };
 
   const handleChange = (e) => {
@@ -51,10 +53,19 @@ const LoginForm = ({ darkMode }) => {
 
       console.log("response: ", response);
       if (response.status === 200) {
-        test();
+        const { data, error } = await supabase
+          .from("character")
+          .select()
+          .eq("email", formData.email);
+        console.log(data);
+        if (error) {
+          console.log("Login failed");
+          setError("An error occurred while logging in");
+        }
       }
+
       // if (response.status === 201) {
-      //   test();
+
       //   fetchPlayerByEmail(jsonData.email)
       //     .then((playerData) => {
       //       console.log("Login successful: ", playerData);
