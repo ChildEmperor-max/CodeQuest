@@ -17,13 +17,6 @@ const HEADERS = {
 
 const handler = async (event) => {
   try {
-    const refresh_token = event.queryStringParameters.refresh_token;
-    const { testdata, testerror } = await supabase.auth.refreshSession({
-      refresh_token,
-    });
-    const { session, user } = testdata;
-    console.log("session: " + session);
-    console.log("user: " + user);
     if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,
@@ -33,11 +26,16 @@ const handler = async (event) => {
     }
     const { email, password } = JSON.parse(event.body);
 
-    const { data, error } = await supabase
-      .from("players")
-      .select()
-      .eq("email", email)
-      .single();
+    // const { data, error } = await supabase
+    //   .from("players")
+    //   .select()
+    //   .eq("email", email)
+    //   .single();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
     console.log("DATA: ", data);
     if (error) {
       return {
