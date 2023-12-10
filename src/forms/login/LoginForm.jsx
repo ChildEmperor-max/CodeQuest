@@ -61,7 +61,7 @@ const LoginForm = ({ darkMode }) => {
         console.log(data);
         if (data) {
           navigate("/game");
-          localStorage.setItem("playerId", user_id);
+          localStorage.setItem("playerId", toString(user_id));
           login(user_id);
         }
         if (error) {
