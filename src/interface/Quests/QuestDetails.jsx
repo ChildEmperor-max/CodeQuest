@@ -55,6 +55,7 @@ const QuestDetails = ({
             <div className="quest-details-buttons">
               {onStart && (
                 <QuestSideButton
+                  questData={questData}
                   questDetails={questDetails}
                   onStart={onStart}
                   onAbandon={onAbandon}
