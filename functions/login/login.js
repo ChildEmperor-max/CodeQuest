@@ -26,15 +26,13 @@ const handler = async (event) => {
     }
     const { email, password } = JSON.parse(event.body);
 
-    const { testData, testError } = await supabase.from("players").select();
-    console.log("testData: ", testData);
-    if (testError) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "testError: " + error.message }),
-        headers: HEADERS,
-      };
-    }
+    // Insert a row
+    const { testdata, testerror } = await supabase
+      .from("notes")
+      .insert([{ note: "I need to not forget this" }]);
+
+    // Did it work?
+    console.log("testdata: " + testdata, "testerror: " + testerror);
 
     const { data, error } = await supabase
       .from("players")
