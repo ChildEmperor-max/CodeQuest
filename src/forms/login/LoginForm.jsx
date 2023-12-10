@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,7 +8,6 @@ import { fetchPlayerByEmail } from "../../db/HandleTable";
 import supabase from "../../config/supabaseConfig";
 
 const LoginForm = ({ darkMode }) => {
-  console.log(supabase);
   const navigate = useNavigate();
   const { login } = usePlayerContext();
   const [formData, setFormData] = useState({
@@ -17,6 +16,18 @@ const LoginForm = ({ darkMode }) => {
   });
   const [error, setError] = useState("");
   const [loginLabel, setLoginLabel] = useState("");
+
+  useEffect(() => {
+    const { data, error } = supabase.from("character").select();
+    console.log(data);
+    if (error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "Fetch error: " + error.message }),
+        headers: HEADERS,
+      };
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
