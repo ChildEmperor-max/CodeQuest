@@ -54,6 +54,8 @@ export default function InterfaceHandler({
     editor: "editor",
     shop: "shop",
   };
+  // const playerId = JSON.parse(localStorage.getItem("playerId"));
+  const playerId = localStorage.getItem("playerId");
   const navigate = useNavigate();
   const manageQuest = new ManageQuest();
   const { npcs } = useWorldContext();
@@ -113,7 +115,6 @@ export default function InterfaceHandler({
   };
 
   const displayUsername = () => {
-    const playerId = JSON.parse(localStorage.getItem("playerId"));
     // if (!playerId) {
     //   navigate("/login");
     // }
@@ -121,7 +122,6 @@ export default function InterfaceHandler({
   };
 
   const fetchCharacter = () => {
-    const playerId = JSON.parse(localStorage.getItem("playerId"));
     fetchCharacterById(playerId)
       .then((result) => {
         setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);

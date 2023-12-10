@@ -1,5 +1,8 @@
+import supabase from "../config/supabaseConfig";
+
 // const host = "http://localhost:8000/";
-const host = "http://127.0.0.1:8000/";
+// const host = "http://127.0.0.1:8000/";
+const host = "db.lijmzdfdpsabhpwqlfnh.supabase.co";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
@@ -442,20 +445,30 @@ export function fetchHelpByDialogId(id) {
     });
 }
 
-export function fetchCharacterById(player_id) {
-  return fetch(characterAPI + "/" + player_id)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          "Error fetching Character data: " + response.statusText
-        );
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchCharacterById(player_id) {
+  const { data, error } = await supabase
+    .from("character")
+    .select()
+    .eq("player_id", player_id);
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
+  // return fetch(characterAPI + "/" + player_id)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         "Error fetching Character data: " + response.statusText
+  //       );
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export function updateCharacterNameById(player_id, new_name) {

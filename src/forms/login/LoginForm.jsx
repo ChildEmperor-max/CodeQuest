@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LoginForm.css";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { fetchPlayerByEmail } from "../../db/HandleTable";
+import supabase from "../../config/supabaseConfig";
 
 const LoginForm = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -15,6 +16,16 @@ const LoginForm = ({ darkMode }) => {
   });
   const [error, setError] = useState("");
   const [loginLabel, setLoginLabel] = useState("");
+
+  useEffect(() => {
+    test();
+  }, []);
+
+  const test = async () => {
+    const { data, error } = await supabase.from("character").select();
+    console.log(data);
+    return data;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +39,6 @@ const LoginForm = ({ darkMode }) => {
     setError("");
     setLoginLabel("Logging in...");
     e.preventDefault();
-
     try {
       const jsonData = {
         email: formData.email,
@@ -36,33 +46,49 @@ const LoginForm = ({ darkMode }) => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/api/users/login",
-        jsonData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        // "http://localhost:8000/api/users/login",
+        "https://playcodequest.netlify.app/.netlify/functions/login",
+        jsonData
       );
 
-      if (response.status === 201) {
-        fetchPlayerByEmail(jsonData.email)
-          .then((playerData) => {
-            console.log("Login successful: ", playerData);
-            navigate("/game");
-
-            localStorage.setItem("playerId", playerData[0].id);
-
-            login(playerData[0].id);
-          })
-          .catch((err) => {
-            console.log("Login failed: ", err);
-            setError("An error occurred while logging in");
-          });
-      } else {
-        console.log("Login failed");
-        setError("An error occurred while logging in");
+      console.log("response: ", response);
+      const user_id = response.data.user.id;
+      if (response.status === 200) {
+        const { data, error } = await supabase
+          .from("character")
+          .select()
+          .eq("player_id", user_id);
+        console.log(data);
+        if (data) {
+          navigate("/game");
+          localStorage.setItem("playerId", toString(user_id));
+          login(user_id);
+        }
+        if (error) {
+          console.log("Login failed");
+          setError("An error occurred while logging in");
+        }
       }
+
+      // if (response.status === 201) {
+
+      //   fetchPlayerByEmail(jsonData.email)
+      //     .then((playerData) => {
+      //       console.log("Login successful: ", playerData);
+      //       navigate("/game");
+
+      //       localStorage.setItem("playerId", playerData[0].id);
+
+      //       login(playerData[0].id);
+      //     })
+      //     .catch((err) => {
+      //       console.log("Login failed: ", err);
+      //       setError("An error occurred while logging in");
+      //     });
+      // } else {
+      //   console.log("Login failed");
+      //   setError("An error occurred while logging in");
+      // }
     } catch (error) {
       console.error("Error logging in:", error);
       setError("Invalid email or password");

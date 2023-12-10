@@ -1,0 +1,106 @@
+const { createClient } = require("@supabase/supabase-js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const supabase = createClient(
+  "https://lijmzdfdpsabhpwqlfnh.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpam16ZGZkcHNhYmhwd3FsZm5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE1MDQzNzcsImV4cCI6MjAxNzA4MDM3N30.YJPUGL7jXFlf6SG_mE_k4cR9aVtnlUFNGqfVjnVb8ZM"
+);
+const HEADERS = {
+  "content-type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "OPTIONS, POST",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Max-Age": "86400", // Adjust the value as needed
+  Vary: "Origin", // Add the Vary header
+};
+
+const handler = async (event) => {
+  try {
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        body: "",
+        headers: HEADERS,
+      };
+    }
+    const { email, password } = JSON.parse(event.body);
+
+    // const { data, error } = await supabase
+    //   .from("players")
+    //   .select()
+    //   .eq("email", email)
+    //   .single();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+    console.log("DATA: ", data);
+    if (error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "Fetch error: " + error.message }),
+        headers: HEADERS,
+      };
+    }
+
+    const userExists = data ? data[0] : null;
+
+    if (data) {
+      console.log("LOGIN SUCCESSFULLY!!!");
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+        headers: HEADERS,
+      };
+    }
+
+    if (userExists) {
+      const isSame = await bcrypt.compare(password, userExists.password);
+
+      //if password is the same
+      //generate token with the user's id and the secretKey in the env file
+
+      if (isSame) {
+        let token = jwt.sign({ id: userExists.id }, process.env.secretKey, {
+          expiresIn: 1 * 24 * 60 * 60 * 1000,
+        });
+
+        //if password matches with the one in the database
+        //go ahead and generate a cookie for the user
+        res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
+        console.log("user", JSON.stringify(userExists, null, 2));
+        console.log("LOGIN SUCCESSFULLY!!!");
+        //send user data
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify(userExists),
+          headers: HEADERS,
+        };
+      } else {
+        return {
+          statusCode: 401,
+          body: JSON.stringify("Wrong password"),
+          headers: HEADERS,
+        };
+      }
+    } else {
+      return {
+        statusCode: 401,
+        body: JSON.stringify("Account does not exists"),
+        headers: HEADERS,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error" }),
+      headers: HEADERS,
+    };
+  }
+};
+
+module.exports = { handler };
