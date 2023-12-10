@@ -17,6 +17,7 @@ const HEADERS = {
 
 const handler = async (event) => {
   try {
+    console.log(supabase);
     if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,
