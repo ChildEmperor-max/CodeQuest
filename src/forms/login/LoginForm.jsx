@@ -18,16 +18,12 @@ const LoginForm = ({ darkMode }) => {
   const [loginLabel, setLoginLabel] = useState("");
 
   useEffect(() => {
-    const { data, error } = supabase.from("character").select();
-    console.log(data);
-    if (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "Fetch error: " + error.message }),
-        headers: HEADERS,
-      };
-    }
+    test();
   }, []);
+  const test = async () => {
+    const { data, error } = await supabase.from("character").select();
+    console.log(data);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
