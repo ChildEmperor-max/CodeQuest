@@ -42,6 +42,7 @@ const LoginForm = ({ darkMode }) => {
         {
           headers: {
             "Content-Type": "application/json",
+            "access-control-allow-origin": "*",
           },
         }
       );
