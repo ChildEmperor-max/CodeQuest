@@ -25,6 +25,8 @@ class ManageQuest {
       sub: "sub",
       story: "story",
     };
+    // this.player_id = JSON.parse(localStorage.getItem("playerId"));
+    this.player_id = localStorage.getItem("playerId");
   }
 
   fetchQuest() {
@@ -48,44 +50,36 @@ class ManageQuest {
   }
 
   getPlayerQuests() {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    return fetchPlayerQuests(player_id);
+    return fetchPlayerQuests(this.player_id);
   }
 
   getQuestByQuestId(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
-    return fetchQuestByQuestId(player_id, quest_id);
   }
 
   insertQuestProgress(quest_id, quest_status) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    insertPlayerQuestProgress(player_id, quest_id, quest_status);
+    insertPlayerQuestProgress(this.player_id, quest_id, quest_status);
   }
 
   updateQuestStatus(quest_id, newStatus) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    updatePlayerQuestProgress(player_id, quest_id, newStatus);
+    updatePlayerQuestProgress(this.player_id, quest_id, newStatus);
   }
 
   acceptQuest(quest_id, questData) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
     this.insertQuestProgress(quest_id, "active");
   }
 
   toCompleteQuest(quest_id) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    updatePlayerQuestProgress(player_id, quest_id, this.status.toComplete);
+    updatePlayerQuestProgress(this.player_id, quest_id, this.status.toComplete);
   }
 
   completedQuest(npc_id, questData, quest_id, dialog_id) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    updatePlayerQuestProgress(player_id, quest_id, this.status.completed);
-    updateNpcQuestDialogById(player_id, quest_id, null, null);
+    updatePlayerQuestProgress(this.player_id, quest_id, this.status.completed);
+    updateNpcQuestDialogById(this.player_id, quest_id, null, null);
   }
 
   abandonQuest(quest_id) {
-    const player_id = JSON.parse(localStorage.getItem("playerId"));
-    updatePlayerQuestProgress(player_id, quest_id, this.status.inactive);
+    updatePlayerQuestProgress(this.player_id, quest_id, this.status.inactive);
   }
 }
 
