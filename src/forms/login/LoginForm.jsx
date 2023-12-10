@@ -50,7 +50,7 @@ const LoginForm = ({ darkMode }) => {
         "https://playcodequest.netlify.app/.netlify/functions/login",
         jsonData,
         {
-          HEADERS,
+          headers: HEADERS,
         }
       );
 

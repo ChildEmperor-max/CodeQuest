@@ -11,6 +11,18 @@ const HEADERS = {
 
 const handler = async (event) => {
   try {
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        body: "",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS, POST",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Max-Age": "8640",
+        },
+      };
+    }
     const { email, password } = JSON.parse(event.body);
 
     const { data, error } = await supabase
@@ -47,7 +59,7 @@ const handler = async (event) => {
         //send user data
 
         return {
-          statusCode: 201,
+          statusCode: 200,
           body: JSON.stringify(user),
           headers: HEADERS,
         };
