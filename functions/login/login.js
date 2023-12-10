@@ -1,4 +1,4 @@
-const login = async (req, res) => {
+const handler = async (req, res) => {
   try {
     res.setHeader(
       "Access-Control-Allow-Origin",
@@ -45,4 +45,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login };
+module.exports = { handler };
