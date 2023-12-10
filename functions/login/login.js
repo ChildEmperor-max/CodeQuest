@@ -47,6 +47,15 @@ const handler = async (event) => {
 
     const userExists = data ? data[0] : null;
 
+    if (data) {
+      console.log("LOGIN SUCCESSFULLY!!!");
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+        headers: HEADERS,
+      };
+    }
+
     if (userExists) {
       const isSame = await bcrypt.compare(password, userExists.password);
 
