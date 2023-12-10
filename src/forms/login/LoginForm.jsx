@@ -5,8 +5,10 @@ import axios from "axios";
 import "./LoginForm.css";
 import { usePlayerContext } from "../../components/PlayerContext";
 import { fetchPlayerByEmail } from "../../db/HandleTable";
+import supabase from "config/supabaseConfig";
 
 const LoginForm = ({ darkMode }) => {
+  console.log(supabase);
   const navigate = useNavigate();
   const { login } = usePlayerContext();
   const [formData, setFormData] = useState({
