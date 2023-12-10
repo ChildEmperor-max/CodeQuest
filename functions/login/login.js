@@ -17,7 +17,12 @@ const HEADERS = {
 
 const handler = async (event) => {
   try {
-    console.log(supabase);
+    const { testdata, testerror } = await supabase.auth.refreshSession({
+      refresh_token,
+    });
+    const { testsession, testuser } = testdata;
+    console.log("testsession: " + testsession);
+    console.log("testuser: " + testuser);
     if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,
