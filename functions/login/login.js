@@ -15,17 +15,9 @@ const HEADERS = {
   Vary: "Origin", // Add the Vary header
 };
 
-// Get the current URL
-const currentUrl = window.location.href;
-
-// Parse the URL to get its query parameters
-const urlParams = new URLSearchParams(currentUrl);
-
-// Get the value of the 'refresh_token' parameter
-const refresh_token = urlParams.get("refresh_token");
-
 const handler = async (event) => {
   try {
+    const refresh_token = event.queryStringParameters.refresh_token;
     const { testdata, testerror } = await supabase.auth.refreshSession({
       refresh_token,
     });
