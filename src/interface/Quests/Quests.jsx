@@ -111,8 +111,8 @@ const Quests = ({ onClose }) => {
               )} */}
               {questsData.map((quest, index) =>
                 quest.quest.quest_type === "story" &&
-                quest.quest.quest_status !== "completed" &&
-                quest.quest.quest_status !== "locked" ? (
+                quest.quest_status !== "completed" &&
+                quest.quest_status !== "locked" ? (
                   <li
                     key={index}
                     onClick={() => {
@@ -167,8 +167,8 @@ const Quests = ({ onClose }) => {
               )} */}
               {questsData.map((quest, index) =>
                 quest.quest.quest_type === "side" &&
-                quest.quest.quest_status !== "completed" &&
-                quest.quest.quest_status !== "locked" ? (
+                quest.quest_status !== "completed" &&
+                quest.quest_status !== "locked" ? (
                   <li
                     key={index}
                     onClick={() => {
@@ -182,7 +182,8 @@ const Quests = ({ onClose }) => {
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
-                        quest={quest}
+                        questData={questData}
+                        questDetails={questDetails}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
                           handleAbandonQuestAlert(
