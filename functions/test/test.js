@@ -1,29 +1,42 @@
-// note - this function MUST be named `identity-signup` to work
-// we do not yet offer local emulation of this functionality in Netlify Dev
-//
-// more:
-// https://www.netlify.com/blog/2019/02/21/the-role-of-roles-and-how-to-set-them-in-netlify-identity/
-// https://docs.netlify.com/functions/functions-and-identity/
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const handler = async function (event) {
-  const data = JSON.parse(event.body)
-  const { user } = data
+    //find a user by their email
+    const user = await Player.findOne({
+      where: {
+        email: email,
+      },
+    });
 
-  const responseBody = {
-    app_metadata: {
-      roles: user.email.split('@')[1] === 'trust-this-company.com' ? ['editor'] : ['visitor'],
-      my_user_info: 'this is some user info',
-    },
-    user_metadata: {
-      // append current user metadata
-      ...user.user_metadata,
-      custom_data_from_function: 'hurray this is some extra metadata',
-    },
+    //if user email is found, compare password with bcrypt
+    if (user) {
+      const isSame = await bcrypt.compare(password, user.password);
+
+      //if password is the same
+      //generate token with the user's id and the secretKey in the env file
+
+      if (isSame) {
+        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
+          expiresIn: 1 * 24 * 60 * 60 * 1000,
+        });
+
+        //if password matches with the one in the database
+        //go ahead and generate a cookie for the user
+        res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
+        console.log("user", JSON.stringify(user, null, 2));
+        console.log("LOGIN SUCCESSFULLY!!!");
+        //send user data
+        return res.status(201).send(user);
+      } else {
+        return res.status(401).send("Wrong password");
+      }
+    } else {
+      return res.status(401).send("Account does not exists");
+    }
+  } catch (error) {
+    console.log(error);
   }
-  return {
-    statusCode: 200,
-    body: JSON.stringify(responseBody),
-  }
-}
+};
 
-module.exports = { handler }
+module.exports = { login };
