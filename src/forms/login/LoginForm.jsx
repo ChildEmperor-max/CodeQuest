@@ -20,9 +20,11 @@ const LoginForm = ({ darkMode }) => {
   useEffect(() => {
     test();
   }, []);
+
   const test = async () => {
     const { data, error } = await supabase.from("character").select();
     console.log(data);
+    return data;
   };
 
   const handleChange = (e) => {

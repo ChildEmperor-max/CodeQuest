@@ -8,6 +8,7 @@ import {
   insertAllPlayerQuest,
   insertPlayerQuestProgress,
 } from "../../db/HandleTable";
+import supabase from "../../config/supabaseConfig";
 
 const SignupForm = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -34,31 +35,69 @@ const SignupForm = ({ darkMode }) => {
     e.preventDefault();
 
     try {
+      const user = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Extract user ID from the Netlify identity object
+      const userId = user.id;
+
+      const userDetails = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        gender: gender,
+        role: formData.role,
+        // Add other details as needed
+      };
+
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/users/signup",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
       const response = await axios.post(
-        "http://localhost:8000/api/users/signup",
+        // "http://localhost:8000/api/users/signup",
+        "https://playcodequest.netlify.app/.netlify/functions/signup",
         formData,
         {
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            user_id: userId,
+            ...userDetails,
+          }),
         }
       );
 
-      if (response.status === 201) {
-        const quests = await fetchQuestTable();
-
-        insertAllPlayerQuest(response.data.id, quests).then((result) => {
-          console.log("QUEST ADDED: ", result);
-          insertCharacterByPlayerId(response.data.id).then((result) => {
-            navigate("/login");
-            console.log("Character inserted successfully: ", result);
-          });
-        });
-        console.log("Signup successful:", response.data);
+      if (response.ok) {
+        console.log("User and details inserted successfully");
+        // Redirect or perform other actions as needed
       } else {
-        setError("Signup failed");
-        console.log("Signup failed");
+        console.error("Error inserting user details");
       }
+
+      // if (response.status === 201) {
+      //   const quests = await fetchQuestTable();
+
+      //   insertAllPlayerQuest(response.data.id, quests).then((result) => {
+      //     console.log("QUEST ADDED: ", result);
+      //     insertCharacterByPlayerId(response.data.id).then((result) => {
+      //       navigate("/login");
+      //       console.log("Character inserted successfully: ", result);
+      //     });
+      //   });
+      //   console.log("Signup successful:", response.data);
+      // } else {
+      //   setError("Signup failed");
+      //   console.log("Signup failed");
+      // }
     } catch (error) {
       console.error("Error signing up:", error.response.statusText);
       setError("An error occured while signing up");
