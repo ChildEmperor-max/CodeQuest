@@ -112,7 +112,7 @@ exports.handler = async (event) => {
 const pool = new Pool({
   user: "postgres",
   host: "db.lijmzdfdpsabhpwqlfnh.supabase.co",
-  database: "postgres",
+  database: "CodeQuest",
   password: "zGTyOIYJDL3vVUu6",
   port: 5432, // default PostgreSQL port
 });

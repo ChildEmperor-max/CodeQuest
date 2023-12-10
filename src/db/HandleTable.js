@@ -1,5 +1,6 @@
 // const host = "http://localhost:8000/";
-const host = "http://127.0.0.1:8000/";
+// const host = "http://127.0.0.1:8000/";
+const host = "db.lijmzdfdpsabhpwqlfnh.supabase.co";
 const npcAPI = host + "npc";
 const questAPI = host + "quests";
 const dialogAPI = host + "dialog";
