@@ -1,11 +1,11 @@
 import React from "react";
 
-const QuestSideButton = ({ quest, onStart, onAbandon }) => {
+const QuestSideButton = ({ questDetails, onStart, onAbandon }) => {
   return (
     <>
-      {quest.quest_status === "active" ? (
+      {questDetails.quest_status === "active" ? (
         <>
-          {quest.quest_type !== "story" ? (
+          {questDetails.quest_type !== "story" ? (
             <button className="quest-side-button" onClick={onAbandon}>
               Abandon
             </button>
