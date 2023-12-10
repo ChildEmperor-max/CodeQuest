@@ -121,7 +121,7 @@ export default function InterfaceHandler({
   };
 
   const fetchCharacter = () => {
-    const playerId = JSON.parse(localStorage.getItem("playerId"));
+    const playerId = localStorage.getItem("playerId");
     fetchCharacterById(playerId)
       .then((result) => {
         setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);
