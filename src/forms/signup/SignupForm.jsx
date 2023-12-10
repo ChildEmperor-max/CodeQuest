@@ -46,7 +46,7 @@ const SignupForm = ({ darkMode }) => {
       const userDetails = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        gender: gender,
+        gender: formData.gender,
         role: formData.role,
         // Add other details as needed
       };
