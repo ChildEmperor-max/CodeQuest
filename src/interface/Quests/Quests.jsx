@@ -126,7 +126,8 @@ const Quests = ({ onClose }) => {
                     {quest.quest.quest_title}{" "}
                     <div className="quest-side-button-container">
                       <QuestSideButton
-                        quest={quest}
+                        questData={questData}
+                        questDetails={questDetails}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
                           handleAbandonQuestAlert(
