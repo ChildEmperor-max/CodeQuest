@@ -1,11 +1,5 @@
 const handler = async (req, res) => {
   try {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      "https://playcodequest.netlify.app"
-    );
-    res.setHeader("Access-Control-Allow-Methods", "POST");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     const { email, password } = req.body;
 
     //find a user by their email
