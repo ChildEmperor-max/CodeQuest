@@ -7,6 +7,10 @@ const supabase = createClient(
 const HEADERS = {
   "content-type": "application/json",
   "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "OPTIONS, POST",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Max-Age": "86400", // Adjust the value as needed
+  Vary: "Origin", // Add the Vary header
 };
 
 const handler = async (event) => {
@@ -15,12 +19,7 @@ const handler = async (event) => {
       return {
         statusCode: 200,
         body: "",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS, POST",
-          "Access-Control-Allow-Headers": "Content-Type",
-          // "Access-Control-Max-Age": "86400",
-        },
+        headers: HEADERS,
       };
     }
     const { email, password } = JSON.parse(event.body);

@@ -34,7 +34,8 @@ const LoginForm = ({ darkMode }) => {
         "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin",
       "Content-Type": "application/json", //optional
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      // "Access-Control-Max-Age": "86400",
+      "Access-Control-Max-Age": "86400", // Adjust the value as needed
+      Vary: "Origin", // Add the Vary header
     };
     HEADERS["Access-Control-Allow-Origin"] = "*";
     HEADERS["Vary"] = "Origin";
