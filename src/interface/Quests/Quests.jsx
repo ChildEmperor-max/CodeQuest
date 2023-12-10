@@ -21,6 +21,7 @@ const Quests = ({ onClose }) => {
   useEffect(() => {
     viewQuests()
       .then((data) => {
+        console.log(data);
         setQuestsData(data);
       })
       .catch((error) => {
