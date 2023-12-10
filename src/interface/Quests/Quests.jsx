@@ -86,9 +86,9 @@ const Quests = ({ onClose }) => {
             <h3 className="StoryQuest-text">Main Quest</h3>
             <ul id="StoryQuestList">
               {questsData.map((quest, index) =>
-                quest.quest_type === "story" &&
-                quest.quest_status !== "completed" &&
-                quest.quest_status !== "locked" ? (
+                quest.quest.quest_type === "story" &&
+                quest.quest.quest_status !== "completed" &&
+                quest.quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
                     {quest.quest_title}{" "}
                     <div className="quest-side-button-container">
@@ -98,7 +98,7 @@ const Quests = ({ onClose }) => {
                         onAbandon={() =>
                           handleAbandonQuestAlert(
                             quest.quest_id,
-                            quest.quest_title
+                            quest.quest.quest_title
                           )
                         }
                       />
@@ -112,9 +112,9 @@ const Quests = ({ onClose }) => {
             <h3 className="SideQuests-text">Side Quests</h3>
             <ul id="Available">
               {questsData.map((quest, index) =>
-                quest.quest_type === "side" &&
-                quest.quest_status !== "completed" &&
-                quest.quest_status !== "locked" ? (
+                quest.quest.quest_type === "side" &&
+                quest.quest.quest_status !== "completed" &&
+                quest.quest.quest_status !== "locked" ? (
                   <li key={index} onClick={() => setQuestDetails(quest)}>
                     {quest.quest_title}{" "}
                     <div className="quest-side-button-container">
@@ -124,7 +124,7 @@ const Quests = ({ onClose }) => {
                         onAbandon={() =>
                           handleAbandonQuestAlert(
                             quest.quest_id,
-                            quest.quest_title
+                            quest.quest.quest_title
                           )
                         }
                       />
