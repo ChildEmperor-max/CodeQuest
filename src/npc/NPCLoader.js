@@ -147,7 +147,7 @@ export default class NPCLoader extends Interactibles {
         if (this.npcData) {
           // if (this.npcData[0].quest_status !== "locked") {
           //   if (this.npcData[0].quest_status !== "completed") {
-          if (this.npcData[0].quest_id) {
+          if (this.npcData.quest_id) {
             this.hasQuest = true;
             fetchNpcQuest.call(
               this,
