@@ -465,7 +465,7 @@ export default function InterfaceHandler({
                               className="quest-display-title"
                               onClick={() => toggleInterface(interfaces.quests)}
                             >
-                              {quest.quest_title}
+                              {quest.quest.quest_title}
                             </p>
                             <p
                               className="quest-display-action"
