@@ -121,15 +121,15 @@ export default function InterfaceHandler({
     fetchCharacter();
   };
 
-  const fetchCharacter = () => {
-    fetchCharacterById(playerId)
-      .then((result) => {
-        setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);
-        setCharacterData(result[0]);
-      })
-      .catch((err) => {
-        console.log("[FETCH CHARACTER ERROR]", err);
-      });
+  const fetchCharacter = async () => {
+    const [data, error] = await fetchCharacterById(playerId);
+    if (data) {
+      setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
+      setCharacterData(data[0]);
+    }
+    if (error) {
+      console.log("ERROR FETCHING CHARACTER IN INTERFACE: ", error);
+    }
   };
 
   const toggleInterface = async (interfaceName) => {
