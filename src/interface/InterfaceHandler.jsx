@@ -121,12 +121,20 @@ export default function InterfaceHandler({
     fetchCharacter();
   };
 
-  const fetchCharacter = async () => {
+  const getPlayerId = async () => {
     let playerId = localStorage.getItem("playerId");
+
     while (!playerId) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Wait until playerId is defined
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the delay as needed
       playerId = localStorage.getItem("playerId");
     }
+
+    return playerId;
+  };
+
+  const fetchCharacter = async () => {
+    const playerId = await getPlayerId(); // Wait for playerId to be fetched
 
     console.log("PLAYER ID: ", playerId);
 
