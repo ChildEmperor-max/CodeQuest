@@ -1039,8 +1039,8 @@ export async function fetchNpcQuestStatus(npcId, playerId) {
   if (playerQuestData && questData) {
     if (questData) {
       const combinedData = {
-        ...playerQuestData,
-        ...questData,
+        playerQuestData: playerQuestData[0],
+        questData: questData[0],
       };
       console.log("QUEST DATA: ", questData);
       console.log("PLAYER QUEST DATA: ", playerQuestData);

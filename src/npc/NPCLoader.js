@@ -129,9 +129,10 @@ export default class NPCLoader extends Interactibles {
             console.log("NPC DATA: ", result);
             this.setQuestIcon(
               this.currentQuest.data.quest_type,
-              result[0].quest_status
+              result.playerQuestsData.quest_status
             );
-            this.currentQuestStatus.stats = result[0].quest_status;
+            this.currentQuestStatus.stats =
+              result.playerQuestsData.quest_status;
           })
           .catch((err) => {
             console.log("Setting Quest Icon: ", err);
