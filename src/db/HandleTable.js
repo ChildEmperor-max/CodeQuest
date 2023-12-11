@@ -746,7 +746,7 @@ export function fetchPlayerByEmail(email) {
     });
 }
 
-export async function fetchPlayerQuests(id) {
+export async function fetchPlayerQuests(player_id) {
   const getQuestData = async () => {
     const { data, error } = await supabase.from("quest").select();
 
@@ -756,7 +756,7 @@ export async function fetchPlayerQuests(id) {
     const { data, error } = await supabase
       .from("player_quests")
       .select()
-      .eq("player_id", id);
+      .eq("player_id", player_id);
     return data || error || null;
   };
 
@@ -769,7 +769,9 @@ export async function fetchPlayerQuests(id) {
         ...playerQuestData,
         ...questData,
       };
-      console.log("TEEEEEEEEEEEEEST: ", combinedData);
+      console.log("QUEST DATA: ", questData);
+      console.log("PLAYER QUEST DATA: ", playerQuestData);
+      console.log("MERGE: ", combinedData);
       return combinedData;
     } else {
       return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
