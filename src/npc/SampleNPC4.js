@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
-import OldMan1 from "src/assets/npc/OldMan1/Idle.fbx";
-import BrownTexture from "src/assets/npc/OldMan1/Peasant Orin Brown.png";
+import OldMan1 from "src/assets/npc/Traveler1/Idle.fbx";
+import BrownTexture from "src/assets/npc/OldMan1/Peasant Taren Blue.png";
 
 export default class SampleNPC4 extends NPCLoader {
   constructor() {
