@@ -189,7 +189,7 @@ export async function fetchNpcDataByName(name, playerId) {
     )
     .contains("npc_id", "npc.id")
     .eq("player_id", playerId)
-    .eq("npc.npc_name", npcName);
+    .eq("npc.npc_name", name);
 
   if (data) {
     return data;
