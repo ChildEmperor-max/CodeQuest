@@ -180,14 +180,13 @@ export async function fetchNpcDataByName(name, playerId) {
     .from("player_quests")
     .select(
       `
-    p.npc_id,
-    p.dialog_id,
-    p.quest_id,
-    n.npc_name,
-    p.quest_status
+    npc_id: npc.id,
+    dialog_id,
+    quest_id,
+    quest_status,
+    n: npc (npc_name)
   `
     )
-    .contains("npc_id", "npc.id")
     .eq("player_id", playerId)
     .eq("npc.npc_name", name);
 
