@@ -190,19 +190,19 @@ export async function fetchNpcDataByName(name, playerId) {
     }
   };
 
-  const getQuestData = async (quest_id) => {
-    try {
-      const { data, error } = await supabase
-        .from("quest")
-        .select()
-        .eq("quest_id", quest_id);
+  // const getQuestData = async (quest_id) => {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("quest")
+  //       .select()
+  //       .eq("quest_id", quest_id);
 
-      return data || error || null;
-    } catch (error) {
-      console.error("Error fetching quest data:", error);
-      return null;
-    }
-  };
+  //     return data || error || null;
+  //   } catch (error) {
+  //     console.error("Error fetching quest data:", error);
+  //     return null;
+  //   }
+  // };
 
   const getPlayerQuestsData = async () => {
     try {
