@@ -176,25 +176,38 @@ export function fetchNpcDataById(id) {
 }
 
 export async function fetchNpcDataByName(name, playerId) {
-  const { data, error } = await supabase
-    .from("player_quests")
-    .select(
-      `
-    npc_id: npc.id,
-    dialog_id,
-    quest_id,
-    quest_status,
-    n: npc (npc_name)
-  `
-    )
-    .eq("player_id", playerId)
-    .eq("npc.npc_name", name);
+  const getNpcData = async () => {
+    const { data, error } = await supabase
+      .from("npc")
+      .select()
+      .eq("npc_name", name);
 
-  if (data) {
-    return data;
-  }
-  if (error) {
-    return error;
+    return data || error || null;
+  };
+  const getQuestData = async () => {
+    const { data, error } = await supabase
+      .from("player_quests")
+      .select()
+      .eq("player_id", playerId);
+    return data || error || null;
+  };
+
+  const npcData = await getNpcData();
+  const questData = await getQuestData();
+
+  if (npcData && questData) {
+    if (questData) {
+      const combinedData = {
+        npc: npcData,
+        quests: questData,
+      };
+
+      return combinedData;
+    } else {
+      return { error: "[ERROR at fetchNpcDataByName]: questData is empty" };
+    }
+  } else {
+    return { error: "[ERROR at fetchNpcDataByName]: npcData is empty" };
   }
   // return fetch(npcAPI + "/get-npc/" + name + "/" + playerId)
   //   .then((response) => {
