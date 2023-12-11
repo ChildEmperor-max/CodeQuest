@@ -122,13 +122,11 @@ export default function InterfaceHandler({
   };
 
   const fetchCharacter = async () => {
-    const [data, error] = await fetchCharacterById(playerId);
+    const data = await fetchCharacterById(playerId);
     if (data) {
       setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
       setCharacterData(data[0]);
-    }
-    if (error) {
-      console.log("ERROR FETCHING CHARACTER IN INTERFACE: ", error);
+      console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
     }
   };
 
