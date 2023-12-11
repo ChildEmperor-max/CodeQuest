@@ -122,16 +122,19 @@ export default function InterfaceHandler({
   };
 
   const fetchCharacter = async () => {
-    const playerId = localStorage.getItem("playerId");
+    let playerId = localStorage.getItem("playerId");
+    while (!playerId) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      playerId = localStorage.getItem("playerId");
+    }
+
     console.log("PLAYER ID: ", playerId);
 
-    if (playerId) {
-      const data = await fetchCharacterById(playerId);
-      if (data) {
-        setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
-        setCharacterData(data[0]);
-        console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
-      }
+    const data = await fetchCharacterById(playerId);
+    if (data) {
+      setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
+      setCharacterData(data[0]);
+      console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
     }
   };
 
