@@ -262,6 +262,7 @@ export default function InterfaceHandler({
       toggleInterface(interfaces.quests);
       setOpenQuestDetails(true);
     } else {
+      console.log("NAVIGATING TO QUEST: ", quest);
       const questNpc = npcs.filter((item) => {
         let npc;
         if (item.npcData[0]) {
@@ -274,6 +275,8 @@ export default function InterfaceHandler({
         questNpc[0].hideDistanceToPlayer();
       } else {
         setIsNavigating(true);
+        console.log("NAVIGATION: ", questNpc);
+        console.log("NAVIGATION: ", questNpc[0]);
         questNpc[0].showDistanceToPlayer();
       }
     }
