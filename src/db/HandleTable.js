@@ -769,7 +769,7 @@ export async function fetchPlayerQuests(id) {
         ...playerQuestData,
         ...questData,
       };
-
+      console.log("TEEEEEEEEEEEEEST: ", combinedData);
       return combinedData;
     } else {
       return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
