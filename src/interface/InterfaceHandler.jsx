@@ -101,7 +101,7 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-    displayUsername();
+    fetchCharacter();
   }, [updateAvailableQuests]);
 
   const viewQuests = async () => {
