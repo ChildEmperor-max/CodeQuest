@@ -94,7 +94,6 @@ export default function InterfaceHandler({
       .catch((err) => {
         console.log(err);
       });
-    displayUsername();
     viewQuests()
       .then((data) => {
         updateAvailableQuests(data);
@@ -102,7 +101,9 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-  }, [updateAvailableQuests]);
+    const playerId = localStorage.getItem("playerId");
+    displayUsername(playerId);
+  }, [updateAvailableQuests, playerId]);
 
   const viewQuests = async () => {
     try {
@@ -114,22 +115,21 @@ export default function InterfaceHandler({
     }
   };
 
-  const displayUsername = () => {
+  const displayUsername = (playerId) => {
     // if (!playerId) {
     //   navigate("/login");
     // }
-    fetchCharacter();
+    fetchCharacter(playerId);
   };
 
-  const fetchCharacter = () => {
-    fetchCharacterById(playerId)
-      .then((result) => {
-        setCurrentXpBar((result[0].xp.current_xp / result[0].xp.max_xp) * 200);
-        setCharacterData(result[0]);
-      })
-      .catch((err) => {
-        console.log("[FETCH CHARACTER ERROR]", err);
-      });
+  const fetchCharacter = async (playerId) => {
+    console.log("PLAYER ID: ", playerId);
+    const data = await fetchCharacterById(playerId);
+    if (data && playerId) {
+      setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
+      setCharacterData(data[0]);
+      console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
+    }
   };
 
   const toggleInterface = async (interfaceName) => {
@@ -150,7 +150,6 @@ export default function InterfaceHandler({
       setShowButtons(false);
       // disableKeyListeners();
     }
-    displayUsername();
   };
 
   useEffect(() => {
@@ -263,6 +262,7 @@ export default function InterfaceHandler({
       toggleInterface(interfaces.quests);
       setOpenQuestDetails(true);
     } else {
+      console.log("NAVIGATING TO QUEST: ", quest);
       const questNpc = npcs.filter((item) => {
         let npc;
         if (item.npcData[0]) {
@@ -275,6 +275,8 @@ export default function InterfaceHandler({
         questNpc[0].hideDistanceToPlayer();
       } else {
         setIsNavigating(true);
+        console.log("NAVIGATION: ", questNpc);
+        console.log("NAVIGATION: ", questNpc[0]);
         questNpc[0].showDistanceToPlayer();
       }
     }
@@ -466,7 +468,7 @@ export default function InterfaceHandler({
                               className="quest-display-title"
                               onClick={() => toggleInterface(interfaces.quests)}
                             >
-                              {quest.quest_title}
+                              {quest.quest.quest_title}
                             </p>
                             <p
                               className="quest-display-action"
