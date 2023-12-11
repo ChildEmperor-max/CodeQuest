@@ -223,12 +223,12 @@ export async function fetchNpcDataByName(name, playerId) {
     const playerQuestsData = await getPlayerQuestsData();
 
     if (playerQuestsData && playerQuestsData.length > 0) {
-      const questData = await getQuestData(playerQuestsData[0].quest_id);
+      // const questData = await getQuestData(playerQuestsData[0].quest_id);
       let combinedData = Object.assign(
         {},
         npcData[0],
-        playerQuestsData[0],
-        questData[0]
+        playerQuestsData[0]
+        // questData[0]
       );
 
       return combinedData;
