@@ -120,6 +120,7 @@ export default class NPCLoader extends Interactibles {
 
     async function fetchNpcQuest(quest_id, npc_id) {
       try {
+        console.log("QUEST ID: " + quest_id, "NPC_ID: " + npc_id);
         const questData = await viewQuestById(quest_id);
         this.currentQuest.data = questData[0];
 
@@ -143,7 +144,6 @@ export default class NPCLoader extends Interactibles {
     async function fetchData(npcName) {
       try {
         this.npcData = await viewNpcData(npcName, this.playerId);
-        console.log("THIS NPC DATA: ", this.npcData);
         if (this.npcData) {
           // if (this.npcData[0].quest_status !== "locked") {
           //   if (this.npcData[0].quest_status !== "completed") {
