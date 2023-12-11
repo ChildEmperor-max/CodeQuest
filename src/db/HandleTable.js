@@ -760,14 +760,16 @@ export async function fetchPlayerQuests(player_id) {
     return data || error || null;
   };
 
-  const playerQuestData = await getPlayerQuestData()[0];
-  const questData = await getQuestData()[0];
+  const playerQuestData = await getPlayerQuestData();
+  const questData = await getQuestData();
+  const test1 = playerQuestData[0];
+  const test2 = questData[0];
 
   if (playerQuestData && questData) {
     if (questData) {
       const combinedData = {
-        ...questData,
-        ...playerQuestData,
+        ...test1,
+        ...test2,
       };
       console.log("QUEST DATA: ", questData);
       console.log("PLAYER QUEST DATA: ", playerQuestData);
