@@ -144,19 +144,19 @@ export default class NPCLoader extends Interactibles {
       try {
         this.npcData = await viewNpcData(npcName, this.playerId);
         console.log("THIS NPC DATA: ", this.npcData);
-        if (this.npcData[0]) {
+        if (this.npcData) {
           // if (this.npcData[0].quest_status !== "locked") {
           //   if (this.npcData[0].quest_status !== "completed") {
           if (this.npcData[0].quest_id) {
             this.hasQuest = true;
             fetchNpcQuest.call(
               this,
-              this.npcData[0].quest_id,
-              this.npcData[0].npc_id
+              this.npcData.quest_id,
+              this.npcData.npc_id
             );
           }
           // REMINDER: CHANGE HOW THE NPC IS BEING DETECTED OF DIALOG
-          if (this.npcData[0].dialog_id) {
+          if (this.npcData.dialog_id) {
             this.hasDialog = true;
           } else {
             this.hasDialog = false;
