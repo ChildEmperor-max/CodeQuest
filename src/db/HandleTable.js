@@ -206,9 +206,9 @@ export async function fetchNpcDataByName(name, playerId) {
   if (npcData && questData) {
     if (questData) {
       const combinedData = {
-        npcData: npcData,
-        playerQuestsData: playerQuestsData,
-        questData: questData,
+        npcData: npcData[0],
+        playerQuestsData: playerQuestsData[0],
+        questData: questData[0],
       };
 
       return combinedData;
