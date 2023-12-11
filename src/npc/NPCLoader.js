@@ -125,6 +125,7 @@ export default class NPCLoader extends Interactibles {
 
         fetchNpcQuestStatus(npc_id, this.playerId)
           .then((result) => {
+            console.log("NPC DATA: ", result);
             this.setQuestIcon(
               this.currentQuest.data.quest_type,
               result[0].quest_status
