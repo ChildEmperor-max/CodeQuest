@@ -177,39 +177,53 @@ export function fetchNpcDataById(id) {
 
 export async function fetchNpcDataByName(name, playerId) {
   const getNpcData = async () => {
-    const { data, error } = await supabase
-      .from("npc")
-      .select()
-      .eq("npc_name", name);
+    try {
+      const { data, error } = await supabase
+        .from("npc")
+        .select()
+        .eq("npc_name", name);
 
-    return data || error || null;
+      return data || error || null;
+    } catch (error) {
+      console.error("Error fetching NPC data:", error);
+      return null;
+    }
   };
+
   const getQuestData = async (quest_id) => {
-    const { data, error } = await supabase
-      .from("quest")
-      .select()
-      .eq("quest_id", quest_id);
-    return data || error || null;
+    try {
+      const { data, error } = await supabase
+        .from("quest")
+        .select()
+        .eq("quest_id", quest_id);
+
+      return data || error || null;
+    } catch (error) {
+      console.error("Error fetching quest data:", error);
+      return null;
+    }
   };
+
   const getPlayerQuestsData = async () => {
-    const { data, error } = await supabase
-      .from("player_quests")
-      .select()
-      .eq("player_id", playerId);
-    return data || error || null;
+    try {
+      const { data, error } = await supabase
+        .from("player_quests")
+        .select()
+        .eq("player_id", playerId);
+
+      return data || error || null;
+    } catch (error) {
+      console.error("Error fetching player quests data:", error);
+      return null;
+    }
   };
 
-  const npcData = await getNpcData();
-  const playerQuestsData = await getPlayerQuestsData();
-  const questData = await getQuestData(playerQuestsData[0].quest_id);
+  try {
+    const npcData = await getNpcData();
+    const playerQuestsData = await getPlayerQuestsData();
 
-  if (npcData && questData) {
-    if (questData) {
-      // const combinedData = {
-      //   npcData: npcData[0],
-      //   playerQuestsData: playerQuestsData[0],
-      //   questData: questData[0],
-      // };
+    if (playerQuestsData && playerQuestsData.length > 0) {
+      const questData = await getQuestData(playerQuestsData[0].quest_id);
       let combinedData = Object.assign(
         {},
         npcData[0],
@@ -219,10 +233,10 @@ export async function fetchNpcDataByName(name, playerId) {
 
       return combinedData;
     } else {
-      return { error: "[ERROR at fetchNpcDataByName]: questData is empty" };
+      console.error("Player quests data is empty or null.");
     }
-  } else {
-    return { error: "[ERROR at fetchNpcDataByName]: npcData is empty" };
+  } catch (error) {
+    console.error("Error in data retrieval:", error);
   }
   // return fetch(npcAPI + "/get-npc/" + name + "/" + playerId)
   //   .then((response) => {
