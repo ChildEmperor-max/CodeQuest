@@ -783,9 +783,9 @@ export async function fetchPlayerQuests(player_id) {
   const { data, error } = await supabase
     .from("player_quests")
     .select("*, quest (*)")
-    .eq("player_id", id);
+    .eq("player_id", player_id);
   if (data) {
-    console.log(data);
+    console.log("QUEST DATA: ", data);
     return data;
   }
   if (error) {
