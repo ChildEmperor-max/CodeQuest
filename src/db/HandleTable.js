@@ -766,8 +766,8 @@ export async function fetchPlayerQuests(player_id) {
   if (playerQuestData && questData) {
     if (questData) {
       const combinedData = {
-        ...questData,
-        ...playerQuestData,
+        ...questData[0],
+        ...playerQuestData[0],
       };
       console.log("QUEST DATA: ", questData);
       console.log("PLAYER QUEST DATA: ", playerQuestData);
