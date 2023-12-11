@@ -177,7 +177,7 @@ export function fetchNpcDataById(id) {
 
 export async function fetchNpcDataByName(name, playerId) {
   const { data, error } = await supabase
-    .from("npc")
+    .from("npc, player_quests")
     .from()
     .select(
       `
@@ -188,8 +188,8 @@ export async function fetchNpcDataByName(name, playerId) {
       player_quests:quest_status
       `
     )
-    .eq("player_id", playerId)
-    .eq("npc_name", name);
+    .eq("player_quests:player_id", playerId)
+    .eq("npc:npc_name", name);
 
   if (data) {
     return data;
