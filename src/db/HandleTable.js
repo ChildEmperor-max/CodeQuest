@@ -747,16 +747,47 @@ export function fetchPlayerByEmail(email) {
 }
 
 export async function fetchPlayerQuests(id) {
-  const { data, error } = await supabase
-    .from("player_quests")
-    .select("*, quest (*)")
-    .eq("player_id", id);
-  if (data) {
-    return data;
+  const getQuestData = async () => {
+    const { data, error } = await supabase.from("quest").select();
+
+    return data || error || null;
+  };
+  const getPlayerQuestData = async () => {
+    const { data, error } = await supabase
+      .from("player_quests")
+      .select()
+      .eq("player_id", id);
+    return data || error || null;
+  };
+
+  const playerQuestData = await getPlayerQuestData();
+  const questData = await getQuestData();
+
+  if (playerQuestData && questData) {
+    if (questData) {
+      const combinedData = {
+        ...playerQuestData,
+        ...questData,
+      };
+
+      return combinedData;
+    } else {
+      return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
+    }
+  } else {
+    return { error: "[ERROR at fetchPlayerQuests]: playerQuestData is empty" };
   }
-  if (error) {
-    return error;
-  }
+
+  // const { data, error } = await supabase
+  //   .from("player_quests")
+  //   .select("*, quest (*)")
+  //   .eq("player_id", id);
+  // if (data) {
+  //   return data;
+  // }
+  // if (error) {
+  //   return error;
+  // }
   // return fetch(playerQuestsAPI + "/select/quests/" + id)
   //   .then((response) => {
   //     if (!response.ok) {
