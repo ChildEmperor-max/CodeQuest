@@ -177,18 +177,19 @@ export function fetchNpcDataById(id) {
 
 export async function fetchNpcDataByName(name, playerId) {
   const { data, error } = await supabase
-    .from("player_quests")
+    .from("npc")
+    .from()
     .select(
       `
-    player_quests.npc_id,
-    player_quests.dialog_id,
-    player_quests.quest_id,
-    npc.npc_name,
-    player_quests.quest_status
-  `
+      npc:npc_name,
+      player_quests:npc_id
+      player_quests:dialog_id,
+      player_quests:quest_id,
+      player_quests:quest_status
+      `
     )
-    .eq("player_quests.player_id", playerId)
-    .eq("npc.npc_name", name);
+    .eq("player_id", playerId)
+    .eq("npc_name", name);
 
   if (data) {
     return data;
