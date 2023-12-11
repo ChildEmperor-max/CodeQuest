@@ -236,18 +236,23 @@ export function fetchNpcIdByName(name) {
     });
 }
 
-export function fetchQuestById(id) {
-  return fetch(questAPI + "/get-quest/" + id)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error fetching quest data: " + response.statusText);
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchQuestById(quest_id) {
+  const [data, error] = await supabase
+    .from("quest")
+    .select()
+    .eq("quest_id", quest_id);
+  return data || error || null;
+  // return fetch(questAPI + "/get-quest/" + quest_id)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error("Error fetching quest data: " + response.statusText);
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export function fetchDialogById(id) {
@@ -334,12 +339,8 @@ export function addQuestToTable(from, title, description, status, type) {
 
 export async function fetchQuestTable() {
   const { data, error } = await supabase.from("quest").select();
-  if (data) {
-    return data;
-  }
-  if (error) {
-    return error;
-  }
+
+  return data || error || null;
   // return fetch(questAPI)
   //   .then((response) => {
   //     if (!response.ok) {
@@ -490,12 +491,8 @@ export async function fetchCharacterById(player_id) {
     .from("character")
     .select()
     .eq("player_id", player_id);
-  if (data) {
-    return data;
-  }
-  if (error) {
-    return error;
-  }
+
+  return data || error || null;
   // return fetch(characterAPI + "/" + player_id)
   //   .then((response) => {
   //     if (!response.ok) {
@@ -955,20 +952,56 @@ export function updateNpcQuestDialogById(
   });
 }
 
-export function fetchNpcQuestStatus(npcId, playerId) {
-  return fetch(playerQuestsAPI + "/select/npc-quest/" + npcId + "/" + playerId)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          "Error fetching npc quest data: " + response.statusText
-        );
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchNpcQuestStatus(npcId, playerId) {
+  const getQuestData = async () => {
+    const { data, error } = await supabase
+      .from("quest")
+      .select()
+      .eq("npc_id", npcId);
+
+    return data || error || null;
+  };
+  const getPlayerQuestData = async () => {
+    const { data, error } = await supabase
+      .from("player_quests")
+      .select()
+      .eq("player_id", playerId);
+    return data || error || null;
+  };
+
+  const playerQuestData = await getPlayerQuestData();
+  const questData = await getQuestData();
+
+  if (playerQuestData && questData) {
+    if (questData) {
+      const combinedData = {
+        ...playerQuestData,
+        ...questData,
+      };
+      console.log("QUEST DATA: ", questData);
+      console.log("PLAYER QUEST DATA: ", playerQuestData);
+      console.log("MERGE: ", combinedData);
+      return combinedData;
+    } else {
+      return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
+    }
+  } else {
+    return { error: "[ERROR at fetchPlayerQuests]: playerQuestData is empty" };
+  }
+
+  // return fetch(playerQuestsAPI + "/select/npc-quest/" + npcId + "/" + playerId)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         "Error fetching npc quest data: " + response.statusText
+  //       );
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export function fetchNpcByQuestId(questId, playerId) {
