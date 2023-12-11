@@ -184,7 +184,14 @@ export async function fetchNpcDataByName(name, playerId) {
 
     return data || error || null;
   };
-  const getQuestData = async () => {
+  const getQuestData = async (quest_id) => {
+    const { data, error } = await supabase
+      .from("quest")
+      .select()
+      .eq("quest_id", quest_id);
+    return data || error || null;
+  };
+  const getPlayerQuestsData = async () => {
     const { data, error } = await supabase
       .from("player_quests")
       .select()
@@ -193,13 +200,15 @@ export async function fetchNpcDataByName(name, playerId) {
   };
 
   const npcData = await getNpcData();
-  const questData = await getQuestData();
+  const playerQuestsData = await getPlayerQuestsData();
+  const questData = await getQuestData(playerQuestsData[0].quest_id);
 
   if (npcData && questData) {
     if (questData) {
       const combinedData = {
-        npc: npcData,
-        quests: questData,
+        npcData: npcData,
+        playerQuestsData: playerQuestsData,
+        questData: questData,
       };
 
       return combinedData;
