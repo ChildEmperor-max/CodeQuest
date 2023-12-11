@@ -747,51 +747,50 @@ export function fetchPlayerByEmail(email) {
 }
 
 export async function fetchPlayerQuests(player_id) {
-  const getQuestData = async () => {
-    const { data, error } = await supabase.from("quest").select();
+  // const getQuestData = async () => {
+  //   const { data, error } = await supabase.from("quest").select();
 
-    return data || error || null;
-  };
-  const getPlayerQuestData = async () => {
-    const { data, error } = await supabase
-      .from("player_quests")
-      .select()
-      .eq("player_id", player_id);
-    return data || error || null;
-  };
+  //   return data || error || null;
+  // };
+  // const getPlayerQuestData = async () => {
+  //   const { data, error } = await supabase
+  //     .from("player_quests")
+  //     .select()
+  //     .eq("player_id", player_id);
+  //   return data || error || null;
+  // };
 
-  const playerQuestData = await getPlayerQuestData();
-  const questData = await getQuestData();
-  const test1 = playerQuestData[0];
-  const test2 = questData[0];
+  // const playerQuestData = await getPlayerQuestData();
+  // const questData = await getQuestData();
 
-  if (playerQuestData && questData) {
-    if (questData) {
-      const combinedData = {
-        ...test1,
-        ...test2,
-      };
-      console.log("QUEST DATA: ", questData);
-      console.log("PLAYER QUEST DATA: ", playerQuestData);
-      console.log("MERGE: ", combinedData);
-      return combinedData;
-    } else {
-      return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
-    }
-  } else {
-    return { error: "[ERROR at fetchPlayerQuests]: playerQuestData is empty" };
+  // if (playerQuestData && questData) {
+  //   if (questData) {
+  //     const combinedData = {
+  //       ...playerQuestData,
+  //       ...questData,
+  //     };
+  //     console.log("QUEST DATA: ", questData);
+  //     console.log("PLAYER QUEST DATA: ", playerQuestData);
+  //     console.log("MERGE: ", combinedData);
+  //     return combinedData;
+  //   } else {
+  //     return { error: "[ERROR at fetchPlayerQuests]: questData is empty" };
+  //   }
+  // } else {
+  //   return { error: "[ERROR at fetchPlayerQuests]: playerQuestData is empty" };
+  // }
+
+  const { data, error } = await supabase
+    .from("player_quests")
+    .select("*, quest (*)")
+    .eq("player_id", id);
+  if (data) {
+    console.log(data);
+    return data;
   }
-
-  // const { data, error } = await supabase
-  //   .from("player_quests")
-  //   .select("*, quest (*)")
-  //   .eq("player_id", id);
-  // if (data) {
-  //   return data;
-  // }
-  // if (error) {
-  //   return error;
-  // }
+  if (error) {
+    return error;
+  }
   // return fetch(playerQuestsAPI + "/select/quests/" + id)
   //   .then((response) => {
   //     if (!response.ok) {
