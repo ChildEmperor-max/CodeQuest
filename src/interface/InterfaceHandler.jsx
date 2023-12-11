@@ -94,7 +94,6 @@ export default function InterfaceHandler({
       .catch((err) => {
         console.log(err);
       });
-    displayUsername();
     viewQuests()
       .then((data) => {
         updateAvailableQuests(data);
@@ -102,6 +101,7 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
+    displayUsername();
   }, [updateAvailableQuests]);
 
   const viewQuests = async () => {
@@ -122,6 +122,7 @@ export default function InterfaceHandler({
   };
 
   const fetchCharacter = async () => {
+    const playerId = localStorage.getItem("playerId");
     const data = await fetchCharacterById(playerId);
     if (data) {
       setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
