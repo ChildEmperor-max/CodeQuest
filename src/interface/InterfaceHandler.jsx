@@ -101,8 +101,9 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-    fetchCharacter();
-  }, [updateAvailableQuests]);
+    const playerId = localStorage.getItem("playerId");
+    displayUsername(playerId);
+  }, [updateAvailableQuests, playerId]);
 
   const viewQuests = async () => {
     try {
@@ -114,32 +115,17 @@ export default function InterfaceHandler({
     }
   };
 
-  const displayUsername = () => {
+  const displayUsername = (playerId) => {
     // if (!playerId) {
     //   navigate("/login");
     // }
-    fetchCharacter();
+    fetchCharacter(playerId);
   };
 
-  const getPlayerId = async () => {
-    let playerId = localStorage.getItem("playerId");
-
-    while (!playerId) {
-      // Wait until playerId is defined
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the delay as needed
-      playerId = localStorage.getItem("playerId");
-    }
-
-    return playerId;
-  };
-
-  const fetchCharacter = async () => {
-    const playerId = await getPlayerId(); // Wait for playerId to be fetched
-
+  const fetchCharacter = async (playerId) => {
     console.log("PLAYER ID: ", playerId);
-
     const data = await fetchCharacterById(playerId);
-    if (data) {
+    if (data && playerId) {
       setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
       setCharacterData(data[0]);
       console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
