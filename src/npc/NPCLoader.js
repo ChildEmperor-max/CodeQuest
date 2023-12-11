@@ -143,6 +143,7 @@ export default class NPCLoader extends Interactibles {
     async function fetchData(npcName) {
       try {
         this.npcData = await viewNpcData(npcName, this.playerId);
+        console.log("THIS NPC DATA: ", this.npcData);
         if (this.npcData[0]) {
           // if (this.npcData[0].quest_status !== "locked") {
           //   if (this.npcData[0].quest_status !== "completed") {
