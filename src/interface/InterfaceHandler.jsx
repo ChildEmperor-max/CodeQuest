@@ -55,7 +55,7 @@ export default function InterfaceHandler({
     shop: "shop",
   };
   // const playerId = JSON.parse(localStorage.getItem("playerId"));
-  const playerId = localStorage.getItem("playerId");
+  const [playerId, setPlayerId] = useState(null);
   const navigate = useNavigate();
   const manageQuest = new ManageQuest();
   const { npcs } = useWorldContext();
@@ -102,8 +102,11 @@ export default function InterfaceHandler({
         console.error("[ERROR]:", error);
       });
     const playerId = localStorage.getItem("playerId");
-    displayUsername(playerId);
-  }, [updateAvailableQuests, playerId]);
+    if (playerId) {
+      setPlayerId(playerId);
+      displayUsername(playerId);
+    }
+  }, [updateAvailableQuests]);
 
   const viewQuests = async () => {
     try {
@@ -150,7 +153,6 @@ export default function InterfaceHandler({
       setShowButtons(false);
       // disableKeyListeners();
     }
-    displayUsername();
   };
 
   useEffect(() => {

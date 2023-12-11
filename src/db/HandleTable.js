@@ -175,18 +175,38 @@ export function fetchNpcDataById(id) {
     });
 }
 
-export function fetchNpcDataByName(name, playerId) {
-  return fetch(npcAPI + "/get-npc/" + name + "/" + playerId)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error fetching NPC data: " + response.statusText);
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      throw error;
-    });
+export async function fetchNpcDataByName(name, playerId) {
+  const { data, error } = await supabase
+    .from("player_quests")
+    .select(
+      `
+    player_quests.npc_id,
+    player_quests.dialog_id,
+    player_quests.quest_id,
+    npc.npc_name,
+    player_quests.quest_status
+  `
+    )
+    .eq("player_quests.player_id", playerId)
+    .eq("npc.npc_name", name);
+
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
+  // return fetch(npcAPI + "/get-npc/" + name + "/" + playerId)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       throw new Error("Error fetching NPC data: " + response.statusText);
+  //     }
+  //     return response.json();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     throw error;
+  //   });
 }
 
 export function fetchNpcIdByName(name) {
