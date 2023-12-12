@@ -193,16 +193,15 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
               true
             );
             updateNpcQuestStatus("toComplete");
+          } else {
+            console.log("WRONG! ");
+            handlePopupContent(
+              "Wrong answer",
+              quest_data.quest_title,
+              "You can try again, don't worry!",
+              false
+            );
           }
-          // else {
-          //   console.log("WRONG! ");
-          //   handlePopupContent(
-          //     "Wrong answer",
-          //     quest_data.quest_title,
-          //     "You can try again, don't worry!",
-          //     false
-          //   );
-          // }
         }
       })
       .catch((error) => {

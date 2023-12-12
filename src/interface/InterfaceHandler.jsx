@@ -101,9 +101,9 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-    const playerId = localStorage.getItem("playerId");
-    displayUsername(playerId);
-  }, [updateAvailableQuests, playerId]);
+    // const playerId = localStorage.getItem("playerId");
+    displayUsername();
+  }, [updateAvailableQuests]);
 
   const viewQuests = async () => {
     try {
@@ -115,20 +115,25 @@ export default function InterfaceHandler({
     }
   };
 
-  const displayUsername = (playerId) => {
+  const displayUsername = () => {
     // if (!playerId) {
     //   navigate("/login");
     // }
-    fetchCharacter(playerId);
+    fetchCharacter();
   };
 
-  const fetchCharacter = async (playerId) => {
-    console.log("PLAYER ID: ", playerId);
-    const data = await fetchCharacterById(playerId);
-    if (data && playerId) {
-      setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
-      setCharacterData(data[0]);
-      console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
+  const fetchCharacter = async () => {
+    try {
+      const playerId = localStorage.getItem("playerId");
+      console.log("PLAYER ID: ", playerId);
+      const data = await fetchCharacterById(playerId);
+      if (data) {
+        setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
+        setCharacterData(data[0]);
+        console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -468,7 +473,8 @@ export default function InterfaceHandler({
                               className="quest-display-title"
                               onClick={() => toggleInterface(interfaces.quests)}
                             >
-                              {quest.quest.quest_title}
+                              {/* {quest.quest.quest_title} */}
+                              {quest.quest_title}
                             </p>
                             <p
                               className="quest-display-action"

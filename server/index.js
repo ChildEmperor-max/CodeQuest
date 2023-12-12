@@ -83,21 +83,21 @@ const {
 
 const PORT = process.env.PORT || 8000;
 require("dotenv").config();
-// const pool = new Pool({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "CodeQuest",
-//   password: "admin",
-//   port: 5432, // default PostgreSQL port
-// });
-
 const pool = new Pool({
   user: "postgres",
-  host: "db.lijmzdfdpsabhpwqlfnh.supabase.co",
+  host: "localhost",
   database: "CodeQuest",
-  password: "zGTyOIYJDL3vVUu6",
+  password: "admin",
   port: 5432, // default PostgreSQL port
 });
+
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "db.lijmzdfdpsabhpwqlfnh.supabase.co",
+//   database: "CodeQuest",
+//   password: "zGTyOIYJDL3vVUu6",
+//   port: 5432, // default PostgreSQL port
+// });
 
 const app = express();
 //middleware

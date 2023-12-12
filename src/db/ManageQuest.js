@@ -55,6 +55,7 @@ class ManageQuest {
 
   getQuestByQuestId(quest_id) {
     const player_id = JSON.parse(localStorage.getItem("playerId"));
+    return fetchQuestByQuestId(player_id, quest_id);
   }
 
   insertQuestProgress(quest_id, quest_status) {
