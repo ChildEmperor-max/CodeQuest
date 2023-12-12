@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Maiden1 from "src/assets/npc/Maiden1/Idle.fbx";
+import RedTexture from "src/assets/npc/Maiden1/Peasant Calla Red.png";
 
 export default class SampleNPC19 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Maiden1/";
+    this.path = Maiden1;
+    this.texture = RedTexture;
   }
   initialize(
     scene,
@@ -15,8 +18,10 @@ export default class SampleNPC19 extends NPCLoader {
     groundMesh,
     rotation = 0,
     modelPath = this.path,
-    npcName = "SampleNPC19: The Symphony of Transformation",
-    scale = 0.01
+    npcName = "Felicity",
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC19 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

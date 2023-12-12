@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Boy1 from "src/assets/npc/Boy1/Idle.fbx";
+import GreenTexture from "src/assets/npc/Boy1/Peasant Boy Tom Green.png";
 
 export default class SampleNPC18 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Boy1/";
+    this.path = Boy1;
+    this.texture = GreenTexture;
   }
   initialize(
     scene,
@@ -15,8 +18,10 @@ export default class SampleNPC18 extends NPCLoader {
     groundMesh,
     rotation = 1.5,
     modelPath = this.path,
-    npcName = "SampleNPC18: The Length Enigma",
-    scale = 0.01
+    npcName = "Bran",
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC18 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

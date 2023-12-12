@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Maiden2 from "src/assets/npc/Maiden2/Idle.fbx";
+import GreenTexture from "src/assets/npc/Maiden2/Peasant Calla Green.png";
 
 export default class SampleNPC20 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Maiden2/";
+    this.path = Maiden2;
+    this.texture = GreenTexture;
   }
   initialize(
     scene,
@@ -16,8 +19,10 @@ export default class SampleNPC20 extends NPCLoader {
     // rotation = new THREE.Vector3(0, Math.PI, 0),
     rotation = 3,
     modelPath = this.path,
-    npcName = "SampleNPC20: Whispers of the Silent Code",
-    scale = 0.01
+    npcName = "Beatrice",
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -29,7 +34,9 @@ export default class SampleNPC20 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

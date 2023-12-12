@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import ElderMan3 from "src/assets/npc/ElderMan3/Idle.fbx";
+import KhakiTexture from "src/assets/npc/ElderMan3/Peasant Elder Halden Khaki.png";
 
 export default class SampleNPC8 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/ElderMan3/";
+    this.path = ElderMan3;
+    this.texture = KhakiTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC8 extends NPCLoader {
     rotation = 4.5,
     modelPath = this.path,
     npcName = "Lord Reynard Blackthorn",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC8 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

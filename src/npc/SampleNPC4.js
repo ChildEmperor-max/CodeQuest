@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
-import OldMan1 from "src/assets/npc/Traveler1/Idle.fbx";
-import BrownTexture from "src/assets/npc/OldMan1/Peasant Taren Blue.png";
+import Traveler1 from "/src/assets/npc/Traveler1/Idle.fbx";
+import BlueTexture from "src/assets/npc/Traveler1/Peasant Taren Blue.png";
 
 export default class SampleNPC4 extends NPCLoader {
   constructor() {
     super();
-    this.path = OldMan1;
-    this.texture = BrownTexture;
+    this.path = Traveler1;
+    this.texture = BlueTexture;
   }
   initialize(
     scene,

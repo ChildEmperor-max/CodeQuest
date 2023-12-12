@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Shop1 from "src/assets/npc/Shop1/Idle.fbx";
+import BrownTexture from "src/assets/npc/Shop1/Peasant Taren Brown.png";
 
 export default class SampleNPC11 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Shop1/";
+    this.path = Shop1;
+    this.texture = BrownTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC11 extends NPCLoader {
     rotation = 3.5,
     modelPath = this.path,
     npcName = "Market Merchant",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC11 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

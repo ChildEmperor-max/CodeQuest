@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Girl1 from "src/assets/npc/Girl1/Idle.fbx";
+import YellowTexture from "src/assets/npc/Girl1/Peasant Girl Elsie Yellow.png";
 
 export default class SampleNPC12 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Girl1/";
+    this.path = Girl1;
+    this.texture = YellowTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC12 extends NPCLoader {
     rotation = 1.5,
     modelPath = this.path,
     npcName = "Elysia Stormborn",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC12 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

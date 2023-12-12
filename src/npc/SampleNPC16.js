@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import AdultFemale2 from "src/assets/npc/AdultFemale2/Idle.fbx";
+import GreenTexture from "src/assets/npc/AdultFemale2/Peasant Anne Green.png";
 
 export default class SampleNPC16 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/AdultFemale2/";
+    this.path = AdultFemale2;
+    this.texture = GreenTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC16 extends NPCLoader {
     rotation = 2.5,
     modelPath = this.path,
     npcName = "Amara",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC16 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

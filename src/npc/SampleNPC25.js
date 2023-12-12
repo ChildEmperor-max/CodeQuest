@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import ElderMan4 from "src/assets/npc/ElderMan4/Idle.fbx";
+import BrownTexture from "src/assets/npc/ElderMan4/Peasant Elder Halden Brown.png";
 
 export default class SampleNPC25 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/ElderMan4/";
+    this.path = ElderMan4;
+    this.texture = BrownTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC25 extends NPCLoader {
     rotation = 5.5,
     modelPath = this.path,
     npcName = "Guardian of Secrets",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC25 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

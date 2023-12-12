@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import ElderWoman2 from "src/assets/npc/ElderWoman2/Idle.fbx";
+import OrangeTexture from "src/assets/npc/ElderWoman2/Peasant Elder Grenda Orange.png";
 
 export default class SampleNPC13 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/ElderWoman2/";
+    this.path = ElderWoman2;
+    this.texture = OrangeTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC13 extends NPCLoader {
     rotation = 0.5,
     modelPath = this.path,
     npcName = "Sorin the Wise",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC13 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

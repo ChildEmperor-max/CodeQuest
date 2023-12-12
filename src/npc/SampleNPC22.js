@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import ElderMan1 from "src/assets/npc/ElderMan1/Idle.fbx";
+import GreyTexture from "src/assets/npc/ElderMan1/Peasant Elder Halden Grey.png";
 
 export default class SampleNPC22 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/ElderMan1/";
+    this.path = ElderMan1;
+    this.texture = GreyTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC22 extends NPCLoader {
     rotation = 3,
     modelPath = this.path,
     npcName = "Sir Cedric Ironheart",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC22 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }

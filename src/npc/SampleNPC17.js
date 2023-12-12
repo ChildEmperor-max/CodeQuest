@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import NPCLoader from "./NPCLoader";
+import Strawhat1 from "src/assets/npc/Strawhat1/Idle.fbx";
+import YellowTexture from "src/assets/npc/Strawhat1/Peasant Nolant Yellow.png";
 
 export default class SampleNPC17 extends NPCLoader {
   constructor() {
     super();
-    this.path = "/src/assets/npc/Strawhat1/";
+    this.path = Strawhat1;
+    this.texture = YellowTexture;
   }
   initialize(
     scene,
@@ -16,7 +19,9 @@ export default class SampleNPC17 extends NPCLoader {
     rotation = 3,
     modelPath = this.path,
     npcName = "SampleNPC17: The Logician's Challenge",
-    scale = 0.01
+    scale = 0.01,
+    destination = null,
+    modelTexturePath = this.texture
   ) {
     super.initialize(
       scene,
@@ -28,7 +33,9 @@ export default class SampleNPC17 extends NPCLoader {
       rotation,
       modelPath,
       npcName,
-      scale
+      scale,
+      destination,
+      modelTexturePath
     );
   }
 }
