@@ -357,10 +357,10 @@ const DialogBox = ({
         newStatus = status.completed;
         headerText = "Quest Completed";
         manageQuest.completedQuest(
-          npc.npcData[0].id,
+          npc.npcData.id,
           quest[0],
           quest_id,
-          npc.npcData[0].dialog_id
+          npc.npcData.dialog_id
         );
         npc.currentQuestStatus.stats = "completed";
         viewQuests()
@@ -375,8 +375,8 @@ const DialogBox = ({
             quest[0].next_quest_id
           );
           const nextNpc = npcs.filter((item) => {
-            if (item.npcData[0]) {
-              return item.npcData[0].npc_id === nextQuest[0].npc_id;
+            if (item.npcData) {
+              return item.npcData.npc_id === nextQuest[0].npc_id;
             }
           });
           const questData = await viewQuestById(nextQuest[0].quest_id);
@@ -413,7 +413,7 @@ const DialogBox = ({
   const getNpcDialog = async () => {
     try {
       const npcData = await viewNpcData(currentTalkingNpc.npcName, playerId);
-      const dialog = await viewDialogById(npcData[0].npc_id);
+      const dialog = await viewDialogById(npcData.npc_id);
       const questData = await manageQuest.getQuestByQuestId(
         npc.currentQuest.data.quest_id
       );

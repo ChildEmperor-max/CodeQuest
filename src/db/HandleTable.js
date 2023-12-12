@@ -183,7 +183,12 @@ export async function fetchNpcDataByName(name, playerId) {
         .select()
         .eq("npc_name", name);
 
-      return data || error || null;
+      if (data) {
+        return data;
+      }
+      if (error) {
+        return error;
+      }
     } catch (error) {
       console.error("Error fetching NPC data:", error);
       return null;
@@ -211,7 +216,12 @@ export async function fetchNpcDataByName(name, playerId) {
         .select()
         .eq("player_id", playerId);
 
-      return data || error || null;
+      if (data) {
+        return data;
+      }
+      if (error) {
+        return error;
+      }
     } catch (error) {
       console.error("Error fetching player quests data:", error);
       return null;
@@ -223,12 +233,12 @@ export async function fetchNpcDataByName(name, playerId) {
     const playerQuestsData = await getPlayerQuestsData();
 
     if (playerQuestsData && playerQuestsData.length > 0) {
-      // const questData = await getQuestData(playerQuestsData[0].quest_id);
+      const questData = await getQuestData(playerQuestsData[0].quest_id);
       let combinedData = Object.assign(
         {},
         npcData[0],
-        playerQuestsData[0]
-        // questData[0]
+        playerQuestsData[0],
+        questData[0]
       );
 
       return combinedData;
@@ -266,11 +276,16 @@ export function fetchNpcIdByName(name) {
 }
 
 export async function fetchQuestById(quest_id) {
-  const [data, error] = await supabase
+  const { data, error } = await supabase
     .from("quest")
     .select()
     .eq("quest_id", quest_id);
-  return data || error || null;
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
   // return fetch(questAPI + "/get-quest/" + quest_id)
   //   .then((response) => {
   //     if (!response.ok) {
@@ -369,7 +384,12 @@ export function addQuestToTable(from, title, description, status, type) {
 export async function fetchQuestTable() {
   const { data, error } = await supabase.from("quest").select();
 
-  return data || error || null;
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
   // return fetch(questAPI)
   //   .then((response) => {
   //     if (!response.ok) {
@@ -521,7 +541,12 @@ export async function fetchCharacterById(player_id) {
     .select()
     .eq("player_id", player_id);
 
-  return data || error || null;
+  if (data) {
+    return data;
+  }
+  if (error) {
+    return error;
+  }
   // return fetch(characterAPI + "/" + player_id)
   //   .then((response) => {
   //     if (!response.ok) {
@@ -988,14 +1013,24 @@ export async function fetchNpcQuestStatus(npcId, playerId) {
       .select()
       .eq("npc_id", npcId);
 
-    return data || error || null;
+    if (data) {
+      return data;
+    }
+    if (error) {
+      return error;
+    }
   };
   const getPlayerQuestData = async () => {
     const { data, error } = await supabase
       .from("player_quests")
       .select()
       .eq("player_id", playerId);
-    return data || error || null;
+    if (data) {
+      return data;
+    }
+    if (error) {
+      return error;
+    }
   };
 
   const playerQuestData = await getPlayerQuestData();
@@ -1004,8 +1039,8 @@ export async function fetchNpcQuestStatus(npcId, playerId) {
   if (playerQuestData && questData) {
     if (questData) {
       const combinedData = {
-        ...playerQuestData,
-        ...questData,
+        playerQuestData: playerQuestData[0],
+        questData: questData[0],
       };
       console.log("QUEST DATA: ", questData);
       console.log("PLAYER QUEST DATA: ", playerQuestData);

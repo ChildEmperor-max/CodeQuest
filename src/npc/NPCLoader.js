@@ -129,9 +129,9 @@ export default class NPCLoader extends Interactibles {
             console.log("NPC DATA: ", result);
             this.setQuestIcon(
               this.currentQuest.data.quest_type,
-              result[0].quest_status
+              result.playerQuestData.quest_status
             );
-            this.currentQuestStatus.stats = result[0].quest_status;
+            this.currentQuestStatus.stats = result.playerQuestData.quest_status;
           })
           .catch((err) => {
             console.log("Setting Quest Icon: ", err);
@@ -144,7 +144,8 @@ export default class NPCLoader extends Interactibles {
     async function fetchData(npcName) {
       try {
         this.npcData = await viewNpcData(npcName, this.playerId);
-        if (this.npcData) {
+        if (this.npcData.npc_name) {
+          console.log("THIS NPC DATA: ", this.npcData);
           // if (this.npcData[0].quest_status !== "locked") {
           //   if (this.npcData[0].quest_status !== "completed") {
           if (this.npcData.quest_id) {
