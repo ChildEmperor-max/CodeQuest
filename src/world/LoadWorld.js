@@ -36,11 +36,11 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         const spawnPoint = new THREE.Vector3(0, 0, -120);
         // const spawnPoint = new THREE.Vector3(218, 0, -97);
 
-        const npcSpawnPoint1 = new THREE.Vector3(0, 0, -140);
+        const npcSpawnPoint1 = new THREE.Vector3(-70, 0, -150);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
         const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
         const npcSpawnPoint4 = new THREE.Vector3(-21, 0, -248);
-        const npcSpawnPoint5 = new THREE.Vector3(2.5, 0, -120); //2.5, 0, -36
+        const npcSpawnPoint5 = new THREE.Vector3(2.5, 0, -36); //2.5, 0, -120
         const npcSpawnPoint6 = new THREE.Vector3(170, 0, -56);
         const npcSpawnPoint7 = new THREE.Vector3(120, 0, 150); //61, 0, -50
         const npcSpawnPoint8 = new THREE.Vector3(-200, 0, -100);

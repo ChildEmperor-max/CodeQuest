@@ -16,9 +16,9 @@ export default class SampleNPC1 extends NPCLoader {
     player,
     canvas,
     groundMesh,
-    rotation = 0, // 0 to 5
+    rotation = 3.5, // 0 to 5
     modelPath = this.path,
-    npcName = "SampleNPC1",
+    npcName = "Theobald",
     scale = 0.01,
     destination = null,
     modelTexturePath = this.texture
