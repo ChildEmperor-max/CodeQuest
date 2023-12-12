@@ -3,8 +3,7 @@ import CloseButtonModal from "../../components/CloseButtonModal";
 import QuestSideButton from "./QuestSideButton";
 
 const QuestDetails = ({
-  questData,
-  questDetails,
+  quest,
   isEditorOpen,
   onStart = null,
   onAbandon = null,
@@ -14,6 +13,7 @@ const QuestDetails = ({
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
+    console.log(quest);
     if (isFirstRender) {
       // Play initial animation
       setTimeout(() => {
@@ -26,24 +26,24 @@ const QuestDetails = ({
         setPlayFlipAnimation(false);
       }, 500);
     }
-  }, [questData.id]);
+  }, []);
 
   return (
     <>
-      {questData ? (
+      {quest ? (
         <div
           className={`quest-details ${isEditorOpen ? "on-editor" : ""} ${
             isFirstRender && "play-initial-animation"
           }`}
         >
           <div className={`${playFlipAnimation ? "play-fade-animation" : ""}`}>
-            <div className="quest-details-header">
+            {/*<div className="quest-details-header">
               <CloseButtonModal onClose={onClose} />
             </div>
             <div className="quest-details-content">
               <p className="quest-details-title">{questDetails.quest_title}</p>
               <p>{questDetails.quest_description}</p>
-              {/* <p>{quest.npc_name}</p> */}
+               <p>{quest.npc_name}</p>
               <div className="quest-reward-section">
                 <p>Quest completion reward</p>
                 {questDetails.reward.xp && <p>Xp: {questDetails.reward.xp}</p>}
@@ -61,8 +61,8 @@ const QuestDetails = ({
                   onAbandon={onAbandon}
                 />
               )}
-            </div>
-            {/* <div className="quest-details-header">
+            </div> */}
+            <div className="quest-details-header">
               <CloseButtonModal onClose={onClose} />
             </div>
             <div className="quest-details-content">
@@ -83,7 +83,7 @@ const QuestDetails = ({
                   onAbandon={onAbandon}
                 />
               )}
-            </div> */}
+            </div>
           </div>
         </div>
       ) : null}

@@ -16,10 +16,7 @@ const Quests = ({ onClose }) => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedQuest, setSelectedQuest] = useState(null);
 
-  const [questDetails, setQuestDetails] = useState({
-    questData: null,
-    questDetails: null,
-  });
+  const [questDetails, setQuestDetails] = useState(null);
 
   useEffect(() => {
     viewQuests()
@@ -116,10 +113,7 @@ const Quests = ({ onClose }) => {
                   <li
                     key={index}
                     onClick={() => {
-                      setQuestDetails({
-                        questData: quest,
-                        questDetails: quest.quest,
-                      });
+                      setQuestDetails(quest);
                       console.log(quest);
                     }}
                   >
@@ -127,7 +121,6 @@ const Quests = ({ onClose }) => {
                     <div className="quest-side-button-container">
                       <QuestSideButton
                         questData={quest}
-                        questDetails={quest.quest}
                         onStart={() => handleStartQuest(quest)}
                         onAbandon={() =>
                           handleAbandonQuestAlert(
@@ -173,10 +166,7 @@ const Quests = ({ onClose }) => {
                   <li
                     key={index}
                     onClick={() => {
-                      setQuestDetails({
-                        questData: quest,
-                        questDetails: quest.quest,
-                      });
+                      setQuestDetails(quest);
                       console.log(quest);
                     }}
                   >
@@ -199,20 +189,17 @@ const Quests = ({ onClose }) => {
             </ul>
           </div>
         </div>
-        {questDetails.questData && (
+        {questDetails ? (
           <QuestDetails
-            questData={questDetails.questData}
+            questData={questDetails}
             isEditorOpen={isEditorOpen}
-            onStart={() => handleStartQuest(questDetails.questDetails)}
+            onStart={() => handleStartQuest(questDetails)}
             onAbandon={() =>
-              handleAbandonQuestAlert(
-                questDetails.questDetails.id,
-                questDetails.questDetails.quest_title
-              )
+              handleAbandonQuestAlert(questDetails.id, questDetails.quest_title)
             }
             onClose={() => setQuestDetails(null)}
           />
-        )}
+        ) : null}
       </div>
     </>
   );
