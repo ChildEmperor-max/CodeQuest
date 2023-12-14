@@ -18,7 +18,7 @@ export default class SampleNPC17 extends NPCLoader {
     groundMesh,
     rotation = 3,
     modelPath = this.path,
-    npcName = "SampleNPC17: The Logician's Challenge",
+    npcName = "Leofric The Logician",
     scale = 0.01,
     destination = null,
     modelTexturePath = this.texture
