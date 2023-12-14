@@ -18,7 +18,7 @@ export default class SampleNPC2 extends NPCLoader {
     groundMesh,
     rotation = 0,
     modelPath = this.path,
-    npcName = "SampleNPC2",
+    npcName = "Gisela",
     scale = 0.01,
     destination = new THREE.Vector3(-8, 0, -120),
     modelTexturePath = this.texture
