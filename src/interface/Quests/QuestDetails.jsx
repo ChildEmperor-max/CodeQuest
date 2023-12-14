@@ -13,7 +13,6 @@ const QuestDetails = ({
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
-    console.log(quest);
     if (isFirstRender) {
       // Play initial animation
       setTimeout(() => {
@@ -26,7 +25,7 @@ const QuestDetails = ({
         setPlayFlipAnimation(false);
       }, 500);
     }
-  }, []);
+  }, [quest.id]);
 
   return (
     <>
@@ -37,31 +36,6 @@ const QuestDetails = ({
           }`}
         >
           <div className={`${playFlipAnimation ? "play-fade-animation" : ""}`}>
-            {/*<div className="quest-details-header">
-              <CloseButtonModal onClose={onClose} />
-            </div>
-            <div className="quest-details-content">
-              <p className="quest-details-title">{questDetails.quest_title}</p>
-              <p>{questDetails.quest_description}</p>
-               <p>{quest.npc_name}</p>
-              <div className="quest-reward-section">
-                <p>Quest completion reward</p>
-                {questDetails.reward.xp && <p>Xp: {questDetails.reward.xp}</p>}
-                {questDetails.reward.gold && (
-                  <p>Gold: {questDetails.reward.gold}</p>
-                )}
-              </div>
-            </div>
-            <div className="quest-details-buttons">
-              {onStart && (
-                <QuestSideButton
-                  questData={questData}
-                  questDetails={questDetails}
-                  onStart={onStart}
-                  onAbandon={onAbandon}
-                />
-              )}
-            </div> */}
             <div className="quest-details-header">
               <CloseButtonModal onClose={onClose} />
             </div>
