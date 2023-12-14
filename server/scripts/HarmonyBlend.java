@@ -5,7 +5,6 @@ public class HarmonyBlend {
         String product = "Code Harmony Blend";
 
         String purchaseSummary = "Total cost for " + quantity + " " + product + " is: $" + (quantity * price);
-
         System.out.println(purchaseSummary);
     }
 }
