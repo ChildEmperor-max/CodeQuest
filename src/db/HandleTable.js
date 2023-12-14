@@ -1143,3 +1143,48 @@ export function fetchCharacterByLevelRank(playerId) {
       throw error;
     });
 }
+
+export function fetchCharacterAvatarPath(playerId) {
+  return fetch(characterAPI + "/profile/displayAvatar/" + playerId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching characters data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export function insertAvatarPath(player_id, avatar_path) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/insert/avatarPath", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        avatar_path: avatar_path,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error inserting character: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("New character created successfully:", data);
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error("Error creating new character:", error);
+        reject(error);
+      });
+  });
+}

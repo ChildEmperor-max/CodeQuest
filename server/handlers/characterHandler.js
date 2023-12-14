@@ -419,6 +419,35 @@ module.exports.handleUpdateInventory = function (req, res, pool) {
   }
 };
 
+module.exports.handleUpdateAvatarPath = async function (
+  req,
+  res,
+  pool,
+  avatar_path
+) {
+  try {
+    const playerId = req.body.playerId;
+    const query = fs.readFileSync(path + "updateAvatarPath.sql", "utf8");
+
+    // Using async/await to handle asynchronous operations
+    await pool.query(query, [playerId, avatar_path]);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        message: `Character data updated successfully`,
+      })
+    );
+  } catch (error) {
+    console.error(
+      "Error updating character data in characterHandler.js:",
+      error
+    );
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Internal Server Error" }));
+  }
+};
+
 function returnError(err) {
   console.error(err);
   res.writeHead(500, { "Content-Type": "application/json" });

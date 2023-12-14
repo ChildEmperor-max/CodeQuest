@@ -22,7 +22,8 @@ import EditUsernameModal from "./EditUsernameModal";
 import AchievementProfile from "./AchievementProfile";
 import LogoutAlertModal from "../../components/LougoutAlertModal";
 import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
-import AvatarImage from "src/assets/icons/default-avatar.png";
+import EditAvatarModal from "./EditAvatarModal";
+import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 
 const CharacterProfile = ({ onClose }) => {
   const [characterData, setCharacterData] = useState(undefined);
@@ -66,6 +67,7 @@ const CharacterProfile = ({ onClose }) => {
     const playerId = JSON.parse(localStorage.getItem("playerId"));
     fetchCharacterById(playerId)
       .then((result) => {
+        console.log(result[0]);
         setCharacterData(result[0]);
         setUserName(result[0].character_name);
         setCurrentBio(result[0].character_bio);
@@ -333,6 +335,10 @@ const CharacterProfile = ({ onClose }) => {
         )
       ) : null}
 
+      {editingProfile === "avatar" ? (
+        <EditAvatarModal onClose={closeEditedProfileModal} />
+      ) : null}
+
       {editingProfile === "username" ? (
         <EditUsernameModal
           currentUsername={userName}
@@ -387,7 +393,15 @@ const CharacterProfile = ({ onClose }) => {
                   onMouseEnter={() => setIsHovered("avatar-hover")}
                   onMouseLeave={() => setIsHovered("")}
                 >
-                  <img src={AvatarImage} id="avatar" alt="Avatar" />
+                  <img
+                    src={
+                      characterData && characterData.avatar_path
+                        ? characterData.avatar_path
+                        : DefaultAvatarImage
+                    }
+                    id="avatar"
+                    alt="Avatar"
+                  />
                   {isHovered === "avatar-hover" && (
                     <EditProfileButton
                       onClickEvent={() => editProfile({ profile: "avatar" })}

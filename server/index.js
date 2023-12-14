@@ -10,6 +10,7 @@ const db = require("./Models");
 const userRoutes = require("./Routes/userRoutes");
 const bodyParser = require("body-parser");
 
+const multer = require("multer");
 const { Pool } = require("pg");
 
 const { handleSubmittedJavaAnswer } = require("./handlers/javaHandler.js");
@@ -66,6 +67,7 @@ const {
   handleFetchCharacterByLevelRank,
   handleUpdateInventory,
   handleUpdateGold,
+  handleUpdateAvatarPath,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -315,6 +317,35 @@ app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
 app.post("/character/update/item/:itemId/:playerId", (req, res) => {
   handleUpdateInventory(req, res, pool);
 });
+const storage = multer.diskStorage({
+  destination: (req, file, callBack) => {
+    callBack(null, "server/uploads");
+  },
+  filename: (req, file, callBack) => {
+    let fileName = `${req.params.playerId}.${file.originalname
+      .split(".")
+      .pop()}`;
+    callBack(null, fileName);
+  },
+});
+
+let upload = multer({ storage: storage });
+
+app.post(
+  "/profile/uploadImage/:playerId",
+  upload.single("file"),
+  (req, res, next) => {
+    const file = req.file;
+    console.log(file.filename);
+    if (!file) {
+      const error = new Error("No File");
+      error.httpStatusCode = 400;
+      return next(error);
+    }
+    handleUpdateAvatarPath(req, res, pool, "server/uploads/" + file.filename);
+    // res.status(200).send({ status: "ok", filename: avatar_path });
+  }
+);
 
 app.get("/game", (req, res) => {
   const filePath = "index.html";
