@@ -1,12 +1,23 @@
 public class ValueWeaver {
     public static void main(String[] args) {
-        int playerScore;
-        double interestRate;
+        // Declare and initialize variables
+int playerScore;
+double interestRate;
 
-        playerScore = 1000;
-        interestRate = 0.05;
+playerScore = 1000;
+interestRate = 0.05;
 
-        System.out.println("Player score: " + playerScore);
-        System.out.println("Interest rate: " + interestRate);
+System.out.println("Player score: " + playerScore);
+System.out.println("Interest rate: " + interestRate);
+
+
+        // Assign values using the assignment operator
+
+
+
+        // Display the results
+
+
+
     }
 }

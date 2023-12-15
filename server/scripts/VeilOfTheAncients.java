@@ -6,7 +6,7 @@ public class VeilOfTheAncients {
         System.out.println("Whispers in variables, a mystical song,");
         System.out.println("But one part veiled, in comments it belongs.");
         */
-        System.out.println("A guardian of secrets, code's mysteries guards,");
+        System.out.println("A guardian of secrets, code's mysteries guards,");              
         System.out.println("Unlocking wisdom, with coding rewards.");
     }
 }

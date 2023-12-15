@@ -28,6 +28,25 @@ import SampleNPC22 from "./npc/SampleNPC22";
 import SampleNPC23 from "./npc/SampleNPC23";
 import SampleNPC24 from "./npc/SampleNPC24";
 import SampleNPC25 from "./npc/SampleNPC25";
+import SampleNPC26 from "./npc/SampleNPC26";
+import SampleNPC27 from "./npc/SampleNPC27";
+import SampleNPC28 from "./npc/SampleNPC28";
+import SampleNPC29 from "./npc/SampleNPC29";
+import SampleNPC30 from "./npc/SampleNPC30";
+import SampleNPC31 from "./npc/SampleNPC31";
+import SampleNPC32 from "./npc/SampleNPC32";
+import SampleNPC33 from "./npc/SampleNPC33";
+import SampleNPC34 from "./npc/SampleNPC34";
+import SampleNPC35 from "./npc/SampleNPC35";
+import SampleNPC36 from "./npc/SampleNPC36";
+import SampleNPC37 from "./npc/SampleNPC37";
+import SampleNPC38 from "./npc/SampleNPC38";
+import SampleNPC39 from "./npc/SampleNPC39";
+import SampleNPC40 from "./npc/SampleNPC40";
+import SampleNPC41 from "./npc/SampleNPC41";
+import SampleNPC42 from "./npc/SampleNPC42";
+import SampleNPC43 from "./npc/SampleNPC43";
+import SampleNPC44 from "./npc/SampleNPC44";
 
 import AlbyNPC from "./npc/AlbyNPC";
 import CameraController from "./lib/camera/CameraControls";
@@ -80,6 +99,25 @@ const Game = ({ darkMode }) => {
   const sampleNPC23 = new SampleNPC23();
   const sampleNPC24 = new SampleNPC24();
   const sampleNPC25 = new SampleNPC25();
+  const sampleNPC26 = new SampleNPC26();
+  const sampleNPC27 = new SampleNPC27();
+  const sampleNPC28 = new SampleNPC28();
+  const sampleNPC29 = new SampleNPC29();
+  const sampleNPC30 = new SampleNPC30();
+  const sampleNPC31 = new SampleNPC31();
+  const sampleNPC32 = new SampleNPC32();
+  const sampleNPC33 = new SampleNPC33();
+  const sampleNPC34 = new SampleNPC34();
+  const sampleNPC35 = new SampleNPC35();
+  const sampleNPC36 = new SampleNPC36();
+  const sampleNPC37 = new SampleNPC37();
+  const sampleNPC38 = new SampleNPC38();
+  const sampleNPC39 = new SampleNPC39();
+  const sampleNPC40 = new SampleNPC40();
+  const sampleNPC41 = new SampleNPC41();
+  const sampleNPC42 = new SampleNPC42();
+  const sampleNPC43 = new SampleNPC43();
+  const sampleNPC44 = new SampleNPC44();
 
   const albyNPC = new AlbyNPC();
 
@@ -109,6 +147,25 @@ const Game = ({ darkMode }) => {
     sampleNPC23: sampleNPC23,
     sampleNPC24: sampleNPC24,
     sampleNPC25: sampleNPC25,
+    sampleNPC26: sampleNPC26,
+    sampleNPC27: sampleNPC27,
+    sampleNPC28: sampleNPC28,
+    sampleNPC29: sampleNPC29,
+    sampleNPC30: sampleNPC30,
+    sampleNPC31: sampleNPC31,
+    sampleNPC32: sampleNPC32,
+    sampleNPC33: sampleNPC33,
+    sampleNPC34: sampleNPC34,
+    sampleNPC35: sampleNPC35,
+    sampleNPC36: sampleNPC36,
+    sampleNPC37: sampleNPC37,
+    sampleNPC38: sampleNPC38,
+    sampleNPC39: sampleNPC39,
+    sampleNPC40: sampleNPC40,
+    sampleNPC41: sampleNPC41,
+    sampleNPC42: sampleNPC42,
+    sampleNPC43: sampleNPC43,
+    sampleNPC44: sampleNPC44,
 
     albyNPC: albyNPC,
   };
@@ -139,6 +196,25 @@ const Game = ({ darkMode }) => {
     sampleNPC23,
     sampleNPC24,
     sampleNPC25,
+    sampleNPC26,
+    sampleNPC27,
+    sampleNPC28,
+    sampleNPC29,
+    sampleNPC30,
+    sampleNPC31,
+    sampleNPC32,
+    sampleNPC33,
+    sampleNPC34,
+    sampleNPC35,
+    sampleNPC36,
+    sampleNPC37,
+    sampleNPC38,
+    sampleNPC39,
+    sampleNPC40,
+    sampleNPC41,
+    sampleNPC42,
+    sampleNPC43,
+    sampleNPC44,
 
     albyNPC,
   ];
