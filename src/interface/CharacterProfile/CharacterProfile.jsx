@@ -25,7 +25,7 @@ import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import EditAvatarModal from "./EditAvatarModal";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 
-const CharacterProfile = ({ onClose }) => {
+const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
   const [characterData, setCharacterData] = useState(undefined);
   const [completedQuests, setCompletedQuests] = useState([]);
   const [currentTab, setCurrentTab] = useState(1);
@@ -71,6 +71,9 @@ const CharacterProfile = ({ onClose }) => {
         setCharacterData(result[0]);
         setUserName(result[0].character_name);
         setCurrentBio(result[0].character_bio);
+        setCurrentAvatar(
+          result[0].avatar_path ? result[0].avatar_path : DefaultAvatarImage
+        );
       })
       .catch((err) => {
         console.log("[FETCH CHARACTER ERROR]", err);
@@ -336,7 +339,10 @@ const CharacterProfile = ({ onClose }) => {
       ) : null}
 
       {editingProfile === "avatar" ? (
-        <EditAvatarModal onClose={closeEditedProfileModal} />
+        <EditAvatarModal
+          onClose={closeEditedProfileModal}
+          setCurrentAvatar={setCurrentAvatar}
+        />
       ) : null}
 
       {editingProfile === "username" ? (
@@ -394,13 +400,12 @@ const CharacterProfile = ({ onClose }) => {
                   onMouseLeave={() => setIsHovered("")}
                 >
                   <img
-                    src={
-                      characterData && characterData.avatar_path
-                        ? characterData.avatar_path
-                        : DefaultAvatarImage
-                    }
+                    src={currentAvatar}
                     id="avatar"
                     alt="Avatar"
+                    onError={(e) => {
+                      e.target.src = DefaultAvatarImage;
+                    }}
                   />
                   {isHovered === "avatar-hover" && (
                     <EditProfileButton
