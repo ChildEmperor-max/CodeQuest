@@ -426,21 +426,22 @@ module.exports.handleUpdateAvatarPath = async function (
   avatar_path
 ) {
   try {
-    const playerId = req.body.playerId;
+    const playerId = req.params.playerId;
     const query = fs.readFileSync(path + "updateAvatarPath.sql", "utf8");
+    console.log("playerId: " + playerId + "\nAvatar path: " + avatar_path);
 
-    // Using async/await to handle asynchronous operations
     await pool.query(query, [playerId, avatar_path]);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
-        message: `Character data updated successfully`,
+        avatar_path: avatar_path,
+        message: `Character Avatar updated succesfully`,
       })
     );
   } catch (error) {
     console.error(
-      "Error updating character data in characterHandler.js:",
+      "Error updating character avatar in characterHandler.js:",
       error
     );
     res.writeHead(500, { "Content-Type": "application/json" });
