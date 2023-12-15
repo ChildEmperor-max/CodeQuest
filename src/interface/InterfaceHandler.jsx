@@ -85,6 +85,7 @@ export default function InterfaceHandler({
   const [currentXpBar, setCurrentXpBar] = useState(0);
   const [showMiniQuestDisplay, setShowMiniQuestDisplay] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [currentAvatar, setCurrentAvatar] = useState(DefaultAvatarImage);
 
   useEffect(() => {
     fetchQuestTable()
@@ -130,6 +131,9 @@ export default function InterfaceHandler({
       if (data) {
         setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
         setCharacterData(data[0]);
+        setCurrentAvatar(
+          data[0].avatar_path ? data[0].avatar_path : DefaultAvatarImage
+        );
         console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
       }
     } catch (err) {
@@ -354,7 +358,11 @@ export default function InterfaceHandler({
         />
       )}
       {currentOpenedInterface === interfaces.profile && (
-        <CharacterProfile onClose={() => toggleInterface(interfaces.profile)} />
+        <CharacterProfile
+          onClose={() => toggleInterface(interfaces.profile)}
+          currentAvatar={currentAvatar}
+          setCurrentAvatar={setCurrentAvatar}
+        />
       )}
       {currentOpenedInterface === interfaces.shop && (
         <Shop onClose={() => toggleInterface(interfaces.shop)} />
@@ -438,13 +446,12 @@ export default function InterfaceHandler({
                   <div className="horizontal-container">
                     <div onClick={() => toggleInterface(interfaces.profile)}>
                       <img
-                        src={
-                          characterData && characterData.avatar_path
-                            ? characterData.avatar_path
-                            : DefaultAvatarImage
-                        }
+                        src={currentAvatar}
                         id="avatar-display"
                         alt="Avatar"
+                        onError={(e) => {
+                          e.target.src = DefaultAvatarImage;
+                        }}
                       />
                     </div>
                     <div className="profile-display-container">
