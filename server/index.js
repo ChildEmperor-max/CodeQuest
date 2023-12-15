@@ -322,9 +322,8 @@ const storage = multer.diskStorage({
     callBack(null, "server/uploads");
   },
   filename: (req, file, callBack) => {
-    let fileName = `${req.params.playerId}.${file.originalname
-      .split(".")
-      .pop()}`;
+    const ext = file.originalname.split(".").pop();
+    const fileName = `${req.params.playerId}.${Date.now()}.${ext}`; // Append the timestamp and extension
     callBack(null, fileName);
   },
 });
