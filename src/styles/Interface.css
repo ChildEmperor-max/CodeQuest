@@ -84,8 +84,8 @@
   background: radial-gradient(circle, rgb(3, 6, 56), rgb(86, 91, 143));
   box-sizing: border-box;
   border: 5px solid rgb(204, 207, 72);
-  width: 150px;
-  height: auto;
+  width: 110px;
+  height: 110px;
 }
 
 #avatar-display:hover {
