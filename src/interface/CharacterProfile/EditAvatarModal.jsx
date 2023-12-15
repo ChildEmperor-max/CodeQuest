@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const EditAvatarModal = ({ onClose }) => {
+const EditAvatarModal = ({ onClose, setCurrentAvatar }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -32,6 +32,7 @@ const EditAvatarModal = ({ onClose }) => {
       .post("http://127.0.0.1:8000/profile/uploadImage/" + playerId, data)
       .then((res) => {
         console.log(res.data);
+        setCurrentAvatar(res.data.avatar_path);
         onClose();
       })
       .catch((error) => {
