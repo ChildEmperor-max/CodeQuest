@@ -1,7 +1,8 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import ManageLoader from "../lib/Loader";
-import CodeQuestMap from "src/assets/world/SampleWorld.glb";
+// import CodeQuestMap from "src/assets/world/SampleWorld.glb";
+import CodeQuestMap from "src/assets/world/codequest_map.glb";
 
 // const worldLoader = new GLTFLoader();
 let lodLevels = [];
@@ -34,13 +35,13 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         const buildingLOD = new THREE.LOD();
 
         const spawnPoint = new THREE.Vector3(0, 0, -120);
-        // const spawnPoint = new THREE.Vector3(218, 0, -97);
+        // const spawnPoint = new THREE.Vector3(150, 0, -2);
 
         const npcSpawnPoint1 = new THREE.Vector3(-70, 0, -150);
         const npcSpawnPoint2 = new THREE.Vector3(-8, 0, -135);
         const npcSpawnPoint3 = new THREE.Vector3(3, 0, -135);
         const npcSpawnPoint4 = new THREE.Vector3(-21, 0, -248);
-        const npcSpawnPoint5 = new THREE.Vector3(2.5, 0, -36); //2.5, 0, -120
+        const npcSpawnPoint5 = new THREE.Vector3(50, 0, -215); //2.5, 0, -36
         const npcSpawnPoint6 = new THREE.Vector3(170, 0, -56);
         const npcSpawnPoint7 = new THREE.Vector3(120, 0, 150); //61, 0, -50
         const npcSpawnPoint8 = new THREE.Vector3(-200, 0, -100);
@@ -62,6 +63,25 @@ export function LoadWorld(loaderElement, textLoaderElement) {
         const npcSpawnPoint24 = new THREE.Vector3(-222.5, 0, 114);
         const npcSpawnPoint25 = new THREE.Vector3(-223, 0, 111);
         const npcSpawnPoint26 = new THREE.Vector3(157, 0, -149);
+        const npcSpawnPoint27 = new THREE.Vector3(120, 0, 237);
+        const npcSpawnPoint28 = new THREE.Vector3(223, 0, 100);
+        const npcSpawnPoint29 = new THREE.Vector3(220, 0, 128);
+        const npcSpawnPoint30 = new THREE.Vector3(190, 0, 175);
+        const npcSpawnPoint31 = new THREE.Vector3(150, 0, 110);
+        const npcSpawnPoint32 = new THREE.Vector3(149, 0, 112);
+        const npcSpawnPoint33 = new THREE.Vector3(-18, 0, -213);
+        const npcSpawnPoint34 = new THREE.Vector3(22, 0, -213);
+        const npcSpawnPoint35 = new THREE.Vector3(74, 0, -152);
+        const npcSpawnPoint36 = new THREE.Vector3(114, 0, -192);
+        const npcSpawnPoint37 = new THREE.Vector3(98, 0, -123);
+        const npcSpawnPoint38 = new THREE.Vector3(125, 0, -97);
+        const npcSpawnPoint39 = new THREE.Vector3(-145, 0, -160);
+        const npcSpawnPoint40 = new THREE.Vector3(-115, 0, -112);
+        const npcSpawnPoint41 = new THREE.Vector3(-155, 0, 190);
+        const npcSpawnPoint42 = new THREE.Vector3(-180, 0, 160);
+        const npcSpawnPoint43 = new THREE.Vector3(-125, 0, 150);
+        const npcSpawnPoint44 = new THREE.Vector3(-150, 0, -2);
+        const npcSpawnPoint45 = new THREE.Vector3(150, 0, -2);
 
         const npcSpawnPoints = [
           npcSpawnPoint1,
@@ -90,6 +110,25 @@ export function LoadWorld(loaderElement, textLoaderElement) {
           npcSpawnPoint24,
           npcSpawnPoint25,
           npcSpawnPoint26,
+          npcSpawnPoint27,
+          npcSpawnPoint28,
+          npcSpawnPoint29,
+          npcSpawnPoint30,
+          npcSpawnPoint31,
+          npcSpawnPoint32,
+          npcSpawnPoint33,
+          npcSpawnPoint34,
+          npcSpawnPoint35,
+          npcSpawnPoint36,
+          npcSpawnPoint37,
+          npcSpawnPoint38,
+          npcSpawnPoint39,
+          npcSpawnPoint40,
+          npcSpawnPoint41,
+          npcSpawnPoint42,
+          npcSpawnPoint43,
+          npcSpawnPoint44,
+          npcSpawnPoint45,
         ];
 
         if (gltf.animations !== undefined) {

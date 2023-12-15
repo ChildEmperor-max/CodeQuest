@@ -1,8 +1,12 @@
 public class VillageExplorer {
     public static void main(String[] args) {
+        // Declare and initialize the float variable
         float latitude = 43.5912f;
+        
+        System.out.println("Current Latitude: " + latitude);
  
-        System.out.println("Current latitude: " + latitude);
- 
+        // Display the "Current latitude: "
+
+
     }
 }
