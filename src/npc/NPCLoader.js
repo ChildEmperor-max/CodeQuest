@@ -66,6 +66,7 @@ export default class NPCLoader extends Interactibles {
     this.camera = camera;
     this.direction = new THREE.Vector3(0, 0, 0);
     this.name = npcName;
+    this.isLoaded = false;
 
     this.currentQuestStatus = {
       stats: "",
@@ -278,7 +279,7 @@ export default class NPCLoader extends Interactibles {
       this.direction = endPoint.clone().sub(startPoint).normalize();
       distance = this.mesh.position.distanceTo(endPoint);
 
-      if (distance < 2) {
+      if (distance < endPoint.distanceTo(startPoint)) {
         if (this.goingForward) {
           this.direction = new THREE.Vector3(0, 0, 0);
           setTimeout(() => {
@@ -286,11 +287,20 @@ export default class NPCLoader extends Interactibles {
           }, 3000);
         }
       }
+
+      // if (distance < 2) {
+      //   if (this.goingForward) {
+      //     this.direction = new THREE.Vector3(0, 0, 0);
+      //     setTimeout(() => {
+      //       this.goingForward = false;
+      //     }, 3000);
+      //   }
+      // }
     } else {
       this.direction = startPoint.clone().sub(endPoint).normalize();
       distance = this.mesh.position.distanceTo(startPoint);
 
-      if (distance < 2) {
+      if (distance > endPoint.distanceTo(startPoint)) {
         if (!this.goingForward) {
           this.direction = new THREE.Vector3(0, 0, 0);
           setTimeout(() => {
@@ -298,6 +308,15 @@ export default class NPCLoader extends Interactibles {
           }, 3000);
         }
       }
+
+      // if (distance < 2) {
+      //   if (!this.goingForward) {
+      //     this.direction = new THREE.Vector3(0, 0, 0);
+      //     setTimeout(() => {
+      //       this.goingForward = true;
+      //     }, 3000);
+      //   }
+      // }
     }
 
     if (this.isTalking) {
@@ -446,7 +465,12 @@ export default class NPCLoader extends Interactibles {
         fbx.position.set(this.position.x, this.position.y, this.position.z);
         fbx.scale.set(scale, scale, scale);
 
-        const baseTexture = new THREE.TextureLoader().load(modelTexturePath);
+        const baseTexture = new THREE.TextureLoader().load(
+          modelTexturePath,
+          (texture) => {
+            this.isLoaded = true;
+          }
+        );
         const baseMaterial = new THREE.MeshBasicMaterial({ map: baseTexture });
 
         fbx.traverse((child) => {
@@ -460,20 +484,6 @@ export default class NPCLoader extends Interactibles {
             child.material.alphaMap = null;
             child.castShadow = true;
             child.receiveShadow = true;
-            if (Array.isArray(child.material)) {
-              for (let i = 0; i < materials.length; i++) {
-                const material = materials[i];
-                if (material instanceof THREE.MeshPhongMaterial) {
-                  // Replace the material with MeshToonMaterial
-                  const toonMaterial = new THREE.MeshToonMaterial({
-                    color: material.color,
-                    map: material.map,
-                    // Copy other relevant properties as needed
-                  });
-                  materials[i] = toonMaterial;
-                }
-              }
-            }
           }
         });
         // fbx.rotation.y = Math.PI / 2;
