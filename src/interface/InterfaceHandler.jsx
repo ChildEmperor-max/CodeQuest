@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuestsData } from "../components/QuestContext";
 import { useWorldContext } from "../components/WorldContext";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
+import ProfileDisplay from "./CharacterProfile/ProfileDisplay";
 
 export default function InterfaceHandler({
   settings: {
@@ -102,19 +103,9 @@ export default function InterfaceHandler({
       .catch((error) => {
         console.error("[ERROR]:", error);
       });
-    // const playerId = localStorage.getItem("playerId");
     displayUsername();
+    // const playerId = localStorage.getItem("playerId");
   }, [updateAvailableQuests]);
-
-  const viewQuests = async () => {
-    try {
-      const quests = await manageQuest.getPlayerQuests();
-      return quests;
-    } catch (error) {
-      console.error("InterfaceHandler.jsx error viewing the quests: ", error);
-      throw error;
-    }
-  };
 
   const displayUsername = () => {
     // if (!playerId) {
@@ -138,6 +129,16 @@ export default function InterfaceHandler({
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const viewQuests = async () => {
+    try {
+      const quests = await manageQuest.getPlayerQuests();
+      return quests;
+    } catch (error) {
+      console.error("InterfaceHandler.jsx error viewing the quests: ", error);
+      throw error;
     }
   };
 
@@ -441,39 +442,14 @@ export default function InterfaceHandler({
               />
             </div>
             <div className="left-container">
-              {characterData && (
+              {characterData ? (
                 <div className="left-ui-container">
-                  <div className="horizontal-container">
-                    <div onClick={() => toggleInterface(interfaces.profile)}>
-                      <img
-                        src={currentAvatar}
-                        id="avatar-display"
-                        alt="Avatar"
-                        onError={(e) => {
-                          e.target.src = DefaultAvatarImage;
-                        }}
-                      />
-                    </div>
-                    <div className="profile-display-container">
-                      <p className="profile-name">
-                        {characterData.character_name}
-                      </p>
-                      <p>Level: {characterData.level}</p>
-                      <span>XP:</span>
-                      <div className="xp-bar-background">
-                        <div
-                          className="xp-bar"
-                          style={{
-                            width: `${currentXpBar}px`,
-                          }}
-                        ></div>
-                        <p>
-                          {characterData.xp.current_xp}/
-                          {characterData.xp.max_xp}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <ProfileDisplay
+                    onToggle={() => toggleInterface(interfaces.profile)}
+                    currentAvatar={currentAvatar}
+                    currentXpBar={currentXpBar}
+                    characterData={characterData}
+                  />
                   <div className="quest-display-container">
                     <h4
                       onClick={() => setShowMiniQuestDisplay((prev) => !prev)}
@@ -506,6 +482,8 @@ export default function InterfaceHandler({
                       : null}
                   </div>
                 </div>
+              ) : (
+                <h4>Loading...</h4>
               )}
             </div>
             {isPlayerNearNpc && (
