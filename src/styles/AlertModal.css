@@ -78,22 +78,22 @@
 
 @keyframes showAchievement {
     0% {
-        /* top: -10%; */
+        top: -10%;
         display: none;
     }
     100% {
-        /* top: 10%; */
+        top: 10%;
         display: block;
     }
 }
 
 @keyframes hideAchievement {
     0% {
-        /* top: 10%; */
+        top: 10%;
         display: block;
     }
     100% {
-        /* top: -10%; */
+        top: -10%;
         display: none;
     }
 }

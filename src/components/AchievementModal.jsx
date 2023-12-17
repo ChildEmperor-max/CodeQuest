@@ -23,7 +23,10 @@ const AchievementModal = ({ achievementName, onClose }) => {
     return () => clearTimeout(timer);
   }, [timeout]);
   return (
-    <div className={`achievement-modal-container ${isOpen ? "open" : "close"}`}>
+    <div
+      className={`achievement-modal-container ${isOpen ? "open" : "close"}`}
+      style={{ top: isOpen ? "10%" : "-10%" }}
+    >
       <div className="achivement-modal-content">
         <p className="achievement-text-title">New achievement</p>
         <p className="achievement-text-name">{achievementName}</p>

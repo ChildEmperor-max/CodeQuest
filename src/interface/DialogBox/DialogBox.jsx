@@ -32,13 +32,13 @@ const DialogBox = ({
   onSetInteractingNpc,
   setCurrentXpBar,
   fetchCharacter,
+  updateAvailableQuests,
 }) => {
   const manageQuest = new ManageQuest();
   const playerId = localStorage.getItem("playerId");
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
   const [currentNpcs, setCurrentNpcs] = useState(npcs);
-  const { updateAvailableQuests } = useQuestsData();
 
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(npc);
 

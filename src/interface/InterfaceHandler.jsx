@@ -150,13 +150,13 @@ export default function InterfaceHandler({
       setShowButtons(true);
       // enableKeyListeners();
 
-      // viewQuests()
-      //   .then((data) => {
-      //     updateAvailableQuests(data);
-      //   })
-      //   .catch((error) => {
-      //     console.error("[ERROR]:", error);
-      //   });
+      viewQuests()
+        .then((data) => {
+          updateAvailableQuests(data);
+        })
+        .catch((error) => {
+          console.error("[ERROR]:", error);
+        });
     } else {
       setCurrentOpenedInterface(interfaceName);
       setShowButtons(false);
@@ -337,6 +337,7 @@ export default function InterfaceHandler({
           onSetInteractingNpc={(npc) => setIsPlayerInteractingNpc(npc)}
           setCurrentXpBar={setCurrentXpBar}
           fetchCharacter={fetchCharacter}
+          updateAvailableQuests={updateAvailableQuests}
         />
       ) : null}
       {isQuestHint ? (
