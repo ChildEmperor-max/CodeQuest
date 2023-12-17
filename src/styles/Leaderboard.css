@@ -40,7 +40,7 @@
 .toplist {
   width: 90%;
   margin: auto;
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
   /* float: right; */
 }
 .toplist li {
@@ -66,7 +66,7 @@
   font-size: 0;
   line-height: 36px;
   position: relative;
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 .toplist li .thumb span {
   display: inline-block;

@@ -60,6 +60,7 @@ export default function InterfaceHandler({
   const navigate = useNavigate();
   const manageQuest = new ManageQuest();
   const { npcs } = useWorldContext();
+  const [currentNpcs, setCurrentNpcs] = useState(npcs);
   const { availableQuests, updateAvailableQuests } = useQuestsData();
 
   const [characterData, setCharacterData] = useState(null);
@@ -89,6 +90,7 @@ export default function InterfaceHandler({
   const [currentAvatar, setCurrentAvatar] = useState(DefaultAvatarImage);
 
   useEffect(() => {
+    setCurrentNpcs(npcs);
     fetchQuestTable()
       .then((result) => {
         console.log(result);
@@ -241,6 +243,7 @@ export default function InterfaceHandler({
     const handleKeyToggle = (event) => {
       if (event.code === "Escape") {
         toggleInterface(currentOpenedInterface);
+        enableKeyListeners();
       }
       if (event.code === "KeyP" && keys.p.pressed) {
         toggleInterface(interfaces.profile);
@@ -272,21 +275,20 @@ export default function InterfaceHandler({
       toggleInterface(interfaces.quests);
       setOpenQuestDetails(true);
     } else {
-      console.log("NAVIGATING TO QUEST: ", quest);
       const questNpc = npcs.filter((item) => {
-        let npc;
-        if (item.npcData[0]) {
+        let npc = false;
+        if (item.npcData && item.npcData[0] !== undefined) {
           npc = item.npcData[0].npc_id === quest.npc_id;
         }
         return npc;
       });
+
       if (isNavigating) {
         setIsNavigating(false);
         questNpc[0].hideDistanceToPlayer();
       } else {
         setIsNavigating(true);
         console.log("NAVIGATION: ", questNpc);
-        console.log("NAVIGATION: ", questNpc[0]);
         questNpc[0].showDistanceToPlayer();
       }
     }

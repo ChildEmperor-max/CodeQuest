@@ -6,6 +6,7 @@ import {
   fetchCharacterByLevelRank,
   fetchCharactersByLevel,
 } from "../../db/HandleTable";
+import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 
 const Leaderboard = ({ onClose }) => {
   const [levelRank, setLevelRank] = useState([]);
@@ -57,7 +58,16 @@ const Leaderboard = ({ onClose }) => {
           {levelRank.map((item, index) => (
             <li key={index} data-rank={index + 1}>
               <div className="thumb">
-                <span className="img" data-name={item.character_name}></span>
+                <span className="img" data-name="avatar">
+                  <img
+                    src={
+                      item.avatar_path ? item.avatar_path : DefaultAvatarImage
+                    }
+                    onError={(e) => {
+                      e.target.src = DefaultAvatarImage;
+                    }}
+                  />
+                </span>
                 <span className="name">{item.character_name}</span>
                 <span className="stat">
                   <b>{item.level}</b>Level
@@ -73,10 +83,18 @@ const Leaderboard = ({ onClose }) => {
               data-rank={parseInt(currentPlayerRank.rank)}
             >
               <div className="thumb">
-                <span
-                  className="img"
-                  data-name={currentPlayerRank.character_name}
-                ></span>
+                <span className="img" data-name="avatar">
+                  <img
+                    src={
+                      currentPlayerRank.avatar_path
+                        ? currentPlayerRank.avatar_path
+                        : DefaultAvatarImage
+                    }
+                    onError={(e) => {
+                      e.target.src = DefaultAvatarImage;
+                    }}
+                  />
+                </span>
                 <span className="name">{currentPlayerRank.character_name}</span>
                 <span className="stat">
                   <b>{currentPlayerRank.level}</b>Level

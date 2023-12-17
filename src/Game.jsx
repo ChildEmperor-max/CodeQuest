@@ -122,6 +122,7 @@ const Game = ({ darkMode }) => {
   const albyNPC = new AlbyNPC();
 
   const npcs = {
+    albyNPC: albyNPC,
     sampleNPC1: sampleNPC1,
     sampleNPC2: sampleNPC2,
     sampleNPC3: sampleNPC3,
@@ -166,11 +167,10 @@ const Game = ({ darkMode }) => {
     sampleNPC42: sampleNPC42,
     sampleNPC43: sampleNPC43,
     sampleNPC44: sampleNPC44,
-
-    albyNPC: albyNPC,
   };
 
   const npcArray = [
+    albyNPC,
     sampleNPC1,
     sampleNPC2,
     sampleNPC3,
@@ -215,8 +215,6 @@ const Game = ({ darkMode }) => {
     sampleNPC42,
     sampleNPC43,
     sampleNPC44,
-
-    albyNPC,
   ];
 
   useEffect(() => {

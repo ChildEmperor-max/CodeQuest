@@ -1,21 +1,67 @@
 import React, { useEffect, useState } from "react";
-import { fetchAchievements } from "../../db/HandleTable";
+import {
+  fetchAchievements,
+  fetchAchievementById,
+  fetchCharacterById,
+} from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AchievementBadge from "../../components/AchievementBadge";
 import "animate.css";
 
 const Achievements = ({ onClose }) => {
   const [achievementsData, setAchievementsData] = useState([]);
+  const [achieved, setAchieved] = useState([]);
 
   useEffect(() => {
-    viewAchievements()
-      .then((data) => {
-        setAchievementsData(data);
+    const playerId = localStorage.getItem("playerId");
+    fetchCharacterById(playerId)
+      .then((result) => {
+        viewCompletedAchievements(result[0].achievements)
+          .then((result) => {
+            setAchieved(result);
+            viewAchievements()
+              .then((nonFiltered) => {
+                let remainingAchievement = nonFiltered.filter(
+                  (o1) => !result.some((o2) => o1.id === o2.id)
+                );
+                setAchievementsData(remainingAchievement);
+              })
+              .catch((error) => {
+                console.log("Achievements.jsx: ", error);
+              });
+          })
+          .catch((error) => {
+            console.log("Achievements.jsx: ", error);
+          });
       })
       .catch((error) => {
-        console.error("[ERROR]:", error);
+        console.log("Achievements.jsx: ", error);
       });
   }, []);
+
+  const viewCompletedAchievements = async (achievements) => {
+    try {
+      let achievementArray = Object.keys(achievements);
+      const data = await Promise.all(
+        achievementArray.map(async (achievementId) => {
+          try {
+            const result = await fetchAchievementById(achievementId);
+            return {
+              ...result[0],
+              date_achieved: achievements[achievementId],
+            };
+          } catch (error) {
+            console.log("Achievements.jsx: " + error);
+            return null;
+          }
+        })
+      );
+      return data.flat().filter((result) => result !== null);
+    } catch (error) {
+      console.error("Achievements.jsx: ", error);
+      throw error;
+    }
+  };
 
   const viewAchievements = async () => {
     try {
@@ -36,12 +82,31 @@ const Achievements = ({ onClose }) => {
         </div>
       </div>
       <div className="achieve-content">
+        {achieved.map((achievement, index) => (
+          <div className="achievement-wrapper" key={achievement.id}>
+            <AchievementBadge
+              name={achievement.name}
+              description={achievement.description}
+              status="unlocked"
+              date_achieved={
+                achievement.date_achieved
+                  ? new Date(achievement.date_achieved).toLocaleDateString(
+                      "en-US"
+                    )
+                  : null
+              }
+              index={index}
+              large={true}
+              flipOnHover={true}
+            />
+          </div>
+        ))}
         {achievementsData.map((achievement, index) => (
           <div className="achievement-wrapper" key={achievement.id}>
             <AchievementBadge
               name={achievement.name}
               description={achievement.description}
-              status={achievement.status}
+              status="locked"
               date_achieved={
                 achievement.date_achieved
                   ? new Date(achievement.date_achieved).toLocaleDateString(

@@ -46,6 +46,7 @@ const {
 
 const {
   handleFetchAchievements,
+  handleFetchAchievementById,
 } = require("./handlers/achievementsHandler.js");
 
 const {
@@ -68,6 +69,10 @@ const {
   handleUpdateInventory,
   handleUpdateGold,
   handleUpdateAvatarPath,
+  handleUpdateExecutes,
+  handleUpdateErrors,
+  handleFetchCodeProfile,
+  handleUpdateCharacterAchievements,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -312,6 +317,26 @@ app.get("/character/select/level/:playerId", (req, res) => {
 
 app.get("/quests/select/npc/:questId/:playerId", (req, res) => {
   handleFetchNpcByQuestId(req, res, pool);
+});
+
+app.post("/character/update/executes", (req, res) => {
+  handleUpdateExecutes(req, res, pool);
+});
+
+app.post("/character/update/errors", (req, res) => {
+  handleUpdateErrors(req, res, pool);
+});
+
+app.get("/achievements/select/:id", (req, res) => {
+  handleFetchAchievementById(req, res, pool);
+});
+
+app.post("/character/update/achievements", (req, res) => {
+  handleUpdateCharacterAchievements(req, res, pool);
+});
+
+app.post("/character/select/code-profile/:playerId", (req, res) => {
+  handleFetchCodeProfile(req.params.playerId, res, pool);
 });
 
 app.post("/character/update/item/:itemId/:playerId", (req, res) => {

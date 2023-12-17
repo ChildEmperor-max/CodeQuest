@@ -7,8 +7,8 @@ import {
   fetchHelpById,
   fetchDialogByBranch,
   fetchNpcDataById,
-  fetchQuestById,
-  fetchQuestByQuestId,
+  updateCharacterAchievements,
+  fetchAchievementById,
 } from "../../db/HandleTable";
 import TypingAnimation from "./TypingAnimation";
 import { animateCameraToTarget } from "../../lib/camera/cameraAnimation";
@@ -17,6 +17,7 @@ import { usePlayerContext } from "../../components/PlayerContext";
 import { useWorldContext } from "../../components/WorldContext";
 import { receiveReward } from "../../lib/ItemsManager";
 import { useQuestsData } from "../../components/QuestContext";
+import AchievementModal from "../../components/AchievementModal";
 
 const DialogBox = ({
   npc,
@@ -36,6 +37,7 @@ const DialogBox = ({
   const playerId = localStorage.getItem("playerId");
   const { characterData } = usePlayerContext();
   const { npcs } = useWorldContext();
+  const [currentNpcs, setCurrentNpcs] = useState(npcs);
   const { updateAvailableQuests } = useQuestsData();
 
   const [currentTalkingNpc, setCurrentTalkingNpc] = useState(npc);
@@ -49,8 +51,12 @@ const DialogBox = ({
   const [typingFinished, setTypingFinished] = useState(false);
   const [skipTypingAnimation, setSkipTypingAnimation] = useState(false);
   const [isPlayerInteractingNpc, setIsPlayerInteractingNpc] = useState(null);
+  const [achievementPopup, setAchievementPopup] = useState({
+    achievementName: null,
+  });
 
   useEffect(() => {
+    setCurrentNpcs(npcs);
     const handlePlayerNpcInteraction = (event) => {
       setIsPlayerInteractingNpc(event.detail);
       cameraControllerInstance.currentTarget = playerInstance;
@@ -374,10 +380,12 @@ const DialogBox = ({
           const nextQuest = await manageQuest.getQuestByQuestId(
             quest[0].next_quest_id
           );
-          const nextNpc = npcs.filter((item) => {
-            if (item.npcData[0]) {
+          const nextNpc = currentNpcs.filter((item) => {
+            let npc = false;
+            if (item.npcData && item.npcData[0] !== undefined) {
               return item.npcData[0].npc_id === nextQuest[0].npc_id;
             }
+            return npc;
           });
           const questData = await viewQuestById(nextQuest[0].quest_id);
           nextNpc[0].currentQuest.data = questData[0];
@@ -386,6 +394,17 @@ const DialogBox = ({
             questData[0].quest_type,
             questData[0].quest_status
           );
+        }
+        if (quest_id === 3) {
+          showNewAchievement(1);
+          updateCharacterAchievements(localStorage.getItem("playerId"), 1)
+            .then((result) => {
+              console.log("SHOULD SHOW HERE");
+              // showNewAchievement(1);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         receiveReward(quest[0].reward)
           .then(() => {
@@ -414,11 +433,9 @@ const DialogBox = ({
     try {
       const npcData = await viewNpcData(currentTalkingNpc.npcName, playerId);
       const dialog = await viewDialogById(npcData[0].npc_id);
-      console.log(dialog);
       const questData = await manageQuest.getQuestByQuestId(
         npc.currentQuest.data.quest_id
       );
-      console.log(questData);
       const data = await fetchDialogByBranch(dialog[0].dialog_branch);
       return [data, questData];
     } catch (error) {
@@ -462,8 +479,34 @@ const DialogBox = ({
     }
   };
 
+  const showNewAchievement = (achievement_id) => {
+    setAchievementPopup({
+      achievementName: "Hello world!",
+    });
+    // fetchAchievementById(achievement_id)
+    //   .then((result) => {
+    //     console.log("SHOULD SHOW HERE: ", result);
+    //     setAchievementPopup({
+    //       achievementName: result[0].name,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error on fetching achievement: ", error);
+    //   });
+  };
+
   return (
     <div className="dialog-main-container">
+      {achievementPopup.achievementName ? (
+        <AchievementModal
+          achievementName={achievementPopup.achievementName}
+          onClose={() => {
+            setAchievementPopup({
+              achievementName: null,
+            });
+          }}
+        />
+      ) : null}
       <div className="dialog-responses-container">
         {typingFinished &&
           currentResponses.length > 0 &&

@@ -29,11 +29,13 @@ import ace from "ace-builds";
 
 import {
   executeJavaCode,
-  fetchCharacterById,
   fetchPlayerQuests,
   fetchNpcByQuestId,
-  fetchNpcQuestDialog,
   updateCharacterNameById,
+  updateCharacterExecutes,
+  updateCharacterErrors,
+  updateCharacterAchievements,
+  fetchAchievementById,
 } from "../../db/HandleTable";
 import ButtonText from "./ButtonText";
 import PanelButton from "./PanelButton";
@@ -47,6 +49,7 @@ import Countdown from "./Countdown";
 import { usePlayerContext } from "../../components/PlayerContext";
 import AlertModal from "../../components/AlertModal";
 import { useWorldContext } from "../../components/WorldContext";
+import AchievementModal from "../../components/AchievementModal";
 import { getNpcs } from "../../npc/NPCGetterSetter";
 
 const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
@@ -80,6 +83,10 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
   const [useItemAlert, setUseItemAlert] = useState(null);
   const [isWarningAlert, setIsWarningAlert] = useState(null);
   const [updatedUsername, setUpdatedUsername] = useState("");
+
+  const [achievementPopup, setAchievementPopup] = useState({
+    achievementName: null,
+  });
 
   const manageQuest = new ManageQuest();
 
@@ -123,8 +130,10 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
       .then((response) => {
         if (response.error) {
           setOutput(response.error);
+          updateCharacterErrors(playerId);
         } else {
           setOutput(response.output);
+          updateCharacterExecutes(playerId);
         }
         return response;
       })
@@ -161,6 +170,13 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
               );
               console.log("Username must be at least 4 characters long.");
             } else {
+              updateCharacterAchievements(playerId, 2)
+                .then((result) => {
+                  showNewAchievement(2);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
               const regex = /^[a-zA-Z0-9]+$/;
               if (!regex.test(response.output)) {
                 setOutput(
@@ -255,6 +271,18 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
     // }
   };
 
+  const showNewAchievement = (achievement_id) => {
+    fetchAchievementById(achievement_id)
+      .then((result) => {
+        setAchievementPopup({
+          achievementName: result[0].name,
+        });
+      })
+      .catch((error) => {
+        console.log("Error on fetching achievement: ", error);
+      });
+  };
+
   const handleConfirmUsername = () => {
     updateCharacterNameById(playerId, updatedUsername)
       .then(() => {
@@ -280,6 +308,7 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
         setShowAlertModal(false);
       });
   };
+
   const updateNpcQuestStatus = (questStatus) => {
     fetchNpcByQuestId(quest_data.quest_id, playerId)
       .then((result) => {
@@ -324,6 +353,16 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
 
   return (
     <>
+      {achievementPopup.achievementName ? (
+        <AchievementModal
+          achievementName={achievementPopup.achievementName}
+          onClose={() => {
+            setAchievementPopup({
+              achievementName: null,
+            });
+          }}
+        />
+      ) : null}
       {showAlertModal && (
         <AlertModal
           message={alertMessage}

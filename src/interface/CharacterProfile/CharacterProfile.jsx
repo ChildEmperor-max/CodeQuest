@@ -13,6 +13,7 @@ import {
   fetchCompletedQuestCount,
   updateCharacterBio,
   fetchCharacterByLevelRank,
+  fetchAchievementById,
 } from "../../db/HandleTable";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
@@ -74,24 +75,26 @@ const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
         setCurrentAvatar(
           result[0].avatar_path ? result[0].avatar_path : DefaultAvatarImage
         );
+
+        viewCompletedAchievements(result[0].achievements)
+          .then((data) => {
+            console.log(data);
+            setCompletedAchievementsData(data);
+            // const sortedData = data.sort((a, b) => {
+            //   const dateA = new Date(a.date_achieved);
+            //   const dateB = new Date(b.date_achieved);
+            //   return dateB - dateA;
+            // });
+            // const latestData = sortedData.slice(0, 3); // Get the first three data entries
+            // setDisplayedAchievements(latestData);
+            setDisplayedAchievements(data);
+          })
+          .catch((error) => {
+            console.error("[ERROR]:", error);
+          });
       })
       .catch((err) => {
         console.log("[FETCH CHARACTER ERROR]", err);
-      });
-
-    viewCompletedAchievements()
-      .then((data) => {
-        setCompletedAchievementsData(data);
-        const sortedData = data.sort((a, b) => {
-          const dateA = new Date(a.date_achieved);
-          const dateB = new Date(b.date_achieved);
-          return dateB - dateA;
-        });
-        const latestData = sortedData.slice(0, 3); // Get the first three data entries
-        setDisplayedAchievements(latestData);
-      })
-      .catch((error) => {
-        console.error("[ERROR]:", error);
       });
     if (isEditing) {
       disableKeyListeners();
@@ -100,16 +103,33 @@ const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
     }
   }, [isEditing]);
 
-  const viewCompletedAchievements = async () => {
+  const viewCompletedAchievements = async (achievements) => {
     try {
-      var data = [];
-      const achievementsData = await fetchAchievements();
-      achievementsData.forEach((element) => {
-        if (element.status.trim() === "unlocked") {
-          data.push(element);
-        }
-      });
-      return data;
+      // var data = [];
+      // const achievementsData = await fetchAchievements();
+      // achievementsData.forEach((element) => {
+      //   if (element.status.trim() === "unlocked") {
+      //     data.push(element);
+      //   }
+      // });
+      // return data;
+      let achievementArray = Object.keys(achievements);
+      const data = await Promise.all(
+        achievementArray.map(async (achievementId) => {
+          try {
+            const result = await fetchAchievementById(achievementId);
+            return {
+              ...result[0],
+              date_achieved: achievements[achievementId],
+            };
+          } catch (error) {
+            console.log("Achievement fetching error: " + error);
+            return null;
+          }
+        })
+      );
+
+      return data.flat().filter((result) => result !== null);
     } catch (error) {
       console.error("[ERROR]:", error);
       throw error;

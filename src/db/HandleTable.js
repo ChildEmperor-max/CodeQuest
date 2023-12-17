@@ -414,6 +414,17 @@ export async function fetchAchievements() {
   }
 }
 
+export async function fetchAchievementById(achievement_id) {
+  try {
+    const response = await fetch(achievementsAPI + "/select/" + achievement_id);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
 export async function fetchCompletedQuests() {
   try {
     const response = await fetch(questAPI + "/completed");
@@ -553,6 +564,20 @@ export async function fetchCharacterById(player_id) {
         throw new Error(
           "Error fetching Character data: " + response.statusText
         );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export async function fetchCodeProfile(player_id) {
+  return fetch(characterAPI + "/select/code-profile/" + player_id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error Code Profile fetch: " + response.statusText);
       }
       return response.json();
     })
@@ -1184,6 +1209,91 @@ export function insertAvatarPath(player_id, avatar_path) {
       })
       .catch((error) => {
         console.error("Error creating new character:", error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterAchievements(player_id, achievement_id) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/achievements", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+        achievement_id: achievement_id,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("HandleTable.js: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("HandleTable.js: ", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterExecutes(player_id) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/executes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("HandleTable.js: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("HandleTable.js: ", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export function updateCharacterErrors(player_id) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/errors", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id: player_id,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("HandleTable.js: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("HandleTable.js: ", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
         reject(error);
       });
   });

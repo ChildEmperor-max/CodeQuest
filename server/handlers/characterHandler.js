@@ -21,6 +21,21 @@ module.exports.handleFetchCharacterById = async function (id, res, pool) {
   }
 };
 
+module.exports.handleFetchCodeProfile = async function (id, res, pool) {
+  try {
+    const query = fs.readFileSync(
+      path + "selectCharacterCodeProfile.sql",
+      "utf8"
+    );
+    const result = await pool.query(query, [id]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error fetching character by id:", error);
+  }
+};
+
 module.exports.handleFetchCharacterByLevelRank = async function (
   req,
   res,
@@ -358,7 +373,7 @@ module.exports.handleUpdateLevel = function (req, res, pool) {
       [player_id],
       (err, result) => {
         if (err) {
-          returnError(err);
+          returnError(err, res);
         }
         let currentLevel = result.rows[0].level;
         const updatedLevel = currentLevel + 1;
@@ -366,7 +381,7 @@ module.exports.handleUpdateLevel = function (req, res, pool) {
         const updateLevel = fs.readFileSync(path + "updateLevel.sql", "utf8");
         pool.query(updateLevel, [player_id, updatedLevel], (err, result) => {
           if (err) {
-            returnError(err);
+            returnError(err, res);
           }
           res.writeHead(201, {
             "Content-Type": "application/json",
@@ -449,7 +464,124 @@ module.exports.handleUpdateAvatarPath = async function (
   }
 };
 
-function returnError(err) {
+module.exports.handleUpdateCharacterAchievements = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+    const achievement_id = data.achievement_id;
+
+    const updateCharacterAchievements = fs.readFileSync(
+      path + "updateCharacterAchievements.sql",
+      "utf8"
+    );
+    pool.query(
+      updateCharacterAchievements,
+      [player_id, parseInt(achievement_id)],
+      (err, result) => {
+        if (err) {
+          returnError(err, res);
+        }
+        res.writeHead(201, {
+          "Content-Type": "application/json",
+        });
+        res.end(
+          JSON.stringify({
+            message: "level updated successfully",
+          })
+        );
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateExecutes = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+
+    pool.query(
+      "SELECT code_profile->'executes' as executes FROM character WHERE player_id = $1",
+      [player_id],
+      (err, result) => {
+        if (err) {
+          returnError(err, res);
+        }
+        let currentExecutes = result.rows[0].executes;
+        const updatedExecutes = currentExecutes + 1;
+
+        const updateExecutes = fs.readFileSync(
+          path + "updateExecutes.sql",
+          "utf8"
+        );
+        pool.query(
+          updateExecutes,
+          [player_id, updatedExecutes],
+          (err, result) => {
+            if (err) {
+              returnError(err, res);
+            }
+            res.writeHead(201, {
+              "Content-Type": "application/json",
+            });
+            res.end(
+              JSON.stringify({
+                message: "level updated successfully",
+              })
+            );
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+module.exports.handleUpdateErrors = function (req, res, pool) {
+  try {
+    const data = req.body;
+    const player_id = data.player_id;
+
+    pool.query(
+      "SELECT code_profile->'errors' as errors FROM character WHERE player_id = $1",
+      [player_id],
+      (err, result) => {
+        if (err) {
+          returnError(err, res);
+        }
+        let currentErrors = result.rows[0].errors;
+        const updatedErrors = currentErrors + 1;
+
+        const updateErrors = fs.readFileSync(path + "updateErrors.sql", "utf8");
+        pool.query(updateErrors, [player_id, updatedErrors], (err, result) => {
+          if (err) {
+            returnError(err, res);
+          }
+          res.writeHead(201, {
+            "Content-Type": "application/json",
+          });
+          res.end(
+            JSON.stringify({
+              message: "level updated successfully",
+            })
+          );
+        });
+      }
+    );
+  } catch (error) {
+    console.error("Error parsing character data:", error);
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Bad Request" }));
+  }
+};
+
+function returnError(err, res) {
   console.error(err);
   res.writeHead(500, { "Content-Type": "application/json" });
   res.end(JSON.stringify({ error: "Internal Server Error" }));
