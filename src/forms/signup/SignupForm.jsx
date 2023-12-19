@@ -35,21 +35,21 @@ const SignupForm = ({ darkMode }) => {
     e.preventDefault();
 
     try {
-      const user = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-      });
+      // const user = await supabase.auth.signUp({
+      //   email: formData.email,
+      //   password: formData.password,
+      // });
 
       // Extract user ID from the Netlify identity object
-      const userId = user.id;
+      // const userId = user.id;
 
-      const userDetails = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender,
-        role: formData.role,
-        // Add other details as needed
-      };
+      // const userDetails = {
+      //   firstName: formData.firstName,
+      //   lastName: formData.lastName,
+      //   gender: formData.gender,
+      //   role: formData.role,
+      //   // Add other details as needed
+      // };
 
       const response = await axios.post(
         "http://localhost:8000/api/users/signup",
