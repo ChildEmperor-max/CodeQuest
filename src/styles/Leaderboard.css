@@ -83,6 +83,11 @@
   margin-right: 20px;
   font-size: 0;
 }
+.leaderboard-avatar {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
 .toplist li .thumb .stat {
   position: absolute;
   top: 26px;

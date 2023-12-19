@@ -6,7 +6,7 @@ import {
   fetchCharacterByLevelRank,
   fetchCharactersByLevel,
 } from "../../db/HandleTable";
-import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
+import RankList from "./RankList";
 
 const Leaderboard = ({ onClose }) => {
   const [levelRank, setLevelRank] = useState([]);
@@ -29,18 +29,6 @@ const Leaderboard = ({ onClose }) => {
       });
   }, []);
 
-  const RankList = ({ key, name, level, rank }) => {
-    <li key={key} data-rank={rank}>
-      <div className="thumb">
-        <span className="img" data-name={name}></span>
-        <span className="name">{name}</span>
-        <span className="stat">
-          <b>{level}</b>Level
-        </span>
-      </div>
-    </li>;
-  };
-
   return (
     <div className="leaderboard-main-container">
       <div className="leaderboard-header">
@@ -57,23 +45,7 @@ const Leaderboard = ({ onClose }) => {
         <ul className="toplist">
           {levelRank.map((item, index) => (
             <li key={index} data-rank={index + 1}>
-              <div className="thumb">
-                <span className="img" data-name="avatar">
-                  <img
-                    src={
-                      item.avatar_path ? item.avatar_path : DefaultAvatarImage
-                    }
-                    onError={(e) => {
-                      e.target.src = DefaultAvatarImage;
-                    }}
-                  />
-                </span>
-                <span className="name">{item.character_name}</span>
-                <span className="stat">
-                  <b>{item.level}</b>Level
-                </span>
-              </div>
-              <div className="more">{/* To be designed & implemented */}</div>
+              <RankList item={item} />
             </li>
           ))}
           {currentPlayerRank ? (
@@ -82,24 +54,7 @@ const Leaderboard = ({ onClose }) => {
               key={currentPlayerRank.player_id}
               data-rank={parseInt(currentPlayerRank.rank)}
             >
-              <div className="thumb">
-                <span className="img" data-name="avatar">
-                  <img
-                    src={
-                      currentPlayerRank.avatar_path
-                        ? currentPlayerRank.avatar_path
-                        : DefaultAvatarImage
-                    }
-                    onError={(e) => {
-                      e.target.src = DefaultAvatarImage;
-                    }}
-                  />
-                </span>
-                <span className="name">{currentPlayerRank.character_name}</span>
-                <span className="stat">
-                  <b>{currentPlayerRank.level}</b>Level
-                </span>
-              </div>
+              <RankList item={currentPlayerRank} />
             </li>
           ) : null}
         </ul>
