@@ -15,19 +15,19 @@ import {
   fetchCharacterByLevelRank,
   fetchAchievementById,
 } from "../../db/HandleTable";
+import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
-import { fetchAchievements, fetchCharacterById } from "../../db/HandleTable";
 import AchievementBadge from "../../components/AchievementBadge";
 import EditUsernameModal from "./EditUsernameModal";
 import AchievementProfile from "./AchievementProfile";
 import LogoutAlertModal from "../../components/LougoutAlertModal";
-import { disableKeyListeners, enableKeyListeners } from "../../lib/KeyControls";
 import EditAvatarModal from "./EditAvatarModal";
+import usePlayerCharacter from "../../hooks/player/usePlayerCharacter";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 
 const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
-  const [characterData, setCharacterData] = useState(undefined);
+  const { characterData, loading, error } = usePlayerCharacter();
   const [completedQuests, setCompletedQuests] = useState([]);
   const [currentTab, setCurrentTab] = useState(1);
   const [userName, setUserName] = useState("");
@@ -65,54 +65,42 @@ const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
   }, []);
 
   useEffect(() => {
-    const playerId = JSON.parse(localStorage.getItem("playerId"));
-    fetchCharacterById(playerId)
-      .then((result) => {
-        console.log(result[0]);
-        setCharacterData(result[0]);
-        setUserName(result[0].character_name);
-        setCurrentBio(result[0].character_bio);
-        setCurrentAvatar(
-          result[0].avatar_path ? result[0].avatar_path : DefaultAvatarImage
-        );
+    if (!loading && !error) {
+      console.log(characterData[0]);
+      setUserName(characterData[0].character_name);
+      setCurrentBio(characterData[0].character_bio);
+      setCurrentAvatar(
+        characterData[0].avatar_path
+          ? characterData[0].avatar_path
+          : DefaultAvatarImage
+      );
 
-        viewCompletedAchievements(result[0].achievements)
-          .then((data) => {
-            console.log(data);
-            setCompletedAchievementsData(data);
-            // const sortedData = data.sort((a, b) => {
-            //   const dateA = new Date(a.date_achieved);
-            //   const dateB = new Date(b.date_achieved);
-            //   return dateB - dateA;
-            // });
-            // const latestData = sortedData.slice(0, 3); // Get the first three data entries
-            // setDisplayedAchievements(latestData);
-            setDisplayedAchievements(data);
-          })
-          .catch((error) => {
-            console.error("[ERROR]:", error);
-          });
-      })
-      .catch((err) => {
-        console.log("[FETCH CHARACTER ERROR]", err);
-      });
+      viewCompletedAchievements(characterData[0].achievements)
+        .then((data) => {
+          console.log(data);
+          setCompletedAchievementsData(data);
+          // const sortedData = data.sort((a, b) => {
+          //   const dateA = new Date(a.date_achieved);
+          //   const dateB = new Date(b.date_achieved);
+          //   return dateB - dateA;
+          // });
+          // const latestData = sortedData.slice(0, 3); // Get the first three data entries
+          // setDisplayedAchievements(latestData);
+          setDisplayedAchievements(data);
+        })
+        .catch((error) => {
+          console.error("[ERROR]:", error);
+        });
+    }
     if (isEditing) {
       disableKeyListeners();
     } else {
       enableKeyListeners();
     }
-  }, [isEditing]);
+  }, [isEditing, loading]);
 
   const viewCompletedAchievements = async (achievements) => {
     try {
-      // var data = [];
-      // const achievementsData = await fetchAchievements();
-      // achievementsData.forEach((element) => {
-      //   if (element.status.trim() === "unlocked") {
-      //     data.push(element);
-      //   }
-      // });
-      // return data;
       let achievementArray = Object.keys(achievements);
       const data = await Promise.all(
         achievementArray.map(async (achievementId) => {
@@ -492,7 +480,7 @@ const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
                     <div>
                       <span>Level: </span>
                       {/* <RandomTextAnimation text="1" elementType="span" /> */}
-                      <span>{characterData ? characterData.level : "..."}</span>
+                      <span>{!loading ? characterData[0].level : "..."}</span>
                     </div>
                     <div>
                       <span>Rank: </span>
@@ -504,10 +492,10 @@ const CharacterProfile = ({ onClose, currentAvatar, setCurrentAvatar }) => {
                     <div>
                       <span>Exp: </span>
                       {/* <RandomTextAnimation text="0/20" elementType="span" /> */}
-                      {characterData ? (
+                      {!loading ? (
                         <span>
-                          {characterData.xp.current_xp}/
-                          {characterData.xp.max_xp}
+                          {characterData[0].xp.current_xp}/
+                          {characterData[0].xp.max_xp}
                         </span>
                       ) : (
                         "..."

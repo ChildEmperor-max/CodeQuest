@@ -6,24 +6,22 @@ import React, { useState, useEffect } from "react";
 import CloseButtonModal from "../../components/CloseButtonModal";
 import AlertModal from "../../components/AlertModal";
 import { usePlayerContext } from "../../components/PlayerContext";
-import { fetchCharacterById } from "../../db/HandleTable";
+import usePlayerCharacter from "../../hooks/player/usePlayerCharacter";
 import { OPERATION, updateGold } from "../../lib/ItemsManager";
+import { updateCharacterInventory } from "../../db/HandleTable";
 
 const Shop = ({ onClose }) => {
-  const { playerId, characterData, setCharacterData } = usePlayerContext();
+  const { setCharacterData } = usePlayerContext();
+  const { characterData, loading, error } = usePlayerCharacter();
   const [itemToBuy, setItemToBuy] = useState(null);
   const [buyError, setBuyError] = useState(null);
-  const [currentGold, setCurrentGold] = useState(0);
+  const [currentGold, setCurrentGold] = useState("-");
 
   useEffect(() => {
-    fetchCharacterById(playerId)
-      .then((character) => {
-        setCurrentGold(character[0].gold);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (!loading && !error) {
+      setCurrentGold(characterData[0].gold);
+    }
+  }, [loading]);
 
   const handleBuyItem = (itemName, itemPrice, itemId) => {
     setItemToBuy({ itemName: itemName, itemPrice: itemPrice, itemId: itemId });
@@ -34,30 +32,35 @@ const Shop = ({ onClose }) => {
       const itemPrice = parseInt(item.itemPrice);
       if (currentGold >= itemPrice) {
         setCurrentGold((prev) => prev - itemPrice);
-        setCharacterData((prevData) => {
-          console.log(prevData);
-          const newInventoryItem = {
-            itemId: item.itemId,
-            itemName: item.itemName,
-            itemPrice: itemPrice,
-            itemCount: (prevData.inventory[item.itemId]?.itemCount || 0) + 1,
-          };
+        updateCharacterInventory(characterData[0].player_id, item.itemId, 1)
+          .then(() => {
+            setCharacterData((prevData) => {
+              const newInventoryItem = {
+                itemId: item.itemId,
+                itemName: item.itemName,
+                itemPrice: itemPrice,
+                itemCount:
+                  (prevData.inventory[item.itemId]?.itemCount || 0) + 1,
+              };
 
-          return {
-            ...prevData,
-            inventory: {
-              ...prevData.inventory,
-              [item.itemId]: {
-                ...prevData.inventory?.[item.itemId],
-                ...newInventoryItem,
-              },
-            },
-          };
-        });
+              return {
+                ...prevData,
+                inventory: {
+                  ...prevData.inventory,
+                  [item.itemId]: {
+                    ...prevData.inventory?.[item.itemId],
+                    ...newInventoryItem,
+                  },
+                },
+              };
+            });
+          })
+          .catch((error) => {
+            console.log("Shop.jsx: ", error);
+          });
 
         setItemToBuy(null);
         updateGold(itemPrice, OPERATION.MINUS);
-        console.log(characterData.inventory);
       } else {
         setItemToBuy(null);
         setBuyError({ message: "Not enough gold" });

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchCharacterById } from "../../db/HandleTable";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 
 const ProfileDisplay = ({

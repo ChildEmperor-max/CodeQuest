@@ -24,12 +24,13 @@ import {
   faQuestionCircle,
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
-import QuestDetails from "./Quests/QuestDetails";
 import { disableKeyListeners, enableKeyListeners } from "../lib/KeyControls";
-import { fetchCharacterById, fetchQuestTable } from "../db/HandleTable";
+import { fetchQuestTable } from "../db/HandleTable";
 import { useNavigate } from "react-router-dom";
 import { useQuestsData } from "../components/QuestContext";
 import { useWorldContext } from "../components/WorldContext";
+import usePlayerCharacter from "../hooks/player/usePlayerCharacter";
+import QuestDetails from "./Quests/QuestDetails";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 import ProfileDisplay from "./CharacterProfile/ProfileDisplay";
 
@@ -55,15 +56,14 @@ export default function InterfaceHandler({
     editor: "editor",
     shop: "shop",
   };
-  // const playerId = JSON.parse(localStorage.getItem("playerId"));
   const playerId = localStorage.getItem("playerId");
   const navigate = useNavigate();
   const manageQuest = new ManageQuest();
+  const { characterData, loading, error } = usePlayerCharacter();
   const { npcs } = useWorldContext();
   const [currentNpcs, setCurrentNpcs] = useState(npcs);
   const { availableQuests, updateAvailableQuests } = useQuestsData();
 
-  const [characterData, setCharacterData] = useState(null);
   const [currentOpenedInterface, setCurrentOpenedInterface] = useState(
     interfaces.none
   );
@@ -106,31 +106,18 @@ export default function InterfaceHandler({
         console.error("[ERROR]:", error);
       });
     displayUsername();
-    // const playerId = localStorage.getItem("playerId");
-  }, [updateAvailableQuests]);
+    if (!loading && !error) {
+      const data = characterData[0];
+      setCurrentXpBar((data.xp.current_xp / data.xp.max_xp) * 200);
+      setCurrentAvatar(
+        data.avatar_path ? data.avatar_path : DefaultAvatarImage
+      );
+    }
+  }, [updateAvailableQuests, loading]);
 
   const displayUsername = () => {
-    // if (!playerId) {
-    //   navigate("/login");
-    // }
-    fetchCharacter();
-  };
-
-  const fetchCharacter = async () => {
-    try {
-      const playerId = localStorage.getItem("playerId");
-      console.log("PLAYER ID: ", playerId);
-      const data = await fetchCharacterById(playerId);
-      if (data) {
-        setCurrentXpBar((data[0].xp.current_xp / data[0].xp.max_xp) * 200);
-        setCharacterData(data[0]);
-        setCurrentAvatar(
-          data[0].avatar_path ? data[0].avatar_path : DefaultAvatarImage
-        );
-        console.log("SUCCESSFULLY FETCHED CHARACTER DATA");
-      }
-    } catch (err) {
-      console.log(err);
+    if (!playerId) {
+      navigate("/login");
     }
   };
 
@@ -445,13 +432,13 @@ export default function InterfaceHandler({
               />
             </div>
             <div className="left-container">
-              {characterData ? (
+              {!loading ? (
                 <div className="left-ui-container">
                   <ProfileDisplay
                     onToggle={() => toggleInterface(interfaces.profile)}
                     currentAvatar={currentAvatar}
                     currentXpBar={currentXpBar}
-                    characterData={characterData}
+                    characterData={characterData[0]}
                   />
                   <div className="quest-display-container">
                     <h4

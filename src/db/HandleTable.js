@@ -1298,3 +1298,33 @@ export function updateCharacterErrors(player_id) {
       });
   });
 }
+
+export function updateCharacterInventory(player_id, item_id, item_count) {
+  return new Promise((resolve, reject) => {
+    fetch(characterAPI + "/update/item", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        playerId: player_id,
+        itemId: item_id.toString(),
+        itemCount: item_count,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("HandleTable.js: " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("HandleTable.js: ", data);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}

@@ -5,11 +5,12 @@ import AlertModal from "../../components/AlertModal";
 import CodeEditor from "../Editor/CodeEditor";
 import QuestDetails from "./QuestDetails";
 import QuestSideButton from "./QuestSideButton";
+import usePlayerQuests from "../../hooks/player/usePlayerQuests";
 
 const Quests = ({ onClose }) => {
   const manageQuest = new ManageQuest();
+  const { questsData, unlockedQuestsData, loading, error } = usePlayerQuests();
   const playerId = localStorage.getItem("playerId");
-  const [questsData, setQuestsData] = useState([]);
   const [abandonQuestAlert, setAbandonQuestAlert] = useState(false);
   const [currentQuestId, setCurrentQuestId] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
@@ -17,26 +18,6 @@ const Quests = ({ onClose }) => {
   const [selectedQuest, setSelectedQuest] = useState(null);
 
   const [questDetails, setQuestDetails] = useState(null);
-
-  useEffect(() => {
-    viewQuests()
-      .then((data) => {
-        setQuestsData(data);
-      })
-      .catch((error) => {
-        console.error("[ERROR]:", error);
-      });
-  }, []);
-
-  const viewQuests = async () => {
-    try {
-      const quests = await manageQuest.getPlayerQuests();
-      return quests;
-    } catch (error) {
-      console.error("Quests.jsx error viewing the quests: ", error);
-      throw error;
-    }
-  };
 
   const handleEditorOpen = () => {
     setIsEditorOpen(!isEditorOpen);
