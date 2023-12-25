@@ -407,10 +407,13 @@ module.exports.handleUpdateInventory = function (req, res, pool) {
     const playerId = data.playerId;
     const itemId = data.itemId;
     const itemCount = data.itemCount;
-    const query = fs.readFileSync(path + "updateInventory.sql", "utf8");
+    const updateInventory = fs.readFileSync(
+      path + "updateInventory.sql",
+      "utf8"
+    );
 
     pool
-      .query(query, [playerId, itemId, itemCount])
+      .query(updateInventory, [playerId, itemId, itemCount])
       .then(() => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(

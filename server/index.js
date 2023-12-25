@@ -339,16 +339,17 @@ app.post("/character/select/code-profile/:playerId", (req, res) => {
   handleFetchCodeProfile(req.params.playerId, res, pool);
 });
 
-app.post("/character/update/item/:itemId/:playerId", (req, res) => {
+app.post("/character/update/item", (req, res) => {
   handleUpdateInventory(req, res, pool);
 });
+
 const storage = multer.diskStorage({
   destination: (req, file, callBack) => {
     callBack(null, "server/uploads");
   },
   filename: (req, file, callBack) => {
     const ext = file.originalname.split(".").pop();
-    const fileName = `${req.params.playerId}.${ext}`; // Append the timestamp and extension
+    const fileName = `${req.params.playerId}.${ext}`;
     callBack(null, fileName);
   },
 });
@@ -367,7 +368,6 @@ app.post(
       return next(error);
     }
     handleUpdateAvatarPath(req, res, pool, "server/uploads/" + file.filename);
-    // res.status(200).send({ status: "ok", filename: avatar_path });
   }
 );
 
