@@ -31,7 +31,6 @@ const DialogBox = ({
   onHighlightQuestHint,
   onSetInteractingNpc,
   setCurrentXpBar,
-  fetchCharacter,
   updateAvailableQuests,
 }) => {
   const manageQuest = new ManageQuest();
@@ -412,7 +411,6 @@ const DialogBox = ({
             setCurrentXpBar(
               (characterData.xp.current_xp / characterData.xp.max_xp) * 200
             );
-            fetchCharacter();
           })
           .catch((error) => {
             console.log("Error in receiving rewards: ", error);
