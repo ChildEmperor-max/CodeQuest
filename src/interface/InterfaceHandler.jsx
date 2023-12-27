@@ -113,7 +113,7 @@ export default function InterfaceHandler({
         data.avatar_path ? data.avatar_path : DefaultAvatarImage
       );
     }
-  }, [updateAvailableQuests, loading]);
+  }, [updateAvailableQuests, loading, characterData]);
 
   const displayUsername = () => {
     if (!playerId) {
@@ -323,7 +323,6 @@ export default function InterfaceHandler({
           }}
           onSetInteractingNpc={(npc) => setIsPlayerInteractingNpc(npc)}
           setCurrentXpBar={setCurrentXpBar}
-          fetchCharacter={fetchCharacter}
           updateAvailableQuests={updateAvailableQuests}
         />
       ) : null}
