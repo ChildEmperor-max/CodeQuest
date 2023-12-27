@@ -1,3 +1,7 @@
+:root {
+  --box-shadow-color: #fff;
+}
+
 .shop-main-container {
   position: fixed;
   font-size: 14px;
@@ -101,4 +105,76 @@
 
 .item-list button:hover {
   background-color: #141f45;
+}
+
+.item-bought-popup-container {
+  /* display: none; */
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  padding: 10px 10px;
+  z-index: 5;
+  border-radius: 5px;
+  transition: opacity 0.5s ease-in-out;
+  transform-origin: center;
+
+  width: 600px;
+  max-width: 600px;
+
+  background: linear-gradient(120deg, rgba(13, 22, 49, 0.568) 0%, rgb(19, 26, 51) 100%);
+  
+}
+
+.item-bought-popup-container.open {
+  opacity: 1;
+  animation: fade-scale-in 0.5s ease-in-out;
+}
+
+.item-bought-popup-container.close {
+  opacity: 0;
+  animation: fade-scale-out 0.5s ease-in-out;
+}
+
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.image-container img{
+  width: 100px;
+  height: auto;
+  box-shadow:
+  0 0 60px 10px #ffffff8a,
+  0 0 140px 50px #ffffff8a;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+  
+@keyframes fade-scale-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes fade-scale-out {
+  0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1);
+    display: none;
+  }
 }
