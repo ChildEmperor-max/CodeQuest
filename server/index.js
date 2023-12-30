@@ -73,6 +73,8 @@ const {
   handleUpdateErrors,
   handleFetchCodeProfile,
   handleUpdateCharacterAchievements,
+  handleFetchItemsById,
+  handleFetchCharacterItems,
 } = require("./handlers/characterHandler.js");
 
 const { handleFetchPlayerByEmail } = require("./handlers/playerHandler.js");
@@ -341,6 +343,14 @@ app.post("/character/select/code-profile/:playerId", (req, res) => {
 
 app.post("/character/update/item", (req, res) => {
   handleUpdateInventory(req, res, pool);
+});
+
+app.get("/character/select/inventory/:playerId", (req, res) => {
+  handleFetchCharacterItems(req.params.playerId, res, pool);
+});
+
+app.get("/character/select/inventory/:playerId/:itemId", (req, res) => {
+  handleFetchItemsById(req, res, pool);
 });
 
 const storage = multer.diskStorage({

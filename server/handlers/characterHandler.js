@@ -36,6 +36,45 @@ module.exports.handleFetchCodeProfile = async function (id, res, pool) {
   }
 };
 
+module.exports.handleFetchCharacterItems = async function (
+  playerId,
+  res,
+  pool
+) {
+  try {
+    const selectCharacterItems = fs.readFileSync(
+      path + "selectCharacterItems.sql",
+      "utf8"
+    );
+    const result = await pool.query(selectCharacterItems, [playerId]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("handleFetchCharacterItems:", error);
+  }
+};
+
+module.exports.handleFetchItemsById = async function (req, res, pool) {
+  try {
+    const playerId = req.params.playerId;
+    const itemId = req.params.itemId;
+    const selectCharacterItemById = fs.readFileSync(
+      path + "selectCharacterItemById.sql",
+      "utf8"
+    );
+    const result = await pool.query(selectCharacterItemById, [
+      playerId,
+      itemId,
+    ]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("handleFetchCharacterItems:", error);
+  }
+};
+
 module.exports.handleFetchCharacterByLevelRank = async function (
   req,
   res,

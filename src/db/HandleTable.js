@@ -546,6 +546,36 @@ export function fetchHelpByDialogId(id) {
     });
 }
 
+export async function fetchCharacterItems(playerId) {
+  return fetch(characterAPI + "/select/inventory/" + playerId)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching Inventory: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
+export async function fetchCharacterItemsById(player_id, item_id) {
+  return fetch(characterAPI + "/select/inventory/" + player_id + "/" + item_id)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching Character data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
+
 export async function fetchCharacterById(player_id) {
   // const { data, error } = await supabase
   //   .from("character")
