@@ -97,20 +97,17 @@ const Shop = ({ onClose }) => {
           onClose={() => setItemBought(null)}
         />
       ) : null}
+      {buyError ? (
+        <AlertModal message={buyError.message} onOk={() => setBuyError(null)} />
+      ) : null}
+      {itemToBuy ? (
+        <AlertModal
+          message={`Buy ${itemToBuy.itemName} for ${itemToBuy.itemPrice} gold?`}
+          onConfirm={() => confirmBuyItem(itemToBuy)}
+          onCancel={() => setItemToBuy(null)}
+        />
+      ) : null}
       <div className="shop-main-container">
-        {buyError ? (
-          <AlertModal
-            message={buyError.message}
-            onOk={() => setBuyError(null)}
-          />
-        ) : null}
-        {itemToBuy ? (
-          <AlertModal
-            message={`Buy ${itemToBuy.itemName} for ${itemToBuy.itemPrice} gold?`}
-            onConfirm={() => confirmBuyItem(itemToBuy)}
-            onCancel={() => setItemToBuy(null)}
-          />
-        ) : null}
         <CloseButtonModal onClose={onClose} />
         <div className="shop-header-container">
           <span className="gold-container">
