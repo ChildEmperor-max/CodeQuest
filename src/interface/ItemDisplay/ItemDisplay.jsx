@@ -1,9 +1,9 @@
 import "./ItemDisplay.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import usePlayerInventory from "../../hooks/player/usePlayerInventory";
 import InventoryItem from "./InventoryItem";
 
-const ItemDisplay = ({ showItemData, setShowItemData }) => {
+const ItemDisplay = ({ setShowItemData }) => {
   const { inventoryData, loading, error } = usePlayerInventory();
   return (
     <>

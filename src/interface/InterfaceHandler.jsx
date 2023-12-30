@@ -385,9 +385,7 @@ export default function InterfaceHandler({
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       )}
 
-      {showItemData && (
-        <ItemData item={showItemData} onClose={() => setShowItemData(null)} />
-      )}
+      {showItemData && <ItemData onClose={() => setShowItemData(null)} />}
 
       <div className="ui-container" id="interface-container">
         {showButtons && (
