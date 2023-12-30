@@ -33,6 +33,8 @@ import usePlayerCharacter from "../hooks/player/usePlayerCharacter";
 import QuestDetails from "./Quests/QuestDetails";
 import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 import ProfileDisplay from "./CharacterProfile/ProfileDisplay";
+import ItemDisplay from "./ItemDisplay/ItemDisplay";
+import ItemData from "./ItemDisplay/ItemData";
 
 export default function InterfaceHandler({
   settings: {
@@ -88,6 +90,7 @@ export default function InterfaceHandler({
   const [showMiniQuestDisplay, setShowMiniQuestDisplay] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
   const [currentAvatar, setCurrentAvatar] = useState(DefaultAvatarImage);
+  const [showItemData, setShowItemData] = useState(null);
 
   useEffect(() => {
     setCurrentNpcs(npcs);
@@ -382,6 +385,10 @@ export default function InterfaceHandler({
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       )}
 
+      {showItemData && (
+        <ItemData item={showItemData} onClose={() => setShowItemData(null)} />
+      )}
+
       <div className="ui-container" id="interface-container">
         {showButtons && (
           <>
@@ -429,6 +436,12 @@ export default function InterfaceHandler({
                 id="help-button"
                 onClickEvent={() => toggleInterface(interfaces.helper)}
               />
+              <div className="item-display-container">
+                <ItemDisplay
+                  showItemData={showItemData}
+                  setShowItemData={setShowItemData}
+                />
+              </div>
             </div>
             <div className="left-container">
               {!loading ? (
