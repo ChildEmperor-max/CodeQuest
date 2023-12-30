@@ -7,7 +7,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  display: flex;
+  display: block;
 }
 
 .left-container {
@@ -28,6 +28,11 @@
 .horizontal-container {
   display: flex;
   flex-direction: row;
+}
+
+.item-display-container {
+  display: block;
+  flex-direction: column;
 }
 
 .quest-display-container {
