@@ -1,6 +1,6 @@
 import React from "react";
 
-const InventoryItem = ({ item }) => (
+const InventoryItem = ({ item, index }) => (
   <>
     <span className="tooltip">
       <span className="tooltiptext">{item.item_name}</span>

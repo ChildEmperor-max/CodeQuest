@@ -11,7 +11,11 @@ const usePlayerInventory = () => {
       try {
         const playerId = localStorage.getItem("playerId");
         const data = await fetchCharacterItems(playerId);
-        setInventoryData(data);
+        if (data[0].item_id === null) {
+          setInventoryData([]);
+        } else {
+          setInventoryData(data);
+        }
       } catch (error) {
         console.error("Error fetching inventory: ", error);
         setError(error);

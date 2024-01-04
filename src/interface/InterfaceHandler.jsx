@@ -35,6 +35,8 @@ import DefaultAvatarImage from "src/assets/icons/default-avatar.png";
 import ProfileDisplay from "./CharacterProfile/ProfileDisplay";
 import ItemDisplay from "./ItemDisplay/ItemDisplay";
 import ItemData from "./ItemDisplay/ItemData";
+import HelpButton from "./Help/HelpButton";
+import SystemAlert from "../components/SystemAlert";
 
 export default function InterfaceHandler({
   settings: {
@@ -92,6 +94,8 @@ export default function InterfaceHandler({
   const [currentAvatar, setCurrentAvatar] = useState(DefaultAvatarImage);
   const [showItemData, setShowItemData] = useState(null);
 
+  const [showSystemAlert, setShowSystemAlert] = useState(false);
+
   useEffect(() => {
     setCurrentNpcs(npcs);
     fetchQuestTable()
@@ -115,6 +119,7 @@ export default function InterfaceHandler({
       setCurrentAvatar(
         data.avatar_path ? data.avatar_path : DefaultAvatarImage
       );
+      setShowSystemAlert(true);
     }
   }, [updateAvailableQuests, loading, characterData]);
 
@@ -385,127 +390,146 @@ export default function InterfaceHandler({
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       )}
 
-      {showItemData && <ItemData onClose={() => setShowItemData(null)} />}
+      {showItemData && (
+        <ItemData item={showItemData} onClose={() => setShowItemData(null)} />
+      )}
 
       <div className="ui-container" id="interface-container">
-        {showButtons && (
-          <>
-            <div className="right-container">
-              <InterfaceButton
-                name="Quests"
-                icon={faTasks}
-                id="quest-button"
-                onClickEvent={() => toggleInterface(interfaces.quests)}
-                // shortcutKey="Q"
-              />
-              <InterfaceButton
-                name="Editor"
-                icon={faEdit}
-                id="toggle-editor-button"
-                onClickEvent={() => toggleInterface(interfaces.editor)}
-              />
-              <InterfaceButton
-                name="Leaderboard"
-                icon={faMedal}
-                id="leaderboard-button"
-                onClickEvent={() => toggleInterface(interfaces.leaderboard)}
-              />
-              <InterfaceButton
-                name="Achievements"
-                icon={faTrophy}
-                id="achivements-button"
-                onClickEvent={() => toggleInterface(interfaces.achievements)}
-              />
-              <InterfaceButton
-                name="Shop"
-                icon={faShoppingCart}
-                id="shop-button"
-                onClickEvent={() => toggleInterface(interfaces.shop)}
-              />
-              {/* <InterfaceButton
+        <>
+          {showSystemAlert && (
+            <SystemAlert onClose={() => setShowSystemAlert(false)} />
+          )}
+          {showButtons && (
+            <>
+              <div className="right-container">
+                <InterfaceButton
+                  name="Quests"
+                  icon={faTasks}
+                  id="quest-button"
+                  onClickEvent={() => toggleInterface(interfaces.quests)}
+                  // shortcutKey="Q"
+                />
+                <InterfaceButton
+                  name="Editor"
+                  icon={faEdit}
+                  id="toggle-editor-button"
+                  onClickEvent={() => toggleInterface(interfaces.editor)}
+                />
+                <InterfaceButton
+                  name="Leaderboard"
+                  icon={faMedal}
+                  id="leaderboard-button"
+                  onClickEvent={() => toggleInterface(interfaces.leaderboard)}
+                />
+                <InterfaceButton
+                  name="Achievements"
+                  icon={faTrophy}
+                  id="achivements-button"
+                  onClickEvent={() => toggleInterface(interfaces.achievements)}
+                />
+                <InterfaceButton
+                  name="Shop"
+                  icon={faShoppingCart}
+                  id="shop-button"
+                  onClickEvent={() => toggleInterface(interfaces.shop)}
+                />
+                {/* <InterfaceButton
                 name="Settings"
                 icon={faCog}
                 id="settings-button"
                 onClickEvent={() => toggleInterface(interfaces.settings)}
               /> */}
-              <InterfaceButton
+                {/* <InterfaceButton
                 name="Help"
                 icon={faQuestionCircle}
                 id="help-button"
                 onClickEvent={() => toggleInterface(interfaces.helper)}
-              />
-              <div className="item-display-container">
-                <ItemDisplay
-                  showItemData={showItemData}
-                  setShowItemData={setShowItemData}
+              /> */}
+                <div className="item-display-container">
+                  <ItemDisplay
+                    showItemData={showItemData}
+                    setShowItemData={setShowItemData}
+                  />
+                </div>
+              </div>
+              <div className="left-container">
+                <div className="left-ui-container">
+                  {!loading ? (
+                    <>
+                      <ProfileDisplay
+                        onToggle={() => toggleInterface(interfaces.profile)}
+                        currentAvatar={currentAvatar}
+                        currentXpBar={currentXpBar}
+                        characterData={characterData[0]}
+                      />
+                      <div className="quest-display-container">
+                        <h4
+                          onClick={() =>
+                            setShowMiniQuestDisplay((prev) => !prev)
+                          }
+                        >
+                          Quests
+                          <span>{showMiniQuestDisplay ? "-" : "+"}</span>
+                        </h4>
+                        {showMiniQuestDisplay
+                          ? availableQuests.map((quest, index) => (
+                              <div
+                                className="quest-display-content"
+                                key={index}
+                              >
+                                <p
+                                  className="quest-display-title"
+                                  onClick={() =>
+                                    toggleInterface(interfaces.quests)
+                                  }
+                                >
+                                  {/* {quest.quest.quest_title} */}
+                                  {quest.quest_title}
+                                </p>
+                                <p
+                                  className="quest-display-action"
+                                  onClick={() => startQuestAction(quest)}
+                                >
+                                  {quest.quest_status === "active"
+                                    ? "Start"
+                                    : isNavigating
+                                    ? "Cancel"
+                                    : "Navigate"}
+                                </p>
+                              </div>
+                            ))
+                          : null}
+                      </div>
+                    </>
+                  ) : (
+                    <h4>Loading...</h4>
+                  )}
+                </div>
+                <HelpButton
+                  onToggle={() => toggleInterface(interfaces.helper)}
                 />
               </div>
-            </div>
-            <div className="left-container">
-              {!loading ? (
-                <div className="left-ui-container">
-                  <ProfileDisplay
-                    onToggle={() => toggleInterface(interfaces.profile)}
-                    currentAvatar={currentAvatar}
-                    currentXpBar={currentXpBar}
-                    characterData={characterData[0]}
-                  />
-                  <div className="quest-display-container">
-                    <h4
-                      onClick={() => setShowMiniQuestDisplay((prev) => !prev)}
-                    >
-                      Quests
-                      <span>{showMiniQuestDisplay ? "-" : "+"}</span>
-                    </h4>
-                    {showMiniQuestDisplay
-                      ? availableQuests.map((quest, index) => (
-                          <div className="quest-display-content" key={index}>
-                            <p
-                              className="quest-display-title"
-                              onClick={() => toggleInterface(interfaces.quests)}
-                            >
-                              {/* {quest.quest.quest_title} */}
-                              {quest.quest_title}
-                            </p>
-                            <p
-                              className="quest-display-action"
-                              onClick={() => startQuestAction(quest)}
-                            >
-                              {quest.quest_status === "active"
-                                ? "Start"
-                                : isNavigating
-                                ? "Cancel"
-                                : "Navigate"}
-                            </p>
-                          </div>
-                        ))
-                      : null}
-                  </div>
+              {isPlayerNearNpc && (
+                <div className="interact-action-container">
+                  <div className="interact-button">E</div>
+                  <span>Interact</span>
                 </div>
-              ) : (
-                <h4>Loading...</h4>
               )}
-            </div>
-            {isPlayerNearNpc && (
-              <div className="interact-action-container">
-                <div className="interact-button">E</div>
-                <span>Interact</span>
+              <div className="player-actions-container">
+                <div
+                  className={`sprint-image-container ${
+                    isPlayerRunning ? "sprint-triggered" : "sprint-enabled"
+                  }`}
+                  id="sprint-icon"
+                >
+                  <a>
+                    <img src={SprintImageNoBG} alt="Sprint" className="svg" />
+                  </a>
+                </div>
               </div>
-            )}
-            <div className="player-actions-container">
-              <div
-                className={`sprint-image-container ${
-                  isPlayerRunning ? "sprint-triggered" : "sprint-enabled"
-                }`}
-                id="sprint-icon"
-              >
-                <a>
-                  <img src={SprintImageNoBG} alt="Sprint" className="svg" />
-                </a>
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </>
       </div>
     </>
   );

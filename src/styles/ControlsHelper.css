@@ -1,3 +1,8 @@
+:root {
+    --help-cloud-color: rgba(44, 79, 124, 0.74);
+    --help-cloud-arrow-border-color: rgb(255, 255, 255);
+}
+
 .helper-main-container {
     width: 100%;
     height: 100%;
@@ -18,9 +23,6 @@
     text-align: center;
 }
 
-.helper-close-button {
-}
-
 .helper-box {
     width: 80%;
     height: 70%;
@@ -28,4 +30,53 @@
     border: 2px solid grey;
     box-shadow: 0 0 10px 5px black;
     background-color: black;
+}
+
+.help-button-container {
+    position: absolute;
+    display: flex;
+    top: 140%;
+    margin: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.help-button-container p {
+    background-color: var(--help-cloud-color);
+    padding: 10px;
+    position: relative;
+    border: 1px solid var(--help-cloud-arrow-border-color);
+    border-radius: 5px;
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+p.open-reminder {
+    opacity: 1;
+}
+
+p.close-reminder {
+    opacity: 0;
+}
+
+.help-button-container p::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent var(--help-cloud-arrow-border-color) transparent transparent;
+  }
+
+.help-button {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.6s;
+}
+
+.help-button:hover {
+    opacity: 1;
 }
