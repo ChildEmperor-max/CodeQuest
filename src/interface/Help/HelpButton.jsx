@@ -4,14 +4,14 @@ import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 
 const HelpButton = ({ onToggle }) => {
   const [showReminder, setShowReminder] = useState(true);
-  const timeout = 2000;
-  // this should be the exact duration of the closing animation
-  const closeAnimationTimeout = 1000;
+  const TIMEOUT = 2000;
+  const CLOSE_REMINDER_ANIM_TIMEOUT = 3000;
+  const SHOW_INTERVAL = 10_000;
 
   const handleClose = () => {
     const timer = setTimeout(() => {
       setShowReminder(false);
-    }, closeAnimationTimeout);
+    }, CLOSE_REMINDER_ANIM_TIMEOUT);
 
     return () => clearTimeout(timer);
   };
@@ -19,10 +19,19 @@ const HelpButton = ({ onToggle }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleClose();
-    }, timeout);
+    }, TIMEOUT);
 
-    return () => clearTimeout(timer);
-  }, [timeout]);
+    const interval = setInterval(() => {
+      setShowReminder(true);
+      handleClose();
+    }, SHOW_INTERVAL);
+
+    // Clear timers and intervals when the component is unmounted
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [TIMEOUT, SHOW_INTERVAL]);
 
   return (
     <div className="help-button-container">
