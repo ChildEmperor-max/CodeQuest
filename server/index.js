@@ -86,6 +86,7 @@ const {
   handleFetchNpcQuestStatus,
   handleInsertAllQuestProgress,
 } = require("./handlers/playerQuestHandler");
+const { handleFetchAllItems } = require("./handlers/itemsHandler.js");
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
@@ -351,6 +352,10 @@ app.get("/character/select/inventory/:playerId", (req, res) => {
 
 app.get("/character/select/inventory/:playerId/:itemId", (req, res) => {
   handleFetchItemsById(req, res, pool);
+});
+
+app.get("/items", (req, res) => {
+  handleFetchAllItems(req, res, pool);
 });
 
 const storage = multer.diskStorage({

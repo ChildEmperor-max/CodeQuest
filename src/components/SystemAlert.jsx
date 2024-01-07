@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const SystemAlert = ({ onClose }) => {
+const SystemAlert = ({ message, onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const timeout = 5000;
   // this should be the exact duration of the closing animation
@@ -25,7 +25,7 @@ const SystemAlert = ({ onClose }) => {
   return (
     <div className="system-alert-container">
       <div className={`system-alert ${isOpen ? "open" : "close"}`}>
-        <p>You can press "F11" for a better gaming experience</p>
+        <p>{message}</p>
       </div>
     </div>
   );

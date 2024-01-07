@@ -36,6 +36,7 @@ import {
   updateCharacterErrors,
   updateCharacterAchievements,
   fetchAchievementById,
+  updateCharacterInventory,
 } from "../../db/HandleTable";
 import ButtonText from "./ButtonText";
 import PanelButton from "./PanelButton";
@@ -51,10 +52,17 @@ import AlertModal from "../../components/AlertModal";
 import { useWorldContext } from "../../components/WorldContext";
 import AchievementModal from "../../components/AchievementModal";
 import { getNpcs } from "../../npc/NPCGetterSetter";
+import usePlayerInventory from "../../hooks/player/usePlayerInventory";
+import SystemAlert from "../../components/SystemAlert";
 
 const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
   const { playerId, characterData, updateCharacterData, setCharacterData } =
     usePlayerContext();
+  const {
+    inventoryData,
+    loading: loadingInventory,
+    error: errorInventory,
+  } = usePlayerInventory();
   const { npcs } = useWorldContext();
   const [npcArray, setNpcArray] = useState([]);
 
@@ -322,33 +330,49 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
       });
   };
 
-  const confirmUseItem = (item) => {
-    console.log(characterData.inventory);
-    switch (item) {
-      case characterData.inventory && characterData.inventory[1].itemName:
-        setShowHint(true);
-        setIsWarningAlert({ message: `${item} is now used` });
-        // setCharacterData({
-        //   ...characterData,
-        //   inventory: {
-        //     ...characterData.inventory,
-        //     [1]: {
-        //       ...characterData.inventory[1],
-        //       itemCount: (characterData.inventory[1]?.itemCount || 0) - 1,
-        //     },
-        //   },
-        // });
-
+  const confirmUseItem = (itemName) => {
+    const foundItem = inventoryData.find((item) => item.item_name === itemName);
+    switch (foundItem.item_id) {
+      case 1:
+        if (foundItem.item_count < 1) {
+          setIsWarningAlert({
+            message: ` You don't have the item '${itemName}'`,
+          });
+        } else {
+          setShowHint(true);
+          setIsWarningAlert({ message: `${foundItem.item_name} is now used` });
+          updateItemCount(foundItem.item_id);
+        }
         break;
-      case characterData.inventory && characterData.inventory[3].itemName:
-        setShowPseudoCode(true);
-        setIsWarningAlert({ message: `${item} is now used` });
+      case 3:
+        if (foundItem.item_count < 1) {
+          setIsWarningAlert({
+            message: ` You don't have the item '${itemName}'`,
+          });
+        } else {
+          setShowPseudoCode(true);
+          setIsWarningAlert({ message: `${foundItem.item_name} is now used` });
+          updateItemCount(foundItem.item_id);
+        }
         break;
       default:
-        setIsWarningAlert({ message: ` You don't have the item '${item}'` });
+        setIsWarningAlert({
+          message: ` You don't have the item '${itemName}'`,
+        });
         break;
     }
     setUseItemAlert(null);
+  };
+
+  const updateItemCount = (item_id) => {
+    const playerId = localStorage.getItem("playerId");
+    updateCharacterInventory(playerId, item_id, -1)
+      .then(() => {
+        console.log("Item updated successfully");
+      })
+      .catch((error) => {
+        console.log("CodeEditor.jsx: ", error);
+      });
   };
 
   return (
@@ -378,9 +402,9 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
         />
       )}
       {isWarningAlert && (
-        <AlertModal
+        <SystemAlert
           message={isWarningAlert.message}
-          onOk={() => setIsWarningAlert(null)}
+          onClose={() => setIsWarningAlert(null)}
         />
       )}
       {showPopup && (
@@ -473,8 +497,9 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                   <ButtonText
                     onClick={() => {
                       setUseItemAlert({
-                        message: "Are you sure you want to use 'Hints'?",
-                        item: "Hints",
+                        message:
+                          "Are you sure you want to use 'Code Cipher Scroll'?",
+                        item: "Code Cipher Scroll",
                       });
                     }}
                     disabled={quest_data && quest_data.hint ? false : true}
@@ -488,14 +513,15 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
                   <ButtonText
                     onClick={() => {
                       setUseItemAlert({
-                        message: "Are you sure you want to use 'Pseudo Code'?",
-                        item: "Pseudo Code",
+                        message:
+                          "Are you sure you want to use 'Scripter's Blueprint'?",
+                        item: "Scripter's Blueprint",
                       });
                     }}
                     disabled={
                       quest_data && quest_data.pseudo_code ? false : true
                     }
-                    title="Pseudo Code"
+                    title="Use Scripter's Blueprint"
                     icon={faCode}
                     buttonText="Pseudo Code"
                   />

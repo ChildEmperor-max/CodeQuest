@@ -397,7 +397,10 @@ export default function InterfaceHandler({
       <div className="ui-container" id="interface-container">
         <>
           {showSystemAlert && (
-            <SystemAlert onClose={() => setShowSystemAlert(false)} />
+            <SystemAlert
+              message='You can press "F11" for a better gaming experience'
+              onClose={() => setShowSystemAlert(false)}
+            />
           )}
           {showButtons && (
             <>

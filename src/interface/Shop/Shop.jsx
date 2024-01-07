@@ -11,20 +11,38 @@ import { OPERATION, updateGold } from "../../lib/ItemsManager";
 import { updateCharacterInventory } from "../../db/HandleTable";
 import ShopItem from "./ShopItem";
 import ItemBoughtPopup from "./ItemBoughtPopup";
+import useItems from "../../hooks/items/useItems";
 
 const Shop = ({ onClose }) => {
+  const {
+    itemsData,
+    loading: loadingItemsData,
+    error: errorItemsData,
+  } = useItems();
   const { setCharacterData } = usePlayerContext();
-  const { characterData, loading, error } = usePlayerCharacter();
+  const {
+    characterData,
+    loading: loadingCharacterData,
+    error: errorCharacterData,
+  } = usePlayerCharacter();
   const [itemToBuy, setItemToBuy] = useState(null);
   const [buyError, setBuyError] = useState(null);
   const [currentGold, setCurrentGold] = useState("-");
   const [itemBought, setItemBought] = useState(null);
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (!loadingCharacterData && !errorCharacterData) {
       setCurrentGold(characterData[0].gold);
     }
-  }, [loading]);
+    if (!loadingItemsData && !errorItemsData) {
+      console.log(itemsData);
+    }
+  }, [
+    loadingCharacterData,
+    errorCharacterData,
+    loadingItemsData,
+    errorItemsData,
+  ]);
 
   const handleBuyItem = (
     itemName,
@@ -119,30 +137,19 @@ const Shop = ({ onClose }) => {
           </div>
         </div>
         <div className="shop-content">
-          <ShopItem
-            handleBuyItem={handleBuyItem}
-            itemImage={ScrollHint}
-            itemName="Hints"
-            itemDescription="Gives a hint on how to complete a quest"
-            itemPrice="2"
-            itemId={1}
-          />
-          <ShopItem
-            handleBuyItem={handleBuyItem}
-            itemImage={DoubleXP}
-            itemName="Double xp"
-            itemDescription="Doubles your xp gain"
-            itemPrice="2"
-            itemId={2}
-          />
-          <ShopItem
-            handleBuyItem={handleBuyItem}
-            itemImage={PseudoCode}
-            itemName="Pseudo Code"
-            itemDescription="Provides a pseudo code for a quest"
-            itemPrice="2"
-            itemId={3}
-          />
+          {itemsData.map((item, index) => (
+            <div key={item.item_id}>
+              <ShopItem
+                handleBuyItem={handleBuyItem}
+                itemImage={item.item_iconPath}
+                itemName={item.item_name}
+                itemDescription={item.item_description}
+                itemPrice={item.item_price}
+                itemId={item.item_id}
+                index={index}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </>

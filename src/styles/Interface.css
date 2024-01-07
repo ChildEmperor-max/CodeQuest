@@ -21,6 +21,30 @@
   border-style: groove double groove double;
 }
 
+.center-position {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.692);
+  border: 8px solid rgb(160, 160, 160);
+  border-style: groove double groove double;
+}
+
+.inner-box {
+  border: 1px solid white
+}
+
+.inner-box p {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.inner-box p:hover {
+  background-color: rgba(0, 0, 0, 0.623);
+}
+
 .system-alert.open {
   display: block;
   animation: open-alert 1s ease-in-out;

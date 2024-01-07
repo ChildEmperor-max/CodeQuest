@@ -11,6 +11,7 @@ const helpAPI = host + "help";
 const characterAPI = host + "character";
 const playerAPI = host + "player";
 const playerQuestsAPI = host + "player-quest";
+const itemsAPI = host + "items";
 
 export function executeJavaCode(data) {
   return fetch(host + "execute-java", {
@@ -1357,4 +1358,18 @@ export function updateCharacterInventory(player_id, item_id, item_count) {
         reject(error);
       });
   });
+}
+
+export function fetchAllItems() {
+  return fetch(itemsAPI)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error fetching items data: " + response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
 }

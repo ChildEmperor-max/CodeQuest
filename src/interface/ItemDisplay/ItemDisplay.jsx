@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import usePlayerInventory from "../../hooks/player/usePlayerInventory";
 import usePlayerCharacter from "../../hooks/player/usePlayerCharacter";
 import InventoryItem from "./InventoryItem";
+import ChoicesModal from "../../components/ChoicesModal";
 
 const ItemDisplay = ({ setShowItemData }) => {
   const {
@@ -22,6 +23,7 @@ const ItemDisplay = ({ setShowItemData }) => {
 
   return (
     <>
+      <ChoicesModal message="Choose a quest to view its hint:" />
       {isLoadingInventory ? (
         <p>Loading...</p>
       ) : (
