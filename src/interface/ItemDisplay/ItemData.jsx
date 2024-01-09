@@ -32,7 +32,7 @@ const ItemData = ({ item, onClose }) => {
             <p>An error occured</p>
           )}
           <div>
-            <button onClick={() => setShowQuestChoices(true)}>Use</button>
+            {/* <button onClick={() => setShowQuestChoices(true)}>Use</button> */}
             <button onClick={onClose}>Close</button>
           </div>
         </div>
