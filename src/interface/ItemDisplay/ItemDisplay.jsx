@@ -1,9 +1,8 @@
 import "./ItemDisplay.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import usePlayerInventory from "../../hooks/player/usePlayerInventory";
 import usePlayerCharacter from "../../hooks/player/usePlayerCharacter";
 import InventoryItem from "./InventoryItem";
-import ChoicesModal from "../../components/ChoicesModal";
 
 const ItemDisplay = ({ setShowItemData }) => {
   const {
@@ -17,13 +16,8 @@ const ItemDisplay = ({ setShowItemData }) => {
     error: isCharacterError,
   } = usePlayerCharacter();
 
-  useEffect(() => {
-    console.log(inventoryData);
-  }, [inventoryData]);
-
   return (
     <>
-      <ChoicesModal message="Choose a quest to view its hint:" />
       {isLoadingInventory ? (
         <p>Loading...</p>
       ) : (

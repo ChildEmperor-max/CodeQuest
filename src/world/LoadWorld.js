@@ -1,8 +1,8 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import ManageLoader from "../lib/Loader";
-import CodeQuestMap from "src/assets/world/SampleWorld.glb";
-// import CodeQuestMap from "src/assets/world/codequest_map.glb";
+// import CodeQuestMap from "src/assets/world/SampleWorld.glb";
+import CodeQuestMap from "src/assets/world/codequest_map.glb";
 
 // const worldLoader = new GLTFLoader();
 let lodLevels = [];

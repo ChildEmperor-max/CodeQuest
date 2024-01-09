@@ -14,7 +14,7 @@
   position: fixed;
   left: 50%;
   top: 20%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.692);
   border: 8px solid rgb(160, 160, 160);
@@ -25,15 +25,19 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
+}
+
+.choices-modal-container {
+  z-index: 5;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.692);
+  background-color: rgba(0, 0, 0, 0.875);
   border: 8px solid rgb(160, 160, 160);
   border-style: groove double groove double;
 }
 
 .inner-box {
-  border: 1px solid white
+  border: 1px solid white;
 }
 
 .inner-box p {

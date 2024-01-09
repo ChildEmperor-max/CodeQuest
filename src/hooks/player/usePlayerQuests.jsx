@@ -5,6 +5,7 @@ const usePlayerQuests = () => {
   const manageQuest = new ManageQuest();
   const [questsData, setQuestsData] = useState([]);
   const [unlockedQuestsData, setUnlockedQuestsData] = useState([]);
+  const [activeQuestsData, setActiveQuestsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,7 +20,12 @@ const usePlayerQuests = () => {
             item.quest_status !== "locked" && item.quest_status !== "completed"
           );
         });
+
+        const activeQuests = quests.filter((item) => {
+          return item.quest_status === "active";
+        });
         setUnlockedQuestsData(unlockedQuests);
+        setActiveQuestsData(activeQuests);
       } catch (error) {
         console.error("Error fetching player quests: ", error);
         setError(error);
@@ -31,7 +37,7 @@ const usePlayerQuests = () => {
     fetchPlayerQuests();
   }, []);
 
-  return { questsData, unlockedQuestsData, loading, error };
+  return { questsData, unlockedQuestsData, activeQuestsData, loading, error };
 };
 
 export default usePlayerQuests;

@@ -100,7 +100,7 @@ export default function InterfaceHandler({
     setCurrentNpcs(npcs);
     fetchQuestTable()
       .then((result) => {
-        console.log(result);
+        console.log("Quests loaded");
       })
       .catch((err) => {
         console.log(err);

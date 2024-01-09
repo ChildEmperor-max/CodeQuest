@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const ChoicesModal = ({ message, onConfirm, onCancel }) => {
   return (
     <div className="system-alert-container">
-      <div className="center-position">
+      <div className="choices-modal-container center-position">
         <div>{message}</div>
         <div className="inner-box">
           <p>test</p>

@@ -85,6 +85,7 @@ const {
   handleFetchQuestByQuestId,
   handleFetchNpcQuestStatus,
   handleInsertAllQuestProgress,
+  handleFetchQuestsByQuestStatus,
 } = require("./handlers/playerQuestHandler");
 const { handleFetchAllItems } = require("./handlers/itemsHandler.js");
 
@@ -303,6 +304,10 @@ app.post("/npc/update/quest-dialog", (req, res) => {
 
 app.get("/player-quest/select/npc-quest/:npcId/:playerId", (req, res) => {
   handleFetchNpcQuestStatus(req, res, pool);
+});
+
+app.get("/player-quest/select/quests/:playerId/:questStatus", (req, res) => {
+  handleFetchQuestsByQuestStatus(req, res, pool);
 });
 
 app.get("/quests/select/npc/:questId/:playerId", (req, res) => {

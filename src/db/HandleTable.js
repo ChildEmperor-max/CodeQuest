@@ -913,6 +913,27 @@ export async function fetchPlayerQuests(player_id) {
     });
 }
 
+export async function fetchPlayerQuestsByQuestStatus(player_id, quest_status) {
+  return fetch(
+    playerQuestsAPI +
+      "/select/quests/:playerId/:questStatus" +
+      player_id +
+      "/" +
+      quest_status
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Error fetching player quests data: " + response.statusText
+        );
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+}
 export function fetchQuestByQuestId(playerId, questId) {
   return fetch(playerQuestsAPI + "/select/quest/" + playerId + "/" + questId)
     .then((response) => {

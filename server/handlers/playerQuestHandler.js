@@ -34,6 +34,30 @@ module.exports.handleFetchQuestByQuestId = async function (
   }
 };
 
+module.exports.handleFetchQuestsByQuestStatus = async function (
+  req,
+  res,
+  pool
+) {
+  const playerId = req.params.playerId;
+  const questStatus = req.params.questStatus;
+  try {
+    const selectQuestByQuestStatus = fs.readFileSync(
+      path + "selectQuestByQuestStatus.sql",
+      "utf8"
+    );
+    const result = await pool.query(selectQuestByQuestStatus, [
+      playerId,
+      questStatus,
+    ]);
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error("Error executing query:", error);
+  }
+};
+
 module.exports.handleFetchNpcQuestStatus = async function (req, res, pool) {
   try {
     const npcId = req.params.npcId;
