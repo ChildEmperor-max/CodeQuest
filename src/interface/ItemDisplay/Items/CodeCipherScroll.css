@@ -1,0 +1,15 @@
+.quest-hint-container {
+    z-index: 999;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    background-color: black;
+    border: 2px solid wheat;
+    color: wheat;
+}
+
+.quest-hint-container p {
+    margin: 15px;
+}
