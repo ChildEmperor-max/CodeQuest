@@ -1,21 +1,52 @@
 import React, { useEffect, useState } from "react";
-import ChoicesModal from "../../components/ChoicesModal";
+import QuestChoicesModal from "../../components/QuestChoicesModal";
+import usePlayerQuests from "../../hooks/player/usePlayerQuests";
+import CodeCipherScroll from "./Items/CodeCipherScroll";
+import SystemAlert from "../../components/SystemAlert";
 
 const ItemData = ({ item, onClose }) => {
   const [showQuestChoices, setShowQuestChoices] = useState(false);
+  const [isAlert, setIsAlert] = useState(null);
+  const {
+    activeQuestsData,
+    loading: isActiveQuestsLoading,
+    error: isActiveQuestsError,
+  } = usePlayerQuests();
+  const [selectedQuestHint, setSelectedQuestHint] = useState(null);
   const closeChoicesModal = () => {
     setShowQuestChoices(false);
   };
+
   useEffect(() => {
     console.log("Viewing Item: ", item);
   }, []);
 
+  const handleSelectedQuestHint = (quest) => {
+    if (!quest.hint) {
+      setIsAlert("No hint is available for this quest");
+    } else {
+      closeChoicesModal();
+      setSelectedQuestHint(quest);
+      setIsAlert("Code Cipher Scroll used");
+    }
+  };
+
   return (
     <>
+      {isAlert && (
+        <SystemAlert message={isAlert} onClose={() => setIsAlert(null)} />
+      )}
+      {selectedQuestHint && (
+        <CodeCipherScroll
+          quest={selectedQuestHint}
+          onClose={() => setSelectedQuestHint(null)}
+        />
+      )}
       {showQuestChoices && (
-        <ChoicesModal
+        <QuestChoicesModal
           message="Choose a quest to view its hint:"
-          onConfirm={closeChoicesModal}
+          quests={activeQuestsData}
+          onConfirm={handleSelectedQuestHint}
           onCancel={closeChoicesModal}
         />
       )}
@@ -32,7 +63,7 @@ const ItemData = ({ item, onClose }) => {
             <p>An error occured</p>
           )}
           <div>
-            {/* <button onClick={() => setShowQuestChoices(true)}>Use</button> */}
+            <button onClick={() => setShowQuestChoices(true)}>Use</button>
             <button onClick={onClose}>Close</button>
           </div>
         </div>
