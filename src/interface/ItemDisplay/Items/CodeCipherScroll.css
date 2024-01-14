@@ -5,11 +5,33 @@
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    background-color: black;
+    width: 40%;
+    background-color: rgb(206, 188, 107);
     border: 2px solid wheat;
-    color: wheat;
+    color: black;
 }
 
 .quest-hint-container p {
     margin: 15px;
+}
+
+.quest-hint-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.quest-hint-container button {
+    float: right;
+    background-color: rgba(241, 202, 26, 0.596);
+    border-radius: 0%;
+    box-shadow: -5px 5px 2px rgba(134, 112, 13, 0.596);
+    transition: box-shadow 0.2 ease-in-out;
+}
+
+.quest-hint-container button:hover {
+    box-shadow: -3px 3px 2px rgba(134, 112, 13, 0.596);
+}
+
+.quest-hint-container button:focus {
+    box-shadow: -1px 1px 2px rgba(134, 112, 13, 0.596);
 }
