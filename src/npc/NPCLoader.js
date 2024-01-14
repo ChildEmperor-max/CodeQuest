@@ -67,6 +67,7 @@ export default class NPCLoader extends Interactibles {
     this.direction = new THREE.Vector3(0, 0, 0);
     this.name = npcName;
     this.isLoaded = false;
+    this.updateRange = 50;
 
     this.currentQuestStatus = {
       stats: "",
@@ -177,29 +178,33 @@ export default class NPCLoader extends Interactibles {
   }
 
   update(delta) {
-    super.update(delta);
-    if (this.mixer) {
-      this.mixer.update(delta);
-      this.stateMachine.update();
-      TWEEN.update();
-      this.collisionBox.position.set(
-        this.position.x,
-        this.position.y,
-        this.position.z
-      );
-      this.npcbox = new THREE.Box3().setFromObject(this.collisionBox);
-      if (this.endPoint) {
-        this.moveToDestination(this.startPoint, this.endPoint, delta);
-      }
-      this.updateAnimation();
-      this.updatePositionToGround(delta);
-      this.updateFloatingName();
+    if (
+      this.player.getPosition().distanceTo(this.position) < this.updateRange
+    ) {
+      super.update(delta);
+      if (this.mixer) {
+        this.mixer.update(delta);
+        this.stateMachine.update();
+        TWEEN.update();
+        this.collisionBox.position.set(
+          this.position.x,
+          this.position.y,
+          this.position.z
+        );
+        this.npcbox = new THREE.Box3().setFromObject(this.collisionBox);
+        if (this.endPoint) {
+          this.moveToDestination(this.startPoint, this.endPoint, delta);
+        }
+        this.updateAnimation();
+        this.updatePositionToGround(delta);
+        this.updateFloatingName();
 
-      if (this.player.interactingWithNpc === this.npcName) {
-        this.rotateTowards(this.player.getPosition());
-        this.isTalking = true;
-      } else {
-        this.isTalking = false;
+        if (this.player.interactingWithNpc === this.npcName) {
+          this.rotateTowards(this.player.getPosition());
+          this.isTalking = true;
+        } else {
+          this.isTalking = false;
+        }
       }
     }
   }
