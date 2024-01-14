@@ -555,7 +555,7 @@ export default class Player extends THREE.Object3D {
     // this.modelScale = 0.03;
     // const loadingManager = new THREE.LoadingManager();
     const loader = new ManageLoader(
-      "Loading Player ...",
+      "Loading Assets ...",
       this.loaderElement,
       this.textLoaderElement
     );
