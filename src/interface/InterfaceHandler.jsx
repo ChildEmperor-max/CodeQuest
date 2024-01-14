@@ -94,7 +94,7 @@ export default function InterfaceHandler({
   const [currentAvatar, setCurrentAvatar] = useState(DefaultAvatarImage);
   const [showItemData, setShowItemData] = useState(null);
 
-  const [showSystemAlert, setShowSystemAlert] = useState(false);
+  const [isSystemAlert, setIsSystemAlert] = useState(null);
 
   useEffect(() => {
     setCurrentNpcs(npcs);
@@ -119,7 +119,7 @@ export default function InterfaceHandler({
       setCurrentAvatar(
         data.avatar_path ? data.avatar_path : DefaultAvatarImage
       );
-      setShowSystemAlert(true);
+      setIsSystemAlert("You can press F11 to toggle fullscreen");
     }
   }, [updateAvailableQuests, loading, characterData]);
 
@@ -390,18 +390,21 @@ export default function InterfaceHandler({
         <ControlsHelper onClose={() => toggleInterface(interfaces.helper)} />
       )}
 
-      {showItemData && (
-        <ItemData item={showItemData} onClose={() => setShowItemData(null)} />
+      {isSystemAlert && (
+        <SystemAlert
+          message={isSystemAlert}
+          onClose={() => setIsSystemAlert(null)}
+        />
       )}
-
+      {showItemData && (
+        <ItemData
+          item={showItemData}
+          setIsSystemAlert={setIsSystemAlert}
+          onClose={() => setShowItemData(null)}
+        />
+      )}
       <div className="ui-container" id="interface-container">
         <>
-          {showSystemAlert && (
-            <SystemAlert
-              message='You can press "F11" for a better gaming experience'
-              onClose={() => setShowSystemAlert(false)}
-            />
-          )}
           {showButtons && (
             <>
               <div className="right-container">
@@ -449,10 +452,7 @@ export default function InterfaceHandler({
                 onClickEvent={() => toggleInterface(interfaces.helper)}
               /> */}
                 <div className="item-display-container">
-                  <ItemDisplay
-                    showItemData={showItemData}
-                    setShowItemData={setShowItemData}
-                  />
+                  <ItemDisplay setShowItemData={setShowItemData} />
                 </div>
               </div>
               <div className="left-container">

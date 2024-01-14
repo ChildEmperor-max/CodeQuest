@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import QuestChoicesModal from "../../components/QuestChoicesModal";
 import usePlayerQuests from "../../hooks/player/usePlayerQuests";
 import CodeCipherScroll from "./Items/CodeCipherScroll";
-import SystemAlert from "../../components/SystemAlert";
 
-const ItemData = ({ item, onClose }) => {
+const ItemData = ({ item, setIsSystemAlert, onClose }) => {
   const [showQuestChoices, setShowQuestChoices] = useState(false);
-  const [isAlert, setIsAlert] = useState(null);
   const {
     activeQuestsData,
     loading: isActiveQuestsLoading,
@@ -23,19 +21,16 @@ const ItemData = ({ item, onClose }) => {
 
   const handleSelectedQuestHint = (quest) => {
     if (!quest.hint) {
-      setIsAlert("No hint is available for this quest");
+      setIsSystemAlert("No hint is available for this quest");
     } else {
       closeChoicesModal();
       setSelectedQuestHint(quest);
-      setIsAlert("Code Cipher Scroll used");
+      setIsSystemAlert("Code Cipher Scroll used");
     }
   };
 
   return (
     <>
-      {isAlert && (
-        <SystemAlert message={isAlert} onClose={() => setIsAlert(null)} />
-      )}
       {selectedQuestHint && (
         <CodeCipherScroll
           quest={selectedQuestHint}
