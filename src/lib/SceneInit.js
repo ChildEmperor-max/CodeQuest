@@ -406,415 +406,415 @@ export default class SceneInit {
             );
             this.npcArray.push(this.npcs.sampleNPC3);
 
-            // this.npcs.sampleNPC4.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[4],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC4);
+            this.npcs.sampleNPC4.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[4],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC4);
 
-            // this.npcs.sampleNPC5.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[5],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC5);
+            this.npcs.sampleNPC5.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[5],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC5);
 
-            // this.npcs.sampleNPC6.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[6],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC6);
+            this.npcs.sampleNPC6.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[6],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC6);
 
-            // this.npcs.sampleNPC7.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[7],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC7);
+            this.npcs.sampleNPC7.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[7],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC7);
 
-            // this.npcs.sampleNPC8.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[8],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC8);
+            this.npcs.sampleNPC8.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[8],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC8);
 
-            // this.npcs.sampleNPC9.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[9],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC9);
+            this.npcs.sampleNPC9.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[9],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC9);
 
-            // this.npcs.sampleNPC10.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[10],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC10);
+            this.npcs.sampleNPC10.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[10],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC10);
 
-            // this.npcs.sampleNPC11.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[11],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC11);
+            this.npcs.sampleNPC11.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[11],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC11);
 
-            // this.npcs.sampleNPC12.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[12],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC12);
+            this.npcs.sampleNPC12.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[12],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC12);
 
-            // this.npcs.sampleNPC13.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[13],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC13);
+            this.npcs.sampleNPC13.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[13],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC13);
 
-            // this.npcs.sampleNPC14.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[14],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC14);
+            this.npcs.sampleNPC14.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[14],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC14);
 
-            // this.npcs.sampleNPC15.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[15],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC15);
+            this.npcs.sampleNPC15.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[15],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC15);
 
-            // this.npcs.sampleNPC16.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[16],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC16);
+            this.npcs.sampleNPC16.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[16],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC16);
 
-            // this.npcs.sampleNPC17.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[17],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC17);
+            this.npcs.sampleNPC17.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[17],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC17);
 
-            // this.npcs.sampleNPC18.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[18],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC18);
+            this.npcs.sampleNPC18.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[18],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC18);
 
-            // this.npcs.sampleNPC19.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[19],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC19);
+            this.npcs.sampleNPC19.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[19],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC19);
 
-            // this.npcs.sampleNPC20.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[20],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC20);
+            this.npcs.sampleNPC20.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[20],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC20);
 
-            // this.npcs.sampleNPC21.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[21],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC21);
+            this.npcs.sampleNPC21.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[21],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC21);
 
-            // this.npcs.sampleNPC22.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[22],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC22);
+            this.npcs.sampleNPC22.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[22],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC22);
 
-            // this.npcs.sampleNPC23.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[23],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC23);
+            this.npcs.sampleNPC23.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[23],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC23);
 
-            // this.npcs.sampleNPC24.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[24],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC24);
+            this.npcs.sampleNPC24.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[24],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC24);
 
-            // this.npcs.sampleNPC25.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[25],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC25);
+            this.npcs.sampleNPC25.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[25],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC25);
 
-            // this.npcs.sampleNPC26.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[26],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC26);
+            this.npcs.sampleNPC26.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[26],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC26);
 
-            // this.npcs.sampleNPC27.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[27],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC27);
+            this.npcs.sampleNPC27.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[27],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC27);
 
-            // this.npcs.sampleNPC28.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[28],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC28);
+            this.npcs.sampleNPC28.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[28],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC28);
 
-            // this.npcs.sampleNPC29.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[29],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC29);
+            this.npcs.sampleNPC29.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[29],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC29);
 
-            // this.npcs.sampleNPC30.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[30],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC30);
+            this.npcs.sampleNPC30.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[30],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC30);
 
-            // this.npcs.sampleNPC31.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[31],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC31);
+            this.npcs.sampleNPC31.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[31],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC31);
 
-            // this.npcs.sampleNPC32.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[32],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC32);
+            this.npcs.sampleNPC32.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[32],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC32);
 
-            // this.npcs.sampleNPC33.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[33],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC33);
+            this.npcs.sampleNPC33.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[33],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC33);
 
-            // this.npcs.sampleNPC34.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[34],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC34);
+            this.npcs.sampleNPC34.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[34],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC34);
 
-            // this.npcs.sampleNPC35.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[35],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC35);
+            this.npcs.sampleNPC35.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[35],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC35);
 
-            // this.npcs.sampleNPC36.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[36],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC36);
+            this.npcs.sampleNPC36.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[36],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC36);
 
-            // this.npcs.sampleNPC37.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[37],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC37);
+            this.npcs.sampleNPC37.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[37],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC37);
 
-            // this.npcs.sampleNPC38.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[38],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC38);
+            this.npcs.sampleNPC38.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[38],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC38);
 
-            // this.npcs.sampleNPC39.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[39],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC39);
+            this.npcs.sampleNPC39.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[39],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC39);
 
-            // this.npcs.sampleNPC40.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[40],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC40);
+            this.npcs.sampleNPC40.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[40],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC40);
 
-            // this.npcs.sampleNPC41.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[41],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC41);
+            this.npcs.sampleNPC41.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[41],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC41);
 
-            // this.npcs.sampleNPC42.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[42],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC42);
+            this.npcs.sampleNPC42.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[42],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC42);
 
-            // this.npcs.sampleNPC43.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[43],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC43);
+            this.npcs.sampleNPC43.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[43],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC43);
 
-            // this.npcs.sampleNPC44.initialize(
-            //   this.mainWorldScene,
-            //   npcSpawnPoints[44],
-            //   this.camera,
-            //   this.player,
-            //   this.canvasId,
-            //   this.groundMesh
-            // );
-            // this.npcArray.push(this.npcs.sampleNPC44);
+            this.npcs.sampleNPC44.initialize(
+              this.mainWorldScene,
+              npcSpawnPoints[44],
+              this.camera,
+              this.player,
+              this.canvasId,
+              this.groundMesh
+            );
+            this.npcArray.push(this.npcs.sampleNPC44);
 
             this.npcs.albyNPC.initialize(
               this.mainWorldScene,
