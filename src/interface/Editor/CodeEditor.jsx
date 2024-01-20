@@ -54,6 +54,7 @@ import AchievementModal from "../../components/AchievementModal";
 import { getNpcs } from "../../npc/NPCGetterSetter";
 import usePlayerInventory from "../../hooks/player/usePlayerInventory";
 import SystemAlert from "../../components/SystemAlert";
+import CodeCipherScroll from "../../interface/ItemDisplay/Items/CodeCipherScroll";
 
 const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
   const { playerId, characterData, updateCharacterData, setCharacterData } =
@@ -377,6 +378,15 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
 
   return (
     <>
+      {showHint && (
+        <CodeCipherScroll
+          quest={quest_data}
+          onClose={() => {
+            setShowHint(false);
+            setShowHintCountdown(true);
+          }}
+        />
+      )}
       {achievementPopup.achievementName ? (
         <AchievementModal
           achievementName={achievementPopup.achievementName}
@@ -421,15 +431,6 @@ const CodeEditor = ({ npcInstances, quest_data, onClose }) => {
           <PseudoCode
             code={quest_data.pseudo_code}
             onClose={() => setShowPseudoCode(false)}
-          />
-        )}
-        {showHint && (
-          <Hint
-            hint={quest_data.hint}
-            onClose={() => {
-              setShowHint(false);
-              setShowHintCountdown(true);
-            }}
           />
         )}
 
