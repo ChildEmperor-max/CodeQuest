@@ -120,9 +120,9 @@ export default class Player extends THREE.Object3D {
         this.position.y,
         this.position.z
       );
-      if (this.raycasterVisuals > 0) {
-        this.updateRaycasterVisuals();
-      }
+      // if (this.raycasterVisuals > 0) {
+      //   this.updateRaycasterVisuals();
+      // }
       if (this.nearNpcs.length > 0) {
         if (!this.updatedNearNpc) {
           this.updatePlayerNearNpc(true);
