@@ -177,14 +177,17 @@ export default class NPCLoader extends Interactibles {
     setNpcs(this);
   }
 
-  update(delta) {
-    if (
+  playerOutOfRange() {
+    return (
       this.player.getPosition().distanceTo(this.position) < this.updateRange
-    ) {
+    );
+  }
+
+  update(delta) {
+    if (this.playerOutOfRange()) {
       super.update(delta);
       if (this.mixer) {
         this.mixer.update(delta);
-        this.stateMachine.update();
         TWEEN.update();
         this.collisionBox.position.set(
           this.position.x,
@@ -443,22 +446,22 @@ export default class NPCLoader extends Interactibles {
   }
 
   loadModel(modelPath, npcName, modelTexturePath, scale) {
-    const loadingManager = new THREE.LoadingManager();
-    loadingManager.setURLModifier(function (url) {
-      if (
-        url ===
-        "/src/assets/models/raphtalia/D:/on sell/Character/raphtalia/texture/body.png"
-      ) {
-        url = "/src/assets/models/raphtalia/texture/body.png";
-      }
-      if (
-        url ===
-        "/src/assets/models/raphtalia/D:/on sell/Character/raphtalia/texture/mata.png"
-      ) {
-        url = "/src/assets/models/raphtalia/texture/mata.png";
-      }
-      return url;
-    });
+    // const loadingManager = new THREE.LoadingManager();
+    // loadingManager.setURLModifier(function (url) {
+    //   if (
+    //     url ===
+    //     "/src/assets/models/raphtalia/D:/on sell/Character/raphtalia/texture/body.png"
+    //   ) {
+    //     url = "/src/assets/models/raphtalia/texture/body.png";
+    //   }
+    //   if (
+    //     url ===
+    //     "/src/assets/models/raphtalia/D:/on sell/Character/raphtalia/texture/mata.png"
+    //   ) {
+    //     url = "/src/assets/models/raphtalia/texture/mata.png";
+    //   }
+    //   return url;
+    // });
     // this.fbxLoader = new FBXLoader(loadingManager);
     this.fbxLoader = new FBXLoader();
 
@@ -490,7 +493,6 @@ export default class NPCLoader extends Interactibles {
             child.receiveShadow = true;
           }
         });
-        // fbx.rotation.y = Math.PI / 2;
         fbx.name = npcName;
         this.scene.add(fbx);
         this.mesh = fbx;
